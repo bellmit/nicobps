@@ -28,7 +28,7 @@
 	    <div id="page-content-wrapper">	
 		  <%@include file="../common/menutop.jsp" %>     
 	      <div class="container-fluid">
-	        <h3 class="mt-4" style="font-size:32px;">Create User</h3>
+	        <h3 class="mt-4" style="font-size:32px;">Create URL</h3>
 	        
 	        <div class="row" ng-app="CommonApp">	         	
 	        	<div class="col-md-12 py-12 px-12">
@@ -51,7 +51,7 @@
 												<div style="display:flex;flex-direction: row;">
 													<div style='border:1px solid black;border-radius:10px;text-align:center;width:20%;padding: 5px;' ng-click="parenticonPressed=true">
 														<span style="color:grey" ng-if="!url.parenticon">Icon</span>
-														<input style="width:auto;"	type="hidden" readonly="readonly" name="parenticon" ng-model="url.parenticon" placeholder='Icon'/><a class="gn-icon {{url.parenticon}}"></a>
+														<input style="width:auto;"	type="hidden" readonly="readonly" name="parenticon" ng-model="url.parenticon" placeholder='Icon'/><a class="fa {{url.parenticon}}"></a>
 													</div>
 													<input  style='width:auto;width:70%'   
 														type="number" placeholder="Order" ng-model="url.parentorder"/>
@@ -60,7 +60,7 @@
 														<button ng-click="parenticonPressed=false" style="position:absolute;right:0">Close</button>
 													<div style="padding:20px;width: 100%; display: grid; grid-gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(20px, 40px));">
 														<div ng-repeat="i in icons">
-															<a class="gn-icon {{i}}" ng-click="url.parenticon=i"></a>
+															<a class="fa {{i}}" ng-click="url.parenticon=i"></a>
 														</div>
 													</div>
 												</div>														
@@ -81,7 +81,7 @@
 													<div style="display:flex;flex-direction: row;">
 														<div style='border:1px solid black;border-radius:10px;text-align:center;width:20%;padding: 5px;' ng-click="submenuiconPressed=true">
 															<span style="color:grey" ng-if="!url.submenuicon">Icon</span>
-															<input style="width:auto;" type="hidden" placeholder='Icon' readonly="readonly" name="submenuicon" ng-model="url.submenuicon" ng-click="submenuiconPressed=true"/><a class="gn-icon {{url.submenuicon}}"></a>
+															<input style="width:auto;" type="hidden" placeholder='Icon' readonly="readonly" name="submenuicon" ng-model="url.submenuicon" ng-click="submenuiconPressed=true"/><a class="fa {{url.submenuicon}}"></a>
 														</div>
 														<input  style='width:auto;width:70%' 
 															type="number" placeholder="Order" ng-model="url.submenuorder"/>
@@ -90,7 +90,7 @@
 															<button ng-click="submenuiconPressed=false" style="position:absolute;right:0">Close</button>
 														<div style="padding:20px;width: 100%; display: grid; grid-gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(20px, 40px));">
 															<div ng-repeat="i in icons">
-																<a class="gn-icon {{i}}" ng-click="url.submenuicon=i"></a>
+																<a class="fa {{i}}" ng-click="url.submenuicon=i"></a>
 															</div>
 														</div>
 													</div>														
@@ -105,7 +105,7 @@
 												<div style="display:flex;flex-direction: row;">
 													<div style='width:20%;border:1px solid black;border-radius:10px;text-align:center;padding: 5px;' ng-click="subsubmenuiconPressed=true">
 														<span style="color:grey" ng-if="!url.subsubmenuicon">Icon</span>
-														<input style="width:auto;" type="hidden" placeholder='Icon' readonly="readonly" name="subsubmenuicon" ng-model="url.subsubmenuicon" ng-click="subsubmenuiconPressed=true"/><a class="gn-icon {{url.subsubmenuicon}}"></a>
+														<input style="width:auto;" type="hidden" placeholder='Icon' readonly="readonly" name="subsubmenuicon" ng-model="url.subsubmenuicon" ng-click="subsubmenuiconPressed=true"/><a class="fa {{url.subsubmenuicon}}"></a>
 													</div>
 													<input  style='width:auto;width:70%' 
 														type="number" placeholder="Order" ng-model="url.subsubmenuorder"/>
@@ -114,7 +114,7 @@
 														<button ng-click="subsubmenuiconPressed=false" style="position:absolute;right:0">Close</button>
 													<div style="padding:20px;width: 100%; display: grid; grid-gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(20px, 40px));">
 														<div ng-repeat="i in icons">
-															<a class="gn-icon {{i}}" ng-click="url.subsubmenuicon=i"></a>
+															<a class="fa {{i}}" ng-click="url.subsubmenuicon=i"></a>
 														</div>
 													</div>
 												</div>														

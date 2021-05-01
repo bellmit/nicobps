@@ -23,6 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
+import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
 
@@ -198,5 +199,37 @@ public class ControllerUserManagement
 	public @ResponseBody List<Userlogin> listUsers() {
 		
 		return serviceUserManagementInterface.listUsers();
+	}
+	////////////////////////////////////////////////////////////////////////////
+	@GetMapping("/createurl.htm")
+	public String createurl() {
+		return "initialization/createurl"; 
+	}	
+	
+	@PostMapping(value = "/saveurl.htm")
+    public ResponseEntity<String> saveurl(@RequestBody Pageurls url) {
+                
+		return ResponseEntity.ok().body(serviceUserManagementInterface.savePageurl(url));
+    }
+	
+	@GetMapping(value = "/listUrls")
+	public @ResponseBody List<Pageurls> listUrls() {
+		return serviceUserManagementInterface.listUrls();
+	}
+	///////////////////////////////////////////////////////////////////////////
+	@GetMapping("/accesscontrol.htm")
+	public String accesscontrol() {
+		return "initialization/accesscontrol"; 
+	}
+	@GetMapping(value = "/listUserAndMappedPages.htm")
+	public @ResponseBody List<Userlogin> listUserAndMappedPages() {
+
+		return serviceUserManagementInterface.listUserAndMappedPages();
+	}
+	
+	@PostMapping(value = "/saveUserpages.htm")
+	public @ResponseBody String saveUserpages(@RequestBody List<Map<String,Object>> userpages) {
+
+		return serviceUserManagementInterface.saveUserpages(userpages);
 	}
 }

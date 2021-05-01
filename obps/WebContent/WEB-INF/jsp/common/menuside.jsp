@@ -87,8 +87,8 @@ body {
 			<li><a href='home.htm' class="dashboard-bgcolor text-white border-bottom b-newpage">Home</a></li>
 			<core:forEach  items="${menu}" var="record">
 				<li class='sub-menu'>
-	                <a class="gn-icon ${record.icon} dashboard-bgcolor border-bottom text-white b-newpage" 
-	                	href="${(record.pageurl == null || record.pageurl=='')?'#':record.pageurl}">${record.name}
+	                <a class="fa ${record.icon} dashboard-bgcolor border-bottom text-white b-newpage" 
+	                	href="${(record.pageurl == null || record.pageurl=='')?'#':record.pageurl}">&nbsp;${record.name}
 	                	<core:if test = "${record.pageurl == null || record.pageurl == ''}">
 	                		<div class='fa fa-caret-down right'></div>
 	                	</core:if>
@@ -97,9 +97,9 @@ body {
 		                <ul>
 							<core:forEach  items="${record.suburls}" var="subrecord">
 		                        <li class="sub-sub-menu">
-			                        <a class="b-newpage gn-icon ${subrecord.icon}" 
+			                        <a class="b-newpage fa ${subrecord.icon}" 
 			                        	href="${(subrecord.pageurl==null || subrecord.pageurl=='')?'#':subrecord.pageurl}">
-			                        	${subrecord.name}
+			                        	&nbsp;${subrecord.name}
 			                        	<core:if test = "${subrecord.pageurl == null || subrecord.pageurl == ''}">
 					                		<div class='fa fa-caret-down right'></div>
 					                	</core:if>
@@ -108,8 +108,8 @@ body {
 				                        <ul>
 											<core:forEach  items="${subrecord.suburls}" var="subsubrecord">
 					                            <li>
-					                                <a class="b-newpage gn-icon ${subsubrecord.icon}" 
-					                                href="${(subsubrecord.pageurl=='')?'#':subsubrecord.pageurl}">${subsubrecord.name}</a>
+					                                <a class="b-newpage fa ${subsubrecord.icon}" 
+					                                href="${(subsubrecord.pageurl=='')?'#':subsubrecord.pageurl}">&nbsp;${subsubrecord.name}</a>
 					                            </li>
 		                    				</core:forEach>
 				                        </ul>

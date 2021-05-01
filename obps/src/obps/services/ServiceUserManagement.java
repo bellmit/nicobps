@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import obps.daos.DaoUserManagementInterface;
 import obps.domains.DomainUserManagementInterface;
@@ -22,7 +21,6 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     @Autowired private ServiceUtilInterface serviceUtilInterface;
     @Autowired private DaoUserManagementInterface DaoUserManagementInterface;
     @Autowired private DomainUserManagementInterface DomainUserManagementInterface;
-    
     @Override
 	public Long getMaxUsercode() {	    	
 		String sql = "SELECT MAX(usercode) FROM nicobps.userlogins ";		
@@ -74,5 +72,32 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     public List<Userlogin> listUsers(){    	    	
 		return DaoUserManagementInterface.listUsers();	
 	}    
-    
+    @Override
+    public List<Pageurls> listUrls(){    	    	
+		return DaoUserManagementInterface.getPageUrls();	
+	}
+
+    @Override
+    public String savePageurl(Pageurls url) {
+		if(url.getSubsubmenu()!=null)
+			url.setSubsubmenu(url.getSubsubmenu().length() == 0 ? null : url.getSubsubmenu());
+		if(url.getSubmenu()!=null)
+			url.setSubmenu(url.getSubmenu().length() == 0 ? null : url.getSubmenu());
+		return (DaoUserManagementInterface.savePageurlsDao(url)) ? "Saved" : "Failed";
+	}
+    @Override
+    public List<Userlogin> listUserAndMappedPages() {
+
+		List<Userlogin> list = listUsers();
+		for (Userlogin user : list) {
+			user.setMappedpages(DaoUserManagementInterface.getMappedPageurls(user.getUsercode()));
+		}
+		return list;
+	}
+
+    @Override
+    public String saveUserpages(List<Map<String,Object>> upages) {
+
+		return (DaoUserManagementInterface.mapUserpages(upages)) ? "Mapped" : "Failed";
+	}
 }

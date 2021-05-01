@@ -24,7 +24,7 @@ app.controller("pageurlCtrl", [
       $scope.url = new Pageurls();
     };
     $scope.getIcons=()=>{
-    	jQuery.getJSON('resources/vendor/googlenexusMenu/fonts/icomoon/icon.json',(data)=>{
+    	jQuery.getJSON('resources/js/vendor/bootstrap/vendor/fontawesome-free/icon.json',(data)=>{
     		$timeout(() => {
     			$scope.icons=data;
           	  },0);
@@ -34,7 +34,7 @@ app.controller("pageurlCtrl", [
     $scope.getSubmenu = function () {
       jQuery.ajax({
         type: "GET",
-        url: "./getSubmenu",
+        url: "./getSubmenu.htm",
         data: "val=" + $scope.url.parent,
         // dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -54,7 +54,7 @@ app.controller("pageurlCtrl", [
     $scope.save = function () {
       jQuery.ajax({
         type: "POST",
-        url: "./saveMenu.htm",
+        url: "./saveurl.htm",
         data: angular.toJson($scope.url),
         contentType: "application/json; charset=utf-8",
         success: function (response) {
@@ -82,7 +82,7 @@ app.controller("pageurlCtrl", [
     $scope.listURLs = function () {
       jQuery.ajax({
         type: "GET",
-        url: "./listUrls",
+        url: "./listUrls.htm",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
           var scope = angular.element($("#pageurlCtrl")).scope();

@@ -1,7 +1,7 @@
 
 function Pageurls() {
 	var Pageurls = {
-		"urlcode" : 0,
+		"urlcode" : -1,
 		"pageurl" : "",
 		"subsubmenu" : "",
 		"subsubmenuicon" : "",

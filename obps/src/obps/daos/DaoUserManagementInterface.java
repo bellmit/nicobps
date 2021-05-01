@@ -15,8 +15,17 @@ public interface DaoUserManagementInterface {
 
 	public boolean updatePassword(Map<String, Object> param);
 
-	public List<Pageurls>  getPageUrls(final Integer usercode);
+	public List<Pageurls> getPageUrls();
+
+	public List<Pageurls> getPageUrls(final Integer usercode);
+
 	public boolean updateUser(Userlogin user);
+
 	public List<Userlogin> listUsers();
 
+	public boolean savePageurlsDao(Pageurls url);
+
+	public List<Pageurls> getMappedPageurls(Integer usercode);
+
+	public boolean mapUserpages(List<Map<String, Object>> upage);
 }

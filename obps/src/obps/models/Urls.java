@@ -1,8 +1,9 @@
 package obps.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Urls{
+public class Urls implements Serializable{
 	private String name;
 	private String icon;
 	private String pageurl;
