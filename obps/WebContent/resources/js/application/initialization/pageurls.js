@@ -11,8 +11,8 @@ app.controller("pageurlCtrl", [
   "$sce","$timeout",
   function ($scope, $sce,$timeout) {
 	$scope.parenticonPressed=false;
-	  $scope.icons = [];
-    $scope.header = header;
+    $scope.icons = [];
+    $scope.header = [];
     $scope.submenu = [];
     $scope.subsubmenu = [];
     $scope.URLs = [];
@@ -32,25 +32,39 @@ app.controller("pageurlCtrl", [
     };
     $scope.getIcons();
     $scope.getSubmenu = function () {
-      jQuery.ajax({
-        type: "GET",
-        url: "./getSubmenu.htm",
-        data: "val=" + $scope.url.parent,
-        // dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-          $timeout(() => {
-        	  $scope.submenu = response
-        	  },0);
-        },
-        error: function (xhr) {
-          alert(xhr.status + " = " + xhr);
-          alert(
-            "Sorry, there was an error while trying to process the request."
-          );
-        },
-      });
+    	$timeout(() => {
+    	  let contains={};
+  		  $scope.submenu=[];    		  
+  		  let header=JSON.parse(JSON.stringify($scope.header)); 
+  		  let head=header.filter((x)=>{
+  			  return x.parent=$scope.url.parent;
+  		  })[0];
+  		  $scope.url.parenticon=head.parenticon;
+  		  $scope.url.parentorder=head.parentorder;
+  		  $scope.URLs.forEach((x, o) => {
+  			  if(x.parent==$scope.url.parent){
+	  			  if(contains[x.submenu]!==true){
+	  				  contains[x.submenu]=true;
+	  				  if(x.submenu!==''){
+	  					  $scope.submenu.push(x);
+	  				  }
+	  			  }
+	  		  }
+  		  });
+  	  	},0);
     };
+    
+    $scope.getSubsubmenu = function () {
+    	$timeout(() => {
+  		  let header=JSON.parse(JSON.stringify($scope.submenu)); 
+  		  let head=header.filter((x)=>{
+  			  return x.submenu=$scope.url.submenu;
+  		  })[0];
+  		  $scope.url.submenuicon=head.submenuicon;
+  		  $scope.url.submenuorder=head.submenuorder;
+  	  	},0);
+    };
+    
     $scope.save = function () {
       jQuery.ajax({
         type: "POST",
@@ -70,6 +84,7 @@ app.controller("pageurlCtrl", [
         },
       });
     };
+    
     $scope.edit = function (index) {
       $scope.url = $scope.URLs[index];
       jQuery("html, body").animate(
@@ -85,10 +100,7 @@ app.controller("pageurlCtrl", [
         url: "./listUrls.htm",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-          var scope = angular.element($("#pageurlCtrl")).scope();
-          scope.$apply(function () {
-            scope.URLs = response;
-          });
+            $scope.URLs = response;
         },
         error: function (xhr) {
           alert(xhr.status + " = " + xhr);
@@ -96,6 +108,17 @@ app.controller("pageurlCtrl", [
             "Sorry, there was an error while trying to process the request."
           );
         },
+      }).then(()=>{
+    	  $timeout(() => {
+    		  let contains={};
+    		  $scope.header=[];    		  
+    		  $scope.URLs.forEach((x, o) => {
+    			  if(contains[x.parent]!==true){
+    				  contains[x.parent]=true;
+    				  $scope.header.push(x);
+    			  }
+    		  });
+    	  },0);
       });
     };
   },

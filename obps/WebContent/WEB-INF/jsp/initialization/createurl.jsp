@@ -42,9 +42,9 @@
 											<select name="parent" ng-model="url.parent"
 											ng-change="getSubmenu();" style="background-color:beige;width:44%">
 												<option value="">--Select--</option>
-												<option ng-selected="head.key == url.parent"
-													ng-repeat='head in header track by $index' ng-value="head.key">
-													{{head.key}}</option>
+												<option ng-selected="head.parent == url.parent"
+													ng-repeat='head in header track by $index' ng-value="head.parent">
+													{{head.parent}}</option>
 											</select> 
 											<input type="text" name="parentNew" ng-model="url.parent" placeholder="New Menu Header" style="width:45%"/>   
 											<div style="display:inline-block;position: relative;width:100%">
@@ -70,7 +70,8 @@
 									<tr>
 										<td class="title">Sub Menu</td>
 										<td>
-												<select name="submenu" ng-model="url.submenu" style="background-color:beige;width:44%">
+												<select name="submenu" ng-model="url.submenu"
+												ng-change="getSubsubmenu();" style="background-color:beige;width:44%">
 														<option value="">--Select--</option>
 														<option ng-selected="head.submenu == url.submenu"
 															ng-repeat='head in submenu track by $index'
