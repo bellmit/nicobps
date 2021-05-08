@@ -41,7 +41,7 @@ app.controller("pageurlCtrl", [
   		  })[0];
   		  $scope.url.parenticon=head.parenticon;
   		  $scope.url.parentorder=head.parentorder;
-  		  $scope.URLs.forEach((x, o) => {
+  		  JSON.parse(JSON.stringify($scope.URLs)).forEach((x, o) => {
   			  if(x.parent==$scope.url.parent){
 	  			  if(contains[x.submenu]!==true){
 	  				  contains[x.submenu]=true;
@@ -112,7 +112,7 @@ app.controller("pageurlCtrl", [
     	  $timeout(() => {
     		  let contains={};
     		  $scope.header=[];    		  
-    		  $scope.URLs.forEach((x, o) => {
+    		  JSON.parse(JSON.stringify($scope.URLs)).forEach((x, o) => {
     			  if(contains[x.parent]!==true){
     				  contains[x.parent]=true;
     				  $scope.header.push(x);

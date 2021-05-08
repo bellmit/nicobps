@@ -14,7 +14,8 @@ public interface DaoUtilInterface {
     public boolean checkExistance(String sql, Object[] criteria);
     public String getStringObject(String sql);
     public String getStringObject(String sql, Object[] criteria); 
-    public byte[] getFileByte(String sql, Object[] criteria);    
+    public byte[] getFileByte(String sql, Object[] criteria);  
+    public byte[] getBytes(String sql, Object[] criteria) ; 
     //////////////////////////////////////////////////    
 	public Integer getMax(String schema, String table, String column);
 	public <T> List<T> listGeneric(Class<T> clazz, String sql);

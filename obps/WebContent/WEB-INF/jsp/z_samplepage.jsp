@@ -3,7 +3,7 @@
 		<title>OBPS | Sample</title>
 		<%@include file="common/headerfiles.jsp" %>     		
 	</head>
-	<body>
+	<body  ng-app="CommonApp" >
 	<div class="d-flex" id="wrapper">
 		<%@include file="common/menuside.jsp" %>  		   
 	    <div id="page-content-wrapper">	
