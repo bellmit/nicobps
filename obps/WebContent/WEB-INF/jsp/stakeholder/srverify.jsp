@@ -18,6 +18,7 @@
 								<th>Firm/Individual</th>
 								<th>Firm/Applicant Name</th>
 								<th>District</th>
+								<th>Status</th>
 								<th></th>
 							</tr>
 							<tr ng-repeat='item in Licensees'>
@@ -25,6 +26,7 @@
 								<td>{{item.firmindividual=='I'?'Individual':'Firm'}}</td>
 								<td>{{item.firmindividual=='I'?item.applicantsname:item.firmname}}</td>
 								<td>{{item.districtname}}</td>
+								<td>{{getStatus(item.processcode)}}</td>
 								<td><input type="button" value="View Details"
 									ng-click="viewDetails(item)" /></td>
 							</tr>
@@ -47,10 +49,12 @@
 					</table>
 					<div style="position: absolute;bottom:0" class="text-center w-100">
 						<core:if test='${pageType=="srverify"}'>
-							<input type="button" value="Verify" class="btn btn-info" ng-click='verify(applicant.usercode)'/>
+							<input type="button" value="Verify" class="btn btn-info" ng-click='verify(applicant.usercode)'
+							ng-show="applicant.processcode==3"/>
 						</core:if>
 						<core:if test='${pageType=="srapproval"}'>
-							<input type="button" value="Approve" class="btn btn-info" ng-click='approve(applicant.usercode)'/>
+							<input type="button" value="Approve" class="btn btn-info" ng-click='approve(applicant.usercode)'
+							ng-show="applicant.processcode==5"/>
 						</core:if>
 					</div>
 				</div>

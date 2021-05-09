@@ -3,6 +3,14 @@ var signatures = {
 	"/9J/4": "image/jpeg",
 	"IVBOR": "image/png"
 };
+var applicationStatus={
+		1:"Registered ",
+		2:"Application Fees Pending",
+		3:"Verifications Pending",
+		4:"Registration Fees Pending",
+		5:"Approval Pending",
+		6:"Approved"
+};
 function detectMimeType(b64) {
   return signatures[b64.toUpperCase().substr(0,5)];
 }
@@ -12,6 +20,9 @@ app.controller("CommonCtrl", [
 	  $scope.applicant={};
 	  $scope.Licensees=[];
 	  
+	  $scope.getStatus=(processcode)=>{
+		  return applicationStatus[processcode];
+	  };
 	  $scope.viewDetails=(applicant)=>{
 		  $scope.applicant=applicant;
 		  jQuery.fancybox.close();
