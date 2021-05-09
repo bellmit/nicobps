@@ -7,8 +7,8 @@ function detectMimeType(b64) {
   return signatures[b64.toUpperCase().substr(0,5)];
 }
 app.controller("CommonCtrl", [
-  "$scope","$http","$timeout",
-  function ($scope,$http,$timeout) {
+  "$scope","$http","$timeout","commonInitService",
+  function ($scope,$http,$timeout,commonInitService) {
 	  $scope.applicant={};
 	  $scope.Licensees=[];
 	  
@@ -27,6 +27,43 @@ app.controller("CommonCtrl", [
 				'width':'100%',
 			});
 	  },	  
+	  $scope.verify=(usercode,endpoint="./verifyStakeHolder.htm")=>{
+		  let data ="usercode="+usercode;
+		  commonInitService.http("POST", endpoint, data, function(response) {
+			  if(response){
+	        		MsgBox("Applicant verification complete.");
+	        		$scope.listLicensees();
+	        		jQuery.fancybox.close();
+	        	}else{
+	        		MsgBox("Error! Please try again.");		        		
+	        	}
+		  }, function() {
+			  alert("Sorry, there was an error while trying to process the request.");
+		  });
+//		  jQuery.ajax({
+//		        type: "POST",
+//		        url: endpoint,
+//		        data: "usercode="+usercode,
+//		        success: function (response) {	
+//		        	if(response){
+//		        		MsgBox("Applicant verification complete.");
+//		        		$scope.listLicensees();
+//		        		jQuery.fancybox.close();
+//		        	}else{
+//		        		MsgBox("Error! Please try again.");		        		
+//		        	}
+//		        },
+//		        error: function (xhr) {
+//		          alert(xhr.status + " = " + xhr);
+//		          alert(
+//		            "Sorry, there was an error while trying to process the request."
+//		          );
+//		        },
+//	      });
+	  },
+	  $scope.approve=(usercode)=>{
+		  $scope.verify(usercode,"./approveStakeHolder.htm");
+	  },
 	  $scope.getEnclosure=(usercode,enclosurecode)=>{
 		  jQuery.ajax({
 		        type: "POST",
@@ -48,7 +85,7 @@ app.controller("CommonCtrl", [
 		            "Sorry, there was an error while trying to process the request."
 		          );
 		        },
-		      });
+	      });
 	  },
 	  $scope.listLicensees=function(){
 		  $http.post("./listLicensees.htm").success(

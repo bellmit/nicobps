@@ -35,5 +35,12 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "WHERE usercode=? AND enclosurecode=? ";
 		return UI.getBytes(sql, new Object[] {usercode,enclosurecode});
 	}
+
+	@Override
+	public boolean verifyApproveStakeHolder(Integer usercode,Integer nextprocessode) {
+		String sql="UPDATE nicobps.licensees set processcode= ? "
+				+ "WHERE usercode=? ";
+		return UI.update("nicobps.licensees",sql, new Object[] {nextprocessode,usercode});
+	}
 	
 }

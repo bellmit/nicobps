@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +22,14 @@ public class ControllerStakeholder {
 	@Autowired private ServiceUtilInterface serviceUtilInterface;  
 	
 	@GetMapping("/srverify.htm")
-	public String verification() {
+	public String verification(Model model) {
+		model.addAttribute("pageType", "srverify");
 		return "stakeholder/srverify";
 	}
 	
 	@GetMapping("/srapproval.htm")
-	public String approval() {
+	public String approval(Model model) {
+		model.addAttribute("pageType", "srapproval");
 		return "stakeholder/srverify";
 	}
 	
@@ -44,5 +47,15 @@ public class ControllerStakeholder {
 	public @ResponseBody String getEnclosures(Integer usercode,Integer enclosurecode) {
 		byte[] file=SSI.getEnclosure(usercode,enclosurecode);
 		return (file!=null)?Base64.getEncoder().encodeToString(file):null;		
+	}
+	
+	@PostMapping("/verifyStakeHolder.htm")
+	public @ResponseBody boolean verifyStakeHolder(Integer usercode) {
+		return SSI.verifyApproveStakeHolder(usercode,4);		
+	}
+
+	@PostMapping("/approveStakeHolder.htm")
+	public @ResponseBody boolean approveStakeHolder(Integer usercode) {
+		return SSI.verifyApproveStakeHolder(usercode,6);		
 	}
 }

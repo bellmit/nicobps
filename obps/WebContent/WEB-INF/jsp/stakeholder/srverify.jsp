@@ -14,7 +14,7 @@
 					<div class="col-md-12 py-4 px-5">
 						<table class="table">
 							<tr>
-								<th>Licences</th>
+								<th>Licence</th>
 								<th>Firm/Individual</th>
 								<th>Firm/Applicant Name</th>
 								<th>District</th>
@@ -40,14 +40,18 @@
 				<div class="col-md-4 py-2 px-2 h-100" style="display:block">
 					<table class="table">
 						<tr>
-							<th>Document</th>
+							<th>Documents</th>
 						</tr>
 						<tr ng-repeat="item in Enclosures"><td><span style="cursor: pointer" 
 						ng-click="getEnclosure(applicant.usercode,item.key)">{{item.value}}</span></td></tr>
 					</table>
 					<div style="position: absolute;bottom:0" class="text-center w-100">
-						<input type="button" value="Verify" class="btn btn-info"/>
-						<input type="button" value="Approve" class="btn btn-info"/>
+						<core:if test='${pageType=="srverify"}'>
+							<input type="button" value="Verify" class="btn btn-info" ng-click='verify(applicant.usercode)'/>
+						</core:if>
+						<core:if test='${pageType=="srapproval"}'>
+							<input type="button" value="Approve" class="btn btn-info" ng-click='approve(applicant.usercode)'/>
+						</core:if>
 					</div>
 				</div>
 				<div class="col-md-8 py-2 px-2" id="enclosureWindow">

@@ -36,7 +36,7 @@ app.service("commonInitService", function($http) {
             }            
         });
 	}
-	this.http = (method, endpoint, data, successCallback, errorCallback)=>{
+	this.httpSendJSON = (method, endpoint, data, successCallback, errorCallback)=>{
 		$.ajax({
 			type: method,
 			url: endpoint,
@@ -44,6 +44,23 @@ app.service("commonInitService", function($http) {
 			async: false,
 			contentType: "application/json; charset=utf-8",
 			data: angular.toJson(data),
+			success: function (res) {
+				successCallback(res);
+			},
+			error: function (xhr) {
+				MsgBox("Unable to process request.");
+				errorCallback(xhr);
+			}            
+		});
+	}
+	this.http = (method, endpoint, data, successCallback, errorCallback)=>{
+		$.ajax({
+			type: method,
+			url: endpoint,
+//			dataType: "json",
+			async: false,
+//			contentType: "application/json; charset=utf-8",
+			data: data,
 			success: function (res) {
 				successCallback(res);
 			},
