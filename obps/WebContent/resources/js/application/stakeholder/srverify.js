@@ -38,42 +38,21 @@ app.controller("CommonCtrl", [
 				'width':'100%',
 			});
 	  },	  
-	  $scope.verify=(usercode,endpoint="./verifyStakeHolder.htm")=>{
+	  $scope.verify=(usercode,endpoint="./verifyStakeHolder.htm",msg="verification")=>{
 		  let data ="usercode="+usercode;
 		  commonInitService.http("POST", endpoint, data, function(response) {
 			  if(response){
-	        		MsgBox("Applicant verification complete.");
-	        		$scope.listLicensees();
-	        		jQuery.fancybox.close();
+				  MsgBox("Stakeholder "+msg+" complete.");
+				  $scope.listLicensees();
 	        	}else{
-	        		MsgBox("Error! Please try again.");		        		
+    			  MsgBox("Error! Please try again.");		        		
 	        	}
 		  }, function() {
 			  alert("Sorry, there was an error while trying to process the request.");
 		  });
-//		  jQuery.ajax({
-//		        type: "POST",
-//		        url: endpoint,
-//		        data: "usercode="+usercode,
-//		        success: function (response) {	
-//		        	if(response){
-//		        		MsgBox("Applicant verification complete.");
-//		        		$scope.listLicensees();
-//		        		jQuery.fancybox.close();
-//		        	}else{
-//		        		MsgBox("Error! Please try again.");		        		
-//		        	}
-//		        },
-//		        error: function (xhr) {
-//		          alert(xhr.status + " = " + xhr);
-//		          alert(
-//		            "Sorry, there was an error while trying to process the request."
-//		          );
-//		        },
-//	      });
 	  },
 	  $scope.approve=(usercode)=>{
-		  $scope.verify(usercode,"./approveStakeHolder.htm");
+		  $scope.verify(usercode,"./approveStakeHolder.htm","approval");
 	  },
 	  $scope.getEnclosure=(usercode,enclosurecode)=>{
 		  jQuery.ajax({

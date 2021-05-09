@@ -48,11 +48,11 @@
 						ng-click="getEnclosure(applicant.usercode,item.key)">{{item.value}}</span></td></tr>
 					</table>
 					<div style="position: absolute;bottom:0" class="text-center w-100">
-						<core:if test='${pageType=="srverify"}'>
+						<core:if test='${pageType=="Verification"}'>
 							<input type="button" value="Verify" class="btn btn-info" ng-click='verify(applicant.usercode)'
 							ng-show="applicant.processcode==3"/>
 						</core:if>
-						<core:if test='${pageType=="srapproval"}'>
+						<core:if test='${pageType=="Approval"}'>
 							<input type="button" value="Approve" class="btn btn-info" ng-click='approve(applicant.usercode)'
 							ng-show="applicant.processcode==5"/>
 						</core:if>

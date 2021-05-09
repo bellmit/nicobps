@@ -23,13 +23,13 @@ public class ControllerStakeholder {
 	
 	@GetMapping("/srverify.htm")
 	public String verification(Model model) {
-		model.addAttribute("pageType", "srverify");
+		model.addAttribute("pageType", "Verification");
 		return "stakeholder/srverify";
 	}
 	
 	@GetMapping("/srapproval.htm")
 	public String approval(Model model) {
-		model.addAttribute("pageType", "srapproval");
+		model.addAttribute("pageType", "Approval");
 		return "stakeholder/srverify";
 	}
 	
