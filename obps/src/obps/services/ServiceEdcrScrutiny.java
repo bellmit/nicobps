@@ -68,10 +68,10 @@ public class ServiceEdcrScrutiny {
 			String edcrdetails = (new ObjectMapper())
 					.writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("usercode", "123");
+			map.put("usercode", "1");
 			map.put("edcrnumber", (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")));
 			map.put("response", edcrdetails);
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();
 			System.out.println(dateFormat.format(date));
 			map.put("log_date", dateFormat.format(date));

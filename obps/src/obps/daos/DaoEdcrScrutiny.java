@@ -1,5 +1,7 @@
 package obps.daos;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -37,9 +39,12 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		String sql = null;
 		try {
 			Integer usercode = Integer.valueOf((String) param.get("usercode"));
-			sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,jsonresponse,log_date) "
-					+ "VALUES (?,?,?,?) ";
-			Object[] values = {usercode ,((String) param.get("edcrnumber")).trim(),((String) param.get("response")).trim(),((String) param.get("log_date")).trim()};
+			System.out.println(((String) param.get("log_date")).trim());
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd"); 
+			Date date = sd.parse(((String) param.get("log_date")).trim());
+			sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,jsonresponse,log_date) " + "VALUES (?,?,?,?) ";
+			Object[] values = { usercode, ((String) param.get("edcrnumber")).trim(),
+					((String) param.get("response")).trim(), date };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -49,7 +54,7 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	public EdcrScrutiny fetchEdcr(String edcrnumber) {
 		EdcrScrutiny edcr = new EdcrScrutiny();
