@@ -42,7 +42,7 @@ public class ControllerEdcrScrutiny {
 	@GetMapping(value = "/fetch_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody EdcrScrutiny fetchEdcrScrutiny( @RequestParam String edcrnumber) {
 		System.out.println("fetchEdcrScrutiny POST-----"+edcrnumber);
-		edcrscrutiny.fetch(edcrnumber);
+	
 		return   edcrscrutiny.fetch(edcrnumber);
 	}
 }
