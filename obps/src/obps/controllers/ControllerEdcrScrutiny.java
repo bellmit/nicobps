@@ -32,17 +32,15 @@ public class ControllerEdcrScrutiny {
 		return "edcrScrutiny/edcrscrutiny";
 	}
 
-	@PostMapping(value = "/scrutinize_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public String scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String edcrRequest,HttpServletRequest request) {
+	@PostMapping(value = "/scrutinize_edcr.htm")
+	public @ResponseBody String scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String edcrRequest,HttpServletRequest request) {
 		System.out.println("edcrscrutiny.htm POST");
 		String usercode=(String)request.getSession().getAttribute("usercode");		
 		return  edcrscrutiny.Scrutinize(edcrRequest, planFile,usercode);
 	}
 	
 	@GetMapping(value = "/fetch_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public EdcrScrutiny fetchEdcrScrutiny( @RequestParam String edcrnumber) {
+	public @ResponseBody EdcrScrutiny fetchEdcrScrutiny( @RequestParam String edcrnumber) {
 		System.out.println("fetchEdcrScrutiny POST-----"+edcrnumber);
 		edcrscrutiny.fetch(edcrnumber);
 		return   edcrscrutiny.fetch(edcrnumber);
