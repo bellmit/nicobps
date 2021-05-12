@@ -46,8 +46,9 @@ public class ServiceEdcrScrutiny {
 	public JSONObject Scrutinize(MultipartFile planFile,String usercode) {
 		String resp = null;
 		JSONObject respJson=null;
+		final String uuid = UUID.randomUUID().toString().replace("-", "");
 		String edcrRequest="{\r\n"
-				+ "\"transactionNumber\": \"TRANS-000515\",\r\n"
+				+ "\"transactionNumber\": \"TRANS-"+uuid+"\",\r\n"
 				+ "\"applicationSubType\": \"NEW_CONSTRUCTION\",\r\n"
 				+ "\"appliactionType\": \"BUILDING_PLAN_SCRUTINY\",\r\n"
 				+ "\"applicantName\": \"Suraj\",\r\n"
@@ -87,6 +88,7 @@ public class ServiceEdcrScrutiny {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("usercode", usercode);
 			map.put("edcrnumber",edcrnumber);
+			map.put("status",status);
 			map.put("response", edcrdetails);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();

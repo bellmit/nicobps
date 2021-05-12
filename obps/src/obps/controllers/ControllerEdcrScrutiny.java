@@ -32,14 +32,7 @@ public class ControllerEdcrScrutiny {
 		System.out.println("edcrscrutiny.htm GET");
 		return "edcrScrutiny/edcrscrutiny";
 	}
-//	@CrossOrigin
-//	@PostMapping(value = "/scrutinize_edcr.htm")
-//	public @ResponseBody String scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String edcrRequest,HttpServletRequest request) {
-//		System.out.println("edcrscrutiny.htm POST");
-//		String usercode=(String)request.getSession().getAttribute("usercode");		
-//		return  edcrscrutiny.Scrutinize( planFile,usercode);
-//	}
-//	
+
 	@GetMapping(value = "/fetch_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody EdcrScrutiny fetchEdcrScrutiny( @RequestParam String edcrnumber) {
 		System.out.println("fetchEdcrScrutiny POST-----"+edcrnumber);
@@ -47,10 +40,10 @@ public class ControllerEdcrScrutiny {
 		return   edcrscrutiny.fetch(edcrnumber);
 	}
  	 
-	@PostMapping(value = "/scrutinize_edcr1.htm",produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/scrutinize_edcr.htm",produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody JSONObject scrutinize_Post( @RequestBody MultipartFile planFile,HttpServletRequest request) {
 		System.out.println("edcrscrutiny.htm POST");
-		System.out.println(planFile);
+	 
 		String usercode=(String)request.getSession().getAttribute("usercode");		
 		return  edcrscrutiny.Scrutinize(planFile,usercode);
 		 
