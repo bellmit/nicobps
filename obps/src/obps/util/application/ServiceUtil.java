@@ -216,5 +216,13 @@ public class ServiceUtil implements ServiceUtilInterface {
 		String sql = "SELECT T.urlcode AS key, T.parent || ' > ' || T.subsubmenu || ' > ' || T.subsubmenu AS value FROM masters.pageurls T ORDER BY T.urlcode ";
 		return this.listCommonMap(sql);
 	}
+	
+	@Override	
+	public boolean updateApplicationflowremarks(Map<String, String> param) {
+		String sql = "SELECT MAX(afrcode) FROM nicobps.applicationflowremarks ";
+		String afrcode=this.getMaxValue(sql)+"";
+		param.put("afrcode", afrcode);			
+		return daoUtilInterface.updateApplicationflowremarks(param);
+	}
 
 }

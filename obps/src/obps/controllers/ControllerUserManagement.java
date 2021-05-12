@@ -78,7 +78,10 @@ public class ControllerUserManagement
 		}				
 		
 		String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
-		param.put("usercode", usercode);		
+		param.put("usercode", usercode);	
+		
+		String afrcode=serviceUserManagementInterface.getMaxAfrCode()+"";
+		param.put("afrcode", afrcode);			
 		
 		if(serviceUserManagementInterface.createUser(param)){			
 			request.getSession().setAttribute("usercode",usercode);			
@@ -116,7 +119,11 @@ public class ControllerUserManagement
 			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));				
 		}			
 				
-		String usercode=(String)request.getSession().getAttribute("usercode");		
+		String usercode=(String)request.getSession().getAttribute("usercode");	
+		
+		String afrcode=serviceUserManagementInterface.getMaxAfrCode()+"";
+		param.put("afrcode", afrcode);	
+		
 		if(usercode!=null) {
 			param.put("usercode", usercode);	
 		}else {			

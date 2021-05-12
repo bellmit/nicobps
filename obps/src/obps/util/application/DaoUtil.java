@@ -3,11 +3,16 @@ package obps.util.application;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Base64;
+
 import javax.sql.DataSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -244,4 +249,34 @@ public class DaoUtil implements DaoUtilInterface {
 		return response;
 	}
 
+	
+	@Override
+	public boolean updateApplicationflowremarks(Map<String, String> param) 
+	{
+		boolean response = false;
+		String sql = null;
+		try 
+		{
+			Long afrcode=Long.valueOf(param.get("afrcode"));
+			String appreferencecode=param.get("appreferencecode");
+			Short modulecode=Short.valueOf(param.get("modulecode"));
+			Short fromprocesscode=Short.valueOf(param.get("fromprocesscode"));
+			Short toprocesscode=Short.valueOf(param.get("toprocesscode"));
+			Integer fromusercode=Integer.valueOf(param.get("fromusercode"));
+			Integer tousercode=Integer.valueOf(param.get("tousercode"));
+			String remarks="Upload Enclosures";
+			
+			sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks) "
+				+ "VALUES (?,?,?,?,?,?,?,?) ";
+			Object[] values2 = {afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks};
+			response = jdbcTemplate.update(sql, values2) > 0;																
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUtil.updateApplicationflowremarks(Map<String,String> param) : " + e);
+		}
+		return response;
+	}	
+	
+	
 }

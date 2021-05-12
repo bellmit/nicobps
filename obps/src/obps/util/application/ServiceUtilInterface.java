@@ -43,5 +43,6 @@ public interface ServiceUtilInterface
 	public List<CommonMap> listOfficeCategories();
 	public List<CommonMap> listOffices();
 	public List<CommonMap> listModules();
-	public List<CommonMap> listPageurls();	
+	public List<CommonMap> listPageurls();
+	public boolean updateApplicationflowremarks(Map<String, String> param);
 }

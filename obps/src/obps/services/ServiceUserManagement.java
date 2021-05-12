@@ -26,6 +26,11 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		String sql = "SELECT MAX(usercode) FROM nicobps.userlogins ";		
 		return serviceUtilInterface.getMaxValue(sql)+1;	
 	} 
+    @Override
+	public Long getMaxAfrCode() {	    	
+		String sql = "SELECT MAX(afrcode) FROM nicobps.applicationflowremarks ";		
+		return serviceUtilInterface.getMaxValue(sql)+1;	
+	}     
 	
     @Override
 	public boolean checkEmailExistance(final String username){

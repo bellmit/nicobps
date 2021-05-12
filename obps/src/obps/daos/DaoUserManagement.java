@@ -42,20 +42,24 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean createUser(Map<String, Object> param) {
+	public boolean createUser(Map<String, Object> param) 
+	{
 		boolean response = false;
 		String sql = null;
 		Integer usercode = Integer.valueOf((String) param.get("usercode"));
-		try {
+		try 
+		{
 			sql = "INSERT INTO nicobps.userlogins(usercode,username,userpassword,fullname,mobileno,designation) "
 					+ "VALUES (?,?,?,?,?,?) ";
 			Object[] values = { usercode, ((String) param.get("username")).trim(),
 					((String) param.get("userpassword")).trim(), ((String) param.get("fullname")).trim(),
 					((String) param.get("mobileno")).trim(), ((String) param.get("designation")).trim() };
 			response = jdbcTemplate.update(sql, values) > 0;
-			if (param.get("usertype") == null) {
-				if (response && param.get("licenseetypecode") != null
-						&& ((String) param.get("licenseetypecode")).length() > 0) {
+			
+			if (param.get("usertype") == null && param.get("licenseetypecode") != null && ((String) param.get("licenseetypecode")).length() > 0) 
+			{
+				if(response) 
+				{
 					sql = "INSERT INTO nicobps.licensees" + "( "
 							+ "  usercode,licenseetypecode,firmindividual,firmname,applicantsname,gender, "
 							+ "  preaddressline1,preaddressline2,previllagetown,predistrictcode,prepincode, "
@@ -73,13 +77,13 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 							Integer.valueOf(((String) param.get("perpincode")).trim()) };
 					response = jdbcTemplate.update(sql, values1) > 0;
 				}
-				if (response && param.get("licenseetypecode") != null
-						&& ((String) param.get("licenseetypecode")).length() > 0) {
+				if(response) {
 					JSONParser parser = new JSONParser();
 					Object obj = parser.parse((String) param.get("listLicenseesregistrationsm"));
 					JSONArray listLicenseesregistrationsm = (JSONArray) obj;
 
-					if (listLicenseesregistrationsm.size() > 0) {
+					if (listLicenseesregistrationsm.size() > 0) 
+					{
 						sql = "INSERT INTO nicobps.licensesregistrationst(usercode,licenseeregistrationcode,registrationdescription) VALUES(?,?,?)";
 						List<Object[]> list = new ArrayList<>();
 						for (int i = 0; i < listLicenseesregistrationsm.size(); i++) {
@@ -95,6 +99,21 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 						response = jdbcTemplate.batchUpdate(sql, list).length > 0;
 					}
 				}
+				if(response) 
+				{
+					Long afrcode=Long.valueOf((String) param.get("afrcode"));
+					String appreferencecode=usercode+"";
+					Short modulecode=Short.valueOf("1");
+					Short fromprocesscode=Short.valueOf("1");
+					Short toprocesscode=Short.valueOf("2");
+					Integer fromusercode=usercode;
+					String remarks="Initial Registration";
+					
+					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
+						+ "VALUES (?,?,?,?,?,?,?) ";
+					Object[] values2 = { afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
+					response = jdbcTemplate.update(sql, values2) > 0;					
+				}				
 			}
 		} catch (Exception e) {
 			e.getStackTrace();
@@ -105,16 +124,14 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean updateUser(Userlogin user) {
-
+	public boolean updateUser(Userlogin user) 
+	{
 		String sql = "";
 		boolean response = false;
-		try {
-			sql = "UPDATE nicobps.userlogins SET  " + "            username = ?, userpassword = ?, "
-					+ " 		   fullname = ?, mobileno = ?, designation = ?   " + "    WHERE usercode = ?";
-
-			Object[] param = new Object[] { user.getUsername(), user.getUserpassword(), user.getFullname(),
-					user.getMobileno(), user.getDesignation(), user.getUsercode() };
+		try 
+		{
+			sql = "UPDATE nicobps.userlogins SET username = ?, userpassword = ?,fullname = ?, mobileno = ?, designation = ? WHERE usercode = ?";
+			Object[] param = new Object[] { user.getUsername(), user.getUserpassword(), user.getFullname(),user.getMobileno(), user.getDesignation(), user.getUsercode() };
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -126,8 +143,8 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public List<Userlogin> listUsers() {
-
+	public List<Userlogin> listUsers() 
+	{
 		List<Userlogin> list = null;
 		try {
 			String sql = "Select usercode, username, fullname, mobileno, designation, "
@@ -141,23 +158,26 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean submitEnclosureDetails(Map<String, Object> param) {
+	public boolean submitEnclosureDetails(Map<String, Object> param) 
+	{
 		boolean response = false;
 		String sql = null;
-		try {
+		try 
+		{
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse((String) param.get("listEnclosures"));
 			JSONArray listEnclosures = (JSONArray) obj;
 			Integer usercode = Integer.valueOf((String) param.get("usercode"));
-
-			if (listEnclosures.size() > 0) {
+			if (listEnclosures.size() > 0) 
+			{
 				sql = "DELETE FROM  nicobps.licenseesenclosures WHERE usercode=?";
 				Object[] values = { usercode };
 				jdbcTemplate.update(sql, values);
 
 				sql = "INSERT INTO nicobps.licenseesenclosures(usercode,enclosurecode,enclosureimage) VALUES(?,?,?)";
 				List<Object[]> list = new ArrayList<>();
-				for (int i = 0; i < listEnclosures.size(); i++) {
+				for (int i = 0; i < listEnclosures.size(); i++) 
+				{
 					JSONObject row = (JSONObject) listEnclosures.get(i);
 					Boolean ischecked = (Boolean) row.get("ischecked");
 					if (ischecked) {
@@ -167,6 +187,21 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 					}
 				}
 				response = jdbcTemplate.batchUpdate(sql, list).length > 0;
+				if(response) 
+				{
+					Long afrcode=Long.valueOf((String) param.get("afrcode"));
+					String appreferencecode=usercode+"";
+					Short modulecode=Short.valueOf("1");
+					Short fromprocesscode=Short.valueOf("2");
+					Short toprocesscode=Short.valueOf("3");
+					Integer fromusercode=usercode;
+					String remarks="Upload Enclosures";
+					
+					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
+						+ "VALUES (?,?,?,?,?,?,?) ";
+					Object[] values2 = {afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
+					response = jdbcTemplate.update(sql, values2) > 0;					
+				}									
 			}
 		} catch (Exception e) {
 			e.getStackTrace();
@@ -190,7 +225,8 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean updatePassword(Map<String, Object> param) {
+	public boolean updatePassword(Map<String, Object> param) 
+	{
 		boolean response = false;
 		String sql = null;
 		try {
@@ -208,11 +244,12 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public List<Pageurls> getPageUrls() {
+	public List<Pageurls> getPageUrls() 
+	{
 		List<Pageurls> urls = null;
-		try {
-			String sql = "Select * " + "From masters.pageurls "
-					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
+		try 
+		{
+			String sql = "Select * From masters.pageurls ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu ";
 			urls = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Pageurls.class));
 		} catch (Exception e) {
 			System.out.println("Error in DaoUserManagement.getPageUrls() : " + e);
@@ -221,12 +258,13 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public List<Pageurls> getPageUrls(final Integer usercode) {
+	public List<Pageurls> getPageUrls(final Integer usercode) 
+	{
 		List<Pageurls> urls = null;
-		try {
-			String sql = "Select url.* " + "From nicobps.UserPages up,masters.pageurls url "
-					+ "WHERE up.urlcode=url.urlcode " + "AND up.usercode=? "
-					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
+		try 
+		{
+			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url WHERE up.urlcode=url.urlcode AND up.usercode=? "
+					   + "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
 			Object[] criteria = { usercode };
 			urls = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Pageurls.class), criteria);
 		} catch (Exception e) {
@@ -236,9 +274,11 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean savePageurlsDao(Pageurls url) {
+	public boolean savePageurlsDao(Pageurls url) 
+	{
 		boolean response = false;
-		try {
+		try 
+		{
 			MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("pageurl", url.getPageurl())
 					.addValue("subsubmenu", url.getSubsubmenu()).addValue("subsubmenuicon", url.getSubsubmenuicon())
 					.addValue("submenu", url.getSubmenu()).addValue("submenuicon", url.getSubmenuicon())
@@ -279,15 +319,16 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public List<Pageurls> getMappedPageurls(Integer usercode) {
-
+	public List<Pageurls> getMappedPageurls(Integer usercode) 
+	{
 		ObjectMapper mapper = new ObjectMapper();
 		List<Pageurls> urllist = null;
 		List<Map<String, Object>> rowList = null;
-		try {
-			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url "
-					+ "WHERE up.urlcode=url.urlcode and usercode=:usercode "
-					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
+		try 
+		{
+			String sql ="Select url.* From nicobps.UserPages up,masters.pageurls url "
+					   +"WHERE up.urlcode=url.urlcode and usercode=:usercode "
+					   +"ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
 			MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("usercode", usercode);
 			rowList = (List<Map<String, Object>>) namedParameterJdbcTemplate.queryForList(sql, parameters);
 		} catch (Exception ex) {
@@ -304,9 +345,11 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 	
 	@Override
-	public boolean mapUserpages(List<Map<String,Object>> upage) {
+	public boolean mapUserpages(List<Map<String,Object>> upage) 
+	{
 		boolean response = false;
-		try {
+		try 
+		{
 			String sql = "DELETE From nicobps.UserPages WHERE usercode=? ";
 			if (jdbcTemplate.update(sql, upage.get(0).get("usercode")) < 0) {
 				return false;

@@ -10,6 +10,8 @@ import obps.models.Userlogin;
 public interface ServiceUserManagementInterface {
 	public Long getMaxUsercode();
 
+	public Long getMaxAfrCode();
+	
 	public boolean checkEmailExistance(final String username);
 
 	public boolean checkMobileExistance(final String mobileno);

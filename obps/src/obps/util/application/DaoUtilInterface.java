@@ -23,4 +23,5 @@ public interface DaoUtilInterface {
 	public List<Map<String, Object>> listGeneric(String sql);
 	public List<Map<String, Object>> listGeneric(String sql, Object[] params);
 	public <T> boolean update(String tablename, String sql, Object[] params);    
+	public boolean updateApplicationflowremarks(Map<String, String> param);
 }
