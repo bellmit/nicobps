@@ -43,8 +43,24 @@ public class ServiceEdcrScrutiny {
 		return resp;
 	}
 
-	public String Scrutinize(String edcrRequest, MultipartFile planFile,String usercode) {
+	public JSONObject Scrutinize(MultipartFile planFile,String usercode) {
 		String resp = null;
+		JSONObject respJson=null;
+		String edcrRequest="{\r\n"
+				+ "\"transactionNumber\": \"TRANS-000515\",\r\n"
+				+ "\"applicationSubType\": \"NEW_CONSTRUCTION\",\r\n"
+				+ "\"appliactionType\": \"BUILDING_PLAN_SCRUTINY\",\r\n"
+				+ "\"applicantName\": \"Suraj\",\r\n"
+				+ "\"tenantId\": \"jk.jammu\",\r\n"
+				+ "\"RequestInfo\": {\r\n"
+				+ "\"userInfo\": {\r\n"
+				+ "\"id\": \"1c79f77e-e847-4663-98a7-5aee31f185c5\",\r\n"
+				+ "\"tenantId\": \"0003\"\r\n"
+				+ "}\r\n"
+				+ "}\r\n"
+				+ "}\r\n"
+				+ "";
+		
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -65,23 +81,27 @@ public class ServiceEdcrScrutiny {
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(resp);
-			String edcrdetails = (new ObjectMapper())
-					.writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
+			String edcrnumber= (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
+			String status= (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
+			String edcrdetails = (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("usercode", "1");
-			map.put("edcrnumber", (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")));
+			map.put("usercode", usercode);
+			map.put("edcrnumber",edcrnumber);
 			map.put("response", edcrdetails);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();
-			System.out.println(dateFormat.format(date));
 			map.put("log_date", dateFormat.format(date));
 			DaoedcrScrutinyInterface.createEdcrScrutiny(map);
 			// ---------------------------------
+			respJson=new JSONObject();
+			respJson.put("status", status);
+			respJson.put("edcrnumber", edcrnumber);
+			System.out.println(respJson);
 		} catch (Exception e) {
 			resp = e.getMessage();
 			e.printStackTrace();
 		}
-		return resp;
+		return respJson ;
 	}
 
 }
