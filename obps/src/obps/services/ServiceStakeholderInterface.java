@@ -7,5 +7,5 @@ public interface ServiceStakeholderInterface {
 
 	public List<Map<String,Object>> listLicensees();
 	public byte[] getEnclosure(Integer usercode,Integer enclosurecode);
-	public boolean verifyApproveStakeHolder(Integer usercode,Integer nextprocessode) ;
+	public boolean updateStakeholder(Integer usercode, Integer nextprocessode,String remark) ;
 }

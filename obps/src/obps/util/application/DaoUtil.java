@@ -251,21 +251,12 @@ public class DaoUtil implements DaoUtilInterface {
 
 	
 	@Override
-	public boolean updateApplicationflowremarks(Map<String, String> param) 
+	public boolean updateApplicationflowremarks(Integer afrcode,String appreferencecode,Integer modulecode,Integer fromprocesscode,Integer toprocesscode,Integer fromusercode,Integer tousercode,String remarks) 
 	{
 		boolean response = false;
 		String sql = null;
 		try 
-		{
-			Long afrcode=Long.valueOf(param.get("afrcode"));
-			String appreferencecode=param.get("appreferencecode");
-			Short modulecode=Short.valueOf(param.get("modulecode"));
-			Short fromprocesscode=Short.valueOf(param.get("fromprocesscode"));
-			Short toprocesscode=Short.valueOf(param.get("toprocesscode"));
-			Integer fromusercode=Integer.valueOf(param.get("fromusercode"));
-			Integer tousercode=Integer.valueOf(param.get("tousercode"));
-			String remarks="Upload Enclosures";
-			
+		{	
 			sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks) "
 				+ "VALUES (?,?,?,?,?,?,?,?) ";
 			Object[] values2 = {afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks};

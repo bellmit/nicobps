@@ -27,12 +27,6 @@ public class ControllerStakeholder {
 		return "stakeholder/srverify";
 	}
 	
-	@GetMapping("/srapproval.htm")
-	public String approval(Model model) {
-		model.addAttribute("pageType", "Approval");
-		return "stakeholder/srverify";
-	}
-	
 	@PostMapping("/listLicensees.htm")
 	public @ResponseBody List<Map<String,Object>> listLicensees() {
 		return SSI.listLicensees();
@@ -49,13 +43,23 @@ public class ControllerStakeholder {
 		return (file!=null)?Base64.getEncoder().encodeToString(file):null;		
 	}
 	
-	@PostMapping("/verifyStakeHolder.htm")
-	public @ResponseBody boolean verifyStakeHolder(Integer usercode) {
-		return SSI.verifyApproveStakeHolder(usercode,4);		
-	}
+//	@PostMapping("/verifyStakeHolder.htm")
+//	public @ResponseBody boolean verifyStakeHolder(Integer usercode) {
+//		return SSI.updateStakeholder(usercode,4);		
+//	}
+//
+//	@PostMapping("/approveStakeHolder.htm")
+//	public @ResponseBody boolean approveStakeHolder(Integer usercode) {
+//		return SSI.updateStakeholder(usercode,6);		
+//	}
 
-	@PostMapping("/approveStakeHolder.htm")
-	public @ResponseBody boolean approveStakeHolder(Integer usercode) {
-		return SSI.verifyApproveStakeHolder(usercode,6);		
+	@PostMapping("/updateStakeholder.htm")
+	public @ResponseBody boolean updateStakeholder(Integer usercode,Integer toprocesscode,String remarks) {
+		return SSI.updateStakeholder(usercode,toprocesscode,remarks);		
+	}
+	
+	@PostMapping("/listNextProcess.htm")
+	public @ResponseBody List<Map<String, Object>> listNextProcess(@RequestBody Map<String,Object> params) {
+		return serviceUtilInterface.getNextProcessflow(1, Integer.valueOf(params.get("currentprocesscode").toString()));		
 	}
 }

@@ -218,11 +218,19 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 	
 	@Override	
-	public boolean updateApplicationflowremarks(Map<String, String> param) {
-		String sql = "SELECT MAX(afrcode) FROM nicobps.applicationflowremarks ";
-		String afrcode=this.getMaxValue(sql)+"";
-		param.put("afrcode", afrcode);			
-		return daoUtilInterface.updateApplicationflowremarks(param);
+	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode,
+			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks) {
+		Integer afrcode=this.getMax("nicobps", "applicationflowremarks", "afrcode");
+		String sql="select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=? )";		
+		Integer fromprocesscode=(Integer)(listGeneric(sql, new Object[] {appreferencecode})).get(0).get("toprocesscode");
+		return daoUtilInterface.updateApplicationflowremarks( afrcode+1,  appreferencecode,  modulecode,
+				 fromprocesscode,  toprocesscode,  fromusercode,  tousercode,  remarks);
+	}
+
+	@Override	
+	public List<Map<String,Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode) {
+		String sql="select * from masters.processflow where fromprocesscode=? ";
+		return this.listGeneric(sql, new Object[] {fromprocesscode});
 	}
 
 }
