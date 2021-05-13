@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,19 +33,19 @@ public class ControllerEdcrScrutiny {
 		return "edcrScrutiny/edcrscrutiny";
 	}
 
-	@PostMapping(value = "/scrutinize_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public String scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String edcrRequest,HttpServletRequest request) {
-		System.out.println("edcrscrutiny.htm POST");
-		String usercode=(String)request.getSession().getAttribute("usercode");		
-		return  edcrscrutiny.Scrutinize(edcrRequest, planFile,usercode);
-	}
-	
 	@GetMapping(value = "/fetch_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public EdcrScrutiny fetchEdcrScrutiny( @RequestParam String edcrnumber) {
+	public @ResponseBody EdcrScrutiny fetchEdcrScrutiny( @RequestParam String edcrnumber) {
 		System.out.println("fetchEdcrScrutiny POST-----"+edcrnumber);
-		edcrscrutiny.fetch(edcrnumber);
+	
 		return   edcrscrutiny.fetch(edcrnumber);
+	}
+ 	 
+	@PostMapping(value = "/scrutinize_edcr.htm",produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody JSONObject scrutinize_Post( @RequestBody MultipartFile planFile,HttpServletRequest request) {
+		System.out.println("edcrscrutiny.htm POST");
+	 
+		String usercode=(String)request.getSession().getAttribute("usercode");		
+		return  edcrscrutiny.Scrutinize(planFile,usercode);
+		 
 	}
 }

@@ -36,7 +36,7 @@
         /> 
         <logout invalidate-session="true" logout-url="logout.htm" logout-success-url="/logout.htm"/>
         <custom-filter ref="captchaVerifierFilter" before="FORM_LOGIN_FILTER"/>
-      <!--    <csrf disabled="true"/>-->
+<!--       <csrf disabled="true"/> -->
     </http> 
     
     <beans:bean id="captchaVerifierFilter" class="obps.security.CaptchaVerifierFilter" p:failureUrl="/loginfailed.htm" />  
