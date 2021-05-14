@@ -12,6 +12,20 @@
 	        <h3 class="mt-4" style="font-size:32px;">Home</h3>	        
 	        <div class="row" >	               						
 				<div class="container">
+					<core:if test="${process != null }">
+						<div class="row">
+							<div class="col-lg-6 col-sm-12 p-3 b-customize">
+						        <a href="${(process.pageurl!=null)?process.pageurl:'#'}" style="text-decoration: none;color:black">
+									<div class="bg-light p-4 b-dbcard">
+							        	<i class='fas ${process.get("parenticon")} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i> 
+							        	<div class=""> 
+							        		<h4 class="text-left font-weight-bold" style="margin-top: -5px">${process.get("flowname") }</h4>							        		
+							      	  	</div>
+							        </div>
+						        </a>
+						    </div>
+						</div>
+					</core:if>
 					<div class="pl-4 text-right" style="font-size: 24px">
 						<span class="mr-2" id="one-item-row" style="cursor: pointer;">
 							<i class="fas fa-bars"></i>

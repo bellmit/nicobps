@@ -65,6 +65,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public byte[] getFileByte(String sql, Object[] criteria) {
 		return daoUtilInterface.getFileByte(sql, criteria);
 	}
+
 	@Override
 	public byte[] getBytes(String sql, Object[] criteria) {
 		return daoUtilInterface.getBytes(sql, criteria);
@@ -216,21 +217,37 @@ public class ServiceUtil implements ServiceUtilInterface {
 		String sql = "SELECT T.urlcode AS key, T.parent || ' > ' || T.subsubmenu || ' > ' || T.subsubmenu AS value FROM masters.pageurls T ORDER BY T.urlcode ";
 		return this.listCommonMap(sql);
 	}
-	
-	@Override	
-	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode,
-			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks) {
-		Integer afrcode=this.getMax("nicobps", "applicationflowremarks", "afrcode");
-		String sql="select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=? )";		
-		Integer fromprocesscode=(Integer)(listGeneric(sql, new Object[] {appreferencecode})).get(0).get("toprocesscode");
-		return daoUtilInterface.updateApplicationflowremarks( afrcode+1,  appreferencecode,  modulecode,
-				 fromprocesscode,  toprocesscode,  fromusercode,  tousercode,  remarks);
+
+	@Override
+	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode, Integer toprocesscode,
+			Integer fromusercode, Integer tousercode, String remarks) {
+		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
+		String sql = "select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=? )";
+		Integer fromprocesscode =0;
+		try {
+			fromprocesscode = (Integer) (listGeneric(sql, new Object[] { appreferencecode })).get(0)
+					.get("toprocesscode");
+			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, appreferencecode, modulecode, fromprocesscode,
+					toprocesscode, fromusercode, tousercode, remarks);
+		}catch(Exception e) {
+			System.out.println("User is not Applicant");
+		}
+		return false;
 	}
 
-	@Override	
-	public List<Map<String,Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode) {
-		String sql="select * from masters.processflow where fromprocesscode=? ";
-		return this.listGeneric(sql, new Object[] {fromprocesscode});
+	@Override
+	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode) {
+		String sql = "select * from masters.processflow where fromprocesscode=? ";
+		return this.listGeneric(sql, new Object[] { fromprocesscode });
+	}
+
+	@Override
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer appreferencecode) {
+		String sql = "SELECT pf.*,pu.pageurl,pu.parenticon FROM nicobps.applicationflowremarks afr "
+				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' "
+				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode "
+				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=?::text) ";
+		return this.listGeneric(sql, new Object[] { appreferencecode });
 	}
 
 }

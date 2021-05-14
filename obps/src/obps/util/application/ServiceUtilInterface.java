@@ -82,4 +82,6 @@ public interface ServiceUtilInterface {
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);
 
 	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode);
+	
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer appreferencecode);
 }
