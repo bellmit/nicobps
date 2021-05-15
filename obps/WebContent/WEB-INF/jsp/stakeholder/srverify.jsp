@@ -137,13 +137,26 @@
 						<div class="dropup" ng-show="applicant.processcode==4||applicant.processcode==6">
 						  <button class="dropbtn">Action<span class="fa fa-caret-up" style="padding-top:5px;padding-bottom:5px;float:right;"></span></button>
 						  <div class="dropup-content">
-						    <a href="#" ng-repeat="process in nextProcesses" ng-click="updateStakeholder(applicant,process)">{{process.flowname}}</a>
+						    <a href="#" ng-repeat="p in nextProcesses" ng-click="showRemarks(p)">{{p.flowname}}</a>
 						  </div>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-8 py-2 px-2" id="enclosureWindow"></div>
 			</div>
+		</div>
+	</div>
+	<div style="display:none">
+		<div id="remarksTable" style="">
+			<table class="table">
+				<tr>
+					<td>Remarks</td>
+					<td><textarea ng-model="process.remarks" style="width: 200px;height: 100px;"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><button class="btn btn-primary" ng-click="updateStakeholder(applicant,process)">Submit</button></td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </body>

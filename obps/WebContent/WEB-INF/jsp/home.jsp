@@ -19,10 +19,16 @@
 									<div class="bg-light p-4 b-dbcard">
 							        	<i class='fas ${(process.parenticon!=null)?process.parenticon:"fa-info-circle"} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i> 
 							        	<div class=""> 
-							        		<h4 class="text-left font-weight-bold" style="margin-top: -5px">${process.flowname }</h4>							        		
+							        		<h4 class="text-left font-weight-bold" style="margin-top: -5px">${process.flowname }</h4>	
+							        		<div class="text-left" style="margin: 10px 0px 5px;">
+							        			<span style="font-size:13px;">
+								        			<a href="${(process.pageurl!=null)?process.pageurl:'#'}">
+								        				${process.parent }
+											        </a>
+							        			</span>
+							        		</div>						        		
 							      	  	</div>
 							        </div>
-						        </a>
 						    </div>
 						</div>
 					</core:if>

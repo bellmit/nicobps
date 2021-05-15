@@ -243,7 +243,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer appreferencecode) {
-		String sql = "SELECT pf.*,pu.pageurl,pu.parenticon FROM nicobps.applicationflowremarks afr "
+		String sql = "SELECT pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applicationflowremarks afr "
 				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' "
 				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode "
 				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=?::text) ";

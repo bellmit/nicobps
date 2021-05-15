@@ -47,11 +47,16 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
-	public boolean processPayment(Integer usercode,Integer nextprocessode,Integer slno) {
+	public boolean processPayment(Integer usercode,Integer nextprocessode) {
 		String sql = "INSERT INTO nicobps.transactions(transactioncode, usercode, slno, feecode, amount, paymentstatus, sentparameters, responseparameters, bankcode, responsetext1,responsetext2, responsetext3, entrydate)"
 				+ "VALUES (?, ?, ?, 1, 0, 'S','', null, null, null, null, null, null);";
-		Integer max = SUI.getMax("nicobps", "transactions", "transactioncode");
-		if (SUI.update("nicobps.transactions", sql, new Object[] { max + 1, usercode,slno })) {
+		Integer maxtransactioncode = SUI.getMax("nicobps", "transactions", "transactioncode");
+		Integer maxSlno=1;
+		List<Map<String, Object>> maxSlnoList=SUI.listGeneric("select max(slno) from nicobps.transactions where usercode=? ", new Object[] {usercode});
+		if(maxSlnoList.get(0).get("max")!=null) {
+			maxSlno=Integer.valueOf(((Long)maxSlnoList.get(0).get("max")).toString());
+		}
+		if (SUI.update("nicobps.transactions", sql, new Object[] { maxtransactioncode + 1, usercode,maxSlno })) {
 			return SUI.updateApplicationflowremarks(usercode.toString(), 1, nextprocessode, usercode, null, "Payment complete");
 		}
 		return false;
