@@ -14,6 +14,7 @@ app.controller("CommonCtrl", [
 		$scope.Licensees = [];
 		$scope.process={};
 		$scope.viewDetails = (applicant) => {
+			jQuery('#enclosureWindow').html();
 			$scope.applicant = applicant;
 			jQuery.fancybox.close();
 			jQuery.fancybox({

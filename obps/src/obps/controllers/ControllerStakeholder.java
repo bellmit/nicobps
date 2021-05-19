@@ -34,13 +34,13 @@ public class ControllerStakeholder {
 	@GetMapping("/paysrappfee.htm")
 	public String paysrappfee(Model model, HttpServletRequest req) {
 		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 4);
-		return "payresponse";
+		return "stakeholder/payresponse";
 	}
 
 	@GetMapping("/paysrregfee.htm")
 	public String paysrregfee(Model model, HttpServletRequest req) {
 		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 6);
-		return "payresponse";
+		return "stakeholder/payresponse";
 	}
 
 	@PostMapping("/listLicensees.htm")

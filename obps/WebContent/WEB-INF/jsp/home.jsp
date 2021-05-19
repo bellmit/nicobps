@@ -15,7 +15,7 @@
 					<core:if test="${process != null }">
 						<div class="row">
 							<div class="col-lg-6 col-sm-12 p-3 b-customize">
-						        <a href="${(process.pageurl!=null)?process.pageurl:'#'}" style="text-decoration: none;color:black">
+<%-- 						        <a href="${(process.pageurl!=null)?process.pageurl:'#'}" style="text-decoration: none;color:black"> --%>
 									<div class="bg-light p-4 b-dbcard">
 							        	<i class='fas ${(process.parenticon!=null)?process.parenticon:"fa-info-circle"} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i> 
 							        	<div class=""> 
