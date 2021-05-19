@@ -37,6 +37,12 @@ public class ServiceEdcrScrutiny {
 	@Autowired
 	DaoEdcrScrutinyInterface DaoedcrScrutinyInterface;
 
+	public List<EdcrScrutiny> fetch_usercd(String usercd) {
+		List<EdcrScrutiny> resp = null;
+		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
+		return resp;
+	}
+
 	public EdcrScrutiny fetch(String edcrnumber) {
 
 		EdcrScrutiny resp = DaoedcrScrutinyInterface.fetchEdcr(edcrnumber);

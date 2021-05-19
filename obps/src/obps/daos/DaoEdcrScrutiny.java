@@ -2,6 +2,7 @@ package obps.daos;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -39,11 +40,13 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		String sql = null;
 		try {
 			Integer usercode = Integer.valueOf((String) param.get("usercode"));
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd"); 
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = sd.parse(((String) param.get("log_date")).trim());
-			sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,jsonresponse,status,log_date) " + "VALUES (?,?,?,?,?) ";
+			  sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,planinfoobject,status,entrydate,officecode,dxffile,scrutinyreport) "
+					+ "VALUES (?,?,?,?,?,?,?,?) ";
 			Object[] values = { usercode, ((String) param.get("edcrnumber")).trim(),
-					((String) param.get("response")).trim(),((String) param.get("status")).trim(), date };
+					((String) param.get("response")).trim(), ((String) param.get("status")).trim(), date, null, null,
+					null };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -65,5 +68,19 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 			System.out.println("Error in DaoEdcrScrutiny.fetchEdcr(final String edcrnumber) : " + e);
 		}
 		return edcr;
+	}
+
+	@Override
+	public List<EdcrScrutiny> fetchEdcr_usercd(String usercd) {
+
+		List<EdcrScrutiny> list = null;
+		try {
+			String sql = "SELECT * FROM edcrscrutiny WHERE edcrnumber=?";
+			Object[] criteria = { usercd };
+			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
+		} catch (Exception e) {
+			System.out.println("Error in DaoEdcrScrutiny.fetchEdcr(final String edcrnumber) : " + e);
+		}
+		return list;
 	}
 }
