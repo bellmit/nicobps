@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +41,14 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		String sql = null;
 		try {
 			Integer usercode = Integer.valueOf((String) param.get("usercode"));
+			Integer useroffice = Integer.valueOf((String) param.get("useroffice"));
+			System.out.println(useroffice);
 			SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = sd.parse(((String) param.get("log_date")).trim());
 			  sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,planinfoobject,status,entrydate,officecode,dxffile,scrutinyreport) "
 					+ "VALUES (?,?,?,?,?,?,?,?) ";
 			Object[] values = { usercode, ((String) param.get("edcrnumber")).trim(),
-					((String) param.get("response")).trim(), ((String) param.get("status")).trim(), date, null, null,
+					((String) param.get("response")).trim(), ((String) param.get("status")).trim(), date, useroffice, null,
 					null };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
@@ -72,15 +75,32 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 
 	@Override
 	public List<EdcrScrutiny> fetchEdcr_usercd(String usercd) {
-
+		Integer usercode = Integer.valueOf((String) usercd);
 		List<EdcrScrutiny> list = null;
 		try {
 			String sql = "SELECT * FROM edcrscrutiny WHERE edcrnumber=?";
-			Object[] criteria = { usercd };
+			Object[] criteria = { usercode };
 			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
 		} catch (Exception e) {
 			System.out.println("Error in DaoEdcrScrutiny.fetchEdcr(final String edcrnumber) : " + e);
 		}
 		return list;
+	}
+	
+	@Override
+	public String GetOfficeCode(String usercd) {
+		Integer usercode = Integer.valueOf((String) usercd);
+		String resp=null;
+		try {
+			String sql = " SELECT uo.usercode,o.* FROM nicobps.useroffices uo INNER JOIN masters.offices o on  o.officecode=uo.officecode  WHERE uo.usercode=?";
+			Object[] criteria = { usercode };
+			SqlRowSet rowset= jdbcTemplate.queryForRowSet(sql , criteria);
+			while (rowset.next()) {
+				resp = rowset.getString(1);
+			}
+		} catch (Exception e) {
+			System.out.println("Error in DaoEdcrScrutiny.GetOfficeCode(final String usercd) : " + e);
+		}
+		return resp;
 	}
 }

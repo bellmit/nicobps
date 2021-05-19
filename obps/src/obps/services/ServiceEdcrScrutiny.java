@@ -92,6 +92,7 @@ public class ServiceEdcrScrutiny {
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("usercode", usercode);
+			map.put("useroffice", DaoedcrScrutinyInterface.GetOfficeCode(usercode));
 			map.put("edcrnumber", edcrnumber);
 			map.put("status", status);
 			map.put("response", edcrdetails);
