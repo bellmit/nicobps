@@ -27,10 +27,16 @@ function signupDetails()
         pervillagetown:"",
         perstatecode:"",
         perdistrictcode:"",
-        perpincode:"",    
+		perpincode:"",  
 
 		listLicenseesregistrationsm:"",
-        userresponsecaptcha:""            
+		userresponsecaptcha:"",
+
+		issms:"N",
+		isemail:"",		
+		isotp:"N",
+		emailotp:"",
+		mobileotp:""  		            
     };
     return signupDetails;
 }
@@ -49,7 +55,7 @@ app.controller('applicationController', function($scope)
     $scope.listDistricts = new CommonMap();
     $scope.listDistrictsPre = new CommonMap();
     $scope.listDistrictsPer = new CommonMap();
-    $scope.listLicenseesregistrationsm = [];
+	$scope.listLicenseesregistrationsm = [];
     
     loadForm();
     
@@ -100,13 +106,16 @@ app.controller('applicationController', function($scope)
         $scope.signupDetails.listLicenseesregistrationsm=JSON.stringify($scope.listLicenseesregistrationsm);
         if(validateDetails($scope.signupDetails))
         {
-        	var index = $scope.listLicenseetypes.findIndex((x) => x.key == $scope.signupDetails.licenseetypecode); 
-        	if(index!=-1)
-        	{
-        		$scope.signupDetails.designation=$scope.listLicenseetypes[index].value;    	
-        		//$scope.signupDetails.designation=$scope.listLicenseetypes[$scope.listLicenseetypes.map(function(d){return d["key"]}).indexOf($scope.signupDetails.licenseetypecode)].value;
-        	}           		        
-        	$scope.signupDetails.userpassword=SHA256($scope.signupDetails.userpassword);        	
+			var index = $scope.listLicenseetypes.findIndex((x) => x.key == $scope.signupDetails.licenseetypecode); 
+			if(index!=-1)
+			{
+				$scope.signupDetails.designation=$scope.listLicenseetypes[index].value;    	
+				//$scope.signupDetails.designation=$scope.listLicenseetypes[$scope.listLicenseetypes.map(function(d){return d["key"]}).indexOf($scope.signupDetails.licenseetypecode)].value;
+			}    			
+			if($scope.signupDetails.isotp==="Y")
+			{       		        
+				$scope.signupDetails.userpassword=SHA256($scope.signupDetails.userpassword); 
+			}       	
         	submitSignupDetails($scope.signupDetails);
         }                                  
     };     
@@ -297,6 +306,26 @@ function validateDetails(signupDetails)
 	    }		
 	}
 
+	if(signupDetails.isotp==="Y")
+	{
+		if(signupDetails.isemail==="Y"){
+			if(signupDetails.emailotp==""){
+				showMsg("emailotp","Enter email OTP");
+				return false;
+			}else{
+				showMsg("emailotp","");
+			}
+		}
+		if(signupDetails.issms==="Y"){
+			if(signupDetails.mobileotp==""){
+				showMsg("mobileotp","Enter mobile OTP");
+				return false;
+			}else{
+				showMsg("mobileotp","");
+			}
+		}				
+	}
+
   	
 	if(signupDetails.userresponsecaptcha==""){
 		showMsg("jcaptcha","This field is required");
@@ -322,7 +351,10 @@ function loadForm() {
             	scope.listLicenseetypes = data.listLicenseetypes;             	
                 scope.listStates = data.listStates;        
                 scope.listDistricts = data.listDistricts;    
-                
+				
+				scope.signupDetails.issms = data.issms;
+				scope.signupDetails.isemail = data.isemail;
+
                 scope.listLicenseesregistrationsm=[];
                 data.listLicenseesregistrationsm.forEach((row)=>{
                   var item={};
@@ -349,9 +381,24 @@ function submitSignupDetails(signupDetails)
         data: signupDetails,
         type: "POST",
         success: function(data)
-        {        
-        	alert("* "+data);
-        	window.location="uploadenclosuresext.htm";  
+        {       
+			jQuery("#ajaxLoading").fadeOut();
+			var scope = angular.element(jQuery("#applicationForm")).scope();
+			var msg="";				
+			if(data==="0"){
+				msg="Please enter the otp sent to your email/mobile!";	
+				jQuery('#successMsg').html(msg).show();    
+				scope.$apply(function() {   
+					signupDetails.isotp="Y";        
+				});						
+			}else if(data==="1"){
+				msg="Details submitted successfully!";	
+				alert(msg);							 				
+			}				
+			
+			if(data==="1"){			
+				window.location="uploadenclosuresext.htm"; 				
+			}			
         	/*                                 
 	            jQuery('#successMsg').html("* "+data).show();  
 	            loadForm();    
@@ -361,7 +408,8 @@ function submitSignupDetails(signupDetails)
             */                                   
         },
         error: function(request, status, error) { 
-        	alert(status+" : "+JSON.stringify(request));         
+			jQuery("#ajaxLoading").fadeOut();
+        	//alert(status+" : "+JSON.stringify(request));         
             jQuery('#successMsg').html("* Error : "+request.responseText).show();           
         }
     }); 

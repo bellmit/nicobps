@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
+import obps.util.common.Utilty;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
@@ -30,15 +36,21 @@ import obps.services.ServiceUserManagementInterface;
 
 //@RestController
 @Controller
+@Configuration
+@PropertySource("classpath:application.properties")
 public class ControllerUserManagement 
 {
 	@Autowired private ServiceUtilInterface serviceUtilInterface;       
 	@Autowired private ServiceUserManagementInterface serviceUserManagementInterface;
-	
+
+	@Resource private Environment environment;
+
     public static HttpSession ssn() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         return attr.getRequest().getSession(true);
     } 	
+    
+        
 	//=================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
@@ -48,11 +60,19 @@ public class ControllerUserManagement
 	@GetMapping(value = "/initSignupForm.htm")
 	public @ResponseBody Map<String,Object> initSignupForm(HttpServletRequest request) 
 	{ 		
+		String issms = environment.getProperty("app.prop.issms");
+		String isemail = environment.getProperty("app.prop.isemail");
+		
+		System.out.println("issms : "+issms);
+		System.out.println("isemail : "+isemail);		
+		
 		Map<String,Object> data = new LinkedHashMap<>();
 		data.put("listLicenseetypes",serviceUtilInterface.listLicenseetypes());		
 		data.put("listStates",serviceUtilInterface.listStates());			
 		data.put("listDistricts",serviceUtilInterface.listDistricts());
 		data.put("listLicenseesregistrationsm",serviceUtilInterface.listLicenseesregistrationsm());
+		data.put("issms",issms);
+		data.put("isemail",isemail);
 		return data;		 
 	}		
 	
@@ -66,6 +86,14 @@ public class ControllerUserManagement
 		//==========================================================================//
 		String usersessioncaptcha  = (String)request.getSession().getAttribute("CAPTCHA_KEY");
 		String userresponsecaptcha = (String)param.get("userresponsecaptcha");
+		String isotp = (String)param.get("isotp");
+		String issms = environment.getProperty("app.prop.issms");
+		String isemail = environment.getProperty("app.prop.isemail");
+		
+		System.out.println("issms : "+issms);
+		System.out.println("isemail : "+isemail);		
+		System.out.println("isotp : "+isotp);		
+		System.out.println("-------------------------");
 
 		if(usersessioncaptcha==null || userresponsecaptcha==null || !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {	
 			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));				
@@ -76,19 +104,62 @@ public class ControllerUserManagement
 		if(serviceUserManagementInterface.checkMobileExistance((String)param.get("mobileno"))) {
 			return ResponseEntity.badRequest().body(new String("Mobile already exists!"));	
 		}				
-		
-		String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
-		param.put("usercode", usercode);	
-		
-		String afrcode=serviceUserManagementInterface.getMaxAfrCode()+"";
-		param.put("afrcode", afrcode);			
-		
-		if(serviceUserManagementInterface.createUser(param)){			
-			request.getSession().setAttribute("usercode",usercode);			
-	  		return  ResponseEntity.ok(new String("Details submitted successfully!"));  	
-	  	}else {
-	  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-	  	}			  	  
+	
+		if(issms.equals("Y") || isemail.equals("Y")) 
+		{	
+			if(isotp.equals("N")) 
+			{
+				if(issms.equals("Y"))
+				{
+					Integer mobileotp = 123;//Utilty.getRandomNumber();
+					request.getSession().setAttribute("mobileotp",mobileotp.toString());	
+					//Send SMS
+				}
+				if(isemail.equals("Y"))
+				{
+					Integer emailotp = 123;//Utilty.getRandomNumber();
+					request.getSession().setAttribute("emailotp",emailotp.toString());	
+					//Send Email
+				}	
+				return  ResponseEntity.ok(new String("0"));  	
+			}else{				
+				if(isemail.equals("Y")){
+					String emailotpR = (String)param.get("emailotp");
+					String emailotpS = (String)request.getSession().getAttribute("emailotp");
+					if(emailotpR==null || !emailotpR.equals(emailotpS)) {
+						return ResponseEntity.badRequest().body(new String("Email verification otp doesn't match!"));					
+					}
+				}
+				if(issms.equals("Y")){
+					String mobileotpR = (String)param.get("mobileotp");							
+					String mobileotpS = (String)request.getSession().getAttribute("mobileotp");	
+					if(mobileotpR==null || !mobileotpR.equals(mobileotpS)) {
+						return ResponseEntity.badRequest().body(new String("Mobile verification otp doesn't match!"));								
+					}
+				}				
+					
+				String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
+				param.put("usercode", usercode);							
+				if(serviceUserManagementInterface.createUser(param)){			
+					request.getSession().setAttribute("usercode",usercode);			
+			  		//return  ResponseEntity.ok(new String("Details submitted successfully!"));  	
+					return  ResponseEntity.ok(new String("1"));
+			  	}else {
+			  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
+			  	}						
+			}
+		}else {
+			String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
+			param.put("usercode", usercode);
+			if(serviceUserManagementInterface.createUser(param)){			
+				request.getSession().setAttribute("usercode",usercode);			
+		  		//return  ResponseEntity.ok(new String("Details submitted successfully!"));  	
+				return  ResponseEntity.ok(new String("1"));
+		  	}else {
+		  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
+		  	}							
+		}
+			  	  
 	}		
 		
 	//=================================Upload Enclosures====================================//	
@@ -121,8 +192,8 @@ public class ControllerUserManagement
 				
 		String usercode=(String)request.getSession().getAttribute("usercode");	
 		
-		String afrcode=serviceUserManagementInterface.getMaxAfrCode()+"";
-		param.put("afrcode", afrcode);	
+//		String afrcode=serviceUserManagementInterface.getMaxAfrCode()+"";
+//		param.put("afrcode", afrcode);	
 		
 		if(usercode!=null) {
 			param.put("usercode", usercode);	

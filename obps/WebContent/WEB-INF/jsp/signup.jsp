@@ -251,8 +251,33 @@
                                        </td>    
                                    </tr>
                             </table> 
-                            <div id="listLicenseesregistrationsmMsg" class="formErrorContent" style="width:30%"></div>					     							     		
+                            <div id="listLicenseesregistrationsmMsg" class="formErrorContent" style="width:30%"></div>					                            						     		
 				     	</div>	
+				     	
+				     	
+						<div class="col-md-12 py-12 px-12" ng-if="signupDetails.isotp=='Y' && (signupDetails.isemail=='Y' || signupDetails.issms=='Y')">			
+							<h5 style="border-bottom:3px solid #005776">Enter the OTP sent to your email and mobile</h5>				     		
+				     		<table id="entrytable">				     			
+				     			<tr>
+				     				<td ng-if="signupDetails.isemail=='Y'">
+					     				<div class="form-group">
+											<label for="emailotp" class="">Email OTP</label>
+			     							<input type="text" ng-model="signupDetails.emailotp" id="emailotp" name="emailotp" maxlength="10" class="form-control" autocomplete="off" >
+										</div>	
+										<span id="emailotpMsg" class="formErrorContent"></span>					     				
+				     				</td>					     			
+				     				<td ng-if="signupDetails.issms=='Y'">
+					     				<div class="form-group">
+											<label for="emailotp" class="">Mobile OTP</label>
+			     							<input type="text" ng-model="signupDetails.mobileotp" id="mobileotp" name="mobileotp" maxlength="10" class="form-control" autocomplete="off" >
+										</div>				
+										<span id="mobileotpMsg" class="formErrorContent"></span>			     				
+				     				</td>	
+				     			</tr>					     								     				     	
+				     			     						     			
+				     		</table>
+			     		</div>					     	
+				     	
 				     	
 				     	<div class="col-md-12 py-12 px-12">				     						     		
 				     		<table id="entrytable" style="border-top:3px solid #005776;border-bottom:3px solid #005776">		     				     					     		
