@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.junit.runners.Suite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,12 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public List<Map<String, Object>> listLicensees() {
-		String sql = "SELECT l.*,lt.*,d.*,p.processcode,pf.flowname as nextprocessname FROM nicobps.licensees l "
+		String sql = "SELECT l.*,lt.*,d.*,p.processcode,pf.flowname as nextprocessname,app.applicationcode,app.officecode FROM nicobps.licensees l "
 				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
 				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
+				+ "INNER JOIN nicobps.applications app on app.usercode=l.usercode "
 				+ "INNER JOIN nicobps.applicationflowremarks afr on  "
-				+ "		afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=l.usercode::text) "
+				+ "		afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=app.applicationcode::text) "
 				+ "INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' "
 				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode ORDER BY l.entrydate DESC ";
 		return SUI.listGeneric(sql);
@@ -45,8 +47,18 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
-	public boolean updateStakeholder(Integer usercode, Integer nextprocessode, String remarks) {
-		return SUI.updateApplicationflowremarks(usercode.toString(), 1, nextprocessode, usercode, null, remarks);
+	public boolean updateStakeholder(Integer officecode,String applicationcode,Integer usercode, Integer nextprocessode, String remarks) {
+		if(SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
+			List<Map<String,Object>> list=SUI.getNextProcessflow(1, nextprocessode);
+			if(list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
+				String sql="INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+				for(Map<String,Object> i:SUI.listRegisteringOffices(officecode)) {
+					SUI.update("", sql, new Object[] {usercode,i.get("officecode")});
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override

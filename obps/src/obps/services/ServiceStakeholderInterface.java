@@ -9,7 +9,7 @@ public interface ServiceStakeholderInterface {
 
 	public byte[] getEnclosure(Integer usercode, Integer enclosurecode);
 
-	public boolean updateStakeholder(Integer usercode, Integer nextprocessode, String remark);
+	public boolean updateStakeholder(Integer officecode,String applicationcode,Integer usercode, Integer nextprocessode, String remarks);
 
 	public boolean processPayment(Integer usercode, String applicationcode, Integer feecode,Integer fee, Integer nextprocessode);
 

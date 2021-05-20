@@ -80,8 +80,8 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/updateStakeholder.htm")
-	public @ResponseBody boolean updateStakeholder(Integer usercode, Integer toprocesscode, String remarks) {
-		return SSI.updateStakeholder(usercode, toprocesscode, remarks);
+	public @ResponseBody boolean updateStakeholder(Integer officecode,String applicationcode,Integer usercode, Integer toprocesscode, String remarks) {
+		return SSI.updateStakeholder(officecode,applicationcode,usercode, toprocesscode, remarks);
 	}
 
 	@PostMapping("/ulbregistration.htm")
