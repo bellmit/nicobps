@@ -207,6 +207,18 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
+	public List<Map<String,Object>> listRegisteringOffices() {
+		String sql = "SELECT * FROM masters.offices WHERE enabled='Y' and isregisteringoffice='Y' ORDER BY officename1 ";
+		return this.listGeneric(sql);
+	}
+
+	@Override
+	public List<Map<String,Object>> listRegisteringOffices(Integer registeringofficecode) {
+		String sql = "SELECT * FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N' and registeringofficecode=? ORDER BY officename1 ";
+		return this.listGeneric(sql,new Object[] {registeringofficecode});
+	}
+
+	@Override
 	public List<CommonMap> listModules() {
 		String sql = "SELECT T.modulecode AS key, T.modulename AS value FROM masters.modules T ORDER BY T.modulecode ";
 		return this.listCommonMap(sql);
@@ -216,6 +228,19 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public List<CommonMap> listPageurls() {
 		String sql = "SELECT T.urlcode AS key, T.parent || ' > ' || T.subsubmenu || ' > ' || T.subsubmenu AS value FROM masters.pageurls T ORDER BY T.urlcode ";
 		return this.listCommonMap(sql);
+	}
+
+	@Override
+	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode, Integer fromprocesscode,Integer toprocesscode,
+			Integer fromusercode, Integer tousercode, String remarks) {
+		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
+		try {
+			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, appreferencecode, modulecode, fromprocesscode,
+					toprocesscode, fromusercode, tousercode, remarks);
+		}catch(Exception e) {
+			System.out.println("User is not Applicant");
+		}
+		return false;
 	}
 
 	@Override

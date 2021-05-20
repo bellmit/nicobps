@@ -1,5 +1,7 @@
 package obps.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 
 @Service
@@ -47,18 +50,45 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
-	public boolean processPayment(Integer usercode, Integer nextprocessode) {
+	public Map<String, Object> getFeeMaster(Integer officecode, Integer usercode, Integer feetypecode) {
+		String sql = "SELECT f.feecode,f.feeamount FROM masters.feemaster f Inner JOIN nicobps.licensees u on u.licenseetypecode=f.licenseetypecode WHERE officecode=? and usercode=? and feetypecode=?";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { officecode, usercode, feetypecode });
+		if (list.isEmpty()) {
+			return new HashMap<String, Object>();
+		} else {
+			return list.get(0);
+		}
+	}
+
+	@Override
+	public String ulbRegistration(Integer officecode, Integer usercode) {
+		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, applicationtype) "
+				+ "    VALUES (?, ?, ?, ?, ?, ?)";
+		Integer applicationslno = SUI.getMax("nicobps", "applications", "applicationslno");
+		applicationslno++;
+		if (SUI.update("nicobps.applications", sql, new Object[] { applicationslno,
+				"1" + officecode.toString() + usercode.toString() + applicationslno, officecode, 1, usercode, "S" })) {
+			SUI.updateApplicationflowremarks("1" + officecode.toString() + usercode.toString() + applicationslno, 1, 2,
+					3, usercode, null, "Payment Initiated");
+			return "1" + officecode.toString() + usercode.toString() + applicationslno;
+		} else {
+			return "false";
+		}
+	}
+
+	@Override
+	public boolean processPayment(Integer usercode, String applicationcode, Integer feecode, Integer fee,
+			Integer nextprocessode) {
 		String sql = "INSERT INTO nicobps.transactions(transactioncode, usercode, feecode, amount, paymentstatus, sentparameters, "
 				+ "						responseparameters, bankcode, responsetext1, responsetext2, responsetext3,entrydate) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE);";
 		Integer maxtransactioncode = SUI.getMax("nicobps", "transactions", "transactioncode");
-		Integer feecode = 4, amount = 0;
 		String payStatus = "S", sentparameters = "", responseparameters = "", bankcode = "", responsetext1 = "",
 				responsetext2 = "", responsetext3 = "";
 		if (SUI.update("nicobps.transactions", sql,
-				new Object[] { maxtransactioncode + 1, usercode, feecode, amount, payStatus, sentparameters,
+				new Object[] { maxtransactioncode + 1, usercode, feecode, fee, payStatus, sentparameters,
 						responseparameters, bankcode, responsetext1, responsetext2, responsetext3 })) {
-			return SUI.updateApplicationflowremarks(usercode.toString(), 1, nextprocessode, usercode, null,
+			return SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null,
 					"Payment complete");
 		}
 		return false;

@@ -31,17 +31,31 @@ public class ControllerStakeholder {
 		return "stakeholder/srverify";
 	}
 
+	@GetMapping("/ulbregistration.htm")
+	public String ulbregistration(Model model, HttpServletRequest req) {
+		model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
+		return "stakeholder/ulbregistration";
+	}
+
+//	@GetMapping("/paysrappfee.htm")
+//	public String paysrappfee(Model model, HttpServletRequest req) {
+//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 4);
+//		return "stakeholder/payresponse";
+//	}
+
 	@GetMapping("/paysrappfee.htm")
-	public String paysrappfee(Model model, HttpServletRequest req) {
-		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 4);
+	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode,
+			Integer feeamount) {
+		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
+				feecode, feeamount, 4);
 		return "stakeholder/payresponse";
 	}
 
-	@GetMapping("/paysrregfee.htm")
-	public String paysrregfee(Model model, HttpServletRequest req) {
-		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 6);
-		return "stakeholder/payresponse";
-	}
+//	@GetMapping("/paysrregfee.htm")
+//	public String paysrregfee(Model model, HttpServletRequest req) {
+//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 6);
+//		return "stakeholder/payresponse";
+//	}
 
 	@PostMapping("/listLicensees.htm")
 	public @ResponseBody List<Map<String, Object>> listLicensees() {
@@ -59,19 +73,20 @@ public class ControllerStakeholder {
 		return (file != null) ? Base64.getEncoder().encodeToString(file) : null;
 	}
 
-//	@PostMapping("/verifyStakeHolder.htm")
-//	public @ResponseBody boolean verifyStakeHolder(Integer usercode) {
-//		return SSI.updateStakeholder(usercode,4);		
-//	}
-//
-//	@PostMapping("/approveStakeHolder.htm")
-//	public @ResponseBody boolean approveStakeHolder(Integer usercode) {
-//		return SSI.updateStakeholder(usercode,6);		
-//	}
+	@PostMapping("/getApplicationfee.htm")
+	public @ResponseBody Map<String,Object> verifyStakeHolder(HttpServletRequest req, Integer officecode) {
+
+		return SSI.getFeeMaster(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 1);
+	}
 
 	@PostMapping("/updateStakeholder.htm")
 	public @ResponseBody boolean updateStakeholder(Integer usercode, Integer toprocesscode, String remarks) {
 		return SSI.updateStakeholder(usercode, toprocesscode, remarks);
+	}
+
+	@PostMapping("/ulbregistration.htm")
+	public @ResponseBody String ulbRegistration(Integer officecode, HttpServletRequest req) {
+		return SSI.ulbRegistration(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
 	}
 
 	@PostMapping("/listNextProcess.htm")

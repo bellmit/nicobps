@@ -74,14 +74,21 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listOffices();
 
+	public List<Map<String, Object>> listRegisteringOffices();
+
+	public List<Map<String, Object>> listRegisteringOffices(Integer registeringofficecode);
+
 	public List<CommonMap> listModules();
 
 	public List<CommonMap> listPageurls();
 
-	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode,
+	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode, Integer fromprocesscode,
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);
 
+	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode, Integer toprocesscode,
+			Integer fromusercode, Integer tousercode, String remarks);
+
 	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode);
-	
+
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer appreferencecode);
 }
