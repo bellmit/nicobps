@@ -113,7 +113,15 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 						+ "VALUES (?,?,?,?,?,?,?) ";
 					Object[] values2 = { afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
 					response = jdbcTemplate.update(sql, values2) > 0;					
-				}				
+				}	
+				if(response) 
+				{					
+					Short urlcode =Short.valueOf("0");
+					String userpagecode=usercode+"U"+urlcode;					
+					sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+					Object[] values3 = { userpagecode,usercode,urlcode};
+					response = jdbcTemplate.update(sql, values3) > 0;					
+				}					
 			}
 		} catch (Exception e) {
 			e.getStackTrace();
@@ -201,7 +209,21 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 						+ "VALUES (?,?,?,?,?,?,?) ";
 					Object[] values2 = {afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
 					response = jdbcTemplate.update(sql, values2) > 0;					
-				}									
+				}					
+				if(response) 
+				{				
+					Short urlcode =Short.valueOf("16");
+					String userpagecode=usercode+"U"+urlcode;						
+					
+					sql = "DELETE FROM nicobps.userpages WHERE usercode=? AND urlcode=?";
+					Object[] values1 = { usercode,urlcode };
+					jdbcTemplate.update(sql, values1);										
+				
+					sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+					Object[] values3 = { userpagecode,usercode,urlcode};
+					response = jdbcTemplate.update(sql, values3) > 0;					
+				}		
+				
 			}
 		} catch (Exception e) {
 			e.getStackTrace();
