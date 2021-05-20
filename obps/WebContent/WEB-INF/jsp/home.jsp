@@ -107,29 +107,29 @@
 	
 <!-- 				</div>	 -->
 				<script>
-				  $(function() {
-				    $("#one-item-row").on("click", function() {
-				    	$(".b-customize").addClass("col-lg-12", 300);
-				    	$(".b-customize").removeClass("col-lg-4", 300);
-				    	$(".b-customize").removeClass("col-lg-6", 300);
+// 				  $(function() {
+// 				    $("#one-item-row").on("click", function() {
+// 				    	$(".b-customize").addClass("col-lg-12", 300);
+// 				    	$(".b-customize").removeClass("col-lg-4", 300);
+// 				    	$(".b-customize").removeClass("col-lg-6", 300);
 				        
-				    });
+// 				    });
 			
-				    $("#two-item-row").on("click", function() {
-				    	$(".b-customize").addClass("col-lg-6", 300);
-				    	$(".b-customize").removeClass("col-lg-4", 300);
-				    	$(".b-customize").removeClass("col-lg-12", 300);
+// 				    $("#two-item-row").on("click", function() {
+// 				    	$(".b-customize").addClass("col-lg-6", 300);
+// 				    	$(".b-customize").removeClass("col-lg-4", 300);
+// 				    	$(".b-customize").removeClass("col-lg-12", 300);
 				        
-				    });
+// 				    });
 			
-				    $("#three-item-row").on("click", function() {
-				    	$(".b-customize").addClass("col-lg-4", 300);
-				    	$(".b-customize").removeClass("col-lg-6", 300);
-				    	$(".b-customize").removeClass("col-lg-12", 300);
+// 				    $("#three-item-row").on("click", function() {
+// 				    	$(".b-customize").addClass("col-lg-4", 300);
+// 				    	$(".b-customize").removeClass("col-lg-6", 300);
+// 				    	$(".b-customize").removeClass("col-lg-12", 300);
 				        
-				    });
+// 				    });
 				 
-				  });
+// 				  });
 			  </script>       	
 	        </div>   	        	             
 	      </div>	      
