@@ -131,8 +131,40 @@ app.controller('applicationController', function($scope)
 	    $scope.listLicenseesregistrationsm = new CommonMap();
 	    loadForm();          
     };          
-        
+		
+    $scope.copyAddress = function(status) {   
+         if(status){
+			$scope.listDistrictsPer=$scope.listDistrictsPre
+			$scope.signupDetails.peraddressline1 = $scope.signupDetails.preaddressline1;
+			$scope.signupDetails.peraddressline2 = $scope.signupDetails.preaddressline2;
+			$scope.signupDetails.pervillagetown = $scope.signupDetails.previllagetown;
+			$scope.signupDetails.perstatecode = $scope.signupDetails.prestatecode;
+			$scope.signupDetails.perdistrictcode = $scope.signupDetails.predistrictcode;
+			$scope.signupDetails.perpincode = $scope.signupDetails.prepincode;			
+         }else{
+			$scope.listDistrictsPer=new CommonMap();
+			$scope.signupDetails.peraddressline1 = "";
+			$scope.signupDetails.peraddressline2 = "";
+			$scope.signupDetails.pervillagetown = "";
+			$scope.signupDetails.perstatecode = "";
+			$scope.signupDetails.perdistrictcode = "";
+			$scope.signupDetails.perpincode = "";				 
+		 }
+    };	
+
 });
+
+
+function copyAddr(obj){
+    var scope = angular.element(jQuery("#applicationForm")).scope();
+    scope.$apply(function() { 
+        if(jQuery(obj).prop('checked')){            
+            scope.copyAddress(true); 
+        }else{
+            scope.copyAddress(false); 
+        }
+    });            
+}
 
 function validateDetails(signupDetails)
 {
@@ -390,7 +422,9 @@ function submitSignupDetails(signupDetails)
 				jQuery('#successMsg').html(msg).show();    
 				scope.$apply(function() {   
 					signupDetails.isotp="Y";        
-				});						
+					signupDetails.userresponsecaptcha="";
+				});			
+				changeCaptcha()			
 			}else if(data==="1"){
 				msg="Details submitted successfully!";	
 				alert(msg);							 				

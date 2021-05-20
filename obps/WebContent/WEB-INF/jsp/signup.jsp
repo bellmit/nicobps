@@ -177,7 +177,7 @@
 				     	
 				     	<div class="col-md-12 py-12 px-12">
 				     		<h5 style="border-bottom:3px solid #005776">Permanent Address</h5>	
-				     		
+				     		<input type="checkbox" id="copyAddress" onclick="copyAddr(this)"> <span class="tinytext">Same as Present Address</span>
 				     		<table id="entrytable">				     			
 				     			<tr>
 				     				<td>
