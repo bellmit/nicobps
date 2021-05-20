@@ -1,6 +1,5 @@
 package obps.controllers;
 
-
 import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -33,223 +32,225 @@ import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
 
-
 //@RestController
 @Controller
 @Configuration
 @PropertySource("classpath:application.properties")
-public class ControllerUserManagement 
-{
-	@Autowired private ServiceUtilInterface serviceUtilInterface;       
-	@Autowired private ServiceUserManagementInterface serviceUserManagementInterface;
+public class ControllerUserManagement {
+	@Autowired
+	private ServiceUtilInterface serviceUtilInterface;
+	@Autowired
+	private ServiceUserManagementInterface serviceUserManagementInterface;
 
-	@Resource private Environment environment;
+	@Resource
+	private Environment environment;
 
-    public static HttpSession ssn() {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return attr.getRequest().getSession(true);
-    } 	
-    
-        
-	//=================================Registration====================================//
+	public static HttpSession ssn() {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		return attr.getRequest().getSession(true);
+	}
+
+	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
 		return "signup";
-	}		
-	
+	}
+
 	@GetMapping(value = "/initSignupForm.htm")
-	public @ResponseBody Map<String,Object> initSignupForm(HttpServletRequest request) 
-	{ 		
+	public @ResponseBody Map<String, Object> initSignupForm(HttpServletRequest request) {
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
-		
-		System.out.println("issms : "+issms);
-		System.out.println("isemail : "+isemail);		
-		
-		Map<String,Object> data = new LinkedHashMap<>();
-		data.put("listLicenseetypes",serviceUtilInterface.listLicenseetypes());		
-		data.put("listStates",serviceUtilInterface.listStates());			
-		data.put("listDistricts",serviceUtilInterface.listDistricts());
-		data.put("listLicenseesregistrationsm",serviceUtilInterface.listLicenseesregistrationsm());
-		data.put("issms",issms);
-		data.put("isemail",isemail);
-		return data;		 
-	}		
-	
+
+		System.out.println("issms : " + issms);
+		System.out.println("isemail : " + isemail);
+
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("listLicenseetypes", serviceUtilInterface.listLicenseetypes());
+		data.put("listStates", serviceUtilInterface.listStates());
+		data.put("listDistricts", serviceUtilInterface.listDistricts());
+		data.put("listLicenseesregistrationsm", serviceUtilInterface.listLicenseesregistrationsm());
+		data.put("issms", issms);
+		data.put("isemail", isemail);
+		return data;
+	}
+
 	@PostMapping("/submitSignupDetails.htm")
-	//public ResponseEntity<?> submitProfilePersonalDetails(@RequestBody Map<String,Object> param,HttpServletRequest request) 
-	public ResponseEntity<?> submitProfilePersonalDetails(@RequestParam Map<String,Object> param,HttpServletRequest request) 
-	{				
-		//for (Map.Entry<String, Object> entry : param.entrySet()){
-    	//	System.out.println(entry.getKey() +" ::: " + entry.getValue());
-    	//} 		
-		//==========================================================================//
-		String usersessioncaptcha  = (String)request.getSession().getAttribute("CAPTCHA_KEY");
-		String userresponsecaptcha = (String)param.get("userresponsecaptcha");
-		String isotp = (String)param.get("isotp");
+	// public ResponseEntity<?> submitProfilePersonalDetails(@RequestBody
+	// Map<String,Object> param,HttpServletRequest request)
+	public ResponseEntity<?> submitProfilePersonalDetails(@RequestParam Map<String, Object> param,
+			HttpServletRequest request) {
+		// for (Map.Entry<String, Object> entry : param.entrySet()){
+		// System.out.println(entry.getKey() +" ::: " + entry.getValue());
+		// }
+		// ==========================================================================//
+		String usersessioncaptcha = (String) request.getSession().getAttribute("CAPTCHA_KEY");
+		String userresponsecaptcha = (String) param.get("userresponsecaptcha");
+		String isotp = (String) param.get("isotp");
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
-		
-		System.out.println("issms : "+issms);
-		System.out.println("isemail : "+isemail);		
-		System.out.println("isotp : "+isotp);		
+
+		System.out.println("issms : " + issms);
+		System.out.println("isemail : " + isemail);
+		System.out.println("isotp : " + isotp);
 		System.out.println("-------------------------");
 
-		if(usersessioncaptcha==null || userresponsecaptcha==null || !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {	
-			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));				
+		if (usersessioncaptcha == null || userresponsecaptcha == null
+				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
+			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
 		}
-		if(serviceUserManagementInterface.checkEmailExistance((String)param.get("username"))) {
-			return ResponseEntity.badRequest().body(new String("Email already exists!"));	
+		if (serviceUserManagementInterface.checkEmailExistance((String) param.get("username"))) {
+			return ResponseEntity.badRequest().body(new String("Email already exists!"));
 		}
-		if(serviceUserManagementInterface.checkMobileExistance((String)param.get("mobileno"))) {
-			return ResponseEntity.badRequest().body(new String("Mobile already exists!"));	
-		}				
-	
-		if(issms.equals("Y") || isemail.equals("Y")) 
-		{	
-			if(isotp.equals("N")) 
-			{
-				if(issms.equals("Y"))
-				{
-					Integer mobileotp = 123;//Utilty.getRandomNumber();
-					request.getSession().setAttribute("mobileotp",mobileotp.toString());	
-					//Send SMS
+		if (serviceUserManagementInterface.checkMobileExistance((String) param.get("mobileno"))) {
+			return ResponseEntity.badRequest().body(new String("Mobile already exists!"));
+		}
+		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
+		param.put("afrcode", afrcode);
+		if (issms.equals("Y") || isemail.equals("Y")) {
+			if (isotp.equals("N")) {
+				if (issms.equals("Y")) {
+					Integer mobileotp = 123;// Utilty.getRandomNumber();
+					request.getSession().setAttribute("mobileotp", mobileotp.toString());
+					// Send SMS
 				}
-				if(isemail.equals("Y"))
-				{
-					Integer emailotp = 123;//Utilty.getRandomNumber();
-					request.getSession().setAttribute("emailotp",emailotp.toString());	
-					//Send Email
-				}	
-				return  ResponseEntity.ok(new String("0"));  	
-			}else{				
-				if(isemail.equals("Y")){
-					String emailotpR = (String)param.get("emailotp");
-					String emailotpS = (String)request.getSession().getAttribute("emailotp");
-					if(emailotpR==null || !emailotpR.equals(emailotpS)) {
-						return ResponseEntity.badRequest().body(new String("Email verification otp doesn't match!"));					
+				if (isemail.equals("Y")) {
+					Integer emailotp = 123;// Utilty.getRandomNumber();
+					request.getSession().setAttribute("emailotp", emailotp.toString());
+					// Send Email
+				}
+				return ResponseEntity.ok(new String("0"));
+			} else {
+				if (isemail.equals("Y")) {
+					String emailotpR = (String) param.get("emailotp");
+					String emailotpS = (String) request.getSession().getAttribute("emailotp");
+					if (emailotpR == null || !emailotpR.equals(emailotpS)) {
+						return ResponseEntity.badRequest().body(new String("Email verification otp doesn't match!"));
 					}
 				}
-				if(issms.equals("Y")){
-					String mobileotpR = (String)param.get("mobileotp");							
-					String mobileotpS = (String)request.getSession().getAttribute("mobileotp");	
-					if(mobileotpR==null || !mobileotpR.equals(mobileotpS)) {
-						return ResponseEntity.badRequest().body(new String("Mobile verification otp doesn't match!"));								
+				if (issms.equals("Y")) {
+					String mobileotpR = (String) param.get("mobileotp");
+					String mobileotpS = (String) request.getSession().getAttribute("mobileotp");
+					if (mobileotpR == null || !mobileotpR.equals(mobileotpS)) {
+						return ResponseEntity.badRequest().body(new String("Mobile verification otp doesn't match!"));
 					}
-				}				
-					
-				String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
-				param.put("usercode", usercode);							
-				if(serviceUserManagementInterface.createUser(param)){			
-					request.getSession().setAttribute("usercode",usercode);			
-			  		//return  ResponseEntity.ok(new String("Details submitted successfully!"));  	
-					return  ResponseEntity.ok(new String("1"));
-			  	}else {
-			  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-			  	}						
+				}
+
+				String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
+				param.put("usercode", usercode);
+				if (serviceUserManagementInterface.createUser(param)) {
+					request.getSession().setAttribute("usercode", usercode);
+					// return ResponseEntity.ok(new String("Details submitted successfully!"));
+					return ResponseEntity.ok(new String("1"));
+				} else {
+					return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+				}
 			}
-		}else {
-			String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
+		} else {
+			String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
 			param.put("usercode", usercode);
-			if(serviceUserManagementInterface.createUser(param)){			
-				request.getSession().setAttribute("usercode",usercode);			
-		  		//return  ResponseEntity.ok(new String("Details submitted successfully!"));  	
-				return  ResponseEntity.ok(new String("1"));
-		  	}else {
-		  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-		  	}							
+			if (serviceUserManagementInterface.createUser(param)) {
+				request.getSession().setAttribute("usercode", usercode);
+				// return ResponseEntity.ok(new String("Details submitted successfully!"));
+				return ResponseEntity.ok(new String("1"));
+			} else {
+				return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+			}
 		}
-			  	  
-	}		
-		
-	//=================================Upload Enclosures====================================//	
+
+	}
+
+	// =================================Upload
+	// Enclosures====================================//
 	@RequestMapping("/uploadenclosuresext.htm")
 	public String uploadenclosuresext() {
 		return "uploadenclosuresext";
 	}
+
 	@RequestMapping("/uploadenclosuresint.htm")
 	public String uploadenclosuresint() {
 		return "uploadenclosuresint";
-	}	
-	
-	@GetMapping(value = "/initUploadEnclosuresForm.htm")
-	public @ResponseBody Map<String,Object> initUploadEnclosuresForm(HttpServletRequest request) 
-	{ 		
-		Map<String,Object> data = new LinkedHashMap<>();		
-		data.put("listEnclosures",serviceUtilInterface.listEnclosures(Short.valueOf("1")));		
-		return data;		 
-	}	
-	
-	@PostMapping("/submitEnclosureDetails.htm")
-	public ResponseEntity<?> submitEnclosureDetails(@RequestParam Map<String,Object> param,HttpServletRequest request) 
-	{				
-		String usersessioncaptcha  = (String)request.getSession().getAttribute("CAPTCHA_KEY");
-		String userresponsecaptcha = (String)param.get("userresponsecaptcha");
+	}
 
-		if(usersessioncaptcha==null || userresponsecaptcha==null || !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {			
-			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));				
-		}			
-				
-		String usercode=(String)request.getSession().getAttribute("usercode");	
-		
-//		String afrcode=serviceUserManagementInterface.getMaxAfrCode()+"";
-//		param.put("afrcode", afrcode);	
-		
-		if(usercode!=null) {
-			param.put("usercode", usercode);	
-		}else {			
-	  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-	  	}
-		
-		if(serviceUserManagementInterface.submitEnclosureDetails(param)){
-	  		return  ResponseEntity.ok(new String("Documents uploaded successfully!"));  	
-	  	}else {
-	  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-	  	}			  	  
-	}		
-	
-	//=================================Change Password====================================//	
+	@GetMapping(value = "/initUploadEnclosuresForm.htm")
+	public @ResponseBody Map<String, Object> initUploadEnclosuresForm(HttpServletRequest request) {
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1")));
+		return data;
+	}
+
+	@PostMapping("/submitEnclosureDetails.htm")
+	public ResponseEntity<?> submitEnclosureDetails(@RequestParam Map<String, Object> param,
+			HttpServletRequest request) {
+		String usersessioncaptcha = (String) request.getSession().getAttribute("CAPTCHA_KEY");
+		String userresponsecaptcha = (String) param.get("userresponsecaptcha");
+
+		if (usersessioncaptcha == null || userresponsecaptcha == null
+				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
+			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
+		}
+
+		String usercode = (String) request.getSession().getAttribute("usercode");
+
+		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
+		param.put("afrcode", afrcode);
+
+		if (usercode != null) {
+			param.put("usercode", usercode);
+		} else {
+			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+		}
+
+		if (serviceUserManagementInterface.submitEnclosureDetails(param)) {
+			return ResponseEntity.ok(new String("Documents uploaded successfully!"));
+		} else {
+			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+		}
+	}
+
+	// =================================Change
+	// Password====================================//
 	@RequestMapping("/changepassword.htm")
 	public String changepassword() {
 		return "changepassword";
-	}			
-	@PostMapping("/updatePassword.htm")
-	public ResponseEntity<?> updatePassword(@RequestParam Map<String,Object> param,HttpServletRequest request) 
-	{				
-		String usersessioncaptcha  = (String)request.getSession().getAttribute("CAPTCHA_KEY");
-		String userresponsecaptcha = (String)param.get("userresponsecaptcha");
+	}
 
-		if(usersessioncaptcha==null || userresponsecaptcha==null || !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {			
-			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));				
-		}			
-				
-		String usercode=(String)request.getSession().getAttribute("usercode");		
-		if(usercode!=null) {
-			param.put("usercode", usercode);	
-		}else {			
-	  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-	  	}
-		
-		if(serviceUserManagementInterface.updatePassword(param)){
-	  		return  ResponseEntity.ok(new String("Password updated successfully!"));  	
-	  	}else {
-	  		return ResponseEntity.badRequest().body(new String("Unable to process request!"));		
-	  	}			  	  
-	}		
-		
+	@PostMapping("/updatePassword.htm")
+	public ResponseEntity<?> updatePassword(@RequestParam Map<String, Object> param, HttpServletRequest request) {
+		String usersessioncaptcha = (String) request.getSession().getAttribute("CAPTCHA_KEY");
+		String userresponsecaptcha = (String) param.get("userresponsecaptcha");
+
+		if (usersessioncaptcha == null || userresponsecaptcha == null
+				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
+			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
+		}
+
+		String usercode = (String) request.getSession().getAttribute("usercode");
+		if (usercode != null) {
+			param.put("usercode", usercode);
+		} else {
+			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+		}
+
+		if (serviceUserManagementInterface.updatePassword(param)) {
+			return ResponseEntity.ok(new String("Password updated successfully!"));
+		} else {
+			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+		}
+	}
+
 	@GetMapping("/createuser.htm")
 	public String createuser() {
 		return "initialization/createuser";
-	}	
+	}
 
 	@PostMapping(value = "/createuser.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> createUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String usercode=serviceUserManagementInterface.getMaxUsercode()+"";
-		user.put("usercode", usercode);		
-		user.put("usertype","F");
-		
-		if(serviceUserManagementInterface.createUser(user)){
+		String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
+		user.put("usercode", usercode);
+		user.put("usertype", "F");
+
+		if (serviceUserManagementInterface.createUser(user)) {
 			response.put("response", HttpStatus.CREATED);
 			response.put("data", 1);
 			return ResponseEntity.ok().body(response);
@@ -258,12 +259,12 @@ public class ControllerUserManagement
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@PostMapping(value = "/updateuser.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateUser(@RequestBody Userlogin user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		
-		if(serviceUserManagementInterface.updateUser(user)){
+
+		if (serviceUserManagementInterface.updateUser(user)) {
 			response.put("response", HttpStatus.CREATED);
 			response.put("data", 1);
 			return ResponseEntity.ok().body(response);
@@ -272,41 +273,44 @@ public class ControllerUserManagement
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@GetMapping("/listUsers.htm")
 	public @ResponseBody List<Userlogin> listUsers() {
-		
+
 		return serviceUserManagementInterface.listUsers();
 	}
+
 	////////////////////////////////////////////////////////////////////////////
 	@GetMapping("/createurl.htm")
 	public String createurl() {
-		return "initialization/createurl"; 
-	}	
-	
+		return "initialization/createurl";
+	}
+
 	@PostMapping(value = "/saveurl.htm")
-    public ResponseEntity<String> saveurl(@RequestBody Pageurls url) {
-                
+	public ResponseEntity<String> saveurl(@RequestBody Pageurls url) {
+
 		return ResponseEntity.ok().body(serviceUserManagementInterface.savePageurl(url));
-    }
-	
+	}
+
 	@GetMapping(value = "/listUrls")
 	public @ResponseBody List<Pageurls> listUrls() {
 		return serviceUserManagementInterface.listUrls();
 	}
+
 	///////////////////////////////////////////////////////////////////////////
 	@GetMapping("/accesscontrol.htm")
 	public String accesscontrol() {
-		return "initialization/accesscontrol"; 
+		return "initialization/accesscontrol";
 	}
+
 	@GetMapping(value = "/listUserAndMappedPages.htm")
 	public @ResponseBody List<Userlogin> listUserAndMappedPages() {
 
 		return serviceUserManagementInterface.listUserAndMappedPages();
 	}
-	
+
 	@PostMapping(value = "/saveUserpages.htm")
-	public @ResponseBody String saveUserpages(@RequestBody List<Map<String,Object>> userpages) {
+	public @ResponseBody String saveUserpages(@RequestBody List<Map<String, Object>> userpages) {
 
 		return serviceUserManagementInterface.saveUserpages(userpages);
 	}
