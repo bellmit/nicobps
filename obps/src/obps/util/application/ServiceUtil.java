@@ -231,11 +231,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode, Integer fromprocesscode,Integer toprocesscode,
+	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,Integer toprocesscode,
 			Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
 		try {
-			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, appreferencecode, modulecode, fromprocesscode,
+			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, applicationcode, modulecode, fromprocesscode,
 					toprocesscode, fromusercode, tousercode, remarks);
 		}catch(Exception e) {
 			System.out.println("User is not Applicant");
@@ -244,15 +244,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public boolean updateApplicationflowremarks(String appreferencecode, Integer modulecode, Integer toprocesscode,
+	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer toprocesscode,
 			Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
-		String sql = "select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=? )";
+		String sql = "select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=? )";
 		Integer fromprocesscode =0;
 		try {
-			fromprocesscode = (Integer) (listGeneric(sql, new Object[] { appreferencecode })).get(0)
+			fromprocesscode = (Integer) (listGeneric(sql, new Object[] { applicationcode })).get(0)
 					.get("toprocesscode");
-			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, appreferencecode, modulecode, fromprocesscode,
+			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, applicationcode, modulecode, fromprocesscode,
 					toprocesscode, fromusercode, tousercode, remarks);
 		}catch(Exception e) {
 			System.out.println("User is not Applicant");
@@ -267,12 +267,12 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer appreferencecode) {
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer applicationcode) {
 		String sql = "SELECT pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applicationflowremarks afr "
 				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' "
 				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode "
-				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where appreferencecode=?::text) ";
-		return this.listGeneric(sql, new Object[] { appreferencecode });
+				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=?::text) ";
+		return this.listGeneric(sql, new Object[] { applicationcode });
 	}
 
 }

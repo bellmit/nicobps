@@ -41,6 +41,6 @@ public interface DaoUtilInterface {
 
 	public <T> boolean update(String tablename, String sql, Object[] params);
 
-	public boolean updateApplicationflowremarks(Integer afrcode, String appreferencecode, Integer modulecode,
+	public boolean updateApplicationflowremarks(Integer afrcode, String applicationcode, Integer modulecode,
 			 Integer fromprocesscode,Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);
 }

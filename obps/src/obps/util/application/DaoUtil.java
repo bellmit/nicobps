@@ -251,15 +251,15 @@ public class DaoUtil implements DaoUtilInterface {
 
 	
 	@Override
-	public boolean updateApplicationflowremarks(Integer afrcode,String appreferencecode,Integer modulecode,Integer fromprocesscode,Integer toprocesscode,Integer fromusercode,Integer tousercode,String remarks) 
+	public boolean updateApplicationflowremarks(Integer afrcode,String applicationcode,Integer modulecode,Integer fromprocesscode,Integer toprocesscode,Integer fromusercode,Integer tousercode,String remarks) 
 	{
 		boolean response = false;
 		String sql = null;
 		try 
 		{	
-			sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks) "
+			sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks) "
 				+ "VALUES (?,?,?,?,?,?,?,?) ";
-			Object[] values2 = {afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks};
+			Object[] values2 = {afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks};
 			response = jdbcTemplate.update(sql, values2) > 0;																
 		} catch (Exception e) {
 			e.getStackTrace();

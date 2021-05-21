@@ -102,16 +102,16 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 				if(response) 
 				{
 					Long afrcode=Long.valueOf((String) param.get("afrcode"));
-					String appreferencecode=usercode+"";
+					String applicationcode=usercode+"";
 					Short modulecode=Short.valueOf("1");
 					Short fromprocesscode=Short.valueOf("1");
 					Short toprocesscode=Short.valueOf("2");
 					Integer fromusercode=usercode;
 					String remarks="Initial Registration";
 					
-					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
+					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
 						+ "VALUES (?,?,?,?,?,?,?) ";
-					Object[] values2 = { afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
+					Object[] values2 = { afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
 					response = jdbcTemplate.update(sql, values2) > 0;					
 				}	
 				if(response) 
@@ -198,16 +198,16 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 				if(response) 
 				{
 					Long afrcode=Long.valueOf((String) param.get("afrcode"));
-					String appreferencecode=usercode+"";
+					String applicationcode=usercode+"";
 					Short modulecode=Short.valueOf("1");
 					Short fromprocesscode=Short.valueOf("2");
 					Short toprocesscode=Short.valueOf("3");
 					Integer fromusercode=usercode;
 					String remarks="Upload Enclosures";
 					
-					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
+					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
 						+ "VALUES (?,?,?,?,?,?,?) ";
-					Object[] values2 = {afrcode,appreferencecode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
+					Object[] values2 = {afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks};
 					response = jdbcTemplate.update(sql, values2) > 0;					
 				}					
 				if(response) 
