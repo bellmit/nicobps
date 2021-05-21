@@ -90,5 +90,7 @@ public interface ServiceUtilInterface {
 
 	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode);
 
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, String applicationcode);
+
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer applicationcode);
 }

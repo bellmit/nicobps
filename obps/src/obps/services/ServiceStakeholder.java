@@ -84,14 +84,15 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public String ulbRegistration(Integer officecode, Integer usercode) {
-		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, applicationtype) "
+		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
 		Integer applicationslno = SUI.getMax("nicobps", "applications", "applicationslno");
 		applicationslno++;
-		String applicationcode = String.format("%03d", officecode) + "001" + String.format("%05d", usercode.toString())
-				+ String.format("%08d", applicationslno);
+		Integer servicetypecode=1;
+		String applicationcode = String.format("%03d", officecode) + "01" + String.format("%04d", usercode.toString())+String.format("%02d", servicetypecode)
+				+ String.format("%06d", applicationslno);
 		if (SUI.update("nicobps.applications", sql,
-				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, "F" })) {
+				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, servicetypecode })) {
 			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");
 			return applicationcode;
 		} else {

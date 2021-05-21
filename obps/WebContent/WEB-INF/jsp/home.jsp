@@ -12,23 +12,28 @@
 	        <h3 class="mt-4" style="font-size:32px;">Home</h3>	        
 	        <div class="row" >	               						
 				<div class="container">
-					<core:if test="${process != null }">
+					<core:if test="${processess != null }">
 						<div class="row">
-<!-- 							<div class="col-lg-6 col-sm-12 p-3 b-customize"> -->
-<!-- 									<div class="bg-light p-4 b-dbcard"> -->
-<%-- 							        	<i class='fas ${(process.parenticon!=null)?process.parenticon:"fa-info-circle"} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i>  --%>
-<!-- 							        	<div class="">  -->
-<%-- 							        		<h4 class="text-left font-weight-bold" style="margin-top: -5px">${process.flowname }</h4>	 --%>
-<!-- 							        		<div class="text-left" style="margin: 10px 0px 5px;"> -->
-<!-- 							        			<span style="font-size:13px;"> -->
-<%-- 								        			<a href="${(process.pageurl!=null)?process.pageurl:'#'}"> --%>
-<%-- 								        				${process.parent } --%>
-<!-- 											        </a> -->
-<!-- 							        			</span> -->
-<!-- 							        		</div>						        		 -->
-<!-- 							      	  	</div> -->
-<!-- 							        </div> -->
-<!-- 						    </div> -->
+							<core:forEach items="${processess}" var="process">
+								<div class="col-lg-12 col-sm-12 p-3 b-customize">
+									<div class="bg-light p-4 b-dbcard">
+							        	<i class='fas ${(process.parenticon!=null)?process.parenticon:"fa-info-circle"} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i> 
+							        	<div class="row">
+							        		<h4 class="col-lg-6 text-left font-weight-bold" style="margin-top: -5px">${process.officename1}</h4>	
+							        		<div class=col-lg-6">
+								        		<h5 class="text-left font-weight-bold" style="margin-top: -5px">${process.flowname}</h5>	
+								        		<div class="text-left" style="">
+								        			<span style="font-size:13px;">
+									        			<a href='${(process.pageurl!=null)?process.pageurl:"#"}?applicationcode=${process.applicationcode}&officecode=${process.officecode}'>
+									        				${process.parent }
+												        </a>
+								        			</span>
+								        		</div>						        		
+							        		</div>						        		
+							      	  	</div>
+							        </div>
+							    </div>
+							</core:forEach>
 						</div>
 					</core:if>
 <!-- 					<div class="pl-4 text-right" style="font-size: 24px"> -->

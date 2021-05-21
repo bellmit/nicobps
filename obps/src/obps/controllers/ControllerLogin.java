@@ -62,7 +62,7 @@ public class ControllerLogin {
 	public String index(Model model) {
 		List<Map<String,Object>> list=SUI.getCurrentProcessStatus(1, Integer.valueOf(session().getAttribute("usercode").toString()));
 		if(!list.isEmpty()) {
-			model.addAttribute("process",list.get(0));
+			model.addAttribute("processess",list);
 		}
 		return "home";
 	}

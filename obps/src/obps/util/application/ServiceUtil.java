@@ -267,12 +267,24 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer applicationcode) {
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, String applicationcode) {
 		String sql = "SELECT pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applicationflowremarks afr "
 				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' "
 				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode "
 				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=?::text) ";
 		return this.listGeneric(sql, new Object[] { applicationcode });
+	}
+
+	@Override
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer usercode) {
+		String sql = "SELECT app.applicationcode,off.officecode,off.officename1,pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applications app " + 
+				"INNER JOIN nicobps.applicationflowremarks afr on app.applicationcode=afr.applicationcode " + 
+				"		and afrcode=(select max(afrcode) from nicobps.applicationflowremarks afr where afr.applicationcode=app.applicationcode) " + 
+				"INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' " + 
+				"LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode  " + 
+				"LEFT JOIN masters.offices off on off.officecode=app.officecode " + 
+				"WHERE app.usercode=?";
+		return this.listGeneric(sql, new Object[] { usercode });
 	}
 
 }
