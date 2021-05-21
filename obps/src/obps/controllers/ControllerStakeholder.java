@@ -43,19 +43,24 @@ public class ControllerStakeholder {
 //		return "stakeholder/payresponse";
 //	}
 
+	@GetMapping("/paysuccess.htm")
+	public String paysuccess(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount) {
+		return "stakeholder/payresponse";
+	}
+	
 	@GetMapping("/paysrappfee.htm")
 	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount) {
 		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
 				feecode, feeamount, 4);
-		return "stakeholder/payresponse";
+		return "redirect:paysuccess.htm?applicationcode="+applicationcode+"&feecode="+feecode+"&feeamount="+ feeamount;
 	}
 
 	@GetMapping("/paysrregfee.htm")
-	public String paysrregfee(Model model, HttpServletRequest req) {
-
-//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-//				feecode, feeamount, 4);
-		return "stakeholder/payresponse";
+	public String paysrregfee(HttpServletRequest req,String applicationcode,Integer officecode) {
+		Map<String,Object> fee=SSI.getFeeMaster(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 2);
+		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
+				Integer.valueOf(fee.get("feecode").toString()), Integer.valueOf(fee.get("feeamount").toString()), 6);
+		return "redirect:paysuccess.htm?applicationcode="+applicationcode+"&feecode="+Integer.valueOf(fee.get("feecode").toString())+"&feeamount="+ Integer.valueOf(fee.get("feeamount").toString());
 	}
 
 	@PostMapping("/listLicensees.htm")

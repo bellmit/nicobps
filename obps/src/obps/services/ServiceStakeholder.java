@@ -49,29 +49,6 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
-	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
-			Integer nextprocessode, String remarks) {
-		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
-			List<Map<String, Object>> list = SUI.getNextProcessflow(1, nextprocessode);
-			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
-				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
-					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
-				}
-				sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) "
-						+ "    VALUES (?, ?, ?, ?, ?)";
-				Calendar c = Calendar.getInstance();
-				c.setTime(new Date());
-				c.add(Calendar.YEAR, 1);
-				SUI.update("nicobps.applications", sql,
-						new Object[] { applicationcode, usercode, officecode, new Date(), c.getTime() });
-			}
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public Map<String, Object> getFeeMaster(Integer officecode, Integer usercode, Integer feetypecode) {
 		String sql = "SELECT f.feecode,f.feeamount FROM masters.feemaster f Inner JOIN nicobps.licensees u on u.licenseetypecode=f.licenseetypecode WHERE officecode=? and usercode=? and feetypecode=?";
 		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { officecode, usercode, feetypecode });
@@ -83,14 +60,43 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
+	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
+			Integer nextprocessode, String remarks) {
+		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
+			List<Map<String, Object>> list = SUI.getNextProcessflow(1, nextprocessode);
+			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
+				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
+					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
+				}
+				/////////////
+				sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) "
+						+ "    VALUES (?, ?, ?, ?, ?)";
+				Calendar c = Calendar.getInstance();
+				c.setTime(new Date());
+				c.add(Calendar.YEAR, 1);
+				SUI.update("nicobps.licenseeofficesvalidities", sql,
+						new Object[] { applicationcode, usercode, officecode, new Date(), c.getTime() });
+				////////////
+				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+				for (Integer urlcode : new Integer[] { 11, 12, 13 }) {
+					jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public String ulbRegistration(Integer officecode, Integer usercode) {
 		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
 		Integer applicationslno = SUI.getMax("nicobps", "applications", "applicationslno");
 		applicationslno++;
-		Integer servicetypecode=1;
-		String applicationcode = String.format("%03d", officecode) + "01" + String.format("%04d", usercode.toString())+String.format("%02d", servicetypecode)
-				+ String.format("%06d", applicationslno);
+		Integer servicetypecode = 1;
+		String applicationcode = String.format("%03d", officecode) + "01" + String.format("%04d", usercode)
+				+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
 		if (SUI.update("nicobps.applications", sql,
 				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, servicetypecode })) {
 			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");

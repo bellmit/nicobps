@@ -19,10 +19,10 @@
 									<div class="bg-light p-4 b-dbcard">
 							        	<i class='fas ${(process.parenticon!=null)?process.parenticon:"fa-info-circle"} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i> 
 							        	<div class="row">
-							        		<h4 class="col-lg-6 text-left font-weight-bold" style="margin-top: -5px">${process.officename1}</h4>	
+							        		<h4 class="col-lg-6 text-left font-weight-bold">${process.officename1}</h4>	
 							        		<div class=col-lg-6">
-								        		<h5 class="text-left font-weight-bold" style="margin-top: -5px">${process.flowname}</h5>	
-								        		<div class="text-left" style="">
+								        		<h5 class="text-left font-weight-bold" style="padding-top: 3px;color:#005776">${process.flowname}</h5>	
+								        		<div>
 								        			<span style="font-size:13px;">
 									        			<a href='${(process.pageurl!=null)?process.pageurl:"#"}?applicationcode=${process.applicationcode}&officecode=${process.officecode}'>
 									        				${process.parent }
