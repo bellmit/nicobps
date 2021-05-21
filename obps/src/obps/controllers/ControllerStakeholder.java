@@ -44,18 +44,19 @@ public class ControllerStakeholder {
 //	}
 
 	@GetMapping("/paysrappfee.htm")
-	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode,
-			Integer feeamount) {
+	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount) {
 		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
 				feecode, feeamount, 4);
 		return "stakeholder/payresponse";
 	}
 
-//	@GetMapping("/paysrregfee.htm")
-//	public String paysrregfee(Model model, HttpServletRequest req) {
-//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 6);
-//		return "stakeholder/payresponse";
-//	}
+	@GetMapping("/paysrregfee.htm")
+	public String paysrregfee(Model model, HttpServletRequest req) {
+
+//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
+//				feecode, feeamount, 4);
+		return "stakeholder/payresponse";
+	}
 
 	@PostMapping("/listLicensees.htm")
 	public @ResponseBody List<Map<String, Object>> listLicensees() {
@@ -74,14 +75,15 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/getApplicationfee.htm")
-	public @ResponseBody Map<String,Object> verifyStakeHolder(HttpServletRequest req, Integer officecode) {
+	public @ResponseBody Map<String, Object> verifyStakeHolder(HttpServletRequest req, Integer officecode) {
 
 		return SSI.getFeeMaster(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 1);
 	}
 
 	@PostMapping("/updateStakeholder.htm")
-	public @ResponseBody boolean updateStakeholder(Integer officecode,String applicationcode,Integer usercode, Integer toprocesscode, String remarks) {
-		return SSI.updateStakeholder(officecode,applicationcode,usercode, toprocesscode, remarks);
+	public @ResponseBody boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
+			Integer toprocesscode, String remarks) {
+		return SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks);
 	}
 
 	@PostMapping("/ulbregistration.htm")

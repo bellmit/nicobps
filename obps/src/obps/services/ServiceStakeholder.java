@@ -1,6 +1,8 @@
 package obps.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,14 +49,22 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
-	public boolean updateStakeholder(Integer officecode,String applicationcode,Integer usercode, Integer nextprocessode, String remarks) {
-		if(SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
-			List<Map<String,Object>> list=SUI.getNextProcessflow(1, nextprocessode);
-			if(list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
-				String sql="INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-				for(Map<String,Object> i:SUI.listRegisteringOffices(officecode)) {
-					SUI.update("", sql, new Object[] {usercode,i.get("officecode")});
+	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
+			Integer nextprocessode, String remarks) {
+		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
+			List<Map<String, Object>> list = SUI.getNextProcessflow(1, nextprocessode);
+			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
+				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
+					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
 				}
+				sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) "
+						+ "    VALUES (?, ?, ?, ?, ?)";
+				Calendar c = Calendar.getInstance();
+				c.setTime(new Date());
+				c.add(Calendar.YEAR, 1);
+				SUI.update("nicobps.applications", sql,
+						new Object[] { applicationcode, usercode, officecode, new Date(), c.getTime() });
 			}
 			return true;
 		}
@@ -78,11 +88,12 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
 		Integer applicationslno = SUI.getMax("nicobps", "applications", "applicationslno");
 		applicationslno++;
-		if (SUI.update("nicobps.applications", sql, new Object[] { applicationslno,
-				"1" + officecode.toString() + usercode.toString() + applicationslno, officecode, 1, usercode, "S" })) {
-			SUI.updateApplicationflowremarks("1" + officecode.toString() + usercode.toString() + applicationslno, 1, 2,
-					3, usercode, null, "Payment Initiated");
-			return "1" + officecode.toString() + usercode.toString() + applicationslno;
+		String applicationcode = String.format("%03d", officecode) + "001" + String.format("%05d", usercode.toString())
+				+ String.format("%08d", applicationslno);
+		if (SUI.update("nicobps.applications", sql,
+				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, "F" })) {
+			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");
+			return applicationcode;
 		} else {
 			return "false";
 		}
