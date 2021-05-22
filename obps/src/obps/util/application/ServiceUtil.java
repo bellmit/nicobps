@@ -286,5 +286,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 				"WHERE app.usercode=?";
 		return this.listGeneric(sql, new Object[] { usercode });
 	}
+	
+	@Override
+	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
+		String sql = "select * from nicobps.useroffices a \r\n"
+				+ "inner join nicobps.licenseeofficesvalidities b  on a.officecode=b.officecode \r\n"
+				+ "inner join masters.offices c on a.officecode=c.officecode\r\n"
+				+ "where a.usercode= ? and c.enabled='Y' and b.validto>current_date";
+		Object[] criteria = { usercode };
+		return this.listGeneric(sql,criteria);
+	}
 
 }

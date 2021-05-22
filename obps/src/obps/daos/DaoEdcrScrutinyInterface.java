@@ -13,6 +13,5 @@ public interface DaoEdcrScrutinyInterface {
 	public EdcrScrutiny fetchEdcr(final String edcrnumber);
 	
 	public List<EdcrScrutiny> fetchEdcr_usercd(final String usercode);
-	
-	public String GetOfficeCode(final String usercode);
+ 
 }

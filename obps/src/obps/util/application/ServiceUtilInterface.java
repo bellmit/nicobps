@@ -93,4 +93,6 @@ public interface ServiceUtilInterface {
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, String applicationcode);
 
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer applicationcode);
+	
+	public List<Map<String, Object>> listUserValidOffices(Integer usercode);
 }

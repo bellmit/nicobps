@@ -64,7 +64,7 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 	public EdcrScrutiny fetchEdcr(String edcrnumber) {
 		EdcrScrutiny edcr = new EdcrScrutiny();
 		try {
-			String sql = "SELECT * FROM edcrscrutiny WHERE edcrnumber=?";
+			String sql = "SELECT * FROM nicobps.edcrscrutiny WHERE edcrnumber=?";
 			Object[] criteria = { edcrnumber };
 			edcr = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
 		} catch (Exception e) {
@@ -78,7 +78,10 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		Integer usercode = Integer.valueOf((String) usercd);
 		List<EdcrScrutiny> list = null;
 		try {
-			String sql = "SELECT * FROM edcrscrutiny WHERE edcrnumber=?";
+			String sql = "SELECT a.*,b.officename1 as officename FROM nicobps.edcrscrutiny a\r\n"
+					+ "inner join masters.offices b on a.officecode=b.officecode\r\n"
+					+ "\r\n"
+					+ "WHERE a.usercode=?";
 			Object[] criteria = { usercode };
 			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
 		} catch (Exception e) {
@@ -87,20 +90,5 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		return list;
 	}
 	
-	@Override
-	public String GetOfficeCode(String usercd) {
-		Integer usercode = Integer.valueOf((String) usercd);
-		String resp=null;
-		try {
-			String sql = " SELECT uo.usercode,o.* FROM nicobps.useroffices uo INNER JOIN masters.offices o on  o.officecode=uo.officecode  WHERE uo.usercode=?";
-			Object[] criteria = { usercode };
-			SqlRowSet rowset= jdbcTemplate.queryForRowSet(sql , criteria);
-			while (rowset.next()) {
-				resp = rowset.getString(1);
-			}
-		} catch (Exception e) {
-			System.out.println("Error in DaoEdcrScrutiny.GetOfficeCode(final String usercd) : " + e);
-		}
-		return resp;
-	}
+	 
 }

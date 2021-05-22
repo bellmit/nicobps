@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +38,11 @@ public class ServiceEdcrScrutiny {
 
 	@Autowired
 	DaoEdcrScrutinyInterface DaoedcrScrutinyInterface;
-
+	
+	@Autowired
+	private Environment env;
+ 
+	
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
@@ -49,16 +55,32 @@ public class ServiceEdcrScrutiny {
 		return resp;
 	}
 
-	public JSONObject Scrutinize(MultipartFile planFile, String usercode) {
+	public JSONObject Scrutinize(MultipartFile planFile, String usercode,String OfficeCode) {
+	 
 		String resp = null;
 		JSONObject respJson = null;
+		
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
-		String edcrRequest = "{\r\n" + "\"transactionNumber\": \"" + uuid + "\",\r\n"
-				+ "\"applicationSubType\": \"NEW_CONSTRUCTION\",\r\n"
-				+ "\"appliactionType\": \"BUILDING_PLAN_SCRUTINY\",\r\n" + "\"applicantName\": \"Suraj\",\r\n"
-				+ "\"tenantId\": \"jk.jammu\",\r\n" + "\"RequestInfo\": {\r\n" + "\"userInfo\": {\r\n"
-				+ "\"id\": \"1c79f77e-e847-4663-98a7-5aee31f185c5\",\r\n" + "\"tenantId\": \"0003\"\r\n" + "}\r\n"
-				+ "}\r\n" + "}\r\n" + "";
+		JSONObject userInfo=new JSONObject();
+		userInfo.put("id", "1c79f77e-e847-4663-98a7-5aee31f185c5");
+		userInfo.put("tenantId", "0003");
+		JSONObject RequestInfo=new JSONObject();
+		RequestInfo.put("userInfo", userInfo);
+		JSONObject edcrRequest=new JSONObject();
+		edcrRequest.put("transactionNumber", uuid);
+		edcrRequest.put("applicationSubType", "NEW_CONSTRUCTION");
+		edcrRequest.put("appliactionType", "BUILDING_PLAN_SCRUTINY");
+		edcrRequest.put("applicantName", "Suraj");
+		edcrRequest.put("tenantId", env.getProperty("tenantId"));
+		edcrRequest.put("RequestInfo", RequestInfo);
+		
+//		System.out.println(edcrRequest);
+//		String edcrRequest = "{\r\n" + "\"transactionNumber\": \"" + uuid + "\",\r\n"
+//				+ "\"applicationSubType\": \"NEW_CONSTRUCTION\",\r\n"
+//				+ "\"appliactionType\": \"BUILDING_PLAN_SCRUTINY\",\r\n" + "\"applicantName\": \"Suraj\",\r\n"
+//				+ "\"tenantId\": \"jk.jammu\",\r\n" + "\"RequestInfo\": {\r\n" + "\"userInfo\": {\r\n"
+//				+ "\"id\": \"1c79f77e-e847-4663-98a7-5aee31f185c5\",\r\n" + "\"tenantId\": \"0003\"\r\n" + "}\r\n"
+//				+ "}\r\n" + "}\r\n" + "";
 
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -74,25 +96,19 @@ public class ServiceEdcrScrutiny {
 			valueMap.add("edcrRequest", edcrRequest);
 			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
-			String serverUrl = "http://uatobps.jkhudd.gov.in/edcr/rest/dcr/scrutinize?tenantId=jk.jammu";
+			String serverUrl =env.getProperty("edcr.scrutitny.url");
 			RestTemplate restTemplate = new RestTemplate();
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(resp);
-			String edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber"))
-					.toString();
+			String edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
 			String status = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
-			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport"))
-					.toString();
-			String edcrdetails = (new ObjectMapper())
-					.writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
-//			String planReport =(new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).trim() ;
-//			String planPDF= (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planPdfs"));
-
+			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
+			String edcrdetails = (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("usercode", usercode);
-			map.put("useroffice", DaoedcrScrutinyInterface.GetOfficeCode(usercode));
+			map.put("useroffice", OfficeCode);
 			map.put("edcrnumber", edcrnumber);
 			map.put("status", status);
 			map.put("response", edcrdetails);
@@ -101,6 +117,7 @@ public class ServiceEdcrScrutiny {
 			map.put("log_date", dateFormat.format(date));
 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
 			// ---------------------------------
+			
 			if (doaresp) {
 				respJson = new JSONObject();
 				respJson.put("status", status);
