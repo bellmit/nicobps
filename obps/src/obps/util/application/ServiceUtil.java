@@ -289,10 +289,10 @@ public class ServiceUtil implements ServiceUtilInterface {
 	
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
-		String sql = "select * from nicobps.useroffices a \r\n"
-				+ "inner join nicobps.licenseeofficesvalidities b  on a.officecode=b.officecode \r\n"
-				+ "inner join masters.offices c on a.officecode=c.officecode\r\n"
-				+ "where a.usercode= ? and c.enabled='Y' and b.validto>current_date";
+		String sql = "select * from nicobps.useroffices a "
+				+ "inner join nicobps.licenseeofficesvalidities b  on a.officecode=b.officecode and a.usercode=b.usercode and b.validto>current_date "
+				+ "inner join masters.offices c on a.officecode=c.officecode and c.enabled='Y'  "
+				+ "where a.usercode= ?";
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql,criteria);
 	}
