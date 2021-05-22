@@ -53,7 +53,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 				data.append('planFile', file);
 			});
 			data.append('OfficeCode', $scope.validoffice);
-			alert("data=" + JSON.stringify(data));
+			 
 
 			jQuery.ajax({
 				type: "POST",

@@ -21,11 +21,7 @@
 					<div class="row">
 
 						<div class="col-md-12 py-12 px-12">
-							<input type="button" value="Generate Scrutiny Report"
-								id="genReport" name="genReport"
-								ng-click="generateReport(edcrscrutiny.planReport);"
-								formtarget="_blank" class="btn btn-primary b-btn"
-								style="float: right; visibility: hidden; margin-right: 70px">
+
 							<br>
 							<h5 style="">
 								Click on Browse and select a .DXF File<span class="mandatory">*</span>
@@ -34,31 +30,29 @@
 							<table id="dxftable">
 								<tr>
 
-									<td colspan="0">Please Select Office<span
-										class="mandatory">*</span>: <select class=" " id="validoffice"
-										name="validoffice" ng-model="validoffice" required>
+									<td>Please Select Office<span class="mandatory">*</span>:
+										<select class=" " id="validoffice" name="validoffice"
+										ng-model="validoffice" required>
 											<option selected value="">-- select an option --</option>
 											<option ng-repeat='item in userofficelist'
 												value="{{item.officecode}}">{{item.officename1}}</option>
 									</select> <span class=" " style="color: red;">{{errorSelectmsg}}
 									</span>
 									</td>
-									<td><input type="file" id="dxffile" name="dxffile"
-										ng-model="dxffile" class="btn btn-info btn-sm" /><span
+									<td colspan="2"><input type="file" id="dxffile"
+										name="dxffile" ng-model="dxffile" class="btn btn-info btn-sm" /><span
 										class="" style="color: red;">{{errorDxfFile}}</span></td>
-
 								</tr>
 								<tr>
-									<td style="height: 40px"></td>
+									<td style="height: 20px" colspan="3"></td>
 								</tr>
 								<tr>
-
-									<td><input type="button" value="SCRUTINIZE"
+									<td colspan="3"><input type="button" value="SCRUTINIZE"
 										ng-click="submitDetails();" class="btn btn-primary b-btn"></td>
-									<td></td>
-									<td></td>
 								</tr>
-
+								<tr>
+									<td style="height: 20px" colspan="3"></td>
+								</tr>
 								<tr class="edcrResp" style="visibility: hidden;">
 									<td style="font-size: 20px; font-weight: bold;"><label
 										for="edcrstatus">EDCR Status :</label><label id="edcrstatus"
@@ -66,13 +60,17 @@
 									<td style="font-size: 20px; font-weight: bold;"><label
 										for="edcrnumber">EDCR Number :</label><label id="edcrnumber"
 										name="edcrnumber">{{edcrscrutiny.edcrnumber}}</label></td>
-									<td></td>
+									<td><input type="button" value="Generate Scrutiny Report"
+										id="genReport" name="genReport"
+										ng-click="generateReport(edcrscrutiny.planReport);"
+										formtarget="_blank" class="btn btn-info btn-sm"
+										style="margin-left: 70px"></td>
 								</tr>
 
 								<tr class="edcrResp" style="visibility: hidden;">
 									<td><p>
 											Click on <span
-												style="font-size: 20; font-style: italic; color: blue;">*Generate
+												style="font-size: 15px; font-style: italic; color: blue;">*Generate
 												Scrutiny Report</span> Button to view details of Report
 										</p></td>
 									<td></td>
@@ -81,37 +79,6 @@
 							</table>
 
 						</div>
-						<!-- 						<div class="col-md-12 py-12 px-12"> -->
-						<!-- 							<table id="entrytable" -->
-						<!-- 								style="border-top: 3px solid #005776; border-bottom: 3px solid #005776"> -->
-						<!-- 								<tr> -->
-						<!-- 									<td></td> -->
-						<!-- 									<td> -->
-						<!-- 										<div class="form-group"> -->
-						<!-- 											<label for="jcaptcha" class="">Captcha <span -->
-						<!-- 												class="mandatory">*</span></label> <img src="./jcaptcha.jpg" -->
-						<!-- 												id="jcaptchaimg" onclick="changeCaptcha();" -->
-						<!-- 												title="Click To Reload" style="cursor: pointer;" /> <input -->
-						<!-- 												type="text" -->
-						<!-- 												ng-model="applicationEnclosures.userresponsecaptcha" -->
-						<!-- 												id="jcaptcha" name="jcaptcha" value="" class="form-control" -->
-						<!-- 												autocomplete="off"> <span id="jcaptchaMsg" -->
-						<!-- 												class="formErrorContent"></span> -->
-						<!-- 											<div style="text-align: center; padding-top: 10px"> -->
-						<!-- 												<input type="button" value="Submit" -->
-						<!-- 													ng-click="submitDetails();" class="btn btn-primary b-btn"> -->
-						<!-- 												<input type="button" value="Reset" -->
-						<!-- 													ng-click="resetDetails();" class="btn btn-primary b-btn"> -->
-						<!-- 											</div> -->
-						<!-- 											<br /> -->
-						<!-- 											<div id="msg" class="formErrorContent" style="width: 100%"></div> -->
-						<!-- 										</div> -->
-						<!-- 									</td> -->
-						<!-- 									<td></td> -->
-						<!-- 								</tr> -->
-						<!-- 							</table> -->
-
-						<!-- 						</div> -->
 
 						<div class="col-md-12 py-12 px-12"
 							style="border-top: 3px solid #005776; border-bottom: 3px solid #005776">
@@ -141,7 +108,7 @@
 									<td>{{item.status}}</td>
 
 									<td><input type="button" value="Download Report"
-										ng-click="" class="btn btn-info btn-sm"/></td>
+										ng-click="" class="btn btn-info btn-sm" /></td>
 								</tr>
 							</table>
 

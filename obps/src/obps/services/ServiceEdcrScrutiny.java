@@ -116,9 +116,15 @@ public class ServiceEdcrScrutiny {
 			Date date = new Date();
 			map.put("log_date", dateFormat.format(date));
 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
+			
+			
 			// ---------------------------------
 			
 			if (doaresp) {
+				
+				//-----------------generate applcode
+				//-----------------save to application table
+				//-----------------save to applicationflow remarks
 				respJson = new JSONObject();
 				respJson.put("status", status);
 				respJson.put("edcrnumber", edcrnumber);
