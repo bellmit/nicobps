@@ -66,18 +66,16 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			List<Map<String, Object>> list = SUI.getNextProcessflow(1, nextprocessode);
 			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
 				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
-					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
-				}
-				/////////////
-				sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) "
-						+ "    VALUES (?, ?, ?, ?, ?)";
+				String sql2 = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) VALUES (?, ?, ?, ?, ?) ";
 				Calendar c = Calendar.getInstance();
 				c.setTime(new Date());
 				c.add(Calendar.YEAR, 1);
-				SUI.update("nicobps.licenseeofficesvalidities", sql,
-						new Object[] { applicationcode, usercode, officecode, new Date(), c.getTime() });
-				////////////
+				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
+					
+					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
+					SUI.update("nicobps.licenseeofficesvalidities", sql,
+							new Object[] { applicationcode, usercode, i.get("officecode"), new Date(), c.getTime() });
+				}
 				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
 				for (Integer urlcode : new Integer[] { 11, 12, 13 }) {
 					jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
