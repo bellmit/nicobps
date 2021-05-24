@@ -32,17 +32,20 @@ import com.fasterxml.jackson.databind.ext.Java7Handlers;
 
 import obps.daos.DaoEdcrScrutinyInterface;
 import obps.models.EdcrScrutiny;
+import obps.util.application.ServiceUtilInterface;
 
 @Service("ServiceEdcrScrutiny")
 public class ServiceEdcrScrutiny {
 
 	@Autowired
 	DaoEdcrScrutinyInterface DaoedcrScrutinyInterface;
-	
+
+	@Autowired
+	private ServiceUtilInterface serviceUtilInterface;
+
 	@Autowired
 	private Environment env;
- 
-	
+
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
@@ -55,33 +58,22 @@ public class ServiceEdcrScrutiny {
 		return resp;
 	}
 
-	public JSONObject Scrutinize(MultipartFile planFile, String usercode,String OfficeCode) {
-	 
+	public JSONObject Scrutinize(MultipartFile planFile, String usercode, String OfficeCode) {
 		String resp = null;
 		JSONObject respJson = null;
-		
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
-		JSONObject userInfo=new JSONObject();
+		JSONObject userInfo = new JSONObject();
 		userInfo.put("id", "1c79f77e-e847-4663-98a7-5aee31f185c5");
 		userInfo.put("tenantId", "0003");
-		JSONObject RequestInfo=new JSONObject();
+		JSONObject RequestInfo = new JSONObject();
 		RequestInfo.put("userInfo", userInfo);
-		JSONObject edcrRequest=new JSONObject();
+		JSONObject edcrRequest = new JSONObject();
 		edcrRequest.put("transactionNumber", uuid);
 		edcrRequest.put("applicationSubType", "NEW_CONSTRUCTION");
 		edcrRequest.put("appliactionType", "BUILDING_PLAN_SCRUTINY");
 		edcrRequest.put("applicantName", "Suraj");
 		edcrRequest.put("tenantId", env.getProperty("tenantId"));
 		edcrRequest.put("RequestInfo", RequestInfo);
-		
-//		System.out.println(edcrRequest);
-//		String edcrRequest = "{\r\n" + "\"transactionNumber\": \"" + uuid + "\",\r\n"
-//				+ "\"applicationSubType\": \"NEW_CONSTRUCTION\",\r\n"
-//				+ "\"appliactionType\": \"BUILDING_PLAN_SCRUTINY\",\r\n" + "\"applicantName\": \"Suraj\",\r\n"
-//				+ "\"tenantId\": \"jk.jammu\",\r\n" + "\"RequestInfo\": {\r\n" + "\"userInfo\": {\r\n"
-//				+ "\"id\": \"1c79f77e-e847-4663-98a7-5aee31f185c5\",\r\n" + "\"tenantId\": \"0003\"\r\n" + "}\r\n"
-//				+ "}\r\n" + "}\r\n" + "";
-
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -96,7 +88,7 @@ public class ServiceEdcrScrutiny {
 			valueMap.add("edcrRequest", edcrRequest);
 			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
-			String serverUrl =env.getProperty("edcr.scrutitny.url");
+			String serverUrl = env.getProperty("edcr.scrutitny.url");
 			RestTemplate restTemplate = new RestTemplate();
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
 			// --------------save to db------------
@@ -116,15 +108,22 @@ public class ServiceEdcrScrutiny {
 			Date date = new Date();
 			map.put("log_date", dateFormat.format(date));
 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
-			
-			
+
 			// ---------------------------------
-			
+
 			if (doaresp) {
-				
-				//-----------------generate applcode
-				//-----------------save to application table
-				//-----------------save to applicationflow remarks
+				// -----------------generate applcode -- save to application table -- save to
+				// applicationflow remarks
+				String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) " + "    VALUES (?, ?, ?, ?, ?, ?)";
+				Integer applicationslno = serviceUtilInterface.getMax("nicobps", "applications", "applicationslno");
+				applicationslno++;
+				Integer servicetypecode = 1;
+				String applicationcode = edcrnumber + "01" + String.format("%02d", Integer.parseInt(usercode)) + String.format("%02d", 1) + String.format("%01d", 1);
+				System.out.println(applicationcode);
+				if (serviceUtilInterface.update("nicobps.applications", sql,
+						new Object[] { applicationslno, applicationcode, Integer.parseInt(OfficeCode), 2, Integer.parseInt(usercode), servicetypecode })) {
+					serviceUtilInterface.updateApplicationflowremarks(applicationcode, 2, 1, 2, Integer.parseInt(usercode), null, "Scrutiny complete");
+				}
 				respJson = new JSONObject();
 				respJson.put("status", status);
 				respJson.put("edcrnumber", edcrnumber);
