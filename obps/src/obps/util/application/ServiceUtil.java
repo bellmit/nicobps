@@ -207,15 +207,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public List<Map<String,Object>> listRegisteringOffices() {
+	public List<Map<String, Object>> listRegisteringOffices() {
 		String sql = "SELECT * FROM masters.offices WHERE enabled='Y' and isregisteringoffice='Y' ORDER BY officename1 ";
 		return this.listGeneric(sql);
 	}
 
 	@Override
-	public List<Map<String,Object>> listRegisteringOffices(Integer registeringofficecode) {
+	public List<Map<String, Object>> listRegisteringOffices(Integer registeringofficecode) {
 		String sql = "SELECT * FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N' and registeringofficecode=? ORDER BY officename1 ";
-		return this.listGeneric(sql,new Object[] {registeringofficecode});
+		return this.listGeneric(sql, new Object[] { registeringofficecode });
 	}
 
 	@Override
@@ -231,16 +231,16 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,Integer toprocesscode,
-			Integer fromusercode, Integer tousercode, String remarks) {
+	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,
+			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
-		try {
-			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, applicationcode, modulecode, fromprocesscode,
-					toprocesscode, fromusercode, tousercode, remarks);
-		}catch(Exception e) {
-			System.out.println("User is not Applicant");
-		}
-		return false;
+//		try {
+		return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, applicationcode, modulecode, fromprocesscode,
+				toprocesscode, fromusercode, tousercode, remarks);
+//		}catch(Exception e) {
+//			System.out.println("User is not Applicant");
+//		}
+//		return false;
 	}
 
 	@Override
@@ -248,16 +248,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 			Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
 		String sql = "select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=? )";
-		Integer fromprocesscode =0;
-		try {
-			fromprocesscode = (Integer) (listGeneric(sql, new Object[] { applicationcode })).get(0)
-					.get("toprocesscode");
-			return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, applicationcode, modulecode, fromprocesscode,
-					toprocesscode, fromusercode, tousercode, remarks);
-		}catch(Exception e) {
-			System.out.println("User is not Applicant");
-		}
-		return false;
+		Integer fromprocesscode = 0;
+//		try {
+		fromprocesscode = (Integer) (listGeneric(sql, new Object[] { applicationcode })).get(0).get("toprocesscode");
+		return daoUtilInterface.updateApplicationflowremarks(afrcode + 1, applicationcode, modulecode, fromprocesscode,
+				toprocesscode, fromusercode, tousercode, remarks);
+//		}catch(Exception e) {
+//			System.out.println("User is not Applicant");
+//		}
+//		return false;
 	}
 
 	@Override
@@ -277,16 +276,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer usercode) {
-		String sql = "SELECT app.applicationcode,off.officecode,off.officename1,pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applications app " + 
-				"INNER JOIN nicobps.applicationflowremarks afr on app.applicationcode=afr.applicationcode " + 
-				"		and afrcode=(select max(afrcode) from nicobps.applicationflowremarks afr where afr.applicationcode=app.applicationcode) " + 
-				"INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' " + 
-				"LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode  " + 
-				"LEFT JOIN masters.offices off on off.officecode=app.officecode " + 
-				"WHERE app.usercode=?";
+		String sql = "SELECT app.applicationcode,off.officecode,off.officename1,pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applications app "
+				+ "INNER JOIN nicobps.applicationflowremarks afr on app.applicationcode=afr.applicationcode "
+				+ "		and afrcode=(select max(afrcode) from nicobps.applicationflowremarks afr where afr.applicationcode=app.applicationcode) "
+				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' "
+				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode  "
+				+ "LEFT JOIN masters.offices off on off.officecode=app.officecode " + "WHERE app.usercode=?";
 		return this.listGeneric(sql, new Object[] { usercode });
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
 		String sql = "select * from nicobps.useroffices a "
@@ -294,7 +292,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "inner join masters.offices c on a.officecode=c.officecode and c.enabled='Y'  "
 				+ "where a.usercode= ?";
 		Object[] criteria = { usercode };
-		return this.listGeneric(sql,criteria);
+		return this.listGeneric(sql, criteria);
 	}
 
 }
