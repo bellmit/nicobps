@@ -54,7 +54,6 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 //        if($scope.userForm.$invalid)
 //            return false;
     	$scope.user.userpassword=SHA256($scope.user.userpassword);
-        $scope.user.mobileno = "";
         $scope.method = "POST";
         $scope.urlEndpoint = "./createuser.htm";
     	
@@ -75,7 +74,8 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     
     $scope.update = () => {
 	    if($scope.userForm.$invalid)
-             return false;
+             return false;             
+    	$scope.user.userpassword=SHA256($scope.user.userpassword);
 	    $scope.method = "POST";
     	$scope.urlEndpoint = "./updateuser.htm";
     	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, () => {$scope.reset();$scope.listUsers(), alert(successMsg)}, () => {alert(errorMsg)});
