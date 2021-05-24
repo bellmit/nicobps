@@ -118,16 +118,18 @@ public class ServiceEdcrScrutiny {
 				Integer applicationslno = serviceUtilInterface.getMax("nicobps", "applications", "applicationslno");
 				applicationslno++;
 				Integer servicetypecode = 1;
-				String applicationcode = edcrnumber + "01" + String.format("%02d", Integer.parseInt(usercode)) + String.format("%02d", 1) + String.format("%01d", 1);
+				String applicationcode = edcrnumber + String.format("%03d", Integer.parseInt(OfficeCode)) + "02" + String.format("%04d", Integer.parseInt(usercode))
+						+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
 				System.out.println(applicationcode);
-				if (serviceUtilInterface.update("nicobps.applications", sql,
-						new Object[] { applicationslno, applicationcode, Integer.parseInt(OfficeCode), 2, Integer.parseInt(usercode), servicetypecode })) {
-					serviceUtilInterface.updateApplicationflowremarks(applicationcode, 2, 1, 2, Integer.parseInt(usercode), null, "Scrutiny complete");
+				if (serviceUtilInterface.update("nicobps.applications", sql,new Object[] { applicationslno, applicationcode, Integer.parseInt(OfficeCode), 2, Integer.parseInt(usercode), servicetypecode })) {
+					if (serviceUtilInterface.updateApplicationflowremarks(applicationcode, 2, 1, 2, Integer.parseInt(usercode), null, "Scrutiny complete")) {
+						respJson = new JSONObject();
+						respJson.put("status", status);
+						respJson.put("edcrnumber", edcrnumber);
+						respJson.put("planReport", planReport);
+					}
 				}
-				respJson = new JSONObject();
-				respJson.put("status", status);
-				respJson.put("edcrnumber", edcrnumber);
-				respJson.put("planReport", planReport);
+				
 			} else {
 				respJson = new JSONObject();
 				respJson.put("status", "error");
