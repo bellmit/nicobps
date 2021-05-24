@@ -108,42 +108,43 @@ public class ServiceEdcrScrutiny {
 			Date date = new Date();
 			map.put("log_date", dateFormat.format(date));
 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
-
-			// ---------------------------------
-
 			if (doaresp) {
-				// -----------------generate applcode -- save to application table -- save to
-				// applicationflow remarks
-				String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) " + "    VALUES (?, ?, ?, ?, ?, ?)";
-				Integer applicationslno = serviceUtilInterface.getMax("nicobps", "applications", "applicationslno");
-				applicationslno++;
-				Integer servicetypecode = 1;
-				String applicationcode = edcrnumber + String.format("%03d", Integer.parseInt(OfficeCode)) + "02" + String.format("%04d", Integer.parseInt(usercode))
-						+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
-				System.out.println(applicationcode);
-				if (serviceUtilInterface.update("nicobps.applications", sql,new Object[] { applicationslno, applicationcode, Integer.parseInt(OfficeCode), 2, Integer.parseInt(usercode), servicetypecode })) {
-					if (serviceUtilInterface.updateApplicationflowremarks(applicationcode, 2, 1, 2, Integer.parseInt(usercode), null, "Scrutiny complete")) {
-						respJson = new JSONObject();
-						respJson.put("status", status);
-						respJson.put("edcrnumber", edcrnumber);
-						respJson.put("planReport", planReport);
-					}
-				}
-				
+				respJson = new JSONObject();
+				respJson.put("status", status);
+				respJson.put("edcrnumber", edcrnumber);
+				respJson.put("planReport", planReport);
+//				String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) " + "    VALUES (?, ?, ?, ?, ?, ?)";
+//				Integer applicationslno = serviceUtilInterface.getMax("nicobps", "applications", "applicationslno");
+//				applicationslno++;
+//				Integer servicetypecode = 1;
+//				String applicationcode = String.format("%03d", Integer.parseInt(OfficeCode)) + "02" + String.format("%04d", Integer.parseInt(usercode))
+//						+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
+//				System.out.println(applicationcode);
+//				if (serviceUtilInterface.update("nicobps.applications", sql,
+//						new Object[] { applicationslno, applicationcode, Integer.parseInt(OfficeCode), 2, Integer.parseInt(usercode), servicetypecode })) {
+//					if (serviceUtilInterface.updateApplicationflowremarks(applicationcode, 2, 1, 2, Integer.parseInt(usercode), null, "Scrutiny complete")) {
+//						respJson = new JSONObject();
+//						respJson.put("status", status);
+//						respJson.put("edcrnumber", edcrnumber);
+//						respJson.put("planReport", planReport);
+//					}
+//				}
+
 			} else {
 				respJson = new JSONObject();
 				respJson.put("status", "error");
 				respJson.put("edcrnumber", "NA");
 				respJson.put("planReport", "NA");
 				respJson.put("msg", "System Error: Please contact System Admin!");
-
 			}
 
-		} catch (Exception e) {
+		}catch(
+
+	Exception e)
+	{
 			resp = e.getMessage();
 			e.printStackTrace();
-		}
-		return respJson;
-	}
+		}return respJson;
+}
 
 }
