@@ -51,7 +51,7 @@ public class ControllerPayment {
 				.location(URI.create(billdeskgateway.generateRedirectURI().toString())).build();
 	}
 
-	@PostMapping(path = "/payment/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
+	@PostMapping(path = "/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
 	public String paymentResponse(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		System.out.println("/billDesk/paymentResponse.htm");
 		System.out.println("Response :: -----------------" + params.get("msg"));
@@ -72,5 +72,9 @@ public class ControllerPayment {
 
 		return "payment/BilldeskResponse";
 	}
-
+	@GetMapping(path = "/BilldeskResponse.htm")
+	public String paymentResponseGet(HttpServletRequest req) {
+		System.out.println("/billDesk/paymentResponse.htm");
+		return "payment/BilldeskResponse";
+	}
 }
