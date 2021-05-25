@@ -37,8 +37,10 @@
         <logout invalidate-session="true" logout-url="logout.htm" logout-success-url="/logout.htm"/>
         <custom-filter ref="captchaVerifierFilter" before="FORM_LOGIN_FILTER"/>
 <!--       <csrf disabled="true"/> -->
+		<csrf request-matcher-ref="csrfMatcher"/>
     </http> 
     
+    <beans:bean id="csrfMatcher" class="obps.security.CsrfSecurityRequestMatcher"/>  
     <beans:bean id="captchaVerifierFilter" class="obps.security.CaptchaVerifierFilter" p:failureUrl="/loginfailed.htm" />  
     <beans:bean id="MyAuthenticationSuccessHandler" class="obps.security.MyAuthenticationSuccessHandler" />
 	<beans:bean id ="passwordEncoder" class = "org.springframework.security.crypto.password.NoOpPasswordEncoder" factory-method = "getInstance" />
@@ -58,6 +60,4 @@
         </authentication-provider>
     </authentication-manager>
      
-
-    
 </beans:beans>  

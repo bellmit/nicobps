@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +38,8 @@ public class ControllerCommon {
 	@PostMapping("/listOffices/ValidUserOffices.htm")
 	public @ResponseBody List<Map<String, Object>> listValidUserOffice(HttpServletRequest request) {
 		System.out.println("List valid offices");
-		Integer usercode = Integer.valueOf((String)  request.getSession().getAttribute("usercode"));
+		Integer usercode = Integer.valueOf((String) request.getSession().getAttribute("usercode"));
 		return serviceUtilInterface.listUserValidOffices(usercode);
 	}
+
 }

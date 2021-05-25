@@ -26,9 +26,9 @@
 
 								<h3>PAYMENT RESPONSE PAGE</h3>
 							</div>
-
-
-
+							
+							
+							
 						</div>
 					</div>
 				</form>
