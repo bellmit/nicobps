@@ -20,6 +20,7 @@ public class Offices {
 	private Integer registeringofficecode;
 	private String enabled;
 	private List<PaymentModes> mappedpaymentmodes;
+	
 	public Offices() {
 		super();
 		// TODO Auto-generated constructor stub
