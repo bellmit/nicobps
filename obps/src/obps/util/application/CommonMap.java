@@ -5,6 +5,7 @@ public class CommonMap {
     private String value;
     private String value1;
     private String value2;
+    private Integer value3;
 
     public CommonMap() {
     }
@@ -12,6 +13,11 @@ public class CommonMap {
     public CommonMap(String key, String value) {
         this.key = key;
         this.value = value;
+    }
+
+    public CommonMap(String key, Integer value) {
+    	this.key = key;
+    	this.value3 = value;
     }
 
     public String getKey() {
@@ -41,5 +47,13 @@ public class CommonMap {
     public void setValue2(String value2) {
         this.value2 = value2;
     }
+
+	public Integer getValue3() {
+		return value3;
+	}
+
+	public void setValue3(Integer value3) {
+		this.value3 = value3;
+	}
     
 }

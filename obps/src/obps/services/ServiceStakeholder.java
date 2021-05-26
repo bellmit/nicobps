@@ -90,12 +90,10 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	public String ulbRegistration(Integer officecode, Integer usercode) {
 		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
-		Long applicationslno = SUI.getMaxValue(
-				"select max(applicationslno) from nicobps.applications where officecode=? and modulecode=? and usercode=? ",
-				new Object[] { officecode, 1, usercode, });		
-		applicationslno++;
 		Integer servicetypecode = 1;
-		String applicationcode = SUI.generateApplicationcode(officecode, 1, usercode, servicetypecode, applicationslno.intValue());
+		CommonMap application=SUI.generateApplicationcode(officecode, 1, usercode, servicetypecode);
+		String applicationcode = application.getKey();
+		Integer applicationslno = application.getValue3();
 		if (SUI.update("nicobps.applications", sql,
 				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, servicetypecode })) {
 			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");

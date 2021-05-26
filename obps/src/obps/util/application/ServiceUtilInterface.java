@@ -84,8 +84,8 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listPageurls();
 
-	public String generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
-			Integer servicetypecode,Integer applicationslno);
+	public CommonMap generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
+			Integer servicetypecode);
 
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);

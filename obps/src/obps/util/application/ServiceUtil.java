@@ -237,10 +237,13 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public String generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
-			Integer servicetypecode, Integer applicationslno) {
-		return String.format("%03d", officecode) + String.format("%03d", modulecode) + String.format("%04d", usercode)
-				+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
+	public CommonMap generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
+			Integer servicetypecode) {
+		Integer applicationslno = getMax("nicobps", "applications", "applicationslno");	
+		applicationslno++;		
+		return new CommonMap(String.format("%03d", officecode) + String.format("%03d", modulecode) + String.format("%04d", usercode)
+				+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno)
+				,applicationslno);
 	}
 
 	@Override
