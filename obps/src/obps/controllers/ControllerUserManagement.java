@@ -401,6 +401,21 @@ public class ControllerUserManagement {
 		return ResponseEntity.ok().body(response);
 	}
 	
+	@PostMapping(value = "/updatefeemaster.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updatefeemaster(@RequestBody FeeMaster feemaster) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+System.out.println("feemaster:"+feemaster);
+		if (serviceUserManagementInterface.updatefeemaster(feemaster)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	
 	@GetMapping("/initoccupancies.htm")
 	public String initoccupancies() {
 		return "initialization/initoccupancies";
@@ -417,7 +432,7 @@ public class ControllerUserManagement {
 	@PostMapping(value = "/initfeemaster.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initfeemaster(@RequestBody Map<String, Object> feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		System.out.println("feemaster"+feemaster);
+//		System.out.println("feemaster"+feemaster);
 		
 		for (String name: feemaster.keySet()) {
 		    String key = name.toString();

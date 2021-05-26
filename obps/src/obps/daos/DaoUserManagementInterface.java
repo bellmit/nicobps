@@ -46,6 +46,9 @@ public interface DaoUserManagementInterface {
 
 	public boolean updatefeetypes(FeeTypes feetype);
 
+	public boolean updatefeemaster(FeeMaster feemaster);
+
+	
 	public boolean updateoccupancy(Occupancies occupancies);
 	
 	public boolean createLicenseeRegistration(Map<String, Object> param);

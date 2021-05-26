@@ -60,6 +60,8 @@ public interface ServiceUserManagementInterface {
 	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee);
 
 	public boolean updatefeetypes(FeeTypes feetype);
+	
+	public boolean updatefeemaster(FeeMaster feemaster);
 
 	public boolean updateoccupancy(Occupancies occupancy);
 

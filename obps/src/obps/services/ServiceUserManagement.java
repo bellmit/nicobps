@@ -140,6 +140,12 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 	} 
     
     @Override
+    public boolean updatefeemaster(FeeMaster feemaster){    	    	
+		return DaoUserManagementInterface.updatefeemaster(feemaster);	
+	} 
+    
+    
+    @Override
     public boolean updateoccupancy(Occupancies occupancies){    	    	
 		return DaoUserManagementInterface.updateoccupancy(occupancies);	
 	} 

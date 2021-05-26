@@ -25,7 +25,7 @@
 
 										<tr>
 
-											<td>Please Select Office<span class="mandatory">*</span>:
+											<td>Please Select Office:
 											</td>
 											<td><select id='officecode'
 												ng-model='feemaster.offices.officecode'
@@ -41,7 +41,7 @@
 										</tr>
 										<tr>
 
-											<td>Please Select Licensee Type<span class="mandatory">*</span>:
+											<td>Please Select Licensee Type:
 											</td>
 											<td><select id='licenseetypecode'
 												ng-model='feemaster.licenseetypes.licenseetypecode'
@@ -81,10 +81,10 @@
 											<td colspan="2" align="center">
 												<button type="submit" id="add" ng-click="save()"
 													class="button-primary" ng-if="actionButton === 1"
-													ng-disabled="userForm.$invalid">Save</button>
+													ng-disabled="feemasterForm.$invalid">Save</button>
 												<button name="submit" id="add" ng-click="update()"
 													class="button-primary" ng-if="actionButton === 2"
-													ng-disabled="userForm.$invalid">Update</button> <input
+													ng-disabled="feemasterForm.$invalid">Update</button> <input
 												type="reset" value="Reset" ng-click="reset()"
 												class="button-default" />
 											</td>

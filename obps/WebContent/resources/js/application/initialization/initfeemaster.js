@@ -12,108 +12,118 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 
 		/*------------------------*/
 
-			 $scope.feemaster = new FeeMaster();
+		$scope.feemaster = new FeeMaster();
 		$scope.feemasters = [];
 		$scope.actionButton = 1;
-		
-
-   
-    $scope.trustHTML = function (post) {
-        return $sce.trustAsHtml(post);
-    };
-//    $scope.officeDesc = function (offc) {
-//    	return offc.officename1+((offc.officename2)?(', '+offc.officename2):'')+((offc.officename3)?(', '+offc.officename3):'');
-//    };
-    
-    $scope.edit = function (feecode) {
-	
-	$scope.feemaster.licenseetypes.licenseetypecode=0;
-	
-	$scope.feemaster.offices.officecode=0;
-	$scope.feemaster.feetypes.feetypecode=0;
-
-    	$scope.actionButton = 2;
-    	 $scope.feemaster = new FeeMaster();
- 
-        $scope.feemasters.forEach((o, x) => {
-	
-        	if (o.feecode == feecode){
-	
-	alert("o.officecode"+o.officecode)
-	alert("o.feetypecode"+o.feetypecode)
-	alert("o.feeamount"+o.feeamount)
-	alert("o.licenseetypecode"+o.licenseetypecode)
-        	
 
 
 
-$scope.feemaster.licenseetypes.licenseetypecode=o.licenseetypecode;
-$scope.feemaster.feetypes.feetypecode=o.feetypecode;
-$scope.feemaster.offices.officecode=o.officecode;
-$scope.feemaster.feeamount=o.feeamount;
+		$scope.trustHTML = function(post) {
+			return $sce.trustAsHtml(post);
+		};
+		//    $scope.officeDesc = function (offc) {
+		//    	return offc.officename1+((offc.officename2)?(', '+offc.officename2):'')+((offc.officename3)?(', '+offc.officename3):'');
+		//    };
 
-$scope.feemasters.push({
-//	userpagecode: 0,
-//            feeamount: $scope.user.usercode,
-            feemaster: o,
-});
+		$scope.edit = function(feecode) {
 
-alert("officecode"+$scope.feemaster.officecode)
-        	}
-        });
-//        $scope.listOfficeCells($scope.user.officecode);
-        jQuery('html, body').animate({
-            scrollTop: 0
-        }, 2000);
-    };
+			$scope.feemaster.licenseetypes.licenseetypecode = 0;
 
-    $scope.reset = function () {
-    	 $scope.feemaster = new FeeMaster();
-    	$scope.actionButton = 1;
-    };
+			$scope.feemaster.offices.officecode = 0;
+			$scope.feemaster.feetypes.feetypecode = 0;
 
-    $scope.save = function () {
+			$scope.actionButton = 2;
+			$scope.feemaster = new FeeMaster();
 
+			$scope.feemasters.forEach((o, x) => {
+
+				if (o.feecode == feecode) {
+					//		alert("o.feecode"+o.feecode)
+					//	alert("o.officecode"+o.officecode)
+					//	alert("o.feetypecode"+o.feetypecode)
+					//	alert("o.feeamount"+o.feeamount)
+					//	alert("o.licenseetypecode"+o.licenseetypecode)
 
 
-$scope.feemaster.licenseetypecode=$scope.feemaster.licenseetypes.licenseetypecode;
-$scope.feemaster.feetypecode=$scope.feemaster.feetypes.feetypecode;
-$scope.feemaster.officecode=$scope.feemaster.offices.officecode;
-alert("feemaster licenseecode"+$scope.feemaster.licenseetypecode)
 
-        if($scope.feemasterForm.$invalid)
-            return false;
-   
-        $scope.method = "POST";
-        $scope.urlEndpoint = "./initfeemaster.htm";
-    	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, () => {$scope.reset();$scope.listFeeMaster(); alert(successMsg)}, () =>{alert(errorMsg)});
-    };
-    
-//    $scope.toggleUserStatus= function (usercode) {
-//    	$scope.users.forEach((o, x) => {
-//        	if (o.usercode == usercode){
-//        		$scope.user = o;
-//        	}
-//        });
-//    	$scope.method = "POST";
-//    	$scope.urlEndpoint = "./updateuser/status";
-//    	commonInitService.save($scope.method, "./ableuser.htm", $scope.user, () => {$scope.reset();$scope.listLicensees(licenseeregistrationcode);}, () =>{alert("failed")});
-//    	
-//    };
-//    
-    $scope.update = () => {
-	    if($scope.feetypeForm.$invalid)
-             return false;
-	    $scope.method = "POST";
-    	$scope.urlEndpoint = "./updateinitfeetypes.htm";
-    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, () => {$scope.reset();$scope.listFeeTypes(), alert(successMsg)}, () => {alert(errorMsg)});
-    }
-     
+
+					$scope.feemaster.licenseetypes.licenseetypecode = o.licenseetypecode;
+					$scope.feemaster.feetypes.feetypecode = o.feetypecode;
+					$scope.feemaster.offices.officecode = o.officecode;
+					$scope.feemaster.feeamount = o.feeamount;
+					$scope.feemaster.feecode = o.feecode;
+
+					$scope.feemasters.push({
+						//	userpagecode: 0,
+						//            feeamount: $scope.user.usercode,
+						feemaster: o,
+					});
+
+					//alert("officecode"+$scope.feemaster.officecode)
+				}
+			});
+			//        $scope.listOfficeCells($scope.user.officecode);
+			jQuery('html, body').animate({
+				scrollTop: 0
+			}, 2000);
+		};
+
+		$scope.reset = function() {
+			$scope.feemaster = new FeeMaster();
+			$scope.actionButton = 1;
+		};
+
+		$scope.save = function() {
+
+			$scope.validateFeeMasterForm();
+
+
+			$scope.feemaster.licenseetypecode = $scope.feemaster.licenseetypes.licenseetypecode;
+			$scope.feemaster.feetypecode = $scope.feemaster.feetypes.feetypecode;
+			$scope.feemaster.officecode = $scope.feemaster.offices.officecode;
+			//alert("feemaster licenseecode"+$scope.feemaster.licenseetypecode)
+
+//			if ($scope.feemasterForm.$invalid)
+//				return false;
+
+			$scope.method = "POST";
+			$scope.urlEndpoint = "./initfeemaster.htm";
+
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, () => { $scope.reset(); $scope.listFeeMaster(); alert(successMsg) }, () => { alert(errorMsg) });
+		};
+
+		//    $scope.toggleUserStatus= function (usercode) {
+		//    	$scope.users.forEach((o, x) => {
+		//        	if (o.usercode == usercode){
+		//        		$scope.user = o;
+		//        	}
+		//        });
+		//    	$scope.method = "POST";
+		//    	$scope.urlEndpoint = "./updateuser/status";
+		//    	commonInitService.save($scope.method, "./ableuser.htm", $scope.user, () => {$scope.reset();$scope.listLicensees(licenseeregistrationcode);}, () =>{alert("failed")});
+		//    	
+		//    };
+		//    
+		$scope.update = () => {
+			$scope.validateFeeMasterForm();
+			
+			$scope.feemaster.licenseetypecode = $scope.feemaster.licenseetypes.licenseetypecode;
+			$scope.feemaster.feetypecode = $scope.feemaster.feetypes.feetypecode;
+			$scope.feemaster.officecode = $scope.feemaster.offices.officecode;
+			//$scope.feemaster.feecode=feecode;
+			//alert("feecode"+$scope.feemaster.feecode)
+			//alert("feemaster update licenseecode"+$scope.feemaster.licenseetypecode+"feetypecode"+$scope.feemaster.feetypecode+"officecode"+$scope.feemaster.officecode+"feeamount:"+$scope.feemaster.feeamount)
+			if ($scope.feemasterForm.$invalid)
+				return false;
+			$scope.method = "POST";
+			$scope.urlEndpoint = "./updatefeemaster.htm";
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, () => { $scope.reset(); $scope.listFeeMaster(), alert(successMsg) }, () => { alert(errorMsg) });
+		}
+
 
 
 		$scope.setDataTable = function(obj) {
-			
+
 			jQuery("#displayRecords").html("");
 			jQuery("#displayRecords").html("<table id='displayRecordsTable' style='width:100%' border='1'>\n\
                                                 </table>");
@@ -164,6 +174,38 @@ alert("feemaster licenseecode"+$scope.feemaster.licenseetypecode)
 			});
 		};
 
+		$scope.validateFeeMasterForm = function() {
+			//alert("validate"+$scope.feemaster.offices.officecode)
+
+
+
+//
+//			if ($scope.feemaster.offices.officecode === "" || $scope.feemaster.offices.officecode === 0 || $scope.feemaster.offices.officecode === null) {
+//				jQuery("#officecode").focus();
+//				alert("office cannot be empty");
+//				return false;
+//			}
+
+//			if ($scope.feemaster.licenseetypes.licenseetypecode === "" || $scope.feemaster.licenseetypes.licenseetypecode === 0 || $scope.feemaster.licenseetypes.licenseetypecode === null) {
+//				jQuery("#licenseetypecode").focus();
+//				alert("licensee type cannot be empty");
+//				return false;
+//			}
+
+			if ($scope.feemaster.feetypes.feetypecode === "" || $scope.feemaster.feetypes.feetypecode === 0 || $scope.feemaster.feetypes.feetypecode === null) {
+				jQuery("#feetypecode").focus();
+				alert("fee type cannot be empty");
+				return false;
+			}
+
+			if ($scope.feemaster.feeamount === "" || $scope.feemaster.feeamount === 0 || $scope.feemaster.feeamount === null) {
+				jQuery("#feeamount").focus();
+				alert("fee amount cannot be empty");
+				return false;
+			}
+
+			return true;
+		};
 
 		/* READ DATA */
 		$scope.listFeeMaster = (feecode = 0) => {
