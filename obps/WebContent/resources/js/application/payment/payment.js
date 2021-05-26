@@ -5,6 +5,8 @@ app.controller('paymentController', function($scope) {
 		$scope.applicationcode = applicationcode;
 		$scope.feecode = feecode;
 		$scope.feeamount = feeamount;
+		
+
 		$scope.submitDetails = () => {
 			var flag = confirm(" You are about to get Redirect to BillDesk Payment URL.");
 			if (!flag) { return false; }

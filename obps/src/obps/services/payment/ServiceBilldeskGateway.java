@@ -3,6 +3,11 @@ package obps.services.payment;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,8 +32,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import obps.daos.DaoPaymentInterface;
+import obps.util.application.ServiceUtilInterface;
+
 @Service
 public class ServiceBilldeskGateway {
+
+	@Autowired
+	private ServiceUtilInterface serviceUtilInterface;
+	@Autowired
+	private DaoPaymentInterface daoPaymentInterface;
 
 	private final String MERCHANT_URL_PAY;
 	private final String MERCHANT_ID;
@@ -37,6 +50,7 @@ public class ServiceBilldeskGateway {
 	private final String LOCALE;
 	private final String CURRENCY;
 	private final String RETURN_URL;
+	private final String tenantid;
 	private final Environment environment;
 
 	@Autowired
@@ -50,15 +64,18 @@ public class ServiceBilldeskGateway {
 		CHECK_SUM_PWD = environment.getRequiredProperty("billdesk.merchant.pwd");
 		MERCHANT_URL_PAY = environment.getRequiredProperty("billdesk.url.debit");
 		RETURN_URL = environment.getRequiredProperty("billdesk.url.return");
+		tenantid = environment.getRequiredProperty("tenantId");
 	}
 
-	public URI generateRedirectURI() {
+	public URI generateRedirectURI(String usercode, Integer amount, String feecode, String applicationcode) {
 		System.out.println("Generate URI");
+		Integer transactioncode = serviceUtilInterface.getMax("nicobps", "transactions", "transactioncode");
+		transactioncode++;
 		String hashSequence = "MerchantId|CustomerId|NA|Amount|NA|NA|NA|Currency|NA|R|SecureSecret|NA|NA|F|TenantId|NA|NA|NA|5|NA|NA|ReturnUrl";
 		hashSequence = hashSequence.replace("MerchantId", MERCHANT_ID);
-		hashSequence = hashSequence.replace("CustomerId", "TestCustomerID");
-		hashSequence = hashSequence.replace("TenantId", "TestTenantID");
-		hashSequence = hashSequence.replace("Amount", "1");
+		hashSequence = hashSequence.replace("CustomerId", transactioncode.toString());
+		hashSequence = hashSequence.replace("TenantId", tenantid);
+		hashSequence = hashSequence.replace("Amount", amount.toString());
 		hashSequence = hashSequence.replace("Currency", CURRENCY);
 		hashSequence = hashSequence.replace("SecureSecret", SECURE_SECRET);
 		hashSequence = hashSequence.replace("ReturnUrl", RETURN_URL);
@@ -76,10 +93,29 @@ public class ServiceBilldeskGateway {
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 			redirectUri = restTemplate.postForLocation(uriComponents.toUriString(), entity);
 
-			if (redirectUri.equals(null))
+			if (redirectUri.equals(null)) {
 				System.out.println("BILLDESK_REDIRECT_URI_GEN_FAILED , Failed to generate redirect URI");
-			else
+			} else {
 				System.out.println("redirectUri-----------" + redirectUri);
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date date = new Date();
+				// save to db
+				Map<String, Object> transaction = new HashMap<String, Object>();
+				transaction.put("transactioncode", transactioncode);
+				transaction.put("usercode", usercode);
+				transaction.put("feecode", feecode);
+				transaction.put("amount", amount);
+				transaction.put("paymentmodecode", 6);
+				transaction.put("paymentstatus", "I");
+				transaction.put("sentparameters", hashSequence);
+				transaction.put("entrydate", dateFormat.format(date));
+				daoPaymentInterface.InitiatePayment(transaction);
+				Map<String, Object> paymentappl = new HashMap<String, Object>();
+				paymentappl.put("transactioncode", transactioncode);
+				paymentappl.put("applicationcode", applicationcode);
+				paymentappl.put("entrydate", dateFormat.format(date));
+				daoPaymentInterface.SavePaymentMap(paymentappl);
+			}
 
 		} catch (RestClientException e) {
 
@@ -123,8 +159,7 @@ public class ServiceBilldeskGateway {
 				HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 				clientBuilder.useSystemProperties();
 
-				clientBuilder.setProxy(new HttpHost(environment.getRequiredProperty("proxy.url"),
-						Integer.valueOf(environment.getRequiredProperty("proxy.port"))));
+				clientBuilder.setProxy(new HttpHost(environment.getRequiredProperty("proxy.url"), Integer.valueOf(environment.getRequiredProperty("proxy.port"))));
 				CloseableHttpClient client = clientBuilder.build();
 				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 				factory.setHttpClient(client);

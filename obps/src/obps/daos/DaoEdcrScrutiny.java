@@ -25,8 +25,7 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Autowired
-	private DaoUtilInterface daoUtilInterface;
+	 
 
 	@Autowired
 	public void createTemplate(DataSource dataSource) {

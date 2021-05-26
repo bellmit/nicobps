@@ -24,7 +24,7 @@
 
 							<br>
 							<h5 style="">
-								Click on Browse and select a .DXF File<span class="mandatory">*</span>
+								Select the Office and Click on Browse and select a .DXF File<span class="mandatory">*</span>
 							</h5>
 							<br>
 							<table id="dxftable">
