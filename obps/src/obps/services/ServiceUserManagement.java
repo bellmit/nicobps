@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import obps.daos.DaoUserManagementInterface;
 import obps.domains.DomainUserManagementInterface;
+import obps.models.FeeMaster;
+import obps.models.FeeTypes;
+import obps.models.LicenseesRegistrationsm;
+import obps.models.Occupancies;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.util.application.ServiceUtilInterface;
@@ -31,7 +35,26 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		String sql = "SELECT MAX(afrcode) FROM nicobps.applicationflowremarks ";		
 		return serviceUtilInterface.getMaxValue(sql)+1;	
 	}     
+    
+    @Override
+   	public Long getMaxLicenseecode() {	    	
+   		String sql = "SELECT MAX(licenseeregistrationcode) FROM masters.licenseesregistrationsm ";		
+   		return serviceUtilInterface.getMaxValue(sql)+1;	
+   	} 
+    
+    @Override
+   	public Long getMaxFeeTypecode() {	    	
+   		String sql = "SELECT MAX(feetypecode) FROM masters.feetypes ";		
+   		return serviceUtilInterface.getMaxValue(sql)+1;	
+   	} 
 	
+    @Override
+   	public Long getMaxFeeCode() {	    	
+   		String sql = "SELECT MAX(feecode) FROM masters.feemaster ";		
+   		return serviceUtilInterface.getMaxValue(sql)+1;	
+   	} 
+	
+    
     @Override
 	public boolean checkEmailExistance(final String username){
 		String sql="SELECT * FROM nicobps.userlogins WHERE TRIM(username)=?"; 
@@ -105,4 +128,63 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 
 		return (DaoUserManagementInterface.mapUserpages(upages)) ? "Mapped" : "Failed";
 	}
+    
+    @Override
+    public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee){    	    	
+		return DaoUserManagementInterface.updateLicenseesRegistrationsm(licensee);	
+	} 
+    
+    @Override
+    public boolean updatefeetypes(FeeTypes feeTypes){    	    	
+		return DaoUserManagementInterface.updatefeetypes(feeTypes);	
+	} 
+    
+    @Override
+    public boolean updateoccupancy(Occupancies occupancies){    	    	
+		return DaoUserManagementInterface.updateoccupancy(occupancies);	
+	} 
+    
+    @Override
+    public List<Occupancies> listOccupancies(){    	    	
+		return DaoUserManagementInterface.listOccupancies();	
+	} 
+    
+    @Override
+    public List<FeeMaster> listFeeMaster(){    	    	
+		return DaoUserManagementInterface.listFeeMaster();	
+	} 
+    
+    
+    @Override
+    public List<LicenseesRegistrationsm> listLicenseesRegistrationsms(){    	    	
+		return DaoUserManagementInterface.listLicenseesRegistrationsms();	
+	}  
+    
+    @Override
+    public List<FeeTypes> listFeeTypes(){    	    	
+		return DaoUserManagementInterface.listFeeTypes();	
+	}  
+    
+    @Override
+    public boolean createLicenseeRegistration(Map<String,Object> param) {    	    	
+		return DaoUserManagementInterface.createLicenseeRegistration(param);	
+	}	
+    
+    @Override
+    public boolean initfeetypes(Map<String,Object> param) {    	    	
+		return DaoUserManagementInterface.initfeetypes(param);	
+	}	
+    
+    @Override
+    public boolean initoccupancy(Map<String,Object> param) {    	    	
+		return DaoUserManagementInterface.initoccupancy(param);	
+	}
+    
+    @Override
+    public boolean initfeemaster(Map<String,Object> param) {    	    	
+		return DaoUserManagementInterface.initfeemaster(param);	
+	}	
+    
+    
+    
 }

@@ -55,6 +55,8 @@ public interface ServiceUtilInterface {
 	public List<CommonMap> listSalutations();
 
 	public List<CommonMap> listLicenseetypes();
+	
+	public List<CommonMap> listFeetypes();
 
 	public List<CommonMap> listLicenseesregistrationsm();
 

@@ -19,6 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import obps.models.FeeMaster;
+import obps.models.FeeTypes;
+import obps.models.LicenseesRegistrationsm;
+import obps.models.Occupancies;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.util.application.CommonMap;
@@ -385,6 +389,226 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.out.println("\n\nError in mapUserpages(List<Map<String,Object>> upage) " + ex);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee) 
+	{
+		String sql = "";
+		boolean response = false;
+		try 
+		{
+			sql = "UPDATE masters.licenseesregistrationsm SET licenseedescription = ? WHERE licenseeregistrationcode = ?";
+			Object[] param = new Object[] { licensee.getLicenseedescription(),licensee.getLicenseeregistrationcode()};
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee)  : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean updatefeetypes(FeeTypes feetype) 
+	{
+		String sql = "";
+		boolean response = false;
+		try 
+		{
+			sql = "UPDATE masters.feetypes SET feetypedescription = ? WHERE feetypecode = ?";
+			Object[] param = new Object[] { feetype.getFeetypedescription(),feetype.getFeetypecode()};
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updatefeetypes(updatefeetypes )  : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean updateoccupancy(Occupancies occupancies) 
+	{
+		String sql = "";
+		boolean response = false;
+		try 
+		{
+			sql = "UPDATE masters.occupancies SET occupancycode = ?, occupancyname=?,occupancyalias=? WHERE occupancycode = ?";
+			Object[] param = new Object[] { occupancies.getOccupancycode(),occupancies.getOccupancyname(),occupancies.getOccupancyalias(),occupancies.getOccupancycode()};
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updateoccupancy(updateoccupancy )  : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public List<Occupancies> listOccupancies() 
+	{
+		System.out.println("inside dao begin");
+		List<Occupancies> list = null;
+		try {
+			String sql = "Select occupancycode, occupancyname, occupancyalias "
+					+ "From masters.occupancies Order by occupancycode";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Occupancies>(Occupancies.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listUsers()  : " + e);
+		}
+		System.out.println("inside dao end");
+		return (list != null) ? list : new LinkedList();
+	}
+	
+	@Override
+	public List<FeeMaster> listFeeMaster() 
+	{
+		System.out.println("inside listFeeMaster dao begin");
+		List<FeeMaster> list = null;
+		
+		
+		try {
+			String sql = "Select fm.feecode, fm.officecode,o.officename1 || ' ' || o.officename2 as officename1,l.licenseetypename as licenseetypename,f.feetypedescription as feetypedescription,fm.licenseetypecode,fm.feeamount From masters.feemaster fm "
+					+ "inner join masters.offices o on o.officecode=fm.officecode "
+					+ "inner join masters.feetypes f on f.feetypecode=fm.feetypecode "
+					+ "inner join masters.licenseetypes l on l.licenseetypecode=fm.licenseetypecode "
+					+ "Order by officename1";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<FeeMaster>(FeeMaster.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listUsers()  : " + e);
+		}
+		System.out.println("inside dao listFeeMaster end");
+		return (list != null) ? list : new LinkedList();
+	}
+	
+	
+
+	@Override
+	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms() 
+	{
+		List<LicenseesRegistrationsm> list = null;
+		try {
+			String sql = "Select licenseeregistrationcode, licenseedescription, enabled from"
+					+ " masters.licenseesregistrationsm Order by licenseedescription";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<LicenseesRegistrationsm>(LicenseesRegistrationsm.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listLicenseesRegistrationsms()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
+
+
+	@Override
+	public List<FeeTypes> listFeeTypes() 
+	{
+		List<FeeTypes> list = null;
+		try {
+			String sql = "Select feetypecode, feetypedescription, enabled from"
+					+ " masters.feetypes Order by feetypedescription";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<FeeTypes>(FeeTypes.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listFeeTypes()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
+	 
+	@Override
+	public boolean initfeetypes(Map<String, Object> param) 
+	{
+		boolean response = false;
+		String sql = null;
+		Integer feetypecode = Integer.valueOf((String) param.get("feetypecode"));
+		try 
+		{
+			sql = "INSERT INTO masters.feetypes(feetypecode,feetypedescription) "
+					+ "VALUES (?,?) ";
+			Object[] values = { feetypecode, ((String) param.get("feetypedescription")).trim() };
+			response = jdbcTemplate.update(sql, values) > 0;
+			
+		
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.createUser(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean initoccupancy(Map<String, Object> param) 
+	{
+		boolean response = false;
+		String sql = null;
+		
+		try 
+		{
+			sql = "INSERT INTO masters.occupancies(occupancycode,occupancyname,occupancyalias) "
+					+ "VALUES (?,?,?) ";
+			Object[] values = { ((String) param.get("occupancycode")).trim(), ((String) param.get("occupancyname")).trim(),((String) param.get("occupancyalias")).trim() };
+			response = jdbcTemplate.update(sql, values) > 0;
+			
+		
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.createUser(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean initfeemaster(Map<String, Object> param) 
+	{
+		boolean response = false;
+		String sql = null;
+		System.out.println("officecode::::"+param.get("officecode"));
+		System.out.println("licenseetypecode::::"+param.get("licenseetypecode"));
+		System.out.println("feetypecode::::"+param.get("feetypecode"));
+		Integer feecode = Integer.valueOf((String) param.get("feecode"));
+		try 
+		{
+			sql = "INSERT INTO masters.feemaster(feecode,officecode,licenseetypecode,feetypecode,feeamount) "
+					+ "VALUES (?,?,?,?,?) ";
+			Object[] values = {feecode,Integer.valueOf((String) param.get("officecode")),Integer.valueOf((String) param.get("licenseetypecode")),Integer.valueOf((String) param.get("feetypecode")),Integer.valueOf((String) param.get("feeamount")) };
+			response = jdbcTemplate.update(sql, values) > 0;
+			
+		
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.initfeemaster(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean createLicenseeRegistration(Map<String, Object> param) 
+	{
+		boolean response = false;
+		String sql = null;
+		Integer licenseeregistrationcode = Integer.valueOf((String) param.get("licenseeregistrationcode"));
+		try 
+		{
+			sql = "INSERT INTO masters.licenseesregistrationsm(licenseeregistrationcode,licenseedescription) "
+					+ "VALUES (?,?) ";
+			Object[] values = { licenseeregistrationcode, ((String) param.get("licenseedescription")).trim() };
+			response = jdbcTemplate.update(sql, values) > 0;
+			
+		
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.createUser(Map<String,String> param) : " + e);
 		}
 		return response;
 	}

@@ -1,0 +1,195 @@
+app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout', 'commonInitFactory', 'commonInitService',
+	function($scope, $sce, $compile, $timeout, commonInitFactory, commonInitService) {
+		var scope = angular.element($("#createfeemasterCtrl")).scope();
+		commonInitService.success();
+		/* Common Ajax Params */
+		var successMsg = "Success: Fee Master created or updated successfully";
+		var errorMsg = "Error: Unable to perform action";
+		$scope.errorCallback = "";
+		$scope.method = "POST";
+		$scope.successCallback = "";
+		$scope.urlEndpoint = "";
+
+		/*------------------------*/
+
+			 $scope.feemaster = new FeeMaster();
+		$scope.feemasters = [];
+		$scope.actionButton = 1;
+		
+
+   
+    $scope.trustHTML = function (post) {
+        return $sce.trustAsHtml(post);
+    };
+//    $scope.officeDesc = function (offc) {
+//    	return offc.officename1+((offc.officename2)?(', '+offc.officename2):'')+((offc.officename3)?(', '+offc.officename3):'');
+//    };
+    
+    $scope.edit = function (feecode) {
+	
+	$scope.feemaster.licenseetypes.licenseetypecode=0;
+	
+	$scope.feemaster.offices.officecode=0;
+	$scope.feemaster.feetypes.feetypecode=0;
+
+    	$scope.actionButton = 2;
+    	 $scope.feemaster = new FeeMaster();
+ 
+        $scope.feemasters.forEach((o, x) => {
+	
+        	if (o.feecode == feecode){
+	
+	alert("o.officecode"+o.officecode)
+	alert("o.feetypecode"+o.feetypecode)
+	alert("o.feeamount"+o.feeamount)
+	alert("o.licenseetypecode"+o.licenseetypecode)
+        	
+
+
+
+$scope.feemaster.licenseetypes.licenseetypecode=o.licenseetypecode;
+$scope.feemaster.feetypes.feetypecode=o.feetypecode;
+$scope.feemaster.offices.officecode=o.officecode;
+$scope.feemaster.feeamount=o.feeamount;
+
+$scope.feemasters.push({
+//	userpagecode: 0,
+//            feeamount: $scope.user.usercode,
+            feemaster: o,
+});
+
+alert("officecode"+$scope.feemaster.officecode)
+        	}
+        });
+//        $scope.listOfficeCells($scope.user.officecode);
+        jQuery('html, body').animate({
+            scrollTop: 0
+        }, 2000);
+    };
+
+    $scope.reset = function () {
+    	 $scope.feemaster = new FeeMaster();
+    	$scope.actionButton = 1;
+    };
+
+    $scope.save = function () {
+
+
+
+$scope.feemaster.licenseetypecode=$scope.feemaster.licenseetypes.licenseetypecode;
+$scope.feemaster.feetypecode=$scope.feemaster.feetypes.feetypecode;
+$scope.feemaster.officecode=$scope.feemaster.offices.officecode;
+alert("feemaster licenseecode"+$scope.feemaster.licenseetypecode)
+
+        if($scope.feemasterForm.$invalid)
+            return false;
+   
+        $scope.method = "POST";
+        $scope.urlEndpoint = "./initfeemaster.htm";
+    	
+        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, () => {$scope.reset();$scope.listFeeMaster(); alert(successMsg)}, () =>{alert(errorMsg)});
+    };
+    
+//    $scope.toggleUserStatus= function (usercode) {
+//    	$scope.users.forEach((o, x) => {
+//        	if (o.usercode == usercode){
+//        		$scope.user = o;
+//        	}
+//        });
+//    	$scope.method = "POST";
+//    	$scope.urlEndpoint = "./updateuser/status";
+//    	commonInitService.save($scope.method, "./ableuser.htm", $scope.user, () => {$scope.reset();$scope.listLicensees(licenseeregistrationcode);}, () =>{alert("failed")});
+//    	
+//    };
+//    
+    $scope.update = () => {
+	    if($scope.feetypeForm.$invalid)
+             return false;
+	    $scope.method = "POST";
+    	$scope.urlEndpoint = "./updateinitfeetypes.htm";
+    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, () => {$scope.reset();$scope.listFeeTypes(), alert(successMsg)}, () => {alert(errorMsg)});
+    }
+     
+
+
+		$scope.setDataTable = function(obj) {
+			
+			jQuery("#displayRecords").html("");
+			jQuery("#displayRecords").html("<table id='displayRecordsTable' style='width:100%' border='1'>\n\
+                                                </table>");
+			jQuery('#displayRecordsTable').DataTable({
+				data: obj,
+				columns: [
+					{
+						"title": "Slno",
+						"data": "feecode"
+					},
+					{
+						"title": "Office",
+						"data": "officename1"
+					},
+					{
+						"title": "Licensee Type",
+						"data": "licenseetypename"
+					},
+					{
+						"title": "Fee Type Description",
+						"data": "feetypedescription"
+					},
+					{
+						"title": "Fee Amount",
+						"data": "feeamount"
+					},
+
+					{
+						"title": "Action",
+						"sortable": false,
+						"data": "feecode",
+						"render": function(data, type, row, meta) {
+							let status = row.enabled == 'Y' ? 'Disable' : 'Enable';
+							let div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="button-primary">Edit</button>';
+							//                    		div += '<button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="toggleUserStatus(' + data + ')" class="button-primary">'+status+'</button></div>';
+							return div;
+						}
+					}
+				],
+				"sortable": false,
+				"columnDefs": [
+					{ "width": "2%", "targets": 0 }
+				],
+				"bLengthChange": false,
+				createdRow: function(row, data, dataIndex) {
+					$compile(angular.element(row).contents())($scope);
+				}
+			});
+		};
+
+
+		/* READ DATA */
+		$scope.listFeeMaster = (feecode = 0) => {
+
+			if (feecode == 0) {
+				commonInitFactory.listFeeMaster((response) => {
+					$scope.feemasters = response;
+					$scope.setDataTable($scope.feemasters);
+				});
+			} else {
+				commonInitFactory.listFeeMaster((response) => {
+					$scope.feemasters.forEach((o, x) => {
+						if (o.feecode == feecode) {
+							$scope.feemasters[x] = response;
+						}
+					});
+					$scope.setDataTable($scope.feemasters);
+				}, feecode);
+			}
+
+		};
+		$scope.listFeeMaster();
+
+
+
+	}]);
+
+
+

@@ -148,6 +148,12 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
+	public List<CommonMap> listFeetypes() {
+		String sql = "SELECT T.feetypecode AS key, T.feetypedescription AS value FROM masters.feetypes T WHERE enabled='Y' ORDER BY feetypedescription ";
+		return this.listCommonMap(sql);
+	}
+	
+	@Override
 	public List<CommonMap> listLicenseesregistrationsm() {
 		String sql = "SELECT T.licenseeregistrationcode AS key, T.licenseedescription AS value FROM masters.licenseesregistrationsm T WHERE enabled='Y' ORDER BY licenseedescription ";
 		return this.listCommonMap(sql);

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
+import obps.models.FeeMaster;
+import obps.models.FeeTypes;
+import obps.models.LicenseesRegistrationsm;
+import obps.models.Occupancies;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
@@ -313,4 +318,173 @@ public class ControllerUserManagement {
 
 		return serviceUserManagementInterface.saveUserpages(userpages);
 	}
+	
+	@GetMapping("/initlicenseesregistrationsm.htm")
+	public String initlicenseesregistrationsm() {
+		return "initialization/initlicenseesregistrationsm";
+	}
+	@PostMapping(value = "/initlicenseesregistrationsm.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> createlicenseesregistrationsm(@RequestBody Map<String, Object> licensee) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		String licenseeregistrationcode = serviceUserManagementInterface.getMaxLicenseecode() + "";
+		licensee.put("licenseeregistrationcode", licenseeregistrationcode);
+//		user.put("usertype", "F");
+
+		if (serviceUserManagementInterface.createLicenseeRegistration(licensee)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	@GetMapping("/listLicensees.htm")
+	public @ResponseBody List<LicenseesRegistrationsm> listLicenseesRegistrationsms() {
+
+		return serviceUserManagementInterface.listLicenseesRegistrationsms();
+	}
+	
+	@GetMapping("/listFeeTypes.htm")
+	public @ResponseBody List<FeeTypes> listFeeTypes() {
+
+		return serviceUserManagementInterface.listFeeTypes();
+	}
+	
+	@PostMapping(value = "/updatelicenseesregistrationsm.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updatelicenseesregistrationsm(@RequestBody LicenseesRegistrationsm licensee) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		if (serviceUserManagementInterface.updateLicenseesRegistrationsm(licensee)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@GetMapping("/initfeetypes.htm")
+	public String initfeetypes() {
+		return "initialization/initfeetypes";
+	}
+	
+	@PostMapping(value = "/initfeetypes.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initfeetypes(@RequestBody Map<String, Object> feetype) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		String feetypecode = serviceUserManagementInterface.getMaxFeeTypecode() + "";
+		feetype.put("feetypecode", feetypecode);
+//		user.put("usertype", "F");
+
+		if (serviceUserManagementInterface.initfeetypes(feetype)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping(value = "/updateinitfeetypes.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updateinitfeetypes(@RequestBody FeeTypes feetype) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		if (serviceUserManagementInterface.updatefeetypes(feetype)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@GetMapping("/initoccupancies.htm")
+	public String initoccupancies() {
+		return "initialization/initoccupancies";
+	}
+	
+	@GetMapping("/initfeemaster.htm")
+	public String initfeemaster(Model model,HttpServletRequest req) {
+		model.addAttribute("offices", serviceUtilInterface.listOffices());
+		model.addAttribute("licenseetypes", serviceUtilInterface.listLicenseetypes());
+		model.addAttribute("feetypes", serviceUtilInterface.listFeetypes());
+		
+		return "initialization/initfeemaster";
+	}
+	@PostMapping(value = "/initfeemaster.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initfeemaster(@RequestBody Map<String, Object> feemaster) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		System.out.println("feemaster"+feemaster);
+		
+		for (String name: feemaster.keySet()) {
+		    String key = name.toString();
+		    String value = feemaster.get(name).toString();
+		    System.out.println(key + "-key:::value -" + value);
+		   
+//		    
+//		    if(feemaster.containsKey("offices")){
+//		    	
+//		    	Integer	officecode = (Integer) feemaster.get("offices");
+//		    	
+//		    	System.out.println("officecode nested::"+officecode);
+//		    	} 	
+		}
+	
+		String feecode = serviceUserManagementInterface.getMaxFeeCode() + "";
+		feemaster.put("feecode", feecode);
+
+		if (serviceUserManagementInterface.initfeemaster(feemaster)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping(value = "/initoccupancies.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initoccupancies(@RequestBody Map<String, Object> occupancy) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		
+
+		if (serviceUserManagementInterface.initoccupancy(occupancy)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	@PostMapping(value = "/updateoccupancy.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updateoccupancy(@RequestBody Occupancies occupancy) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		if (serviceUserManagementInterface.updateoccupancy(occupancy)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+			return ResponseEntity.ok().body(response);
+		}
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@GetMapping("/listOccupancies.htm")
+	public @ResponseBody List<Occupancies> listOccupancies() {
+System.out.println("list occupancies");
+		return serviceUserManagementInterface.listOccupancies();
+	}
+	
+	@GetMapping("/listFeeMaster.htm")
+	public @ResponseBody List<FeeMaster> listFeeMaster() {
+System.out.println("list fee master");
+		return serviceUserManagementInterface.listFeeMaster();
+	}
+	
+	
 }
