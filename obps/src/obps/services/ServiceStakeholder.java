@@ -71,7 +71,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				c.setTime(new Date());
 				c.add(Calendar.YEAR, 1);
 				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
-					
+
 					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
 					SUI.update("nicobps.licenseeofficesvalidities", sql,
 							new Object[] { applicationcode, usercode, i.get("officecode"), new Date(), c.getTime() });
@@ -90,11 +90,12 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	public String ulbRegistration(Integer officecode, Integer usercode) {
 		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
-		Integer applicationslno = SUI.getMax("nicobps", "applications", "applicationslno");
+		Long applicationslno = SUI.getMaxValue(
+				"select max(applicationslno) from nicobps.applications where officecode=? and modulecode=? and usercode=? ",
+				new Object[] { officecode, 1, usercode, });		
 		applicationslno++;
 		Integer servicetypecode = 1;
-		String applicationcode = String.format("%03d", officecode) + "01" + String.format("%04d", usercode)
-				+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
+		String applicationcode = SUI.generateApplicationcode(officecode, 1, usercode, servicetypecode, applicationslno.intValue());
 		if (SUI.update("nicobps.applications", sql,
 				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, servicetypecode })) {
 			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");

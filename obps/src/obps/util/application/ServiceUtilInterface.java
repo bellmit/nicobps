@@ -55,7 +55,7 @@ public interface ServiceUtilInterface {
 	public List<CommonMap> listSalutations();
 
 	public List<CommonMap> listLicenseetypes();
-	
+
 	public List<CommonMap> listFeetypes();
 
 	public List<CommonMap> listLicenseesregistrationsm();
@@ -84,6 +84,9 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listPageurls();
 
+	public String generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
+			Integer servicetypecode,Integer applicationslno);
+
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);
 
@@ -95,6 +98,6 @@ public interface ServiceUtilInterface {
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, String applicationcode);
 
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer applicationcode);
-	
+
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode);
 }

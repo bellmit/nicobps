@@ -152,7 +152,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 		String sql = "SELECT T.feetypecode AS key, T.feetypedescription AS value FROM masters.feetypes T WHERE enabled='Y' ORDER BY feetypedescription ";
 		return this.listCommonMap(sql);
 	}
-	
+
 	@Override
 	public List<CommonMap> listLicenseesregistrationsm() {
 		String sql = "SELECT T.licenseeregistrationcode AS key, T.licenseedescription AS value FROM masters.licenseesregistrationsm T WHERE enabled='Y' ORDER BY licenseedescription ";
@@ -234,6 +234,13 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public List<CommonMap> listPageurls() {
 		String sql = "SELECT T.urlcode AS key, T.parent || ' > ' || T.subsubmenu || ' > ' || T.subsubmenu AS value FROM masters.pageurls T ORDER BY T.urlcode ";
 		return this.listCommonMap(sql);
+	}
+
+	@Override
+	public String generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
+			Integer servicetypecode, Integer applicationslno) {
+		return String.format("%03d", officecode) + String.format("%03d", modulecode) + String.format("%04d", usercode)
+				+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
 	}
 
 	@Override
