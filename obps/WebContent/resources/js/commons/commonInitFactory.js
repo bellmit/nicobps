@@ -1,12 +1,13 @@
 //Common Factories
 app.factory('commonInitFactory', function($http) {
-	return {		
-		listUsers : function(callback) {
+	return {	
+	listUsers : function(callback) {
 			$http.get("./listUsers.htm").success(
 					function(response, status, headers, config) {
 						callback(response);
 					});
 		},		
+
 		listLicensees : function(callback) {
 			$http.get("./listLicensees.htm").success(
 					function(response, status, headers, config) {
@@ -31,5 +32,32 @@ app.factory('commonInitFactory', function($http) {
 						callback(response);
 					});
 		},	
+
+		listOffices : function(callback) {
+			$http.get("./listOffices.htm").success(
+					function(response, status, headers, config) {
+						callback(response);
+					});
+		},		
+		listEnclosures : function(callback) {
+			$http.get("./listEnclosures.htm").success(
+					function(response, status, headers, config) {
+						callback(response);
+					});
+		},
+		listOffices : function(callback) {
+			$http.get("./listOffices.htm").success(
+					function(response, status, headers, config) {
+						callback(response);
+					});
+		},		
+		listEnclosures : function(callback) {
+			$http.get("./listEnclosures.htm").success(
+					function(response, status, headers, config) {
+						callback(response);
+					});
+		},
+			
+
 	}
 });

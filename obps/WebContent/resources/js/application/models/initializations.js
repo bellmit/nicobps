@@ -114,3 +114,70 @@ function FeeMaster() {
 	};
 	return FeeMaster;
 }
+/*Bankit*/
+function Enclosures(){
+var Enclosures={
+"enclosurecode":0,
+"enclosurename":"",
+"enclosuredescription":""
+}
+};
+
+function Modules(){
+var Modules={
+"modulecode":0,
+"modulename":""
+
+}
+};
+
+function ModulesEnclosures(){
+var ModulesEnclosures={
+"modulecode":0,
+"enclosurecode":0
+
+}
+};
+
+function PaymentModes(){
+var PaymentModes={
+"paymentmodecode":0,
+"paymentmodedescription":"",
+"mode":""
+
+
+}
+};
+
+function OfficePaymentModes(){
+var OfficePaymentModes={
+"officecode":0,
+"paymentmodecode":0
+
+}
+};
+
+
+function Offices(){
+var Offices={
+"officecode":0,
+"officename1":"",
+"officename2":"",
+"officename3":"",
+"officeshortname":"",
+"officelgdcode":"",
+"signatoryname":"",
+"signatorydesignation":"",
+"emailid":"",
+"emailidpassword":"",
+"smsusername":"",
+"smspassword":"",
+"smssenderid":"",
+"isregisteringoffice":"",
+"registeringofficecode":0,
+"enabled":""
+}
+};
+
+
+/*BAnkit*/
