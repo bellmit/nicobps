@@ -4,7 +4,7 @@
 <%@include file="../common/headerfiles.jsp"%>
 
 </head>
-<body>
+<body ng-app="CommonApp" ng-controller="responseController">
 	<div class="d-flex" id="wrapper">
 		<%@include file="../common/menuside.jsp"%>
 		<div id="page-content-wrapper">
@@ -12,19 +12,22 @@
 			<div class="container-fluid">
 
 				<div class="row">
-					<div class="col-md-10">
-						<div class=" bg-light text-black  m-4 p-3 border rounded"
-							style="width: 100%;">
+					<div class="col-md-10 ">
 
 
-							<h3>
-								<core:out value="${message}" escapeXml="true" />
-							</h3>
+						<div
+							class=" col-md-10 bg-light text-black  m-4 p-3 border rounded">
+							<div class="text-center p-3 mb-2 " ng-class="getClass(${status})">
+								<h4>
+									<core:out value="${message}" escapeXml="true" />
+								</h4>
+							</div>
+
 							<core:if test="${status eq '0300'}">
 
-
-								<table class=""
-									style="width: 70%; margin: 0px auto; border-spacing: 10px">
+								<table class=" mt-4 mb-4"
+									style="width: 70%; margin: 0px auto; border-spacing: 10px"
+									ng-init="init(${transactioncode})">
 									<tr>
 										<th colspan="2" class="font-weight-bold text-center h5 ">Payment
 											Details</th>
@@ -56,9 +59,13 @@
 
 									</tr>
 								</table>
-							</core:if>
-
 						</div>
+
+						<input type="button" value="Generate Receipt"
+							ng-click="generate()" class="btn btn-primary offset-4 col-md-2 " />
+						</core:if>
+
+
 
 
 
@@ -70,5 +77,6 @@
 	</div>
 
 </body>
+<script src="resources/js/application/payment/paymentresponse.js"></script>
 
 </html>

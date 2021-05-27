@@ -57,9 +57,47 @@
 									name="feecode" value="{{feecode}}" /> <input type="hidden"
 									readonly name="feeamount" value="{{feeamount}}" />
 							</div>
+							<div class=" m-4 p-3" style="width: 100%;">
+								<core:choose>
+									<core:when test="${status.appexist eq 'NOTEXIST'}">
+										<div class="alert alert-danger text-center  show">
+											<strong>Status : </strong>Application does not Exist !!
+										</div>
 
-							<input type="button" class="offset-5 col-md-2  btn btn-warning"
-								value="PAY" ng-click="submitDetails();" />
+									</core:when>
+									<core:otherwise>
+										<core:choose>
+											<core:when test="${status.feeamount eq 'NOTAVAILABLE'}">
+												<div class="alert alert-danger  text-center  show">
+													<strong>Status : </strong> Amount not Available !!
+												</div>
+
+											</core:when>
+											<core:otherwise>
+												<core:choose>
+													<core:when test="${status.paystatus eq 'PAID'}">
+														<div class="alert alert-success  text-center  show">
+															<strong>Status : </strong> Fee already Paid !!
+														</div>
+
+													</core:when>
+													<core:otherwise>
+														<input type="button"
+															class="offset-5 col-md-2  btn btn-warning" value="PAY"
+															ng-click="submitDetails();" />
+
+													</core:otherwise>
+												</core:choose>
+
+											</core:otherwise>
+										</core:choose>
+
+									</core:otherwise>
+								</core:choose>
+
+							</div>
+
+
 
 
 						</div>

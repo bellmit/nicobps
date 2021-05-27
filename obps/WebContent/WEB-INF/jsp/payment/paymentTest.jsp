@@ -23,7 +23,7 @@
 									</tr>
 									<tr>
 										<td class=" font-weight-bold w-25 ">Application Code :</td>
-										<td class="col-xs-5 "><input type="text" name="applicationcode" value="1391" readonly/></td>
+										<td class="col-xs-5 "><input type="text" name="applicationcode" value="1391" /></td>
 									</tr>
 									<tr>
 										<td class=" font-weight-bold">Fee Code :</td>

@@ -15,8 +15,22 @@ public class ServicePaymentCommon {
 	DaoPaymentInterface daoPaymentInterface;
 
 	public Map<String, Object> getAmount(Integer feecode) {
-		Map<String, Object> feeDetails=daoPaymentInterface.getFeeDetails(feecode);
+		Map<String, Object> feeDetails = daoPaymentInterface.getFeeDetails(feecode);
 		return feeDetails;
+	}
+
+	public List<Map<String, Object>> getPaymentStatus(String applicationcode, Integer feecode) {
+
+		return daoPaymentInterface.getPaymentStatus(applicationcode, feecode);
+
+	}
+
+	public int getApplicationCount(String applicationcode) {
+		return daoPaymentInterface.getApplicationCount(applicationcode);
+	}
+
+	public Map<String, Object> getTransaction( Integer transactioncode) {
+		return daoPaymentInterface.getTransaction(transactioncode);
 	}
 
 }
