@@ -29,7 +29,7 @@
 									ng-init="init(${applicationcode},${feecode},${feeamount})">
 									<tr>
 										<th colspan="2" class="font-weight-bold text-center h5 ">Payment
-											Confirmation</th>
+											Details</th>
 									</tr>
 									<tr>
 										<td colspan="2" style="border-bottom: 2px solid #005776"></td>

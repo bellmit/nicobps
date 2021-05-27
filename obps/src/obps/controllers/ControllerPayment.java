@@ -1,6 +1,8 @@
 package obps.controllers;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,15 +40,25 @@ public class ControllerPayment {
 
 	@PostMapping(value = "/paymentconfirmation.htm")
 	public String paymentConfirmation_Post(@RequestParam Map<String, String> params, Model model) {
-		System.out.println(" --- Payment Confirmation Post--");
+		System.out.println(" --- Payment Confirmation Post--:"+params);
 		// need to get amount based on feecode
 		Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
 		System.out.println("feeDetails--" + feeDetails);
 		// -------------------------------------------
+
+		Map<String, String> statusMap = validate_payparams(params.get("applicationcode").toString(), Integer.valueOf(params.get("feecode")));
+
 		model.addAttribute("applicationcode", params.get("applicationcode"));
 		model.addAttribute("feecode", params.get("feecode"));
-		model.addAttribute("feeamount", feeDetails.get("feeamount"));
-		model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
+		if (feeDetails == null) {
+			model.addAttribute("feeamount", "NA");
+			model.addAttribute("feetypedescription", "NA");
+		} else {
+			model.addAttribute("feeamount", feeDetails.get("feeamount"));
+			model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
+		}
+
+		model.addAttribute("status", statusMap);
 
 		return "payment/paymentconfirmation";
 	}
@@ -66,7 +78,7 @@ public class ControllerPayment {
 
 		String message = null;
 		String response = params.get("msg");
-//		String response = "SPSCSKM|13|VHMP9856639406|314858|1.00|HMP|459200|03|INR|VDDIRECT|05-NA|NA|00000005.00|24-03-2021+13:30:58|0300|NA|sk.gangtok|http|10.179.2.72|8080|5|NA|NA|NA|PGS10001-Success|F3E1804EDFC2A60BF3DD135D4CC7C71DD38E6ECF67645A1CFD8AA7606151B0D0";
+//		String response = "SPSCSKM|13|VHMP9856639406|314858|1.00|HMP|459200|03|INR|VDDIRECT|05-NA|NA|00000005.00|24-03-2021+13:30:58|0300|NA|jk.jammu|http|NA|NA|5|NA|NA|NA|PGS10001-Success|F3E1804EDFC2A60BF3DD135D4CC7C71DD38E6ECF67645A1CFD8AA7606151B0D0";
 		response = response.replace("%7C", "|");
 		response = response.replace("%3A", ":");
 		String[] words = response.toString().split("\\|");
@@ -74,12 +86,12 @@ public class ControllerPayment {
 		String usercode = (String) request.getSession().getAttribute("usercode");
 		model.addAttribute("status", words[14]);
 		try {
-
 			// checksum
 			int lastIndexOf = response.lastIndexOf("|");
 			String msg = response.substring(0, lastIndexOf);
 			String checksum = response.substring(lastIndexOf + 1, response.length());
 			Boolean validatehash = billdeskgateway.checkHmac(msg, checksum);
+			System.out.println("validatehash:"+validatehash);
 			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
@@ -93,7 +105,7 @@ public class ControllerPayment {
 					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				case "0399":
-					message = "Payment Unsuccessful - Invalid Authentication in Bank / Cancelled By User.";
+					message = "Payment Unsucessful - Invalid Authentication in Bank / Cancelled By User.";
 					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				case "NA":
@@ -122,6 +134,64 @@ public class ControllerPayment {
 		}
 
 		return "payment/BilldeskResponse";
+	}
+
+	public Map<String, String> validate_payparams(String applicationcode, Integer feecode) {
+		String appExist = "";
+		String appTransMap = "";
+		String payStatus = "";
+		String feeAmount = "";
+
+		int appCount = serviceCommon.getApplicationCount(applicationcode);
+		System.out.println(" app count : " + appCount);
+		if (appCount > 0) {
+			appExist = "EXIST";
+		} else {
+			appExist = "NOTEXIST";
+		}
+
+		List<Map<String, Object>> payList = serviceCommon.getPaymentStatus(applicationcode, feecode);
+
+		int payListSize = payList.size();
+		System.out.println("Pay list size : " + payListSize);
+
+		if (payListSize > 0) {
+
+			appTransMap = "NOTEMPTY";
+
+			String paymentStatus = payList.get(0).get("paymentstatus").toString();
+			System.out.println(" Pay Status :: " + paymentStatus);
+
+			if (paymentStatus.equals("S")) {
+				payStatus = "PAID";
+
+			} else {
+				payStatus = "NOTPAID";
+
+			}
+
+		} else {
+			appTransMap = "EMPTY";
+			payStatus = "NOTPAID";
+		}
+		Map<String, Object> fee = serviceCommon.getAmount(feecode);
+
+		if (fee == null) {
+			feeAmount = "NOTAVAILABLE";
+		} else {
+			feeAmount = "AVAILABLE";
+		}
+
+		Map<String, String> statusMap = new HashMap<String, String>();
+
+		statusMap.put("appexist", appExist.trim());
+		statusMap.put("apptransmap", appTransMap.trim());
+		statusMap.put("paystatus", payStatus.trim());
+		statusMap.put("feeamount", feeAmount.trim());
+
+		System.out.println("json obj ::" + statusMap.toString());
+		return statusMap;
+
 	}
 
 }
