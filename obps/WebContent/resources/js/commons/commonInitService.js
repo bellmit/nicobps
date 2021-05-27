@@ -21,18 +21,18 @@ app.service("commonInitService", function($http) {
             dataType: "json",
             async: false,
             contentType: "application/json; charset=utf-8",
-            data: angular.toJson(data),
+            data: angular.toJson(data, true),
             success: function (res) {
-            	if(res.response === CREATED||res === true){
+            	if(res.code === 201 || res.code === 200  || res.code === 203 || res === true){
             		successCallback(res);
             	}else{
             		errorCallback(res);
             	}
             },
             error: function (xhr) {
-                console.log("saveERROR")
+                console.log("Error: ", xhr)
                 alert("Sorry, there was an error while trying to process the request.");
-                errorCallback();
+                errorCallback(xhr.responseJSON);
             }            
         });
 	}
