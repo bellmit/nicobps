@@ -1,8 +1,6 @@
 package obps.controllers;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,21 +43,10 @@ public class ControllerPayment {
 		Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
 		System.out.println("feeDetails--" + feeDetails);
 		// -------------------------------------------
-
-		Map<String, String> statusMap = validate_payparams(params.get("applicationcode").toString(),
-				Integer.valueOf(params.get("feecode")));
-
 		model.addAttribute("applicationcode", params.get("applicationcode"));
 		model.addAttribute("feecode", params.get("feecode"));
-		if (feeDetails == null) {
-			model.addAttribute("feeamount", "NA");
-			model.addAttribute("feetypedescription", "NA");
-		} else {
-			model.addAttribute("feeamount", feeDetails.get("feeamount"));
-			model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
-		}
-
-		model.addAttribute("status", statusMap);
+		model.addAttribute("feeamount", feeDetails.get("feeamount"));
+		model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
 
 		return "payment/paymentconfirmation";
 	}
@@ -71,10 +58,7 @@ public class ControllerPayment {
 		String feecode = params.get("feecode");
 		Integer amount = Integer.parseInt(params.get("feeamount"));
 		String applicationcode = params.get("applicationcode");
-		return ResponseEntity.status(HttpStatus.FOUND)
-				.location(URI.create(
-						billdeskgateway.generateRedirectURI(usercode, amount, feecode, applicationcode).toString()))
-				.build();
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount, feecode, applicationcode).toString())).build();
 	}
 
 	@PostMapping(path = "/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
@@ -90,9 +74,13 @@ public class ControllerPayment {
 		String usercode = (String) request.getSession().getAttribute("usercode");
 		model.addAttribute("status", words[14]);
 		try {
-//			 Integer result = response.verifyChecksum(msg);
-			Integer result = 1;
-			if (result == 1) {
+
+			// checksum
+			int lastIndexOf = response.lastIndexOf("|");
+			String msg = response.substring(0, lastIndexOf);
+			String checksum = response.substring(lastIndexOf + 1, response.length());
+			Boolean validatehash = billdeskgateway.checkHmac(msg, checksum);
+			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
 					message = "Payment Successful. ";
@@ -102,33 +90,27 @@ public class ControllerPayment {
 					model.addAttribute("amount", words[4]);
 					model.addAttribute("message", message);
 
-					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]),
-							Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				case "0399":
-					message = "Payment Unsucessful - Invalid Authentication in Bank / Cancelled By User.";
-					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]),
-							Integer.parseInt(usercode));
+					message = "Payment Unsuccessful - Invalid Authentication in Bank / Cancelled By User.";
+					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				case "NA":
 					message = "Invalid Input in Payment Request. Please Contact Admin.";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
-							Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				case "0002":
 					message = "Billdesk Waiting Response From Bank.";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
-							Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				case "0001":
 					message = "An Error has occured at billdesk";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
-							Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				default:
 					message = "An error occured";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
-							Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
 					break;
 				}
 				model.addAttribute("message", message);
@@ -140,64 +122,6 @@ public class ControllerPayment {
 		}
 
 		return "payment/BilldeskResponse";
-	}
-
-	public Map<String, String> validate_payparams(String applicationcode, Integer feecode) {
-		String appExist = "";
-		String appTransMap = "";
-		String payStatus = "";
-		String feeAmount = "";
-
-		int appCount = serviceCommon.getApplicationCount(applicationcode);
-		System.out.println(" app count : " + appCount);
-		if (appCount > 0) {
-			appExist = "EXIST";
-		} else {
-			appExist = "NOTEXIST";
-		}
-
-		List<Map<String, Object>> payList = serviceCommon.getPaymentStatus(applicationcode, feecode);
-
-		int payListSize = payList.size();
-		System.out.println("Pay list size : " + payListSize);
-
-		if (payListSize > 0) {
-
-			appTransMap = "NOTEMPTY";
-
-			String paymentStatus = payList.get(0).get("paymentstatus").toString();
-			System.out.println(" Pay Status :: " + paymentStatus);
-
-			if (paymentStatus.equals("S")) {
-				payStatus = "PAID";
-
-			} else {
-				payStatus = "NOTPAID";
-
-			}
-
-		} else {
-			appTransMap = "EMPTY";
-			payStatus = "NOTPAID";
-		}
-		Map<String, Object> fee = serviceCommon.getAmount(feecode);
-
-		if (fee == null) {
-			feeAmount = "NOTAVAILABLE";
-		} else {
-			feeAmount = "AVAILABLE";
-		}
-
-		Map<String, String> statusMap = new HashMap<String, String>();
-
-		statusMap.put("appexist", appExist.trim());
-		statusMap.put("apptransmap", appTransMap.trim());
-		statusMap.put("paystatus", payStatus.trim());
-		statusMap.put("feeamount", feeAmount.trim());
-
-		System.out.println("json obj ::" + statusMap.toString());
-		return statusMap;
-
 	}
 
 }

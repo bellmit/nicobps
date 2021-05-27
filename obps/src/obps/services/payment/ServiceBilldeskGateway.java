@@ -125,6 +125,20 @@ public class ServiceBilldeskGateway {
 		return redirectUri;
 	}
 
+	public Boolean checkHmac(String msg, String checksum) {
+		Boolean resp = null;
+		String hash = HmacSHA256(msg.trim(), CHECK_SUM_PWD.trim());
+		if (checksum.equals(hash)) {
+			System.out.println("pass");
+			resp = true;
+		} else {
+			System.out.println("fail");
+			resp = false;
+
+		}
+		return resp;
+	}
+
 	public static String HmacSHA256(String message, String secret) {
 		try {
 
