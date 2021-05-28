@@ -53,7 +53,6 @@ var BPA = function () {
       return this;
     },
     extractFromEdcrObject: (edcr) => {
-      console.log(edcr);
       let bpa = BPA;
       try{
         bpa.edcrnumber =  edcr.edcrnumber;

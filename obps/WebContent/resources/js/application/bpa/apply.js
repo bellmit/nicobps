@@ -21,7 +21,7 @@ app.controller("CommonCtrl", [
     $scope.googleMapApiKey = 'AIzaSyC4u5cL3l3jl7dpRnoIcl8drvgpK5uB_bc';
     $scope.BPA = new BPA();
     $scope.EDCR = new EdcrDetail();
-    $scope.gmapLocation = '';
+    $scope.gmapAddress = '';
     $scope.occupancy = '';
     $scope.planInfo = '';
     $scope.planDetail = '';
@@ -36,11 +36,10 @@ app.controller("CommonCtrl", [
 
     /*GET*/
     BS.getEdcrDetails((response) => {
-      console.log(response);
       let edcr = new EdcrDetail();
       $scope.EDCR = edcr.init(response);
       $scope.planInfo = edcr.extractPlanInfo($scope.EDCR);
-      $scope.gmapLocation = ($scope.planInfo.district).toLocaleLowerCase();
+      $scope.gmapAddress = ($scope.planInfo.district).toLocaleLowerCase();
       $scope.occupancy = edcr.extractPlanOccupancy($scope.EDCR);
       $scope.BPA = $scope.BPA.extractFromEdcrObject($scope.EDCR);
     }, EDCRNUMBER);
@@ -85,8 +84,17 @@ app.controller("CommonCtrl", [
         $scope.BPA.ownerdetails.pop();
     };
 
+    $scope.setGoogleMapLocation = (location) => {
+      $scope.BPA.plotgiscoordinates = location.lat + "," + location.lng;
+    };
+
+    $scope.toggleGmapModal = () => {
+      $('#gmapModal').on('shown.bs.modal', function () {
+        $('#gmapModal').trigger('focus')
+      })
+    };
+
     $scope.validateForm = () => {
-      console.log("validateForm");
       let flag = true;
       let bpa = $scope.bpaform;
       bpa.plotaddressline1.$touched = true;
@@ -269,13 +277,11 @@ app.controller("CommonCtrl", [
         // $timeout(() => (bpa.plotpincode.$error.invalid = false), 3000);
         flag = false;
       }
-      console.log(flag);
       return flag;
     };
 
     /*CREATE*/
     $scope.save = () => {
-      console.log("save");
       let BPA = {}, valid = false;
       BPA = $scope.BPA.init($scope.BPA);
       valid = $scope.validateForm();
@@ -289,7 +295,7 @@ app.controller("CommonCtrl", [
         if(success.code == '201'){
           $scope.serverResponseSuccess = true;
           try{
-            $scope.serverMsg += "<br>Next Process: "+success.nextProcess.value;
+            $scope.serverMsg += "\nNext Process: "+success.nextProcess.value;
             $timeout(() => {
               let url = success.nextProcess.key+"?edcrnumber="+BPA.edcrnumber;
               $window.location.href = url;
@@ -300,7 +306,6 @@ app.controller("CommonCtrl", [
           $scope.serverResponseFail = true;
         }
       }, (error) => {
-        console.log("error: ", error);
         $scope.serverMsg = error.msg;
         $scope.serverResponseError = true;
       });

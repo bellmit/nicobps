@@ -138,8 +138,17 @@
 				<div class="form-group">
 					<label class="col-sm-12">GIS Coordinates</label>
 					<div class="col-sm-12">
-						<input type="text" class="form-control custom-form-control" name="plotgiscoordinates"
-							ng-model="BPA.plotgiscoordinates" maxlength="99" required/>
+						<div class="input-group">
+							<input type="text" class="form-control custom-form-control" name="plotgiscoordinates"
+								ng-model="BPA.plotgiscoordinates" maxlength="99" readonly required
+								data-toggle="modal" data-target="#gmapModal"/>
+<!-- 								ng-mousedown="toggleGmapModal()"  -->
+							<div class="input-group-append">
+								<button type="button" class="btn btn-outline-default" data-toggle="modal" data-target="#gmapModal">
+									<i class="fa fa-location"></i>
+								</button>
+							</div>
+						</div>
 						<div class="col" ng-if="bpaform.plotgiscoordinates.$touched" style="color:red">
 							<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span>
 						</div>

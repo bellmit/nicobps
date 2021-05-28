@@ -4,24 +4,27 @@
 		<%@include file="../common/headerfiles.jsp"%>
 		<style type="text/css">
 			.custom-modal-dialog{
-                width: 80%;
-                margin: auto;
-                max-width: 80%;
+				display: flex; 
+				align-items: center;
+				max-width: 550px;
+                max-height: 650px;
                 
             }
-            .custom-modal-dim{
-                top: 20px;
-                padding-bottom: 20px;
+            .custom-modal-content{
                 margin: auto;
-                /*height: 90%;*/
-                /*overflow-y: scroll;*/
-                width: 100%;
+                width: 550px;
+                height: 650px;
+                max-width: 700px;
+                max-height: 800px;
+            }
+            .custom-modal-body{
+            	padding: 0px;
             }
 		</style>
 		<script type="text/javascript">
         </script>
 	</head>
-	<body ng-app="CommonApp" ng-controller="CommonCtrl">
+	<body ng-app="CommonApp" ng-controller="CommonCtrl" id="appId">
 <!-- 	<body> -->
 		<div class="d-flex" id="wrapper">
 			<%@include file="../common/menuside.jsp"%>
@@ -33,6 +36,21 @@
 					</h3>
 					<form id="msform" name="bpaform">
 						<div ng-include="'bpaform.htm'"></div>
+						<!-- GoogleMap Modal -->
+						<div class="modal fade" id="gmapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+						  <div class="modal-dialog modal-lg custom-modal-dialog" role="document">
+						    <div class="modal-content custom-modal-content">
+						      <div class="modal-body custom-modal-body">
+						      		<div ng-include="'googlemap.htm'"></div>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						        <button type="button" class="btn btn-primary" id="pickCityBtn" data-dismiss="modal">Pick Your City</button>
+						      </div>
+						    </div> 
+						  </div>
+						</div>
+						<!-- End: GoogleMap Modal -->
                    	</form>
 				</div>
 			</div>
@@ -44,6 +62,5 @@
 	<script src="resources/js/application/bpa/apply.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		const EDCRNUMBER = '${edcrnumber}';
-		console.log("EDCRNUMBER: ",EDCRNUMBER);
 	</script>
 </html>
