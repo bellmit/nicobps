@@ -27,8 +27,10 @@
 							</select>
 							<form id="form" style="display:none;" method="get" action="./paysrappfee.htm">
 								<input type="hidden" name='applicationcode' value=""/>
+								<input type="hidden" name='officecode' value="{{registeringofficecode}}"/>
 								<input type="hidden" name='feeamount' value="{{fee.feeamount}}"/>
 								<input type="hidden" name='feecode' value="{{fee.feecode}}"/>
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 							</form>
 						</div> 
 						<div class="col-md-6 px-5 pt-5" >

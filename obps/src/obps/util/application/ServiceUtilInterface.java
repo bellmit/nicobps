@@ -93,11 +93,15 @@ public interface ServiceUtilInterface {
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer toprocesscode,
 			Integer fromusercode, Integer tousercode, String remarks);
 
+	public List<Map<String, Object>> getAllNextProcessflows(Integer modulecode, Integer fromprocesscode);
+
 	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode);
+
+	public Map<String, Object> getNextProcessflow(Integer modulecode, String applicationcode);
 
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, String applicationcode);
 
-	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer applicationcode);
+	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer usercode);
 
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode);
 }

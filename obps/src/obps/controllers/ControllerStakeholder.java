@@ -37,30 +37,41 @@ public class ControllerStakeholder {
 		return "stakeholder/ulbregistration";
 	}
 
-//	@GetMapping("/paysrappfee.htm")
-//	public String paysrappfee(Model model, HttpServletRequest req) {
-//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 4);
-//		return "stakeholder/payresponse";
-//	}
+	@PostMapping("/ulbregistration.htm")
+	public @ResponseBody String ulbRegistration(Integer officecode, HttpServletRequest req) {
+		return SSI.ulbRegistration(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
+	}
 
 	@GetMapping("/paysuccess.htm")
 	public String paysuccess(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount) {
 		return "stakeholder/payresponse";
 	}
-	
+
 	@GetMapping("/paysrappfee.htm")
-	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount) {
+	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount,
+			Integer officecode) {
+
 		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-				feecode, feeamount, 4);
-		return "redirect:paysuccess.htm?applicationcode="+applicationcode+"&feecode="+feecode+"&feeamount="+ feeamount;
+				feecode, feeamount,
+				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
+		return "redirect:paysuccess.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
+				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode=" + feecode
+				+ "&feeamount=" + feeamount + "&toprocesscode="
+				+ (Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode");
 	}
 
 	@GetMapping("/paysrregfee.htm")
-	public String paysrregfee(HttpServletRequest req,String applicationcode,Integer officecode) {
-		Map<String,Object> fee=SSI.getFeeMaster(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 2);
+	public String paysrregfee(HttpServletRequest req, String applicationcode, Integer officecode) {
+		Map<String, Object> fee = SSI.getFeeMaster(officecode,
+				Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 2);
 		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-				Integer.valueOf(fee.get("feecode").toString()), Integer.valueOf(fee.get("feeamount").toString()), 6);
-		return "redirect:paysuccess.htm?applicationcode="+applicationcode+"&feecode="+Integer.valueOf(fee.get("feecode").toString())+"&feeamount="+ Integer.valueOf(fee.get("feeamount").toString());
+				Integer.valueOf(fee.get("feecode").toString()), Integer.valueOf(fee.get("feeamount").toString()),
+				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
+		return "redirect:paysuccess.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
+				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode="
+				+ Integer.valueOf(fee.get("feecode").toString()) + "&feeamount="
+				+ Integer.valueOf(fee.get("feeamount").toString()) + "&toprocesscode="
+				+ (Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode");
 	}
 
 	@PostMapping("/listLicensees.htm")
@@ -91,14 +102,10 @@ public class ControllerStakeholder {
 		return SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks);
 	}
 
-	@PostMapping("/ulbregistration.htm")
-	public @ResponseBody String ulbRegistration(Integer officecode, HttpServletRequest req) {
-		return SSI.ulbRegistration(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
-	}
-
 	@PostMapping("/listNextProcess.htm")
 	public @ResponseBody List<Map<String, Object>> listNextProcess(@RequestBody Map<String, Object> params) {
-		return serviceUtilInterface.getNextProcessflow(1, Integer.valueOf(params.get("currentprocesscode").toString()));
+		return serviceUtilInterface.getAllNextProcessflows(1,
+				Integer.valueOf(params.get("currentprocesscode").toString()));
 	}
 
 }

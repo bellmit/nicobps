@@ -63,7 +63,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer nextprocessode, String remarks) {
 		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
-			List<Map<String, Object>> list = SUI.getNextProcessflow(1, nextprocessode);
+			List<Map<String, Object>> list = SUI.getAllNextProcessflows(1, nextprocessode);
 			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
 				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
 				String sql2 = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) VALUES (?, ?, ?, ?, ?) ";
@@ -112,11 +112,11 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		Integer maxtransactioncode = SUI.getMax("nicobps", "transactions", "transactioncode");
 		String payStatus = "S", sentparameters = "", responseparameters = "", bankcode = "", responsetext1 = "",
 				responsetext2 = "", responsetext3 = "";
-		if (SUI.update("nicobps.transactions", sql,
-				new Object[] { maxtransactioncode + 1, usercode, feecode, fee, payStatus, sentparameters,
-						responseparameters, bankcode, responsetext1, responsetext2, responsetext3 })) {
-			return SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null,
-					"Payment complete");
+		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null,
+				"Payment complete")) {
+			return SUI.update("nicobps.transactions", sql,
+					new Object[] { maxtransactioncode + 1, usercode, feecode, fee, payStatus, sentparameters,
+							responseparameters, bankcode, responsetext1, responsetext2, responsetext3 });
 		}
 		return false;
 	}
