@@ -67,12 +67,12 @@ public class ControllerBuildingPermit {
 	}
 
 	@GetMapping(value = "/buildingpermitsteptwo.htm")
-	public String buildingPermitStepTwo(Model model, @RequestParam String edcrnumber) {
+	public String buildingPermitStepTwo(Model model, @RequestParam String applicationcode) {
 		LOG.info("URL: buildingpermitsteptwo.htm");
 		HttpSession session = ControllerLogin.session();
 		if(session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			model.addAttribute("edcrnumber", edcrnumber);
+			model.addAttribute("applicationcode", applicationcode);
 			return PARENT_URL_MAPPING.concat("/buildingpermitsteptwo") ;
 		}
 		

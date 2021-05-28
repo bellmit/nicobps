@@ -34,65 +34,6 @@
 				padding-left: 10px;
 			}
 		</style>
-		<!-- <script>
-			function initMap() {
-				let position = {lat: -34.397, lng: 150.644 };
-				navigator.geolocation.getCurrentPosition((curpos) => {
-					console.log("geolocation");
-					position.lat = curpos.coords.latitude;
-					position.lng = curpos.coords.longitude;
-				});
-				console.log("position: ",position);
-				  const map = new google.maps.Map(document.getElementById("map"), {
-				    zoom: 8,
-				    center: position,
-				  });
-				  const geocoder = new google.maps.Geocoder();
-				  document.getElementById("submit").addEventListener("click", () => {
-				    geocodeAddress(geocoder, map);
-				  });
-
-				  var scope = angular.element($("#appId")).scope();
-				  document.getElementById("pickCityBtn").addEventListener("click", () => {
-					  console.log("marker.position: ",marker.position);
-				    scope.$apply(function () {
-					    scope.setGoogleMapLocation({lat: marker.position.lat(), lng: marker.position.lng()});
-	                });
-				  });
-				  var marker =  new google.maps.Marker({
-				      position: position,
-				      map,
-				    }); 
-				  map.addListener("click", (mapsMouseEvent) => {
-					  marker.setMap(null);
-					    marker = new google.maps.Marker({
-					      position: mapsMouseEvent.latLng,
-					      map,
-					      title: "Hello World!",
-					    });
-					    map.setCenter(mapsMouseEvent.latLng);
-					    
-					    scope.$apply(function () {
-						    scope.setGoogleMapLocation(mapsMouseEvent.latLng.toJSON());
-		                });
-				  });
-				}
-	
-				function geocodeAddress(geocoder, resultsMap) {
-				  const address = document.getElementById("address").value;
-				  geocoder.geocode({ address: address }, (results, status) => {
-				    if (status === "OK") {
-				      resultsMap.setCenter(results[0].geometry.location);
-				      new google.maps.Marker({
-				        map: resultsMap,
-				        position: results[0].geometry.location,
-				      });
-				    } else {
-				      alert("Geocode was not successful for the following reason: " + status);
-				    }
-				  });
-				}
-		</script> -->
 		<script type="text/javascript" src="resources/js/application/bpa/googlemapapi.js"></script>
 	</head>
 	<body>

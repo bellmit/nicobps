@@ -19,7 +19,6 @@ app.controller("CommonCtrl", [
     $scope.listAppScrutinyDetailsForBPA = () => {
       BS.listAppScrutinyDetailsForBPA((response) => {
         $scope.ScrutinzedApp = response;
-        console.log("ScrutinzedApp: ", $scope.ScrutinzedApp);
         $scope.setAppEdcrDetailsTable($scope.ScrutinzedApp);
       }, (data = ""));
     };
@@ -48,14 +47,6 @@ app.controller("CommonCtrl", [
               if(data == null || data == '') return "Apply for BPA";
               else return data;
             }
-          /* }, {
-            "title": "Action",
-            "data": "edcrnumber",
-            render: function (data, type, row, meta) {
-              var buttons = "";
-              // buttons += '<button style="margin: 0.1em 0" class="btn btn-danger btn-md" type="button" data-toggle="modal" ng-click="deleteDetails(\'' + data + '\')">Delete</button>';
-              return buttons;
-            } */
           }
         ],
         "stateSave": true,
@@ -64,14 +55,12 @@ app.controller("CommonCtrl", [
         }
       });
 
-      // $('#displayRecordsTable tbody').on('click', 'tr', function () {
       table.on('click', 'tr', function () {
             var data = table.row(this).data();
-            console.log(data.edcrnumber);
-            if(data.pageurl == null || data.pageurl == '')
+            if(data.applicationcode == null || data.applicationcode == '')
               $window.location.href = "applybuildingpermit.htm?edcrnumber="+data.edcrnumber;
             else
-              $window.location.href = data.pageurl+"?edcrnumber="+data.edcrnumber;
+              $window.location.href = data.pageurl+"?applicationcode="+data.applicationcode;
       });
     }
   },
