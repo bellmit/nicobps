@@ -192,4 +192,29 @@ public class DaoPayment implements DaoPaymentInterface {
 		return resp;
 
 	}
+
+	public List<Map<String, Object>> getTransactionList(Integer transactioncode) {
+		List<Map<String, Object>> resp = null;
+		String sql = null;
+		try {
+
+			sql = " select t.transactioncode,t.responseparameters,atm.applicationcode,ft.feetypedescription,pm.\"mode\",pm.paymentmodedescription,t.paymentstatus,ul.fullname "
+					+ " from nicobps.transactions t "
+					+ " inner join nicobps.applicationstransactionmap atm on t.transactioncode=atm.transactioncode "
+					+ " inner join masters.feemaster fm on fm.feecode=t.feecode "
+					+ " inner join masters.feetypes ft on ft.feetypecode=fm.feetypecode "
+					+ " inner join masters.paymentmodes pm on pm.paymentmodecode=t.paymentmodecode "
+					+ " inner join nicobps.userlogins ul on ul.usercode=t.usercode  where t.transactioncode=? ;";
+
+			Object[] values = { transactioncode };
+			resp = jdbcTemplate.queryForList(sql, values);
+		} catch (Exception e) {
+
+			e.getStackTrace();
+
+			System.out.println("Error in DaoPayment.getTransactionList  : " + e);
+		}
+		return resp;
+
+	}
 }

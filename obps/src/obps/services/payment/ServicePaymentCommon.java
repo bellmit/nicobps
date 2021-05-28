@@ -29,8 +29,12 @@ public class ServicePaymentCommon {
 		return daoPaymentInterface.getApplicationCount(applicationcode);
 	}
 
-	public Map<String, Object> getTransaction( Integer transactioncode) {
+	public Map<String, Object> getTransaction(Integer transactioncode) {
 		return daoPaymentInterface.getTransaction(transactioncode);
+	}
+
+	public List<Map<String, Object>> getTransactionList(Integer transactioncode) {
+		return daoPaymentInterface.getTransactionList(transactioncode);
 	}
 
 }

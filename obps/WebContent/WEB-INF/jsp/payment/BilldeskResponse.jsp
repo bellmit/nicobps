@@ -61,12 +61,15 @@
 								</table>
 						</div>
 
-						<input type="button" value="Generate Receipt"
-							ng-click="generate()" class="btn btn-primary offset-4 col-md-2 " />
+						<form method="post" action="./generateReceipt.htm">
+							<input type="hidden" readonly name="transactioncode"
+								value="{{transactioncode}}" /> <input type="hidden"
+								name="${_csrf.parameterName}" value="${_csrf.token}" /> <input
+								type="submit" value="Generate Receipt"
+								class="btn btn-primary offset-4 col-md-2 " />
+						</form>
+
 						</core:if>
-
-
-
 
 
 					</div>

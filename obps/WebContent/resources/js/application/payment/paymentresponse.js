@@ -7,12 +7,7 @@ app.controller('responseController', function($scope) {
 
 	};
 
-	$scope.generate = function() {
 
-		var params = "transactioncode=" + $scope.transactioncode;
-		window.open("generateReceipt.htm?" + params);
-
-	};
 
 	$scope.getClass = function(status) {
 		if (status == "0300")

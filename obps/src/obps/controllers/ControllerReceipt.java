@@ -1,6 +1,8 @@
 package obps.controllers;
 
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,11 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
-import obps.reports.ReportGenerate;
+import obps.reports.ReportService;
 import obps.services.payment.ServicePaymentCommon;
 
 @Controller
@@ -21,25 +24,28 @@ public class ControllerReceipt {
 	private ServicePaymentCommon serviceCommon;
 
 	@Autowired
-	private ReportGenerate reportgenerate;
+	private ReportService reportservice;
 
-	@GetMapping("/generateReceipt.htm")
-	@ResponseBody
-	public void generateReceipt(HttpServletRequest request, HttpServletResponse response,
+	@PostMapping("/generateReceipt.htm")
+	public void generateReceiptPost(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, String> params) {
-		System.out.println("----Payment receipt---");
-		try {
+		System.out.println("----Payment receipt Post---");
 
-//			String applicationcode = params.get("applicationcode");
+		try {
+			JasperPrint jasperPrint = null;
+			String fileName = "PaymentReceipt";
+			String outputfilename = "receiptpayment";
+
 			Integer transactioncode = Integer.valueOf(params.get("transactioncode"));
 
-			System.out.println("trans code " + transactioncode);
+			Map<String, String> reportParams = new HashMap<String, String>();
 
-			Map<String, Object> transList = serviceCommon.getTransaction(transactioncode);
+			List<Map<String, Object>> transList = serviceCommon.getTransactionList(transactioncode);
 
 			int listsize = transList.size();
+			System.out.println("list size :: " + listsize);
 
-			String responseparams = transList.get("responseparameters").toString();
+			String responseparams = transList.get(0).get("responseparameters").toString();
 
 			System.out.println("resp ::" + responseparams);
 
@@ -52,29 +58,33 @@ public class ControllerReceipt {
 			for (int i = 0; i < resp.length; i++)
 				System.out.println(i + " : " + resp[i]);
 
-			String fileName = "PaymentReceipt";
-			String outputfilename = "receiptpayment";
-
-			Map<String, String> reportParams = new HashMap<String, String>();
-
-			reportParams.put("applicationcode", transList.get("applicationcode").toString());
-			reportParams.put("transactioncode", transList.get("transactioncode").toString());
-			reportParams.put("feetype", transList.get("feetypedescription").toString());
+			reportParams.put("applicationcode", transList.get(0).get("applicationcode").toString());
+			reportParams.put("transactioncode", transList.get(0).get("transactioncode").toString());
+			reportParams.put("feetype", transList.get(0).get("feetypedescription").toString());
 			reportParams.put("transactionno", resp[2]);
 			reportParams.put("date", resp[13]);
-			reportParams.put("paymentgateway", transList.get("paymentmodedescription").toString());
-			reportParams.put("payername", transList.get("fullname").toString());
-			reportParams.put("paymode", transList.get("mode").toString());
+			reportParams.put("paymentgateway", transList.get(0).get("paymentmodedescription").toString());
+			reportParams.put("payername", transList.get(0).get("fullname").toString());
+			reportParams.put("paymode", transList.get(0).get("mode").toString());
 			reportParams.put("amount", resp[4]);
 			reportParams.put("payresponse", getmessage(resp[14]));
 
+			response.setContentType("application/x-download");
+			response.setHeader("Content-Disposition",
+					String.format("attachment; filename=\"" + outputfilename + ".pdf\""));
 
-			reportgenerate.generateReport(request, response, fileName, reportParams, outputfilename);
+			OutputStream out = response.getOutputStream();
+			jasperPrint = reportservice.exportPdfFile(request, fileName, reportParams);
+
+			JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+			out.flush();
+			out.close();
 
 		} catch (Exception e) {
-			System.out.println("exception :: " + e);
+			System.out.println("Exception in generateReceiptPost :" + e);
+			e.printStackTrace();
 		}
-
 	}
 
 	public String getmessage(String paymentstatuscode) {

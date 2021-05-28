@@ -18,5 +18,7 @@ public interface DaoPaymentInterface {
 	public int getApplicationCount(String applicationcode);
 
 	public Map<String, Object> getTransaction(Integer transactioncode);
+	
+	public List<Map<String, Object>> getTransactionList(Integer transactioncode);
 
 }
