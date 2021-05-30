@@ -67,17 +67,21 @@ public class ServiceBilldeskGateway {
 		tenantid = environment.getRequiredProperty("tenantId");
 	}
 
-	public URI generateRedirectURI(String usercode, Integer amount, String feecode, String applicationcode) {
+	public URI generateRedirectURI(String usercode, Integer amount, String feecode, String applicationcode, String modulecode, String toprocesscode) {
 		System.out.println("Generate URI");
 		Integer transactioncode = serviceUtilInterface.getMax("nicobps", "transactions", "transactioncode");
 		transactioncode++;
-		String hashSequence = "MerchantId|CustomerId|NA|Amount|NA|NA|NA|Currency|NA|R|SecureSecret|NA|NA|F|TenantId|NA|NA|NA|5|NA|NA|ReturnUrl";
+		String hashSequence = "MerchantId|CustomerId|NA|Amount|NA|NA|NA|Currency|NA|R|SecureSecret|NA|NA|F|TenantId|ApplicationCode|ModuleCode|ToProcessCode|5|UserCode|NA|ReturnUrl";
 		hashSequence = hashSequence.replace("MerchantId", MERCHANT_ID);
 		hashSequence = hashSequence.replace("CustomerId", transactioncode.toString());
 		hashSequence = hashSequence.replace("TenantId", tenantid);
 		hashSequence = hashSequence.replace("Amount", amount.toString());
 		hashSequence = hashSequence.replace("Currency", CURRENCY);
 		hashSequence = hashSequence.replace("SecureSecret", SECURE_SECRET);
+		hashSequence = hashSequence.replace("ApplicationCode", applicationcode.trim());
+		hashSequence = hashSequence.replace("ModuleCode", modulecode.trim());
+		hashSequence = hashSequence.replace("ToProcessCode", toprocesscode.trim());
+		hashSequence = hashSequence.replace("UserCode", usercode.trim());
 		hashSequence = hashSequence.replace("ReturnUrl", RETURN_URL);
 		String hash = HmacSHA256(hashSequence, CHECK_SUM_PWD);
 		hashSequence = hashSequence + "|" + hash;
@@ -114,6 +118,7 @@ public class ServiceBilldeskGateway {
 				paymentappl.put("transactioncode", transactioncode);
 				paymentappl.put("applicationcode", applicationcode);
 				paymentappl.put("entrydate", dateFormat.format(date));
+				//===========save to  transaction======================
 				daoPaymentInterface.SavePaymentMap(paymentappl);
 			}
 

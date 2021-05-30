@@ -23,16 +23,30 @@
 									</tr>
 									<tr>
 										<td class=" font-weight-bold w-25 ">Application Code :</td>
-										<td class="col-xs-5 "><input type="text" name="applicationcode" value="1391" /></td>
+										<td class="col-xs-5 "><input type="text" name="applicationcode" value="DCR52021A50C20101011" /></td>
 									</tr>
 									<tr>
 										<td class=" font-weight-bold">Fee Code :</td>
 										<td class="col-xs-5 "><input type="text" name="feecode" value="1" /></td>
 									</tr>
+<tr>
+										<td class=" font-weight-bold">Module Code :</td>
+										<td class="col-xs-5 "><input type="text" name="modulecode" value="2" /></td>
+									</tr>
 
 									<tr>
 										<td class=" font-weight-bold">Fee Amount :</td>
 										<td class="col-xs-5 "><input type="text" name="feeamount" value="100"  /></td>
+
+									</tr>
+									<tr>
+										<td class=" font-weight-bold">User Code :</td>
+										<td class="col-xs-5 "><input type="text" name="usercode" value="3"  /></td>
+
+									</tr>
+										<tr>
+										<td class=" font-weight-bold">To Process Code :</td>
+										<td class="col-xs-5 "><input type="text" name="toprocesscode" value="4"  /></td>
 
 									</tr>
 								</table>

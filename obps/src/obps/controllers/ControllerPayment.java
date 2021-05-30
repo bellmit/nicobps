@@ -15,12 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import obps.daos.DaoPaymentInterface;
 import obps.services.payment.ServiceBilldeskGateway;
 import obps.services.payment.ServicePaymentCommon;
+import obps.util.application.ServiceUtilInterface;
 
 @Controller
 public class ControllerPayment {
@@ -31,6 +34,8 @@ public class ControllerPayment {
 
 	@Autowired
 	private ServicePaymentCommon serviceCommon;
+	@Autowired
+	private ServiceUtilInterface serviceUtilInterface;
 
 	@GetMapping(value = "/paymentTest.htm")
 	public String paymentConfirmation_Get() {
@@ -38,25 +43,29 @@ public class ControllerPayment {
 		return "payment/paymentTest";
 	}
 
-	@PostMapping(value = "/paymentconfirmation.htm")
+//	@PostMapping(value = "/paymentconfirmation.htm")
+	@RequestMapping(value = "/paymentconfirmation.htm", method = { RequestMethod.GET, RequestMethod.POST })
 	public String paymentConfirmation_Post(@RequestParam Map<String, String> params, Model model) {
-		System.out.println(" --- Payment Confirmation Post--:"+params);
+		System.out.println(" --- Payment Confirmation Post--:" + params);
 		// need to get amount based on feecode
 		Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
 		System.out.println("feeDetails--" + feeDetails);
 		// -------------------------------------------
 
 		Map<String, String> statusMap = validate_payparams(params.get("applicationcode").toString(), Integer.valueOf(params.get("feecode")));
-
 		model.addAttribute("applicationcode", params.get("applicationcode"));
 		model.addAttribute("feecode", params.get("feecode"));
-		if (feeDetails == null) {
-			model.addAttribute("feeamount", "NA");
-			model.addAttribute("feetypedescription", "NA");
-		} else {
-			model.addAttribute("feeamount", feeDetails.get("feeamount"));
-			model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
-		}
+//		if (feeDetails == null) {
+//			model.addAttribute("feeamount", "NA");
+//			model.addAttribute("feetypedescription", "NA");
+//		} else {
+		model.addAttribute("modulecode", params.get("modulecode"));
+		model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
+		model.addAttribute("usercode", params.get("usercode"));
+		model.addAttribute("feeamount", params.get("feeamount"));
+		model.addAttribute("toprocesscode", params.get("toprocesscode"));
+
+//		}
 
 		model.addAttribute("status", statusMap);
 
@@ -66,11 +75,14 @@ public class ControllerPayment {
 	@PostMapping(value = "/paymentinitialized.htm")
 	public ResponseEntity<Void> redirect(HttpServletRequest request, @RequestParam Map<String, String> params) {
 		System.out.println("paymentinitialized.htm-------POST-" + params);
-		String usercode = (String) request.getSession().getAttribute("usercode");
+		String usercode = params.get("usercode");
 		String feecode = params.get("feecode");
+		String toprocesscode = params.get("toprocesscode");
+		String modulecode = params.get("modulecode");
 		Integer amount = Integer.parseInt(params.get("feeamount"));
 		String applicationcode = params.get("applicationcode");
-		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount, feecode, applicationcode).toString())).build();
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount, feecode, applicationcode, modulecode, toprocesscode).toString()))
+				.build();
 	}
 
 	@PostMapping(path = "/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
@@ -83,7 +95,8 @@ public class ControllerPayment {
 		response = response.replace("%3A", ":");
 		String[] words = response.toString().split("\\|");
 		String paymentstatuscode = words[14];
-		String usercode = (String) request.getSession().getAttribute("usercode");
+//		String usercode = (String) request.getSession().getAttribute("usercode");
+		String usercode = words[21];
 		model.addAttribute("status", words[14]);
 		try {
 			// checksum
@@ -91,7 +104,7 @@ public class ControllerPayment {
 			String msg = response.substring(0, lastIndexOf);
 			String checksum = response.substring(lastIndexOf + 1, response.length());
 			Boolean validatehash = billdeskgateway.checkHmac(msg, checksum);
-			System.out.println("validatehash:"+validatehash);
+			System.out.println("validatehash:" + validatehash);
 			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
@@ -101,12 +114,21 @@ public class ControllerPayment {
 					model.addAttribute("bankreferenceno", words[3]);
 					model.addAttribute("amount", words[4]);
 					model.addAttribute("message", message);
-
+					// ----------------UpdateTransaction
 					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					// ----------------InsertApplicationFlowRemark
+					String applicationcode = words[17];
+					String toprocesscode = words[19];
+					String modulecode = words[18];
+					System.out.println(applicationcode);
+					serviceUtilInterface.updateApplicationflowremarks(applicationcode, Integer.parseInt(modulecode), Integer.parseInt(toprocesscode), Integer.parseInt(usercode), null,
+							"Payment Complete");
 					break;
 				case "0399":
 					message = "Payment Unsucessful - Invalid Authentication in Bank / Cancelled By User.";
+					// ----------------UpdateTransaction
 					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+
 					break;
 				case "NA":
 					message = "Invalid Input in Payment Request. Please Contact Admin.";

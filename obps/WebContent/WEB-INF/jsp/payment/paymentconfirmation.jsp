@@ -36,11 +36,11 @@
 									</tr>
 									<tr>
 										<td class=" font-weight-bold w-25 ">Application Code</td>
-										<td class="col-xs-5 ">: {{applicationcode}}</td>
+										<td class="col-xs-5 ">:${applicationcode}</td>
 									</tr>
 									<tr>
 										<td class=" font-weight-bold">Fee Code</td>
-										<td class="col-xs-5 ">: {{feecode}}</td>
+										<td class="col-xs-5 ">: ${feecode}</td>
 									</tr>
 									<tr>
 										<td class=" font-weight-bold">Fee Type</td>
@@ -53,9 +53,13 @@
 									</tr>
 								</table>
 								<input type="hidden" readonly name="applicationcode"
-									value="{{applicationcode}}" /> <input type="hidden" readonly
-									name="feecode" value="{{feecode}}" /> <input type="hidden"
-									readonly name="feeamount" value="{{feeamount}}" />
+									value="${applicationcode}" /> <input type="hidden" readonly
+									name="feecode" value="${feecode}" /> <input type="hidden"
+									readonly name="feeamount" value="${feeamount}" /> <input
+									type="hidden" readonly name="modulecode" value=" ${modulecode}" />
+								<input type="hidden" readonly name="toprocesscode"
+									value="${toprocesscode}" /> <input type="hidden" readonly
+									name="usercode" value="${usercode}" />
 							</div>
 							<div class=" m-4 p-3" style="width: 100%;">
 								<core:choose>
