@@ -22,7 +22,7 @@
 			                        <tr class="form-group has-feedback">
 			                            <td class="title">Occupancy Code:*</td>
 			                            <td class="col-xs-5 selectContainer">
-											<input type="text" class="form-control" id="occupancycode" name="occupancycode" maxlength="99"
+											<input type="text" class="form-control" id="occupancycode" name="occupancycode" ng-disabled="IsDisabled" maxlength="99"
 												ng-model="occupancy.occupancycode" required autocomplete="off"/>        
 											<span id="occupancycodeMsg"></span>
 <!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->

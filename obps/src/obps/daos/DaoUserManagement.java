@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,8 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
+import obps.models.SubOccupancies;
+import obps.models.Usages;
 import obps.models.Userlogin;
 import obps.util.application.CommonMap;
 import obps.util.application.DaoUtil;
@@ -430,6 +433,49 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
+	public boolean updatesuboccupancy(SubOccupancies suboccupancies) {
+		String sql = "";
+		boolean response = false;
+		try {
+			System.out.println("DAO feemaster::" + suboccupancies.getOccupancycode() + "::" + suboccupancies.getSuboccupancycode()
+					+ "::" + suboccupancies.getSuboccupancyname() + "::" + suboccupancies.getDescription() + "::"
+					);
+			sql = "UPDATE masters.suboccupancies SET occupancycode = ?,suboccupancycode=?,suboccupancyname=?,description=? WHERE suboccupancycode = ?";
+			Object[] param = new Object[] { suboccupancies.getOccupancycode(), suboccupancies.getSuboccupancycode(),
+					suboccupancies.getSuboccupancyname(), suboccupancies.getDescription(),suboccupancies.getSuboccupancycode()};
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updatefeemaster(updatefeetypes )  : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean updateusages(Usages usages) {
+		String sql = "";
+		boolean response = false;
+		try {
+			System.out.println("DAO updateusages::" + usages.getSuboccupancycode() + "::" + usages.getUsagecode()
+					+ "::" + usages.getUsagename() + "::" + usages.getDescription() + "::"
+					);
+			sql = "UPDATE masters.usages SET suboccupancycode=?,usagecode = ?,usagename=?,description=? WHERE usagecode = ?";
+			Object[] param = new Object[] { usages.getSuboccupancycode(), usages.getUsagecode(),
+					usages.getUsagename(), usages.getDescription(),usages.getUsagecode()};
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updateusages(updateusages )  : " + e);
+		}
+		return response;
+	}
+	
+	
+	@Override
 	public boolean updateoccupancy(Occupancies occupancies) {
 		String sql = "";
 		boolean response = false;
@@ -442,7 +488,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 			response = false;
 			e.getStackTrace();
 			response = false;
-			System.out.println("Error in DaoUserManagement.updateoccupancy(updateoccupancy )  : " + e);
+//			System.out.println("Error in DaoUserManagement.updateoccupancy(updateoccupancy )  : " + e);
 		}
 		return response;
 	}
@@ -483,6 +529,43 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		return (list != null) ? list : new LinkedList();
 	}
 
+	@Override
+	public List<SubOccupancies> listSubOccupancy() {
+		System.out.println("inside listSubOccupancy dao begin");
+		List<SubOccupancies> list = null;
+
+		try {
+			String sql = "Select so.occupancycode,so.suboccupancycode,so.suboccupancyname,so.description,o.occupancyname From masters.suboccupancies so\r\n"
+					+ "					inner join masters.occupancies o on o.occupancycode=so.occupancycode\r\n"
+					+ "					Order by so.occupancycode";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<SubOccupancies>(SubOccupancies.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listSubOccupancy()  : " + e);
+		}
+		System.out.println("inside dao listSubOccupancy end");
+		return (list != null) ? list : new LinkedList();
+	}
+	
+	@Override
+	public List<Usages> listUsages() {
+		System.out.println("inside listUsages dao begin");
+		List<Usages> list = null;
+
+		try {
+			String sql = "Select so.suboccupancycode,u.usagecode,u.usagename,u.description From masters.usages u	\r\n"
+					+ "	inner join masters.suboccupancies so on so.suboccupancycode=u.suboccupancycode\r\n"
+					+ "	Order by so.suboccupancycode";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Usages>(Usages.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listUsages()  : " + e);
+		}
+		System.out.println("inside dao listUsages end");
+		return (list != null) ? list : new LinkedList();
+	}
+
+	
 	@Override
 	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms() {
 		List<LicenseesRegistrationsm> list = null;
@@ -576,7 +659,66 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		}
 		return response;
 	}
+	
+	@Override
+	public boolean initsuboccupancies(Map<String, Object> param) {
+		boolean response = false;
+		String sql = null;
+		System.out.println("dao occupancycode::::" + param.get("occupancycode"));
+		System.out.println("dao suboccupancycode::::" + param.get("suboccupancycode"));
+		System.out.println("dao suboccupancyname::::" + param.get("suboccupancyname"));
+		System.out.println("dao description::::" + param.get("description"));
+//		Integer feecode = Integer.valueOf((String) param.get("description"));
+		try {
+			
+			
+			sql = "INSERT INTO masters.suboccupancies(occupancycode,suboccupancycode,suboccupancyname,description) "
+					+ " VALUES (?,?,?,?) ";
+			Object[] values = { 
+				param.get("occupancycode").toString() ,
+					param.get("suboccupancycode").toString(),
+					param.get("suboccupancyname").toString(),
+					param.get("description").toString() };
+			response = jdbcTemplate.update(sql, values) > 0;
 
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.initsuboccupancies(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean initusages(Map<String, Object> param) {
+		boolean response = false;
+		String sql = null;
+		System.out.println("dao usagecode::::" + param.get("usagecode"));
+		System.out.println("dao suboccupancycode::::" + param.get("suboccupancycode"));
+		System.out.println("dao usagename::::" + param.get("usagename"));
+		System.out.println("dao description::::" + param.get("description"));
+//		Integer feecode = Integer.valueOf((String) param.get("description"));
+		try {
+			
+			
+			sql = "INSERT INTO masters.usages(suboccupancycode,usagecode,usagename,description) "
+					+ " VALUES (?,?,?,?) ";
+			Object[] values = { 
+				param.get("suboccupancycode").toString() ,
+					param.get("usagecode").toString(),
+					param.get("usagename").toString(),
+					param.get("description").toString() };
+			response = jdbcTemplate.update(sql, values) > 0;
+
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.initsuboccupancies(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	
+	
 	@Override
 	public boolean createLicenseeRegistration(Map<String, Object> param) {
 		boolean response = false;
@@ -595,4 +737,14 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		}
 		return response;
 	}
+	
+	@Override
+	public boolean checkExistance(String sql, Object[] values) {
+		System.out.println("Already Exist!!!");
+		 SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, values);
+//		 System.out.println("rowset"+rowSet.next());
+	        return rowSet.next();
+	}
+	
+	
 }

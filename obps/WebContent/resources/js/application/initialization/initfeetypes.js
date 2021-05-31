@@ -4,7 +4,7 @@ app.controller('createfeetypeCtrl', ['$scope', '$sce', '$compile','$timeout','co
 	commonInitService.success();
 	/* Common Ajax Params */
 	var successMsg = "Success: Fee Type created or updated successfully";
-	var errorMsg = "Error: Unable to perform action";
+	var errorMsg = "Error: Unable to perform action or Already Existing Data";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
 	$scope.successCallback = "";
@@ -50,6 +50,7 @@ $scope.feetypes=[];
     };
 
     $scope.reset = function () {
+       $scope.listFeeTypes();
     	$scope.feetype = new FeeType();
     	$scope.actionButton = 1;
     };

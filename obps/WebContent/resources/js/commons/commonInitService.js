@@ -1,6 +1,7 @@
 var SAVE = "SAVE";
 var EDIT = "EDIT";
 var CREATED = "CREATED";
+var ALREADY_EXISTS = "ALREADY_EXISTS";
 var ALREADY_REPORTED = "ALREADY_REPORTED";
 
 app.service("commonInitService", function($http) {

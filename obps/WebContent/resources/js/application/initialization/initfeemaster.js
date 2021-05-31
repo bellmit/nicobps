@@ -4,7 +4,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 		commonInitService.success();
 		/* Common Ajax Params */
 		var successMsg = "Success: Fee Master created or updated successfully";
-		var errorMsg = "Error: Unable to perform action";
+		var errorMsg = "Error: Unable to perform action or Already Existing Data";
 		$scope.errorCallback = "";
 		$scope.method = "POST";
 		$scope.successCallback = "";
@@ -69,6 +69,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 		};
 
 		$scope.reset = function() {
+		$scope.listFeeMaster();
 			$scope.feemaster = new FeeMaster();
 			$scope.actionButton = 1;
 		};
@@ -83,8 +84,8 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 			$scope.feemaster.officecode = $scope.feemaster.offices.officecode;
 			//alert("feemaster licenseecode"+$scope.feemaster.licenseetypecode)
 
-//			if ($scope.feemasterForm.$invalid)
-//				return false;
+			//			if ($scope.feemasterForm.$invalid)
+			//				return false;
 
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./initfeemaster.htm";
@@ -106,7 +107,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 		//    
 		$scope.update = () => {
 			$scope.validateFeeMasterForm();
-			
+
 			$scope.feemaster.licenseetypecode = $scope.feemaster.licenseetypes.licenseetypecode;
 			$scope.feemaster.feetypecode = $scope.feemaster.feetypes.feetypecode;
 			$scope.feemaster.officecode = $scope.feemaster.offices.officecode;
@@ -179,18 +180,18 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 
 
 
-//
-//			if ($scope.feemaster.offices.officecode === "" || $scope.feemaster.offices.officecode === 0 || $scope.feemaster.offices.officecode === null) {
-//				jQuery("#officecode").focus();
-//				alert("office cannot be empty");
-//				return false;
-//			}
+			//
+			//			if ($scope.feemaster.offices.officecode === "" || $scope.feemaster.offices.officecode === 0 || $scope.feemaster.offices.officecode === null) {
+			//				jQuery("#officecode").focus();
+			//				alert("office cannot be empty");
+			//				return false;
+			//			}
 
-//			if ($scope.feemaster.licenseetypes.licenseetypecode === "" || $scope.feemaster.licenseetypes.licenseetypecode === 0 || $scope.feemaster.licenseetypes.licenseetypecode === null) {
-//				jQuery("#licenseetypecode").focus();
-//				alert("licensee type cannot be empty");
-//				return false;
-//			}
+			//			if ($scope.feemaster.licenseetypes.licenseetypecode === "" || $scope.feemaster.licenseetypes.licenseetypecode === 0 || $scope.feemaster.licenseetypes.licenseetypecode === null) {
+			//				jQuery("#licenseetypecode").focus();
+			//				alert("licensee type cannot be empty");
+			//				return false;
+			//			}
 
 			if ($scope.feemaster.feetypes.feetypecode === "" || $scope.feemaster.feetypes.feetypecode === 0 || $scope.feemaster.feetypes.feetypecode === null) {
 				jQuery("#feetypecode").focus();

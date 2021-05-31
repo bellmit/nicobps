@@ -4,7 +4,7 @@ app.controller('createlicenseesregCtrl', ['$scope', '$sce', '$compile','$timeout
 	commonInitService.success();
 	/* Common Ajax Params */
 	var successMsg = "Success: Licensee Registration created or updated successfully";
-	var errorMsg = "Error: Unable to perform action";
+	var errorMsg = "Error: Unable to perform action or Already Existing Data";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
 	$scope.successCallback = "";
@@ -50,6 +50,7 @@ $scope.licenseesreg=[];
     };
 
     $scope.reset = function () {
+     $scope.listLicensees();
     	$scope.licensees = new Licenseesregistration();
     	$scope.actionButton = 1;
     };

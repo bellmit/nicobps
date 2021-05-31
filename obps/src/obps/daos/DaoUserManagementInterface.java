@@ -8,6 +8,8 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
+import obps.models.SubOccupancies;
+import obps.models.Usages;
 import obps.models.Userlogin;
 
 public interface DaoUserManagementInterface {
@@ -37,6 +39,11 @@ public interface DaoUserManagementInterface {
 	
 	public List<FeeMaster> listFeeMaster();
 	
+	public List<SubOccupancies> listSubOccupancy();
+	
+	public List<Usages> listUsages();
+	
+	
 	
 	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms();
 
@@ -48,6 +55,10 @@ public interface DaoUserManagementInterface {
 
 	public boolean updatefeemaster(FeeMaster feemaster);
 
+	public boolean updatesuboccupancy(SubOccupancies suboccupancies);
+
+	public boolean updateusages(Usages usages);
+	
 	
 	public boolean updateoccupancy(Occupancies occupancies);
 	
@@ -58,5 +69,12 @@ public interface DaoUserManagementInterface {
 	public boolean initoccupancy(Map<String, Object> param);
 	
 	public boolean initfeemaster(Map<String, Object> param);
+	
+	public boolean initsuboccupancies(Map<String, Object> param);
+	
+	public boolean initusages(Map<String, Object> param);
+	
+	public boolean checkExistance(String sql, Object[] values);
+	
 	
 }

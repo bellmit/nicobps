@@ -14,6 +14,8 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
+import obps.models.SubOccupancies;
+import obps.models.Usages;
 import obps.models.Userlogin;
 import obps.util.application.ServiceUtilInterface;
 
@@ -143,7 +145,15 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     public boolean updatefeemaster(FeeMaster feemaster){    	    	
 		return DaoUserManagementInterface.updatefeemaster(feemaster);	
 	} 
+    @Override
+    public boolean updatesuboccupancy(SubOccupancies suboccupancies){    	    	
+		return DaoUserManagementInterface.updatesuboccupancy(suboccupancies);	
+	} 
     
+    @Override
+    public boolean updateusages(Usages usages){    	    	
+		return DaoUserManagementInterface.updateusages(usages);	
+	} 
     
     @Override
     public boolean updateoccupancy(Occupancies occupancies){    	    	
@@ -159,6 +169,18 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     public List<FeeMaster> listFeeMaster(){    	    	
 		return DaoUserManagementInterface.listFeeMaster();	
 	} 
+    
+    @Override
+    public List<SubOccupancies> listSubOccupancy(){    	    	
+		return DaoUserManagementInterface.listSubOccupancy();	
+	} 
+    
+    
+    @Override
+    public List<Usages> listUsages(){    	    	
+		return DaoUserManagementInterface.listUsages();	
+	} 
+    
     
     
     @Override
@@ -191,6 +213,20 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		return DaoUserManagementInterface.initfeemaster(param);	
 	}	
     
+    @Override
+    public boolean initsuboccupancies(Map<String,Object> param) {    	    	
+		return DaoUserManagementInterface.initsuboccupancies(param);	
+	}	
     
+    
+    @Override
+    public boolean initusages(Map<String,Object> param) {    	    	
+		return DaoUserManagementInterface.initusages(param);	
+	}	
+    
+    @Override
+    public boolean checkExistance(String sql,Object[] values) {    	    	
+		return DaoUserManagementInterface.checkExistance(sql,values);	
+	}
     
 }

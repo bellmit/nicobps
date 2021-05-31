@@ -32,6 +32,7 @@ app.factory('commonInitFactory', function($http) {
 						callback(response);
 					});
 		},	
+<<<<<<< Updated upstream
 
 		listOffices : function(callback) {
 			$http.get("./listOffices.htm").success(
@@ -41,10 +42,15 @@ app.factory('commonInitFactory', function($http) {
 		},		
 		listEnclosures : function(callback) {
 			$http.get("./listEnclosures.htm").success(
+=======
+		listSubOccupancy: function(callback) {
+			$http.get("./listSubOccupancy.htm").success(
+>>>>>>> Stashed changes
 					function(response, status, headers, config) {
 						callback(response);
 					});
 		},
+<<<<<<< Updated upstream
 		listOffices : function(callback) {
 			$http.get("./listOffices.htm").success(
 					function(response, status, headers, config) {
@@ -59,5 +65,15 @@ app.factory('commonInitFactory', function($http) {
 		},
 			
 
+=======
+			listUsages: function(callback) {
+			$http.get("./listUsages.htm").success(
+					function(response, status, headers, config) {
+						callback(response);
+					});
+		},	
+		
+		
+>>>>>>> Stashed changes
 	}
 });

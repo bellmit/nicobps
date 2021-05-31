@@ -34,6 +34,8 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
+import obps.models.SubOccupancies;
+import obps.models.Usages;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
 
@@ -164,7 +166,8 @@ public class ControllerUserManagement {
 
 	}
 
-	// =================================Upload Enclosures====================================//
+	// =================================Upload
+	// Enclosures====================================//
 	@RequestMapping("/uploadenclosuresext.htm")
 	public String uploadenclosuresext() {
 		return "uploadenclosuresext";
@@ -318,188 +321,363 @@ public class ControllerUserManagement {
 
 		return serviceUserManagementInterface.saveUserpages(userpages);
 	}
-	
+
 	@GetMapping("/initlicenseesregistrationsm.htm")
 	public String initlicenseesregistrationsm() {
 		return "initialization/initlicenseesregistrationsm";
 	}
+
 	@PostMapping(value = "/initlicenseesregistrationsm.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> createlicenseesregistrationsm(@RequestBody Map<String, Object> licensee) {
+	public ResponseEntity<HashMap<String, Object>> createlicenseesregistrationsm(
+			@RequestBody Map<String, Object> licensee) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		String licenseeregistrationcode = serviceUserManagementInterface.getMaxLicenseecode() + "";
 		licensee.put("licenseeregistrationcode", licenseeregistrationcode);
-//		user.put("usertype", "F");
+//		check existance
+		String sql = "";
+		Object[] values = { licensee.get("licenseedescription") };
+		sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
 
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+		if(!exist) {
 		if (serviceUserManagementInterface.createLicenseeRegistration(licensee)) {
 			response.put("response", HttpStatus.CREATED);
 			response.put("data", 1);
 			return ResponseEntity.ok().body(response);
 		}
-		response.put("response", HttpStatus.OK);
-		response.put("data", -1);
-		return ResponseEntity.ok().body(response);
-	}
-	@GetMapping("/listLicensees.htm")
-	public @ResponseBody List<LicenseesRegistrationsm> listLicenseesRegistrationsms() {
-
-		return serviceUserManagementInterface.listLicenseesRegistrationsms();
-	}
-	
-	@GetMapping("/listFeeTypes.htm")
-	public @ResponseBody List<FeeTypes> listFeeTypes() {
-
-		return serviceUserManagementInterface.listFeeTypes();
-	}
-	
-	@PostMapping(value = "/updatelicenseesregistrationsm.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> updatelicenseesregistrationsm(@RequestBody LicenseesRegistrationsm licensee) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		if (serviceUserManagementInterface.updateLicenseesRegistrationsm(licensee)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
 		}
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
+
+	@GetMapping("/listLicensees.htm")
+	public @ResponseBody List<LicenseesRegistrationsm> listLicenseesRegistrationsms() {
+
+		return serviceUserManagementInterface.listLicenseesRegistrationsms();
+	}
+
+	@GetMapping("/listFeeTypes.htm")
+	public @ResponseBody List<FeeTypes> listFeeTypes() {
+
+		return serviceUserManagementInterface.listFeeTypes();
+	}
+
+	@PostMapping(value = "/updatelicenseesregistrationsm.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updatelicenseesregistrationsm(
+			@RequestBody LicenseesRegistrationsm licensee) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		// check existance
+				String sql = "";
+				Object[] values = { licensee.getLicenseedescription() };
+				sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
+
+				boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+				if(!exist) {
+					if (serviceUserManagementInterface.updateLicenseesRegistrationsm(licensee)) {
+						response.put("response", HttpStatus.CREATED);
+						response.put("data", 1);
+						return ResponseEntity.ok().body(response);
+					}
+				}
 	
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+
 	@GetMapping("/initfeetypes.htm")
 	public String initfeetypes() {
 		return "initialization/initfeetypes";
 	}
-	
+
 	@PostMapping(value = "/initfeetypes.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initfeetypes(@RequestBody Map<String, Object> feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		String feetypecode = serviceUserManagementInterface.getMaxFeeTypecode() + "";
 		feetype.put("feetypecode", feetypecode);
 //		user.put("usertype", "F");
+		// check existance
+		String sql = "";
+		Object[] values = { feetype.get("feetypedescription") };
+		sql = "SELECT * FROM masters.feetypes WHERE  LOWER(feetypedescription)=LOWER(?) ";
 
-		if (serviceUserManagementInterface.initfeetypes(feetype)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+		if(!exist) {
+			if (serviceUserManagementInterface.initfeetypes(feetype)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
 		}
+		
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@PostMapping(value = "/updateinitfeetypes.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateinitfeetypes(@RequestBody FeeTypes feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
+		// check existance
+				String sql = "";
+				Object[] values = { feetype.getFeetypedescription() };
+				sql = "SELECT * FROM masters.feetypes WHERE  LOWER(feetypedescription)=LOWER(?) ";
 
-		if (serviceUserManagementInterface.updatefeetypes(feetype)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
-		}
+				boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+				if(!exist) {
+					if (serviceUserManagementInterface.updatefeetypes(feetype)) {
+						response.put("response", HttpStatus.CREATED);
+						response.put("data", 1);
+						return ResponseEntity.ok().body(response);
+					}
+				}
+		
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@PostMapping(value = "/updatefeemaster.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updatefeemaster(@RequestBody FeeMaster feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-System.out.println("feemaster:"+feemaster);
-		if (serviceUserManagementInterface.updatefeemaster(feemaster)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
+		System.out.println("feemaster:" + feemaster);
+		// check existance
+		String sql = "";
+		Object[] values = { feemaster.getLicenseetypecode(), feemaster.getOfficecode(),
+				feemaster.getFeetypecode() };
+		sql = "SELECT * FROM masters.feemaster WHERE  licenseetypecode=? AND officecode=? AND feetypecode=? ";
+
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+		if(!exist) {
+			if (serviceUserManagementInterface.updatefeemaster(feemaster)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
 		}
+		
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
-	
+
+	@PostMapping(value = "/updatesuboccupancy.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updatesuboccupancy(@RequestBody SubOccupancies suboccupancies) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		System.out.println("feemaster:" + suboccupancies);
+
+		// check existance
+		String sql = "";
+		Object[] values = { suboccupancies.getSuboccupancycode(), suboccupancies.getDescription(),
+				suboccupancies.getSuboccupancyname() };
+		sql = "SELECT * FROM masters.suboccupancies WHERE  LOWER(suboccupancycode)=LOWER(?) AND LOWER(description)=LOWER(?) AND LOWER(suboccupancyname)=LOWER(?) ";
+
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceUserManagementInterface.updatesuboccupancy(suboccupancies)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
+		}
+
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping(value = "/updateusages.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updateusages(@RequestBody Usages usages) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		System.out.println("update usages:::::" + usages);
+
+		// check existance
+		String sql = "";
+		Object[] values = { usages.getUsagecode(), usages.getDescription(), usages.getUsagename() };
+		sql = "SELECT * FROM masters.usages WHERE  LOWER(usagecode)=LOWER(?) AND LOWER(description)=LOWER(?) OR LOWER(usagename)=LOWER(?) ";
+
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceUserManagementInterface.updateusages(usages)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
+		}
+
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+
 	@GetMapping("/initoccupancies.htm")
 	public String initoccupancies() {
 		return "initialization/initoccupancies";
 	}
-	
+
+	@GetMapping("/initsuboccupancies.htm")
+	public String initsuboccupancies(Model model, HttpServletRequest req) {
+		model.addAttribute("occupancies", serviceUtilInterface.listOccupancies());
+		return "initialization/initsuboccupancies";
+	}
+
+	@GetMapping("/initusages.htm")
+	public String initusages(Model model, HttpServletRequest req) {
+		model.addAttribute("suboccupancies", serviceUtilInterface.listSubOccupancies());
+		return "initialization/initusages";
+	}
+
 	@GetMapping("/initfeemaster.htm")
-	public String initfeemaster(Model model,HttpServletRequest req) {
+	public String initfeemaster(Model model, HttpServletRequest req) {
 		model.addAttribute("offices", serviceUtilInterface.listOffices());
 		model.addAttribute("licenseetypes", serviceUtilInterface.listLicenseetypes());
 		model.addAttribute("feetypes", serviceUtilInterface.listFeetypes());
-		
+
 		return "initialization/initfeemaster";
 	}
+
 	@PostMapping(value = "/initfeemaster.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initfeemaster(@RequestBody Map<String, Object> feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-//		System.out.println("feemaster"+feemaster);
-		
-		for (String name: feemaster.keySet()) {
-		    String key = name.toString();
-		    String value = feemaster.get(name).toString();
-		    System.out.println(key + "-key:::value -" + value);
-		   
-//		    
-//		    if(feemaster.containsKey("offices")){
-//		    	
-//		    	Integer	officecode = (Integer) feemaster.get("offices");
-//		    	
-//		    	System.out.println("officecode nested::"+officecode);
-//		    	} 	
-		}
-	
+
 		String feecode = serviceUserManagementInterface.getMaxFeeCode() + "";
 		feemaster.put("feecode", feecode);
+		// check existance
+				String sql = "";
+				Object[] values = { Integer.parseInt(feemaster.get("licenseetypecode").toString()) , Integer.parseInt(feemaster.get("officecode").toString()),
+						Integer.parseInt(feemaster.get("feetypecode").toString()) };
+				sql = "SELECT * FROM masters.feemaster WHERE  licenseetypecode=? AND officecode=? AND feetypecode=? ";
 
-		if (serviceUserManagementInterface.initfeemaster(feemaster)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
-		}
+				boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+				if(!exist) {
+					if (serviceUserManagementInterface.initfeemaster(feemaster)) {
+						response.put("response", HttpStatus.CREATED);
+						response.put("data", 1);
+						return ResponseEntity.ok().body(response);
+					}
+				}
+		
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
+
+	@PostMapping(value = "/initsuboccupancies.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initsuboccupancies(@RequestBody Map<String, Object> suboccupancies) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		// check existance
+		String sql = "";
+		Object[] values = { suboccupancies.get("suboccupancycode"), suboccupancies.get("description"),
+				suboccupancies.get("suboccupancyname") };
+		sql = "SELECT * FROM masters.suboccupancies WHERE  LOWER(suboccupancycode)=LOWER(?) OR LOWER(description)=LOWER(?) OR LOWER(suboccupancyname)=LOWER(?) ";
+
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+
+		if (!exist) {
+			if (serviceUserManagementInterface.initsuboccupancies(suboccupancies)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
+		} 
+
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping(value = "/initusages.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initusages(@RequestBody Map<String, Object> usages) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		// check existance
+		String sql = "";
+		Object[] values = { usages.get("usagecode"), usages.get("description"), usages.get("usagename") };
+		sql = "SELECT * FROM masters.usages WHERE  LOWER(usagecode)=LOWER(?) OR LOWER(description)=LOWER(?) OR LOWER(usagename)=LOWER(?) ";
+
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+
+		if (!exist) {
+			if (serviceUserManagementInterface.initusages(usages)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
+		}
+
+		response.put("response", HttpStatus.OK);
+		response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+
 	@PostMapping(value = "/initoccupancies.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoccupancies(@RequestBody Map<String, Object> occupancy) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		
-
-		if (serviceUserManagementInterface.initoccupancy(occupancy)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
+		// check existance
+		String sql = "";
+		Object[] values = { occupancy.get("occupancycode"), occupancy.get("occupancyname"),
+				occupancy.get("occupancyalias") };
+		sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) OR LOWER(occupancyname)=LOWER(?) OR LOWER(occupancyalias)=LOWER(?) ";
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+		System.out.println("exist::"+exist);
+		if (!exist) {
+			if (serviceUserManagementInterface.initoccupancy(occupancy)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
 		}
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
+
 	@PostMapping(value = "/updateoccupancy.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateoccupancy(@RequestBody Occupancies occupancy) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		if (serviceUserManagementInterface.updateoccupancy(occupancy)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-			return ResponseEntity.ok().body(response);
+		// check existance
+		String sql = "";
+		Object[] values = { occupancy.getOccupancycode(), occupancy.getOccupancyname(),
+				occupancy.getOccupancyalias()};
+		sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) AND LOWER(occupancyname)=LOWER(?) AND LOWER(occupancyalias)=LOWER(?)  ";
+		boolean exist = serviceUserManagementInterface.checkExistance(sql, values);
+				if (!exist) {
+			if (serviceUserManagementInterface.updateoccupancy(occupancy)) {
+				response.put("response", HttpStatus.CREATED);
+				response.put("data", 1);
+				return ResponseEntity.ok().body(response);
+			}
 		}
+	
 		response.put("response", HttpStatus.OK);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@GetMapping("/listOccupancies.htm")
 	public @ResponseBody List<Occupancies> listOccupancies() {
-System.out.println("list occupancies");
+		System.out.println("list occupancies");
 		return serviceUserManagementInterface.listOccupancies();
 	}
-	
+
+	@GetMapping("/listUsages.htm")
+	public @ResponseBody List<Usages> listUsages() {
+		System.out.println("listUsages");
+		return serviceUserManagementInterface.listUsages();
+	}
+
 	@GetMapping("/listFeeMaster.htm")
 	public @ResponseBody List<FeeMaster> listFeeMaster() {
-System.out.println("list fee master");
+		System.out.println("list fee master");
 		return serviceUserManagementInterface.listFeeMaster();
 	}
-	
-	
+
+	@GetMapping("/listSubOccupancy.htm")
+	public @ResponseBody List<SubOccupancies> listSubOccupancy() {
+		System.out.println("listSubOccupancyr");
+		return serviceUserManagementInterface.listSubOccupancy();
+	}
+
 }

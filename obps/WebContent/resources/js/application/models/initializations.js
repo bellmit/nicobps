@@ -65,6 +65,29 @@ function Occupancy() {
 	};
 	return Occupancy;
 }
+function SubOccupancy() {
+	var SubOccupancy = {
+		"occupancycode": "",
+		"suboccupancycode": "",
+		"suboccupancyname": "",
+		"description": "",
+		"occupancies": new Occupancy()
+		
+	};
+	return SubOccupancy;
+}
+
+function Usage() {
+	var Usage = {
+		"suboccupancycode": "",
+		"usagecode": "",
+		"usagename": "",
+		"description": "",
+		"suboccupancies": new SubOccupancy()
+		
+	};
+	return Usage;
+}
 
 function LicenseeTypes() {
 	var LicenseeTypes = {
