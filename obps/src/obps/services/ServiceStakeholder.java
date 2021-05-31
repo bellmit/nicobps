@@ -36,8 +36,8 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN nicobps.applications app on app.usercode=l.usercode "
 				+ "INNER JOIN nicobps.applicationflowremarks afr on  "
 				+ "		afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=app.applicationcode::text) "
-				+ "INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' "
-				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode ORDER BY l.entrydate DESC ";
+				+ "INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' and pf.modulecode=1 "
+				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode ORDER BY l.entrydate DESC ";
 		return SUI.listGeneric(sql);
 	}
 

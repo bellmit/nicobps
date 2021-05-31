@@ -248,7 +248,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				applicationslno);
 	}
 
-	@Override
+	@Override	//contains both fromprocesscode & toprocesscode
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
@@ -256,7 +256,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				toprocesscode, fromusercode, tousercode, remarks);
 	}
 
-	@Override
+	@Override	//contains only toprocesscode
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer toprocesscode,
 			Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
@@ -269,14 +269,14 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> getAllNextProcessflows(Integer modulecode, Integer fromprocesscode) {
-		String sql = "select * from masters.processflow where fromprocesscode=? ";
-		return this.listGeneric(sql, new Object[] { fromprocesscode });
+		String sql = "select * from masters.processflow where fromprocesscode=? and modulecode=? ";
+		return this.listGeneric(sql, new Object[] { fromprocesscode, modulecode });
 	}
 
 	@Override
 	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode) {
 		String sql = "select * from masters.processflow where modulecode=? and fromprocesscode=? and processflowstatus='N'";
-		return this.listGeneric(sql, new Object[] {modulecode, fromprocesscode });
+		return this.listGeneric(sql, new Object[] { modulecode, fromprocesscode });
 	}
 
 	@Override
