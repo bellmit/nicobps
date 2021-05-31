@@ -8,7 +8,7 @@ app.controller('paymentController', function($scope) {
 		
 
 		$scope.submitDetails = () => {
-			var flag = confirm(" You are about to get Redirect to BillDesk Payment URL.");
+			var flag = confirm(" You are about to get Redirected to External URL.");
 			if (!flag) { return false; }
 			jQuery('#paymentForm').submit();
 

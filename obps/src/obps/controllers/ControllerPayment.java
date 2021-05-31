@@ -46,19 +46,14 @@ public class ControllerPayment {
 //	@PostMapping(value = "/paymentconfirmation.htm")
 	@RequestMapping(value = "/paymentconfirmation.htm", method = { RequestMethod.GET, RequestMethod.POST })
 	public String paymentConfirmation_Post(@RequestParam Map<String, String> params, Model model) {
-		System.out.println(" --- Payment Confirmation Post--:" + params);
+ 
 		// need to get amount based on feecode
 		Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
 		System.out.println("feeDetails--" + feeDetails);
 		// -------------------------------------------
-
 		Map<String, String> statusMap = validate_payparams(params.get("applicationcode").toString(), Integer.valueOf(params.get("feecode")));
 		model.addAttribute("applicationcode", params.get("applicationcode"));
 		model.addAttribute("feecode", params.get("feecode"));
-//		if (feeDetails == null) {
-//			model.addAttribute("feeamount", "NA");
-//			model.addAttribute("feetypedescription", "NA");
-//		} else {
 		model.addAttribute("modulecode", params.get("modulecode"));
 		model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
 		model.addAttribute("usercode", params.get("usercode"));
@@ -74,7 +69,7 @@ public class ControllerPayment {
 
 	@PostMapping(value = "/paymentinitialized.htm")
 	public ResponseEntity<Void> redirect(HttpServletRequest request, @RequestParam Map<String, String> params) {
-		System.out.println("paymentinitialized.htm-------POST-" + params);
+		 
 		String usercode = params.get("usercode");
 		String feecode = params.get("feecode");
 		String toprocesscode = params.get("toprocesscode");
@@ -83,6 +78,29 @@ public class ControllerPayment {
 		String applicationcode = params.get("applicationcode");
 		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount, feecode, applicationcode, modulecode, toprocesscode).toString()))
 				.build();
+	}
+
+	@RequestMapping(value = "/CommonPaymentResponse.htm", method = { RequestMethod.GET, RequestMethod.POST })
+	public String CommonPayment(@RequestParam Map<String, String> params, Model model) {
+		Integer transactioncode = serviceCommon.saveTransaction(params);
+	 
+		if (transactioncode != 0) {
+			serviceUtilInterface.updateApplicationflowremarks(params.get("applicationcode"), Integer.parseInt(params.get("modulecode").trim()), Integer.parseInt(params.get("toprocesscode").trim()),
+					Integer.parseInt(params.get("usercode").trim()), null, "Payment Complete");
+			model.addAttribute("status", "0300");
+			model.addAttribute("transactioncode", transactioncode);
+			model.addAttribute("amount", "0");
+			model.addAttribute("message", "Payment Completed");
+
+		} else {
+			model.addAttribute("status", "NA");
+			model.addAttribute("transactioncode", "NA");
+			model.addAttribute("amount", "NA");
+			model.addAttribute("message", "Payment Registration Failed");
+
+		}
+
+		return "payment/CommonPaymentResponse";
 	}
 
 	@PostMapping(path = "/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
@@ -95,7 +113,6 @@ public class ControllerPayment {
 		response = response.replace("%3A", ":");
 		String[] words = response.toString().split("\\|");
 		String paymentstatuscode = words[14];
-//		String usercode = (String) request.getSession().getAttribute("usercode");
 		String usercode = words[21];
 		model.addAttribute("status", words[14]);
 		try {
