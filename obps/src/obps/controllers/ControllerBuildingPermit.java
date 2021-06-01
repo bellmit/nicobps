@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.models.BpaApplication;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.CommonMap;
+import obps.util.application.ServiceUtilInterface;
 
 @Controller
 public class ControllerBuildingPermit {
@@ -32,7 +33,8 @@ public class ControllerBuildingPermit {
 	
 	@Autowired
 	private ServiceBPAInterface SBI;
-	
+	@Autowired
+	private ServiceUtilInterface SUI;
 	
 	/* Page-URLs */
 	@GetMapping(value = "/applybuildingpermit.htm")
@@ -120,12 +122,25 @@ public class ControllerBuildingPermit {
 	
 	/* CREATE */
 	@PostMapping(value = "/savebpa.htm")
-	public ResponseEntity<HashMap<String, Object>> createlicenseesregistrationsm(@RequestBody BpaApplication bpa) {
+	public ResponseEntity<HashMap<String, Object>> saveBPA(@RequestBody BpaApplication bpa) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
 		if(USERCODE == null) return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 		
 		if(SBI.saveBPA(bpa, USERCODE, response)) {
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		}else
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@PostMapping(value = "/savebpasteptwo.htm")
+	public ResponseEntity<HashMap<String, Object>> saveBPAStepTwo(@RequestBody BpaApplication bpa,
+			@RequestParam(name = "processcode", required = false) Integer fromprocesscode) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		LOG.info(bpa.toString());
+		if(USERCODE == null) return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+		
+		if(SBI.saveBPAStepTwo(bpa, USERCODE, fromprocesscode, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		}else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

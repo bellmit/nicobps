@@ -3,6 +3,7 @@ package obps.daos;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,8 @@ public class DaoBPA implements DaoBPAInterface{
 	private static final Logger LOG = Logger.getLogger(DaoBPA.class.toGenericString());
 	
 	private final Integer BPAMODULECODE = 2;
+	private final Integer BPAFIRSTPROCESSCODE = 1;
+	private final Integer BPANEXTPROCESSCODE = 2;
 	
 	private JdbcTemplate jdbcTemplate;
 	
@@ -118,16 +121,17 @@ public class DaoBPA implements DaoBPAInterface{
 			};
 			if(!status) throw new Exception("Error: Failed to insert to OwnerDetails");
 			
-			status = SUI.updateApplicationflowremarks(bpa.getApplicationcode(), BPAMODULECODE, 11, 12, USERCODE, null, "Apply for Building Buuilding");
+			status = SUI.updateApplicationflowremarks(bpa.getApplicationcode(), BPAMODULECODE, BPAFIRSTPROCESSCODE, BPANEXTPROCESSCODE, USERCODE, null, "Apply for Building Permit");
 			if(!status) throw new Exception("Error: Failed to update application flow");
 
 			try {
-				sql = "SELECT pageurl as key, processname as value  " + 
-						"FROM masters.processflow PF    " + 
-						"INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode    " + 
-						"INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode   " + 
-						"WHERE PF.toprocesscode = 12";
-				List<CommonMap> list = SUI.listCommonMap(sql); 
+				sql = "SELECT pageurl as key, processname as value      " 
+						+ "FROM masters.processflow PF        "
+						+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
+						+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
+						+ "WHERE PF.modulecode = ? AND PF.fromprocesscode = ?   " 
+						+ "AND PF.processflowstatus = 'N'";
+				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {BPAMODULECODE, BPAFIRSTPROCESSCODE}); 
 				if(list != null && !list.isEmpty()) {
 					map = list.get(0);
 				}
@@ -149,5 +153,54 @@ public class DaoBPA implements DaoBPAInterface{
 		return status;
 	}
 	
-	
+	@Override
+	public boolean saveBPAStepTwo(BpaApplication bpa, Integer USERCODE, Integer fromprocesscode, HashMap<String, Object> response) {
+		boolean status = false;
+		try {
+			List<Map<String, Object>> tlist = new ArrayList<Map<String,Object>>();
+			Map<String, Object> tmap = new HashMap<String, Object>();
+			Integer toprocesscode = 0;
+			
+			if(fromprocesscode == null) {
+				tlist = SUI.getCurrentProcessStatus(BPAMODULECODE, bpa.getApplicationcode());
+				if(tlist != null && !tlist.isEmpty()) {
+					tmap = tlist.get(0);
+					fromprocesscode = (Integer) tmap.get("fromprocesscode");
+					toprocesscode = (Integer) tmap.get("toprocesscode");
+				}
+			}
+			
+			status = SUI.updateApplicationflowremarks(bpa.getApplicationcode(), BPAMODULECODE, fromprocesscode, toprocesscode, USERCODE, null, "Apply for Building Permit - Step Two");
+			if(!status) throw new Exception("Error: Failed to update application	 flow");
+
+			try {
+				CommonMap map = new CommonMap();
+
+				String sql = "";
+				sql = "SELECT pageurl as key, processname as value      " 
+						+ "FROM masters.processflow PF        "
+						+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
+						+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
+						+ "WHERE PF.modulecode = ? AND PF.fromprocesscode = ?   " 
+						+ "AND PF.processflowstatus = 'N'";
+				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {BPAMODULECODE, fromprocesscode}); 
+				if(list != null && !list.isEmpty()) {
+					map = list.get(0);
+				}
+				response.put("nextProcess", map);
+			}catch (Exception e) {
+				response.put("nextProcess", "");
+			}
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application saved successfully.");
+			
+		}catch (Exception e) {
+			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.put("msg", "Error: Failed to save building permit application - step two.");
+			status = false;
+			e.printStackTrace();
+			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+		return status;
+	}
 }

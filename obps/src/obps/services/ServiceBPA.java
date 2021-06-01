@@ -83,17 +83,17 @@ public class ServiceBPA implements ServiceBPAInterface {
 	public List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE) {
 		String sql = "SELECT EDCR.usercode, EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,     "
 				+ "      APP.applicationcode, APP.officecode, APP.modulecode, APP.usercode, APP.applicationslno, APP.servicetypecode, TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate ,  "
-				+ "      AF.toprocesscode, PR.processname, PU.pageurl  " + "FROM nicobps.edcrscrutiny EDCR     "
+				+ "      AF.toprocesscode, PR.processname, PU.pageurl  " 
+				+ "FROM nicobps.edcrscrutiny EDCR     "
 				+ "LEFT JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber     "
 				+ "LEFT JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode   "
 				+ "LEFT JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (  "
 				+ "	SELECT applicationcode, MAX(entrydate)  " + "	FROM nicobps.applicationflowremarks  "
 				+ "	WHERE applicationcode = APP.applicationcode   " + "	GROUP BY applicationcode   " + ")  "
-				+ "LEFT JOIN masters.processflow PF ON PF.toprocesscode = AF.toprocesscode  "
-				+ "LEFT JOIN masters.processes PR ON PR.processcode = PF.toprocesscode   "
-				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode  " 
-				+ "WHERE EDCR.usercode = ?";
-//		+ "WHERE APP.applicationcode IS NULL AND EDCR.usercode = ?";
+				+ "LEFT JOIN masters.processflow PF ON PF.toprocesscode = AF.toprocesscode  AND PF.modulecode = AF.modulecode	"
+				+ "LEFT JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode	"
+				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode  " + 
+				"WHERE EDCR.status='Accepted' AND EDCR.usercode = ?";
 		return SUI.listGeneric(sql, new Object[] {USERCODE});
 	}
 
@@ -102,6 +102,11 @@ public class ServiceBPA implements ServiceBPAInterface {
 	@Override
 	public boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response) {
 		return DBI.saveBPA(bpa, USERCODE, response);
+	}
+
+	@Override
+	public boolean saveBPAStepTwo(BpaApplication bpa, Integer USERCODE, Integer fromprocesscode, HashMap<String, Object> response) {
+		return DBI.saveBPAStepTwo(bpa, USERCODE, fromprocesscode, response);
 	}
 
 }
