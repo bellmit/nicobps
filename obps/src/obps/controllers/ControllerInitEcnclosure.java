@@ -63,6 +63,20 @@ public class ControllerInitEcnclosure {
 		enclosures.put("enclosurecode", enclosurecode);
 		
 		if (serviceUserManagementInterface.initenclosures(enclosures)) {
+			response.put("code", 201);
+			response.put("data", 1);
+		return ResponseEntity.ok().body(response);
+	}
+	response.put("response", HttpStatus.OK);
+	response.put("data", -1);
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping(value = "/checkExistEnclosure.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> checkExistEnclosure(@RequestBody Map<String, Object> enclosures) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		System.out.println("CHECK");
+		if (serviceUserManagementInterface.checkExistEnclosure(enclosures)) {
 			response.put("response", HttpStatus.CREATED);
 			response.put("data", 1);
 		return ResponseEntity.ok().body(response);
@@ -72,12 +86,13 @@ public class ControllerInitEcnclosure {
 		return ResponseEntity.ok().body(response);
 	}
 	
+	
 	@PostMapping(value = "/updateinitenclosures.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateInitEnclosure(@RequestBody Enclosures enclosure) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
 		if (serviceUserManagementInterface.updateInitEnclosure(enclosure)) {
-			response.put("response", HttpStatus.CREATED);
+			response.put("code", 201);
 			response.put("data", 1);
 			return ResponseEntity.ok().body(response);
 		}

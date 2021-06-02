@@ -32,4 +32,10 @@ public interface ServiceEnclosureManagementInterface {
 
 	String saveOfficePayment(List<Map<String, Object>> officespayments);
 
+	boolean checkExistEnclosure(Map<String, Object> enclosures);
+
+	
+
+	boolean checkOffice(Map<String, Object> offices);
+
 }

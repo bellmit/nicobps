@@ -46,9 +46,23 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
 	$scope.actionButton =1;
 };
 $scope.save = function () {
-
-    	if($scope.offices.emailidpassword)  { 	
-    	alert("asdasda")
+		var data;
+    	$.ajax({
+        url: "./checkOffice.htm",
+        type:"POST",
+        contentType: "application/json; charset=utf-8",
+         dataType: "json",
+        data: angular.toJson($scope.offices),
+        success: function (resp) {
+            data = resp;
+         
+           
+           
+        if(resp.data==-1)
+    	{
+        
+        if($scope.offices.emailidpassword)  { 	
+    	
    	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}
        if($scope.offices.smspassword)  
     	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
@@ -56,15 +70,37 @@ $scope.save = function () {
         $scope.urlEndpoint = "./initoffices.htm";
     	
         commonInitService.save($scope.method, $scope.urlEndpoint, $scope.offices, () => {$scope.reset();$scope.listOffices(); alert(successMsg)}, () =>{alert(errorMsg)});
+        }
+        else{
+        alert("Office Already Exists");
+        }
+           
+        },
+        error: function () {
+        alert("ERROR")}
+    }); 
+//    	if($scope.offices.emailidpassword)  { 	
+//    	
+//   	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}
+//       if($scope.offices.smspassword)  
+//    	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
+//    	$scope.method = "POST";
+//        $scope.urlEndpoint = "./initoffices.htm";
+//    	
+//        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.offices, () => {$scope.reset();$scope.listOffices(); alert(successMsg)}, () =>{alert(errorMsg)});
   };
 
   $scope.update = () => {
 	  if($scope.officeForm.$invalid)
           return false;
-          $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);
+                   
+if($scope.offices.emailidpassword)  { 	
+    	
+   	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}
+       if($scope.offices.smspassword)  
     	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
-	  $scope.method = "POST";
-   $scope.urlEndpoint = "./updateinitoffices.htm";
+    	$scope.method = "POST";
+        $scope.urlEndpoint = "./updateinitoffices.htm";
  	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.offices, () => {$scope.reset();$scope.listOffices(), alert(successMsg)}, () => {alert(errorMsg)});
   }
   

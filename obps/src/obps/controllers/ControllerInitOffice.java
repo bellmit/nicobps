@@ -66,11 +66,11 @@ public class ControllerInitOffice {
 		offices.put("officecode", officecode);
 		
 		if (serviceUserManagementInterface.initoffices(offices)) {
-			response.put("response", HttpStatus.CREATED);
+			response.put("code", 201);
 			response.put("data", 1);
 		return ResponseEntity.ok().body(response);
 	}
-	response.put("response", HttpStatus.OK);
+	response.put("code", 201);
 	response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
@@ -80,11 +80,11 @@ public class ControllerInitOffice {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
 		if (serviceUserManagementInterface.updateinitoffices(offices)) {
-			response.put("response", HttpStatus.CREATED);
+			response.put("code", 201);
 			response.put("data", 1);
 			return ResponseEntity.ok().body(response);
 		}
-		response.put("response", HttpStatus.OK);
+		response.put("code", 201);
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
@@ -100,6 +100,19 @@ public class ControllerInitOffice {
 		String sql = "SELECT MAX(officecode) FROM masters.offices";		
 		return serviceUtilInterface.getMaxValue(sql);	
 		
+	}
+	@PostMapping(value = "/checkOffice.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> checkOffice(@RequestBody Map<String, Object> offices) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		System.out.println("CHECK");
+		if (serviceUserManagementInterface.checkOffice(offices)) {
+			response.put("response", HttpStatus.CREATED);
+			response.put("data", 1);
+		return ResponseEntity.ok().body(response);
+	}
+	response.put("response", HttpStatus.OK);
+	response.put("data", -1);
+		return ResponseEntity.ok().body(response);
 	}
 
 	

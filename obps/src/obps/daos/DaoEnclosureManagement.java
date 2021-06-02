@@ -52,7 +52,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		String sql = null;
 		Long enclosurecode = (Long) param.get("enclosurecode");
 		
-		System.out.println(enclosurecode);
+		System.out.println("HERE");
 		try 
 		{
 			sql = "INSERT INTO masters.enclosures(enclosurecode,enclosurename,enclosuredescription,enabled) "
@@ -335,6 +335,56 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.out.println("\n\nError in mapOfficesPayments(List<Map<String,Object>> officespayments) " + ex);
+		}
+		return response;
+	}
+	@Override
+	public boolean checkExistEnclosure(Map<String, Object> param) {
+		Boolean response = false;
+		Integer res=0;
+		String sql;
+		try {
+			String encl_name=((String) param.get("enclosurename")).trim();
+			sql = "Select count(*) from  masters.enclosures where enclosurename=?";
+//			Object[] values = {encl_name };
+			res = jdbcTemplate.queryForObject(sql, new Object[] { encl_name }, Integer.class);
+
+			System.out.println("Response"+res);
+			
+		}catch (Exception e) {
+			e.getStackTrace();
+			
+			System.out.println("Error in DaoUserManagement.initenclosure(Map<String,String> param) : " + e);
+		}
+		if(res>0) {
+			response=true;
+		}
+		return response;
+		
+	}
+	
+	@Override
+	public boolean checkExistOffice(Map<String, Object> param) {
+		Boolean response = false;
+		Integer res=0;
+		String sql;
+		try {
+			String officename1=((String) param.get("officename1")).trim();
+			String officename2=((String) param.get("officename2")).trim();
+			String officename3=((String) param.get("officename3")).trim();
+			sql = "Select count(*) from  masters.offices where officename1=? AND officename2=? AND officename3=?";
+//			Object[] values = {encl_name };
+			res = jdbcTemplate.queryForObject(sql, new Object[] { officename1,officename2,officename3 }, Integer.class);
+
+			System.out.println("Response"+res);
+			
+		}catch (Exception e) {
+			e.getStackTrace();
+			
+			System.out.println("Error in DaoUserManagement.initenclosure(Map<String,String> param) : " + e);
+		}
+		if(res>0) {
+			response=true;
 		}
 		return response;
 	}

@@ -39,25 +39,58 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
   	$scope.enclosures = new Enclosures();
 	$scope.actionButton =1;
 };
-
+	
    $scope.save = function () {
     	
      if($scope.enclosureForm.$invalid)
         return false;
+        $scope.checkExist();
+       
+        
     	
+  };
+  $scope.checkExist= function (){
+   
+
+    var data;
+    $.ajax({
+        url: "./checkExistEnclosure.htm",
+        type:"POST",
+        contentType: "application/json; charset=utf-8",
+         dataType: "json",
+        data: angular.toJson($scope.enclosures),
+        success: function (resp) {
+            data = resp;
+          
+           
+           
+        if(resp.data==-1)
+    	{
         
         $scope.method = "POST";
         $scope.urlEndpoint = "./initenclosures.htm";
     	
         commonInitService.save($scope.method, $scope.urlEndpoint, $scope.enclosures, () => {$scope.reset();$scope.listEnclosures(); alert(successMsg)}, () =>{alert(errorMsg)});
-  };
-  
+        }
+        else{
+        alert("Enclosure Name Already Exists");
+        }
+           
+        },
+        error: function () {
+        alert("ERROR")}
+    }); 
+}
+
+
    
   
     
  $scope.update = () => {
 	  if($scope.enclosureForm.$invalid)
           return false;
+           
+          
 	  $scope.method = "POST";
    $scope.urlEndpoint = "./updateinitenclosures.htm";
  	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.enclosures, () => {$scope.reset();$scope.listEnclosures(), alert(successMsg)}, () => {alert(errorMsg)});

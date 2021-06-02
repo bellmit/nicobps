@@ -37,4 +37,7 @@ public interface DaoEnclosureManagementInterface{
 	public List<PaymentModes> getMappedPaymentModes(Integer officecode);
 
 	public boolean mapOfficesPayments(List<Map<String, Object>> officespayments);
+
+	public boolean checkExistEnclosure(Map<String, Object> param);
+	public boolean checkExistOffice(Map<String, Object> offices);
 }
