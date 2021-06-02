@@ -199,7 +199,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 				return false;
 			}
 
-			if ($scope.feemaster.feeamount === "" || $scope.feemaster.feeamount === 0 || $scope.feemaster.feeamount === null) {
+			if ($scope.feemaster.feeamount === "" || $scope.feemaster.feeamount < 0 || $scope.feemaster.feeamount === null) {
 				jQuery("#feeamount").focus();
 				alert("fee amount cannot be empty");
 				return false;

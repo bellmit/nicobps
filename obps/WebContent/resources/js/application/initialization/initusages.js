@@ -3,7 +3,7 @@ app.controller('initusagesCtrl', ['$scope', '$sce', '$compile', '$timeout', 'com
 		var scope = angular.element($("#initusagesCtrl")).scope();
 		commonInitService.success();
 		/* Common Ajax Params */
-		var successMsg = "Success: Sub suboccupancy created or updated successfully";
+		var successMsg = "Success: Usage created or updated successfully";
 		var errorMsg = "Error: Unable to perform action or Already existing data";
 		$scope.errorCallback = "";
 		$scope.method = "POST";

@@ -18,11 +18,7 @@ public interface ServiceUserManagementInterface {
 
 	public Long getMaxAfrCode();
 
-	public Long getMaxLicenseecode();
-
-	public Long getMaxFeeTypecode();
 	
-	public Long getMaxFeeCode();
 
 
 	public boolean checkEmailExistance(final String username);
@@ -49,47 +45,5 @@ public interface ServiceUserManagementInterface {
 
 	public String saveUserpages(List<Map<String, Object>> upages);
 
-	public boolean createLicenseeRegistration(Map<String, Object> param);
-
-	public boolean initfeetypes(Map<String, Object> param);
-
-	public boolean initoccupancy(Map<String, Object> param);
-
-
-	public boolean initfeemaster(Map<String, Object> param);
-	
-	public boolean initsuboccupancies(Map<String, Object> param);
-	
-	public boolean initusages(Map<String, Object> param);
-	
-	
-	public boolean checkExistance(String sql,Object[] values);
-	
-	
-	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee);
-
-	public boolean updatefeetypes(FeeTypes feetype);
-	
-	public boolean updatefeemaster(FeeMaster feemaster);
-
-	public boolean updatesuboccupancy(SubOccupancies suboccupancies);
-	
-	public boolean updateusages(Usages usages);
-	
-	
-	public boolean updateoccupancy(Occupancies occupancy);
-
-	public List<Occupancies> listOccupancies();
-
-	public List<FeeMaster> listFeeMaster();
-	
-	public List<SubOccupancies> listSubOccupancy();
-	
-	public List<Usages> listUsages();
-	
-	
-	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms();
-
-	public List<FeeTypes> listFeeTypes();
 
 }

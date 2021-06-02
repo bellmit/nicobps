@@ -41,7 +41,7 @@
 										</tr>
 										<tr class="form-group has-feedback">
 
-											<td class="title">Sub Usage Code<span class="mandatory">*</span>:</td>
+											<td class="title">Usage Code<span class="mandatory">*</span>:</td>
 											<td class="col-xs-3 "><input type="text"
 												class="form-control" id="usagecode" name="usagecode"
 												maxlength="99" ng-model="usage.usagecode" required ng-disabled="IsDisabled"
@@ -52,7 +52,7 @@
 
 										<tr class="form-group has-feedback">
 
-											<td class="title">Sub Occupancy Name<span class="mandatory">*</span>:</td>
+											<td class="title">Usage Name<span class="mandatory">*</span>:</td>
 											<td class="col-xs-3 "><input type="text"
 												class="form-control" id="usagename" name="usagename"
 												maxlength="99" ng-model="usage.usagename" required

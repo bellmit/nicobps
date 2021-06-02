@@ -38,24 +38,7 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		return serviceUtilInterface.getMaxValue(sql)+1;	
 	}     
     
-    @Override
-   	public Long getMaxLicenseecode() {	    	
-   		String sql = "SELECT MAX(licenseeregistrationcode) FROM masters.licenseesregistrationsm ";		
-   		return serviceUtilInterface.getMaxValue(sql)+1;	
-   	} 
-    
-    @Override
-   	public Long getMaxFeeTypecode() {	    	
-   		String sql = "SELECT MAX(feetypecode) FROM masters.feetypes ";		
-   		return serviceUtilInterface.getMaxValue(sql)+1;	
-   	} 
-	
-    @Override
-   	public Long getMaxFeeCode() {	    	
-   		String sql = "SELECT MAX(feecode) FROM masters.feemaster ";		
-   		return serviceUtilInterface.getMaxValue(sql)+1;	
-   	} 
-	
+   
     
     @Override
 	public boolean checkEmailExistance(final String username){
@@ -131,102 +114,6 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		return (DaoUserManagementInterface.mapUserpages(upages)) ? "Mapped" : "Failed";
 	}
     
-    @Override
-    public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee){    	    	
-		return DaoUserManagementInterface.updateLicenseesRegistrationsm(licensee);	
-	} 
-    
-    @Override
-    public boolean updatefeetypes(FeeTypes feeTypes){    	    	
-		return DaoUserManagementInterface.updatefeetypes(feeTypes);	
-	} 
-    
-    @Override
-    public boolean updatefeemaster(FeeMaster feemaster){    	    	
-		return DaoUserManagementInterface.updatefeemaster(feemaster);	
-	} 
-    @Override
-    public boolean updatesuboccupancy(SubOccupancies suboccupancies){    	    	
-		return DaoUserManagementInterface.updatesuboccupancy(suboccupancies);	
-	} 
-    
-    @Override
-    public boolean updateusages(Usages usages){    	    	
-		return DaoUserManagementInterface.updateusages(usages);	
-	} 
-    
-    @Override
-    public boolean updateoccupancy(Occupancies occupancies){    	    	
-		return DaoUserManagementInterface.updateoccupancy(occupancies);	
-	} 
-    
-    @Override
-    public List<Occupancies> listOccupancies(){    	    	
-		return DaoUserManagementInterface.listOccupancies();	
-	} 
-    
-    @Override
-    public List<FeeMaster> listFeeMaster(){    	    	
-		return DaoUserManagementInterface.listFeeMaster();	
-	} 
-    
-    @Override
-    public List<SubOccupancies> listSubOccupancy(){    	    	
-		return DaoUserManagementInterface.listSubOccupancy();	
-	} 
-    
-    
-    @Override
-    public List<Usages> listUsages(){    	    	
-		return DaoUserManagementInterface.listUsages();	
-	} 
-    
-    
-    
-    @Override
-    public List<LicenseesRegistrationsm> listLicenseesRegistrationsms(){    	    	
-		return DaoUserManagementInterface.listLicenseesRegistrationsms();	
-	}  
-    
-    @Override
-    public List<FeeTypes> listFeeTypes(){    	    	
-		return DaoUserManagementInterface.listFeeTypes();	
-	}  
-    
-    @Override
-    public boolean createLicenseeRegistration(Map<String,Object> param) {    	    	
-		return DaoUserManagementInterface.createLicenseeRegistration(param);	
-	}	
-    
-    @Override
-    public boolean initfeetypes(Map<String,Object> param) {    	    	
-		return DaoUserManagementInterface.initfeetypes(param);	
-	}	
-    
-    @Override
-    public boolean initoccupancy(Map<String,Object> param) {    	    	
-		return DaoUserManagementInterface.initoccupancy(param);	
-	}
-    
-    @Override
-    public boolean initfeemaster(Map<String,Object> param) {    	    	
-		return DaoUserManagementInterface.initfeemaster(param);	
-	}	
-    
-    @Override
-    public boolean initsuboccupancies(Map<String,Object> param) {    	    	
-		return DaoUserManagementInterface.initsuboccupancies(param);	
-	}	
-    
-    
-    @Override
-    public boolean initusages(Map<String,Object> param) {    	    	
-		return DaoUserManagementInterface.initusages(param);	
-	}	
-    
-    @Override
-    public boolean checkExistance(String sql,Object[] values) {    	    	
-		return DaoUserManagementInterface.checkExistance(sql,values);	
-	}
+
     
 }
