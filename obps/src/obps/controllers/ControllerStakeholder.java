@@ -51,10 +51,10 @@ public class ControllerStakeholder {
 	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount,
 			Integer officecode) {
 
-		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-				feecode, feeamount,
-				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
-		return "redirect:paysuccess.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
+//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
+//				feecode, feeamount,
+//				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
+		return "redirect:paymentconfirmation.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
 				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode=" + feecode
 				+ "&feeamount=" + feeamount + "&toprocesscode="
 				+ (Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode");
@@ -64,10 +64,10 @@ public class ControllerStakeholder {
 	public String paysrregfee(HttpServletRequest req, String applicationcode, Integer officecode) {
 		Map<String, Object> fee = SSI.getFeeMaster(officecode,
 				Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 2);
-		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-				Integer.valueOf(fee.get("feecode").toString()), Integer.valueOf(fee.get("feeamount").toString()),
-				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
-		return "redirect:paysuccess.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
+//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
+//				Integer.valueOf(fee.get("feecode").toString()), Integer.valueOf(fee.get("feeamount").toString()),
+//				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
+		return "redirect:paymentconfirmation.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
 				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode="
 				+ Integer.valueOf(fee.get("feecode").toString()) + "&feeamount="
 				+ Integer.valueOf(fee.get("feeamount").toString()) + "&toprocesscode="
