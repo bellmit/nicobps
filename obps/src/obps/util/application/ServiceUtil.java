@@ -248,7 +248,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				applicationslno);
 	}
 
-	@Override	//contains both fromprocesscode & toprocesscode
+	@Override // contains both fromprocesscode & toprocesscode
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
@@ -256,7 +256,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				toprocesscode, fromusercode, tousercode, remarks);
 	}
 
-	@Override	//contains only toprocesscode
+	@Override // contains only toprocesscode
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer toprocesscode,
 			Integer fromusercode, Integer tousercode, String remarks) {
 		Integer afrcode = this.getMax("nicobps", "applicationflowremarks", "afrcode");
@@ -282,8 +282,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public Map<String, Object> getNextProcessflow(Integer modulecode, String applicationcode) {
 		String sql = "SELECT pf.* FROM nicobps.applicationflowremarks afr "
-				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=? "
-				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=?::text) ";
+				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=afr.modulecode "
+				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where modulecode=? and applicationcode=?::text) ";
 		List<Map<String, Object>> list = this.listGeneric(sql, new Object[] { modulecode, applicationcode });
 		return (!list.isEmpty()) ? list.get(0) : new HashMap<>();
 	}
@@ -291,9 +291,9 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, String applicationcode) {
 		String sql = "SELECT pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applicationflowremarks afr "
-				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=? "
+				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=afr.modulecode "
 				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode "
-				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=?::text) ";
+				+ "WHERE afrcode=(select max(afrcode) from nicobps.applicationflowremarks where modulecode=? and applicationcode=?::text) ";
 		return this.listGeneric(sql, new Object[] { modulecode, applicationcode });
 	}
 
@@ -301,10 +301,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer usercode) {
 		String sql = "SELECT app.applicationcode,off.officecode,off.officename1,pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applications app "
 				+ "INNER JOIN nicobps.applicationflowremarks afr on app.applicationcode=afr.applicationcode "
-				+ "		and afrcode=(select max(afrcode) from nicobps.applicationflowremarks afr where afr.applicationcode=app.applicationcode) "
-				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=? "
-				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode  "
-				+ "LEFT JOIN masters.offices off on off.officecode=app.officecode " + "WHERE app.usercode=?";
+				+ "		and afrcode=(select max(afrcode) from nicobps.applicationflowremarks afr where afr.applicationcode=app.applicationcode and afr.modulecode=app.modulecode) "
+				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=afr.modulecode "
+				+ "LEFT JOIN masters.pageurls pu on pu.urlcode=pf.urlcode "
+				+ "LEFT JOIN masters.offices off on off.officecode=app.officecode "
+				+ "WHERE app.modulecode=? and app.usercode=? ";
 		return this.listGeneric(sql, new Object[] { modulecode, usercode });
 	}
 
