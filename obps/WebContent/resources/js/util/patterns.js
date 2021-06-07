@@ -47,8 +47,8 @@ var PATTERN_IPADDRESS = /(^[2][5][0-5].|^[2][0-4][0-9].|^[1][0-9][0-9].|^[0-9][0
 var PATTERN_MAX = /^.{1}$/;
 var PATTERN_LENGTH = /^.{1,150}$/;
 
-var PATTERN_FILE_IMG = /(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG)$/;
-var PATTERN_FILE_ENC = /(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|\.pdf|\.PDF)$/;
+var PATTERN_FILE_IMG = /(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|image\/jpeg|image\/jpg|image\/png)$/;
+var PATTERN_FILE_ENC = /(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|\.pdf|\.PDF|image\/jpeg|image\/jpg|image\/png|application\/pdf)$/;
 
 var PATTERN_BASIC_RESTRICTED_CHARACTER = /^([^<]|\<[^a-zA-Z])*[<]?$/;
 var PATTERN_ALL_RESTRICTED_CHARACTER = /^([^\<\>\"\%\&\)\(\&\+]*)$/;

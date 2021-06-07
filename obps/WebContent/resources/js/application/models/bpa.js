@@ -54,12 +54,12 @@ var BPA = function () {
     },
     extractFromEdcrObject: (edcr) => {
       let bpa = BPA;
-      try{
-        bpa.edcrnumber =  edcr.edcrnumber;
+      try {
+        bpa.edcrnumber = edcr.edcrnumber;
         bpa.applicationcode = edcr.planinfoobject.applicationNumber;
         bpa.plotidentifier1 = edcr.planinfoobject.planDetail.planInformation.plotNo;
         bpa.plotidentifier2 = edcr.planinfoobject.planDetail.planInformation.khataNo;
-      }catch(e){}
+      } catch (e) { }
       return bpa;
     }
   };
@@ -81,42 +81,42 @@ var EdcrDetail = function () {
       this.usercode = edcr.usercode;
       this.officecode = edcr.officecode;
       this.edcrnumber = edcr.edcrnumber;
-      try{
-        if(typeof edcr.planinfoobject == 'string')
-          this.planinfoobject= JSON.parse(edcr.planinfoobject);
+      try {
+        if (typeof edcr.planinfoobject == 'string')
+          this.planinfoobject = JSON.parse(edcr.planinfoobject);
         else
-          this.planinfoobject= edcr.planinfoobject;
-      }catch(e){
-        this.planinfoobject= edcr.planinfoobject;
+          this.planinfoobject = edcr.planinfoobject;
+      } catch (e) {
+        this.planinfoobject = edcr.planinfoobject;
       }
       this.status = edcr.status;
       this.entrydate = edcr.entrydate;
       return this;
-    }, 
+    },
     extractPlanInfo: (edcr) => {
-      if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
+      if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
         return edcr.planinfoobject.planDetail.planInformation;
-      else if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
+      else if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
         return JSON.parse(edcr.planinfoobject).planDetail.planInformation;
-    }, 
+    },
     extractPlanDetail: (edcr) => {
-      if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
+      if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
         return edcr.planinfoobject.planDetail;
-      else if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
+      else if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
         return JSON.parse(edcr.planinfoobject).planDetail;
     },
     extractPlanVirtualBuilding: (edcr) => {
-      if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
+      if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
         return edcr.planinfoobject.planDetail.virtualBuilding;
-      else if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
+      else if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
         return JSON.parse(edcr.planinfoobject).planDetail.virtualBuilding;
     },
     extractPlanOccupancy: (edcr) => {
       let occ = '', occupancyDetails = {}, occupancyTypes = [], subOccupancyTypes = [];
-      
-      if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
+
+      if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
         occ = edcr.planinfoobject.planDetail.virtualBuilding.occupancyTypes;
-      else if(edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
+      else if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
         occ = JSON.parse(edcr.planinfoobject).planDetail.virtualBuilding.occupancyTypes;
       occ.forEach((o, x) => {
         occupancyTypes.push(o.type.name);
@@ -160,4 +160,22 @@ var OwnerDetail = function () {
   };
 
   return OwnerDetail;
+};
+
+var SiteInspection = function () {
+
+  var SiteInspection = {
+    applicationcode: '',
+    report: '',
+    error:{
+      applicationcode: false,
+      report: false,
+    },
+    init: (obj) => {
+      this.applicationcode = obj.applicationcode;
+      this.report = obj.report;
+      return this;
+    }
+  }
+  return SiteInspection;
 };

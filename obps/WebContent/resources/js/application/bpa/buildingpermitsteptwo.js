@@ -28,7 +28,7 @@ app.controller("CommonCtrl", [
           try{
             $scope.serverMsg += "\nNext Process: "+success.nextProcess.value;
             $timeout(() => {
-              let url = success.nextProcess.key+"?edcrnumber="+BPA.edcrnumber;
+              let url = success.nextProcess.key+"?edcrnumber="+BPA.applicationcode;
               $window.location.href = url;
             },4500);
           }catch(e){}

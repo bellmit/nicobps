@@ -33,6 +33,7 @@
 <link href="resources/js/vendor/bootstrap/css/font-awesome.min.css" rel="stylesheet" />
 <link href="resources/js/vendor/bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <!-- <script src="resources/js/vendor/bootstrap/vendor/jquery/jquery.min.js"></script> -->
+<script type="text/javascript" src="resources/js/vendor/bootstrap/vendor/bootstrap/js/popper.js"></script>
 <script src="resources/js/vendor/bootstrap/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/js/vendor/bootstrap/vendor/jquery-ui/jquery-ui.js"></script>    
 <script src="resources/js/vendor/bootstrap/js/jquery.slicknav.min.js"></script>

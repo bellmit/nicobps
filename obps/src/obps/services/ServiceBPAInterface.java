@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import obps.models.BpaApplication;
+import obps.models.BpaApplicationFee;
+import obps.models.BpaSiteInspection;
 import obps.util.application.CommonMap;
 
 public interface ServiceBPAInterface {
@@ -19,13 +21,27 @@ public interface ServiceBPAInterface {
 
 	List<CommonMap> listSalutations();
 
-	Map<String, Object> getEdcrDetails(Integer USERCODE, String edcrnumber);
-
 	List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE);
 
+	List<Map<String, Object>> listNextProcess(String applicationcode);
+
+	List<Map<String, Object>> listOfficePaymentMode(String applicationcode);
+
+	Map<String, Object> getApplicationFee(Integer uSERCODE, String applicationcode, Integer bpaApplicationfeeCode);
+
+	Map<String, Object> getEdcrDetails(Integer USERCODE, String edcrnumber);
+
+	Map<String, Object> getPermitFee(Integer uSERCODE, String applicationcode, Integer bpaPermitfeeCode);
+
 	/* CREATE */
+	boolean processAppPayment(Integer uSERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);
+
 	boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response);
-	
-	public boolean saveBPAStepTwo(BpaApplication bpa, Integer USERCODE, Integer fromprocesscode, HashMap<String, Object> response);
+
+	boolean saveBPAStepTwo(BpaApplication bpa, Integer USERCODE, Integer fromprocesscode,
+			HashMap<String, Object> response);
+
+	boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer USERCODE, Integer fromprocesscode,
+			HashMap<String, Object> response);
 
 }

@@ -89,7 +89,7 @@
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plotaddressline1"
 							ng-model="BPA.plotaddressline1" maxlength="99" pattern-address required/>
-						<div class="col" ng-if="bpaform.plotaddressline1.$touched" style="color:red">
+						<div class="col" ng-if="bpaform.plotaddressline1.$touched || bpaform.plotaddressline1.$dirty" style="color:red">
 							<span ng-show="bpaform.plotaddressline1.$error.required">Address Required</span>
 						</div>
 					</div>
@@ -112,7 +112,7 @@
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plottownvillage"
 							ng-model="BPA.plotvillagetown" maxlength="99" pattern-alpha required/>
-						<div class="col" ng-if="bpaform.plottownvillage.$touched" style="color:red">
+						<div class="col" ng-if="bpaform.plottownvillage.$touched || bpaform.plottownvillage.$dirty" style="color:red">
 							<span ng-show="bpaform.plottownvillage.$error.required">Required</span>
 						</div>
 					</div>
