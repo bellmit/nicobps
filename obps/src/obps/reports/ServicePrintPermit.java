@@ -20,13 +20,12 @@ public class ServicePrintPermit implements ServicePrintPermitInterface {
 
 		String sql = " select ba.applicationcode,ba.edcrnumber,bo.ownername,to_char(ba.entrydate, 'DD-MM-YYYY') as entrydate,ba.landregistrationdetails,ba.ownershipsubtype from nicobps.bpaapplications ba "
 				+ " inner join nicobps.bpaownerdetails bo on ba.applicationcode=bo.applicationcode "
-				+ " inner join nicobps.applicationflowremarks af on ba.applicationcode=af.applicationcode "
-				+ " where ";
+				+ " inner join nicobps.applicationflowremarks af on ba.applicationcode=af.applicationcode " + " where ";
 
 		if (criteria.equals("byappcode")) {
-			sql += " ba.applicationcode='" + applicationcode + "' ;";
+			sql += " upper(ba.applicationcode)=upper('" + applicationcode + "') ;";
 		} else if (criteria.equals("byedcrno")) {
-			sql += " ba.edcrnumber='" + edcrnumber + "' ;";
+			sql += "upper( ba.edcrnumber)=upper('" + edcrnumber + "') ;";
 		} else if (criteria.equals("byowner")) {
 			sql += " lower(bo.ownername) like lower('%" + ownername + "%') ;";
 		} else if (criteria.equals("byentrydate")) {

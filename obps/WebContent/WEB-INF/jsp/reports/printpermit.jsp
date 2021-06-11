@@ -40,7 +40,7 @@
 														<div class="col-4 ">
 															<input type="text" id="applicationcode"
 																name="applicationcode" ng-model="applicationcode"
-																class="form-control" />
+																class="form-control text-uppercase" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyapplicationcode"
@@ -71,7 +71,7 @@
 														<label class="col-2 control-label">EDCR Number : </label>
 														<div class="col-4 ">
 															<input type="text" id="edcrnumber" name="edcrnumber"
-																ng-model="edcrnumber" class="form-control" />
+																ng-model="edcrnumber" class="form-control text-uppercase" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyedcrnumber"
