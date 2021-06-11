@@ -26,7 +26,7 @@ public class DaoReport implements DaoReportInterface {
 			String jrxmlFilePath = request.getSession().getServletContext()
 					.getRealPath("/reports/" + fileName + ".jrxml");
 
-			System.out.println(" jrxml path :: " + jrxmlFilePath);
+//			System.out.println(" jrxml path :: " + jrxmlFilePath);
 
 			JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlFilePath);
 
