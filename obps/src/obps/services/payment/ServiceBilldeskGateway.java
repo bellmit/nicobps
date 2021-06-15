@@ -2,6 +2,7 @@ package obps.services.payment;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -95,8 +96,14 @@ public class ServiceBilldeskGateway {
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-			redirectUri = restTemplate.postForLocation(uriComponents.toUriString(), entity);
-
+//			redirectUri = restTemplate.postForLocation(uriComponents.toUriString(), entity);
+			try {
+				hashSequence = hashSequence.replace("|","%7C");
+				hashSequence = hashSequence.replace( ":","%3A");
+				redirectUri =new URI(uriComponents.toUriString()+"?msg="+hashSequence);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
 			if (redirectUri.equals(null)) {
 				System.out.println("BILLDESK_REDIRECT_URI_GEN_FAILED , Failed to generate redirect URI");
 			} else {
