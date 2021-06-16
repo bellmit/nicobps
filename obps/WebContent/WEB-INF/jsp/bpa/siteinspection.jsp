@@ -25,11 +25,14 @@
 			hr{
 			    font-size: 32px;
 			    border: none;
-    			border-bottom: 3px solid rgba(0, 87, 118, 0.8);
+    			border-bottom: 1px solid rgba(0, 87, 118, 0.8);
 			}
-			/* .dropdown-menu{
-				background-color: rgba(38, 143, 255, .4);	
-			} */
+			.fa-asterisk{
+				font-size: 8px;
+				color: rgba(220, 53, 70, 1);
+				padding-left: 0.125em;
+				vertical-align: middle;
+			}
 		</style>
 	</head>
 	</script>
@@ -43,10 +46,14 @@
 						style="font-size: 32px; border-bottom: 3px solid #005776">
 						Apply for building permit: Site Inspection</h3>
 					<form name="bpaform">
-						<div class="card">
+						<ng-include src="'processtrackstatus.htm'"></ng-include>
+						<ng-include src="'basicdetails.htm'"></ng-include>
+						<ng-include src="'scrutinydetails.htm'"></ng-include>
+						<ng-include src="'documentdetails.htm'"></ng-include>
+						<div class="card mb-4">
 							<div class="card-body">
-								<!-- 								<h5 class="card-title">Basic Details</h5> -->
-								<div class="row">
+								<div class="card-title h4">Inspection Report</div>
+								<div class="row" style="display: none">
 									<div class="col">
 										<div class="form-group">
 											<label class="col-sm-12">Applicationcode</label>
@@ -59,9 +66,9 @@
 								</div>
 								<div class="row">
 									<div class="col">
-										<div class="form-group">
-											<label class="col-sm-12">Site Inspection Report</label>
-											<div class="col-sm-12">
+										<div class="form-group row">
+											<label class="col">Site Inspection Report<span class="fa fa-asterisk"></span></label>
+											<div class="col">
 												<div class="btn btn-outline-primary btn-sm float-left">
 													<input type="file" name="report" file-model="bpa.report" 
 														required><!-- ng-model="report"  -->
@@ -72,16 +79,19 @@
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+						<div class="card mb-4">
+							<div class="card-body">
 								<div class="row">
 									<div class="col">
 										<div class="form-group">
-											<label class="col-sm-12 mb-3"><hr></label>
 											<div class="col-sm-12">
 												<div class="btn-group dropup mt-5">
 													<button type="button" class="btn btn-primary btn-lg dropdown-toggle" data-toggle="dropdown" style="min-width: 10rem">Action</button>
 													<div class="dropdown-menu">
-														<button class="dropdown-item btn-outline-primary" type="button" ng-click="save()">Approve</button>
-													    <button class="dropdown-item btn-outline-danger" type="button" ng-click="reject()">Reject</button>
+														<button class="dropdown-item btn-outline-primary" type="button" data-toggle="modal" data-target="#commonModal" ng-click="setModalTitle(1)">Forward</button>
+													    <button class="dropdown-item btn-outline-danger" type="button" data-toggle="modal" data-target="#commonModal" ng-click="setModalTitle(2)">Reject</button>
 													</div>
 												</div>
 											</div>
@@ -96,6 +106,7 @@
 							   			<span class="alert alert-success" style="display: block" ng-if="serverResponseSuccess">{{serverMsg}}</span>
 							   		</div>
 								</div>
+								<div ng-include="'modal.htm'"></div>
 							</div>
 						</div>
 					</form>

@@ -1,3 +1,4 @@
+/*@author Decent Khongstia*/
 package obps.services;
 
 import java.util.ArrayList;
@@ -12,12 +13,13 @@ import org.springframework.stereotype.Service;
 import obps.daos.DaoBPAInterface;
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaOwnerDetail;
 import obps.models.BpaSiteInspection;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 
 @Service("BPAService")
-public class ServiceBPA implements ServiceBPAInterface {
+class ServiceBPA implements ServiceBPAInterface {
 	private static final Logger LOG = Logger.getLogger(ServiceBPA.class.toGenericString());
 	private static final Integer BPAMODULECODE = 2;
 	@Autowired
@@ -26,7 +28,8 @@ public class ServiceBPA implements ServiceBPAInterface {
 	@Autowired
 	private DaoBPAInterface DBI;
 	
-	Integer getApplicationOfficecode(String applicationcode) {
+	@Override
+	public Integer getApplicationOfficecode(String applicationcode) {
 		String sql = "SELECT officecode FROM nicobps.applications WHERE applicationcode = ?";
 		return Integer.valueOf(SUI.getStringObject(sql, new Object[] {applicationcode}));
 	}
@@ -114,10 +117,53 @@ public class ServiceBPA implements ServiceBPAInterface {
 		return SUI.listGeneric(sql, new Object[] { getApplicationOfficecode(applicationcode) });
 	}
 	
+	
+	@Override
+	public Map<String, Object> getBpaApplicationDetails(Integer USERCODE, String applicationcode) {
+		Map<String, Object> application = new HashMap<String, Object>();
+		List<Map<String, Object>> applications = new ArrayList<Map<String,Object>>();
+		List<Map<String, Object>> details = new ArrayList<Map<String,Object>>();
+		String sql = "SELECT BPA.applicationcode, BPA.edcrnumber, BPA.ownershiptypecode, BPA.ownershipsubtype,   "
+				+ "       BPA.plotaddressline1, BPA.plotaddressline2, BPA.plotvillagetown, BPA.plotpincode,   "
+				+ "       BPA.plotgiscoordinates, BPA.officelocationcode, BPA.landregistrationdetails,   "
+				+ "       BPA.landregistrationno, BPA.plotidentifier1, BPA.plotidentifier2, BPA.plotidentifier3,   "
+				+ "       BPA.holdingno, BPA.entrydate,"
+				+ "		  OL.locationname  " 
+				+ "FROM nicobps.bpaapplications  BPA "
+				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode  "
+				+ "INNER JOIN masters.officelocations OL ON OL.locationcode = BPA.officelocationcode  " 
+				+ "WHERE BPA.applicationcode = ? AND APP.usercode = ? ";
+		applications = SUI.listGeneric(sql, new Object[] {applicationcode, USERCODE});
+		
+		if(applications != null && !applications.isEmpty()) {
+			application = applications.get(0);
+			sql = "SELECT ownerdetailcode, applicationcode, salutationcode, ownername,   "
+					+ "       relationshiptypecode, relationname, mobileno, emailid, address,   "
+					+ "       entrydate  "
+					+ "FROM nicobps.bpaownerdetails  " 
+					+ "WHERE applicationcode = ?";
+			details = SUI.listGeneric(sql, new Object[] {applicationcode});
+			if(details  != null && !details .isEmpty())
+				application.put("ownerdetails", details);
+			
+			details = new ArrayList<Map<String,Object>>();
+			sql = "SELECT BE.appenclosurecode, BE.applicationcode, BE.enclosurecode, BE.enclosureimage,   "
+					+ "       TO_CHAR(BE.entrydate,'DD/MM/YYYY') uploaddate,   "
+					+ "       EN.enclosurename, EN.enclosuredescription  " 
+					+ "FROM nicobps.bpaenclosures BE  "
+					+ "INNER JOIN masters.enclosures EN ON EN.enclosurecode = BE.enclosurecode  "
+					+ "WHERE BE.applicationcode = ?";
+			if(details  != null && !details .isEmpty())
+				application.put("documentdetails", details);
+		}
+		
+		return application;
+	}
+
 	@Override
 	public Map<String, Object> getApplicationFee(Integer USERCODE, String applicationcode,
 			Integer feetypecode) {
-		String sql = "SELECT F.feecode, F.feeamount " + 
+		String sql = "SELECT F.feecode, F.feeamount, F.officecode " + 
 				"FROM masters.feemaster F " + 
 				"WHERE officecode=? and feetypecode=?";
 		List<Map<String, Object>> list = SUI.listGeneric(sql,
@@ -125,6 +171,21 @@ public class ServiceBPA implements ServiceBPAInterface {
 		if(list != null)
 			return list.get(0);
 		return new HashMap<String, Object>();
+	}
+
+	@Override
+	public Map<String, Object> getCurrentProcessTaskStatus(Integer USERCODE, String applicationcode) {
+		String sql = "SELECT pf.*,pu.pageurl,pu.parent,pu.parenticon, UL.fullname, PR.processname, TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks "
+				+ "FROM nicobps.applicationflowremarks AFR   "
+				+ "INNER JOIN masters.processflow PF on PF.fromprocesscode=AFR.toprocesscode and processflowstatus='N' AND PF.modulecode=AFR.modulecode   "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode  "
+				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode  "
+				+ "LEFT JOIN masters.pageurls PU on PU.urlcode=PF.urlcode   "
+				+ "WHERE afrcode=(SELECT max(afrcode) FROM nicobps.applicationflowremarks WHERE modulecode=? AND applicationcode=?::text) ";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPAMODULECODE, applicationcode});
+		if(list != null && !list.isEmpty())
+			return list.get(0);
+		return null;
 	}
 
 	@Override
@@ -136,6 +197,22 @@ public class ServiceBPA implements ServiceBPAInterface {
 		if (list != null && !list.isEmpty())
 			return list.get(0);
 
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> getEdcrDetailsV2(Integer USERCODE, String appcode) {
+		String sql = "SELECT EDCR.usercode, EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, EDCR.entrydate   "
+				+ "FROM nicobps.edcrscrutiny EDCR   " 
+				+ "WHERE EDCR.usercode = ? AND EDCR.edcrnumber = ( "
+				+ "	SELECT edcrnumber "
+				+ "	FROM nicobps.bpaapplications "
+				+ "	WHERE applicationcode = ? "
+				+ ")";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { USERCODE, appcode });
+		if (list != null && !list.isEmpty())
+			return list.get(0);
+		
 		return null;
 	}
 

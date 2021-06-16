@@ -6,6 +6,22 @@ const Ownershipsubtypes = {
   2: "Multiple Owner",
 };
 
+var ApplicationFlow = function () {
+  var ApplicationFlow = {
+    applicationcode: '',
+    tousercode: '',
+    remarks: '',
+    init: (af) => {
+      this.applicationcode = af.applicationcode;
+      this.tousercode = af.tousercode;
+      this.remarks = af.remarks;
+      return this;
+    }
+  }
+
+  return ApplicationFlow;
+};
+
 var BPA = function () {
   let todaysDate = new Date().toLocaleDateString();
   var BPA = {
@@ -125,6 +141,15 @@ var EdcrDetail = function () {
       occupancyDetails.type = occupancyTypes;
       occupancyDetails.subtype = subOccupancyTypes;
       return occupancyDetails;
+    },
+    extractPlanBlocks: (edcr) => {
+      let blks = '';
+
+      if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'object')
+        blks = edcr.planinfoobject.planDetail.blocks;
+      else if (edcr.planinfoobject != null && typeof edcr.planinfoobject == 'string')
+        blks = JSON.parse(edcr.planinfoobject).planDetail.blocks;
+      return blks;
     }
   }
 
@@ -167,15 +192,37 @@ var SiteInspection = function () {
   var SiteInspection = {
     applicationcode: '',
     report: '',
-    error:{
+    error: {
       applicationcode: false,
       report: false,
     },
+    tousercode: null,
+    remarks: "",
     init: (obj) => {
       this.applicationcode = obj.applicationcode;
       this.report = obj.report;
+      this.tousercode = obj.tousercode;
+      this.remarks = obj.remarks;
       return this;
     }
   }
   return SiteInspection;
 };
+
+
+
+
+
+
+
+var Modal = function () {
+  var Modal = {
+    action: 1,
+    actionname: "Forward",
+    title: 'Forward Application',
+    usercode: null,
+    remarks: '',
+  }
+
+  return Modal;
+}

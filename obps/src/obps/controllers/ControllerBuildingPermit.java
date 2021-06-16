@@ -42,6 +42,12 @@ public class ControllerBuildingPermit {
 	private ServiceUtilInterface SUI;
 
 	/* Page-URLs */
+	@GetMapping(value = "/basicdetails.htm")
+	public String basicDetails(Model model) {
+		LOG.info("URL: basicdetails.htm");
+		return PARENT_URL_MAPPING.concat("/basicdetails");
+	}
+	
 	@GetMapping(value = "/bpaform.htm")
 	public String basicDetailsForm(Model model) {
 		LOG.info("URL: bpaform.htm");
@@ -91,6 +97,7 @@ public class ControllerBuildingPermit {
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			model.addAttribute("applicationcode", applicationcode);
+			model.addAttribute("officecode", SBI.getApplicationOfficecode(applicationcode));
 			return PARENT_URL_MAPPING.concat("/payappfee");
 		}
 		return "redirect:login.htm";
@@ -131,6 +138,12 @@ public class ControllerBuildingPermit {
 		return "redirect:login.htm";
 	}
 
+	@GetMapping(value = "/documentdetails.htm")
+	public String documentDetails() {
+		LOG.info("URL: documentdetails.htm");
+		return PARENT_URL_MAPPING.concat("/documentdetails");
+	}
+
 	@GetMapping(value = "/googlemap.htm")
 	public String googleMap() {
 		LOG.info("URL: googlemap.htm");
@@ -138,13 +151,29 @@ public class ControllerBuildingPermit {
 	}
 
 	@GetMapping(value = "/modal.htm")
-	public String modal(Model model, String modalTitle) {
+	public String modal(Model model) {
 		LOG.info("URL: modal.htm");
-		model.addAttribute("modalTitle", modalTitle);
-		return PARENT_URL_MAPPING.concat("/rejectmodal");
+		return PARENT_URL_MAPPING.concat("/modal");
+	}
+
+	@GetMapping(value = "/processtrackstatus.htm")
+	public String processTrackStatus(Model model, String modalTitle) {
+		LOG.info("URL: processtrackstatus.htm");
+		return PARENT_URL_MAPPING.concat("/processtrackstatus");
+	}
+
+	@GetMapping(value = "/scrutinydetails.htm")
+	public String scrutinyDetails(Model model, String modalTitle) {
+		LOG.info("URL: scrutinydetails.htm");
+		return PARENT_URL_MAPPING.concat("/scrutinydetails");
 	}
 
 	/* GET */
+	@GetMapping(value = "/getBpaApplicationDetails.htm")
+	public @ResponseBody Map<String, Object> getBpaApplicationDetails(@RequestParam(name = "param") String applicationcode) {
+		return SBI.getBpaApplicationDetails(USERCODE, applicationcode);	
+	};
+	
 	@GetMapping(value = "/getBpaApplicationFee.htm")
 	public @ResponseBody Map<String, Object> getApplicationFee(@RequestParam(name = "param") String applicationcode) {
 		return SBI.getApplicationFee(USERCODE, applicationcode, BPA_APPLICATIONFEE_CODE);	
@@ -155,11 +184,21 @@ public class ControllerBuildingPermit {
 		return SBI.getPermitFee(USERCODE, applicationcode, BPA_PERMITFEE_CODE);	
 	};
 
+	@GetMapping(value = "/getCurrentProcessTaskStatus.htm")
+	public @ResponseBody Map<String, Object> getCurrentProcessTaskStatus(@RequestParam(name = "param") String applicationcode) {
+		return SBI.getCurrentProcessTaskStatus(USERCODE, applicationcode);
+	};
+	
 	@GetMapping(value = "/getEdcrDetails.htm")
 	public @ResponseBody Map<String, Object> getEdcrDetails(@RequestParam(name = "param") String edcrnumber) {
 		return SBI.getEdcrDetails(USERCODE, edcrnumber);
 	};
-
+	
+	@GetMapping(value = "/getEdcrDetailsV2.htm")
+	public @ResponseBody Map<String, Object> getEdcrDetailsByApplicationcode(@RequestParam(name = "param") String applicationcode) {
+		return SBI.getEdcrDetailsV2(USERCODE, applicationcode);
+	};
+	
 	@GetMapping(value = "/getOfficePaymentMode.htm")
 	public @ResponseBody List<Map<String, Object>> getOfficePaymentMode(@RequestParam(name = "param") String applicationcode) {
 		return SBI.listOfficePaymentMode(applicationcode);

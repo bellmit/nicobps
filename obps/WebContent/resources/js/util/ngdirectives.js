@@ -288,10 +288,13 @@ app.directive("loading", [
     return {
       restrict: "A",
       link: function (scope, element, attrs) {
+        console.log("loading");
         scope.isLoading = function () {
+          console.log("1: loading");
           return $http.pendingRequests.length > 0;
         };
         scope.$watch(scope.isLoading, function (value) {
+          console.log("2: loading: ", value);
           if (value) {
             element.removeClass("ng-hide");
           } else {
@@ -302,7 +305,22 @@ app.directive("loading", [
     };
   },
 ]);
-/* 
+
+/* app.directive('loading', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<p><img src="resources/images/c-processing.gif" alt="LOADING...."/></p>',
+    link: function (scope, element, attr) {
+      console.log("Loading");
+      scope.$watch('loading', function (val) {
+        val = val ? $(element).show() : $(element).hide();
+      });
+    }
+  }
+}); */
+
+/*
 
 app.directive("testFileModel", [
   "$parse", "$timeout",
@@ -329,6 +347,6 @@ app.directive("testFileModel", [
       },
     };
   },
-]); 
+]);
 
 */

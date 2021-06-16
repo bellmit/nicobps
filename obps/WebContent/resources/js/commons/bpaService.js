@@ -1,4 +1,3 @@
-
 /* @author Decent Khongstia*/
 app.service("commonUtilService", [
   "$http",
@@ -33,14 +32,23 @@ app.service("bpaService", [
   function ($http, CUS) {
     console.log("bpaService");
     return {
+      getBpaApplicationDetails: async function (callback, data = "") {
+        CUS.getData('./getBpaApplicationDetails.htm', data, callback);
+      },
       getBpaApplicationFee: async function (callback, data = "") {
         CUS.getData('./getBpaApplicationFee.htm', data, callback);
       },
       getBpaPermitFee: async function (callback, data = "") {
         CUS.getData('./getBpaPermitFee.htm', data, callback);
       },
+      getCurrentProcessTaskStatus: async function (callback, data = "") {
+        CUS.getData('./getCurrentProcessTaskStatus.htm', data, callback);
+      },
       getEdcrDetails: async function (callback, data = "") {
         CUS.getData('./getEdcrDetails.htm', data, callback);
+      },
+      getEdcrDetailsV2: async function (callback, data = "") {
+        CUS.getData('./getEdcrDetailsV2.htm', data, callback);
       },
       getOfficePaymentMode: async function (callback, data = "") {
         CUS.getData('./getOfficePaymentMode.htm', data, callback);
@@ -63,6 +71,65 @@ app.service("bpaService", [
       test: async function (callback, data = "") {
         CUS.getData("./listTest.htm", data, callback);
       },
+      getFloorName: function (data = null) {
+        let name = "";
+        switch (data) {
+          case -3: name = "Basement Level 3";
+            break;
+          case -2: name = "Basement Level 2";
+            break;
+          case -1: name = "Basement Level 1";
+            break;
+          case 0: name = "Ground Floor";
+            break;
+          case 1: name = "First Floor";
+            break;
+          case 2: name = "Second Floor";
+            break;
+          case 3: name = "Third Floor";
+            break;
+          case 4: name = "Fourth Floor";
+            break;
+        }
+        return name;
+      },
+      getFloorSubOccupancy: function (data = "") {
+        let occupanies = [];
+        try {
+          data.forEach((o, x) => {
+            if (o.typeHelper != null && o.typeHelper.subtype != null && o.typeHelper.subtype.name != null) {
+              occupanies.push(o.typeHelper.subtype.name);
+            } else if (o.typeHelper != null && o.typeHelper.type != null && o.typeHelper.type.name != null) {
+              occupanies.push(o.typeHelper.type.name);
+            }
+          });
+        } catch (e) {
+
+        }
+        return occupanies.join(",");
+      },
+      getFloorTotalArea: (data) => {
+        let floorArea = null;
+        try {
+          data.forEach((o, x) => {
+            floorArea = floorArea + parseFloat(o.floorArea);
+          });
+        } catch (e) {
+
+        }
+        return floorArea;
+      },
+      getFloorTotalBuiltUpArea: (data) => {
+        let builtUpArea = null;
+        try {
+          data.forEach((o, x) => {
+            builtUpArea = builtUpArea + parseFloat(o.builtUpArea);
+          });
+        } catch (e) {
+
+        }
+        return builtUpArea;
+      }
     };
   },
 ]);

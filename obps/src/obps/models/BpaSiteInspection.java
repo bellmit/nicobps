@@ -1,3 +1,4 @@
+/*@author Decent Khongstia*/
 package obps.models;
 
 import java.io.Serializable;
@@ -13,6 +14,9 @@ public class BpaSiteInspection implements Serializable {
 	private String applicationcode;
 	private String report;
 	private byte[] imageFile;
+	
+	private Integer tousercode;
+	private String remarks;
 
 	public String getApplicationcode() {
 		return applicationcode;
@@ -46,10 +50,26 @@ public class BpaSiteInspection implements Serializable {
 		this.imageFile = imageFile;
 	}
 
+	public Integer getTousercode() {
+		return tousercode;
+	}
+
+	public void setTousercode(Integer tousercode) {
+		this.tousercode = tousercode;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
 	@Override
 	public String toString() {
 		return "BpaSiteInspection [applicationcode=" + applicationcode + ", report=" + report + ", imageFile="
-				+ Arrays.toString(imageFile) + "]";
+				+ Arrays.toString(imageFile) + ", tousercode=" + tousercode + ", remarks=" + remarks + "]";
 	}
 
 }

@@ -1,3 +1,4 @@
+/*@author Decent Khongstia*/
 package obps.models;
 
 import java.io.Serializable;
