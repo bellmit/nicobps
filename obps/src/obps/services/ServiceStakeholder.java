@@ -96,7 +96,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		Integer applicationslno = application.getValue3();
 		if (SUI.update("nicobps.applications", sql,
 				new Object[] { applicationslno, applicationcode, officecode, 1, usercode, servicetypecode })) {
-//			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");
+			SUI.updateApplicationflowremarks(applicationcode, 1, 2, 3, usercode, null, "Payment Initiated");
 			return applicationcode;
 		} else {
 			return "false";
