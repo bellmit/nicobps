@@ -208,7 +208,7 @@ public class ControllerUserManagement {
 		}
 
 		if (serviceUserManagementInterface.submitEnclosureDetails(param)) {
-			return ResponseEntity.ok(new String("Documents uploaded successfully!"));
+			return ResponseEntity.ok(new String("The documents have been uploaded successfully."));
 		} else {
 			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
 		}

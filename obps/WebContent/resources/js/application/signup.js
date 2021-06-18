@@ -426,7 +426,7 @@ function submitSignupDetails(signupDetails)
 				});			
 				changeCaptcha()			
 			}else if(data==="1"){
-				msg="Details submitted successfully!";	
+				msg="The application has been submitted succesfully, please upload the required document. Alternatively, you may login and upload at a later stage.";	
 				alert(msg);							 				
 			}				
 			

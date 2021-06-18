@@ -3,26 +3,33 @@
 <div class="footer-bs">
     <footer class="container">
         <div class="row">
-        	<div class="row col-md-7 col-sm-12 footer-nav">
-            	<p class="col-md-12">Quick Links</p>
-            	<div class="col-sm-6">
-                    <ul class="list">
-                        <li><a href="#">Information</a></li>
-                        <li><a href="contactus.htm">Contact Us</a></li>                        
-                    </ul>
-                </div>
-                <div class="col-sm-6">
-                    <ul class="list">
-                    	<li data-toggle="modal" data-target="#feedback-modal"><a href="javascript:void(0)">Feedback</a></li>                       
-                        <li><a href="#">FAQ</a></li>
-                        <!-- <li data-toggle="modal" data-target="#signup-modal"><a href="javascript:void(0);">FAQ</a></li> -->                        
-                    </ul>
-                </div>
-            </div>
+<!--         	<div class="row col-md-7 col-sm-12 footer-nav"> -->
+<!--             	<p class="col-md-12">Quick Links</p> -->
+<!--             	<div class="col-sm-6"> -->
+<!--                     <ul class="list"> -->
+<!--                         <li><a href="#">Information</a></li> -->
+<!--                         <li><a href="contactus.htm">Contact Us</a></li>                         -->
+<!--                     </ul> -->
+<!--                 </div> -->
+<!--                 <div class="col-sm-6"> -->
+<!--                     <ul class="list"> -->
+<!--                     	<li data-toggle="modal" data-target="#feedback-modal"><a href="javascript:void(0)">Feedback</a></li>                        -->
+<!--                         <li><a href="#">FAQ</a></li> -->
+<!--                         <li data-toggle="modal" data-target="#signup-modal"><a href="javascript:void(0);">FAQ</a></li>                         -->
+<!--                     </ul> -->
+<!--                 </div> -->
+<!--             </div> -->
         	<div class="col-md-3 col-sm-8 footer-social d-flex">
        			<div class="d-inline-block align-self-center">
-        			<p class="bg-light"><img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"></p>
-        			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/digital-india.png" alt="digital india logo"></p>
+<!--         			<p class="bg-light"><img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"></p> -->
+<!--         			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/digital-india.png" alt="digital india logo"></p> -->
+         			<p class="bg-light">
+         			<img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"  width="100px" height="50px">
+         			<img src="resources/js/vendor/bootstrap/images/egovlogo.jpg" alt="EGov logo" width="70px" height="60px">
+         			<img src="resources/js/vendor/bootstrap/images/niualogo.png" alt="NIUA logo" width="100px" height="70px">
+         			
+         			</p>
+
         		</div>
             </div>
         	<div class="col-md-2 col-sm-4 footer-ns d-flex">
@@ -33,7 +40,7 @@
             </div>
         </div>
         <div class="text-center mt-5">
-        	This site is designed and hosted by <a class="text-light font-weight-bold" href="https://www.nic.in/">National Informatics Centre</a>, <a class="text-light font-weight-bold" href="https://meity.gov.in/">Ministry of Electronics and IT</a>, <a class="text-light font-weight-bold" href="https://www.india.gov.in/">Govt. of India.</a>
+        	This site is designed and hosted by <a class="text-light font-weight-bold" href="https://www.nic.in/">National Informatics Centre</a>, <a class="text-light font-weight-bold" href="https://meity.gov.in/">Ministry of Electronics and Information Technology</a>, <a class="text-light font-weight-bold" href="https://www.india.gov.in/">Govt. of India.</a>
         </div>
     </footer>
 </div>

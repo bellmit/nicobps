@@ -55,7 +55,6 @@
 								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> 
 								<input type="submit" name="submit" value="Login" class="btn btn-primary b-btn" />
 							</div>							
-							<p class="text-left b-notreg">Have you registered with the portal? <a href="signup.htm">Register</a></p>
 							<!-- <p class="text-left b-notreg">Don't have an account? <a href="" data-toggle="modal" data-target="#signup-modal" data-dismiss="modal">Sign Up</a></p> -->
 							<script>
 						        function beforeSubmit() {
@@ -78,48 +77,48 @@
 	</div>
 
 	<!-- Dashboard -->
-	<div class="mt-5" id="b-homedb" style="position: relative; top: -170px; margin-bottom: -110px;">
-		<div class="container">
-			<div class="row text-center">
-				<!-- <h2 class="col-md-12">Figures tell the story</h2> -->
-				<div class="col-lg-4 p-4">
-					<div class="bg-light py-4 b-dbcard">
-						<p><span class="fas fa-university" style="font-size:40px;"></span></p>
-						<h3 style="font-size: 16px;"><strong>No. of Applications Received</strong></h3>
-						<div class="text-left ">
-							<p class="px-5">Last year  <span class="float-right">1.11 Lakh</span></p>
+<!-- 	<div class="mt-5" id="b-homedb" style="position: relative; top: -170px; margin-bottom: -110px;"> -->
+<!-- 		<div class="container"> -->
+<!-- 			<div class="row text-center"> -->
+<!-- 				<h2 class="col-md-12">Figures tell the story</h2> -->
+<!-- 				<div class="col-lg-4 p-4"> -->
+<!-- 					<div class="bg-light py-4 b-dbcard"> -->
+<!-- 						<p><span class="fas fa-university" style="font-size:40px;"></span></p> -->
+<!-- 						<h3 style="font-size: 16px;"><strong>No. of Applications Received</strong></h3> -->
+<!-- 						<div class="text-left "> -->
+<!-- 							<p class="px-5">Last year  <span class="float-right">1.11 Lakh</span></p> -->
 
-							<p class="px-5">Current year <span class="float-right">1.23 Lakh</span></p>
-						</div>
-					</div>
-				</div>
+<!-- 							<p class="px-5">Current year <span class="float-right">1.23 Lakh</span></p> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="col-lg-4 p-4">
-					<div class="bg-light py-4 b-dbcard">
-						<p><span class="fa fa-check-square" style="font-size:40px"></span></p>
-						<h3 style="font-size: 16px;"><strong>No. of Applications Processed</strong></h3>
-						<div class="text-left ">
-							<p class="px-5">Last year  <span class="float-right">1.00 Lakh</span></p>
+<!-- 				<div class="col-lg-4 p-4"> -->
+<!-- 					<div class="bg-light py-4 b-dbcard"> -->
+<!-- 						<p><span class="fa fa-check-square" style="font-size:40px"></span></p> -->
+<!-- 						<h3 style="font-size: 16px;"><strong>No. of Applications Processed</strong></h3> -->
+<!-- 						<div class="text-left "> -->
+<!-- 							<p class="px-5">Last year  <span class="float-right">1.00 Lakh</span></p> -->
 
-							<p class="px-5">Current year <span class="float-right">1.00 Lakh</span></p>
-						</div>						
-					</div>
-				</div>
+<!-- 							<p class="px-5">Current year <span class="float-right">1.00 Lakh</span></p> -->
+<!-- 						</div>						 -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 
-				<div class="col-lg-4 p-4">
-					<div class="bg-light py-4 b-dbcard">
-						<p><span class="fa fa-times-square" style="font-size:40px"></span></p>
-						<h3 style="font-size: 16px;"><strong>No. of Applications Rejected</strong></h3>
-						<div class="text-left ">
-							<p class="px-5">Last year  <span class="float-right">11,000</span></p>
+<!-- 				<div class="col-lg-4 p-4"> -->
+<!-- 					<div class="bg-light py-4 b-dbcard"> -->
+<!-- 						<p><span class="fa fa-times-square" style="font-size:40px"></span></p> -->
+<!-- 						<h3 style="font-size: 16px;"><strong>No. of Applications Rejected</strong></h3> -->
+<!-- 						<div class="text-left "> -->
+<!-- 							<p class="px-5">Last year  <span class="float-right">11,000</span></p> -->
 
-							<p class="px-5">Current year <span class="float-right">13,000</span></p>
-						</div>
-					</div>
-				</div>				
-			</div>
-		</div>
-	</div>	
+<!-- 							<p class="px-5">Current year <span class="float-right">13,000</span></p> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div>				 -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div>	 -->
 	<%@include file="common/footerext.jsp" %> 
 </body>
 </html>

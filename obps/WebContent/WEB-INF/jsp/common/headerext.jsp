@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="font-weight-bold d-inline-block b-acc-ministry my-sm-1 pl-sm-1">				
-			<span>Ministry of Electronics and IT</span>
+			<span>Ministry of Housing and Urban Affairs</span>
 		</div>
 	</div>		
 </div>
@@ -70,7 +70,7 @@
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav main-menu d-flex">
 					<li class="nav-item d-block"> <a href="login.htm" class="nav-link lk active">Home</a> </li>
-					<li class="nav-item d-block"> <a href="signup.htm" class="nav-link lk">Register</a></li>
+					<li class="nav-item d-block"> <a href="signup.htm" class="nav-link lk">Registrations of Architects/License Technical Persons</a></li>
 					<!-- <li class="nav-item d-block"> <a href="uploadenclosures.htm" class="nav-link lk">Upload Enclosures</a></li> -->
 					
 					<li class="nav-item d-block"> <a href="contactus.htm" class="nav-link lk">Contact Us</a></li>
