@@ -30,14 +30,17 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public List<Map<String, Object>> listLicensees() {
-		String sql = "SELECT l.*,lt.*,d.*,p.processcode,pf.flowname as nextprocessname,app.applicationcode,app.officecode FROM nicobps.licensees l "
+		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,app.officecode,"
+				+ "u.mobileno,u.username as email FROM nicobps.licensees l "
 				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
 				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
 				+ "INNER JOIN nicobps.applications app on app.usercode=l.usercode "
 				+ "INNER JOIN nicobps.applicationflowremarks afr on  "
 				+ "		afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=app.applicationcode::text) "
 				+ "INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' and pf.modulecode=1 "
-				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode ORDER BY l.entrydate DESC ";
+				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode "
+				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
+				+ "INNER JOIN masters.states s on s.statecode=d.statecode ORDER BY l.entrydate DESC ";
 		return SUI.listGeneric(sql);
 	}
 
@@ -91,7 +94,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
 		Integer servicetypecode = 1;
-		CommonMap application=SUI.generateApplicationcode(officecode, 1, usercode, servicetypecode);
+		CommonMap application = SUI.generateApplicationcode(officecode, 1, usercode, servicetypecode);
 		String applicationcode = application.getKey();
 		Integer applicationslno = application.getValue3();
 		if (SUI.update("nicobps.applications", sql,
@@ -112,8 +115,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		Integer maxtransactioncode = SUI.getMax("nicobps", "transactions", "transactioncode");
 		String payStatus = "S", sentparameters = "", responseparameters = "", bankcode = "", responsetext1 = "",
 				responsetext2 = "", responsetext3 = "";
-		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null,
-				"Payment complete")) {
+		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, "Payment complete")) {
 			return SUI.update("nicobps.transactions", sql,
 					new Object[] { maxtransactioncode + 1, usercode, feecode, fee, payStatus, sentparameters,
 							responseparameters, bankcode, responsetext1, responsetext2, responsetext3 });

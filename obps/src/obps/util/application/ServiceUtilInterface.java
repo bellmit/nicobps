@@ -104,4 +104,6 @@ public interface ServiceUtilInterface {
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer usercode);
 
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode);
+
+	public List<Map<String, Object>> getLicensee(Integer usercode);
 }

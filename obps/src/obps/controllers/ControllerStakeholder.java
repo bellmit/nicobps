@@ -78,6 +78,11 @@ public class ControllerStakeholder {
 	public @ResponseBody List<Map<String, Object>> listLicensees() {
 		return SSI.listLicensees();
 	}
+	
+	@PostMapping("/getLicensee.htm")
+	public @ResponseBody List<Map<String, Object>> getLicensee(Integer usercode) {
+		return serviceUtilInterface.getLicensee(usercode);
+	}
 
 	@PostMapping("/listEnclosures.htm")
 	public @ResponseBody List<CommonMap> listEnclosures() {

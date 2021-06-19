@@ -238,6 +238,17 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
+	public List<Map<String, Object>> getLicensee(Integer usercode) {
+		String sql = "SELECT l.*,lt.*,d.*,s.statename,u.mobileno,u.username as email FROM nicobps.licensees l  "
+				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
+				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
+				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
+				+ "INNER JOIN masters.states s on s.statecode=d.statecode " + "WHERE l.usercode=?"
+				+ "ORDER BY l.entrydate DESC ";
+		return listGeneric(sql, new Object[] { usercode });
+	}
+
+	@Override
 	public CommonMap generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
 			Integer servicetypecode) {
 		Integer applicationslno = getMax("nicobps", "applications", "applicationslno");
