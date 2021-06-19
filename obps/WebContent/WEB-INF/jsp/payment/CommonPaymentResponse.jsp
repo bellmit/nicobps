@@ -22,29 +22,42 @@
 									<core:out value="${message}" escapeXml="true" />
 								</h4>
 							</div>
-							<table class=" mt-4 mb-4"style="width: 70%; margin: 0px auto; border-spacing: 10px" ng-init="init(${transactioncode})">
-									<tr>
-										<th colspan="2" class="font-weight-bold text-center h5 ">Payment
-											Details</th>
-									</tr>
-									<tr>
-										<td colspan="2" style="border-bottom: 2px solid #005776"></td>
-									</tr>
-									<tr>
-										<td class=" font-weight-bold w-25 ">Transaction Code :</td>
-										<td class="col-md-5 "><core:out
-												value="${transactioncode}" escapeXml="true" /></td>
-									</tr>
-									 
+							<table class=" mt-4 mb-4"
+								style="width: 70%; margin: 0px auto; border-spacing: 10px"
+								ng-init="init(${transactioncode})">
+								<tr>
+									<th colspan="2" class="font-weight-bold text-center h5 ">Transaction
+										Details</th>
+								</tr>
+								<tr>
+									<td colspan="2" style="border-bottom: 2px solid #005776"></td>
+								</tr>
+								<tr>
+									<td class=" font-weight-bold w-25 ">Transaction ID :</td>
+									<td class="col-md-5 "><core:out value="${transactioncode}"
+											escapeXml="true" /></td>
+								</tr>
+								<tr>
+									<td class=" font-weight-bold w-25 ">Transaction Date :</td>
+									<td class="col-md-5 "><core:out value="${transactiondate}"
+											escapeXml="true" /></td>
+								</tr>
+								<tr>
+									<td class=" font-weight-bold w-25 ">Process by :</td>
+									<td class="col-md-5 "><core:out value="${processby}"
+											escapeXml="true" /></td>
+								</tr>
 
-							 
-									<tr>
-										<td class=" font-weight-bold">Amount :</td>
-										<td class="col-md-5 "><core:out value="${amount}"
-												escapeXml="true" /></td>
+								<tr>
+									<td class=" font-weight-bold">Amount :</td>
+									<td class="col-md-5 ">&#8377; <core:out value="${amount}"
+											escapeXml="true" /></td>
 
-									</tr>
-								</table>
+								</tr>
+								<tr>
+									<td colspan="2" style="border-bottom: 2px solid #005776"></td>
+								</tr>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -54,6 +67,6 @@
 	</div>
 
 </body>
- <script src="resources/js/application/payment/paymentresponse.js"></script>
+<script src="resources/js/application/payment/paymentresponse.js"></script>
 
 </html>

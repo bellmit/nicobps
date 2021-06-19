@@ -15,8 +15,7 @@
 					<div class="col-md-10 ">
 
 
-						<div
-							class=" col-md-10 bg-light text-black  m-4 p-3 border rounded">
+						<div class=" col-md-10 bg-light text-black  m-4 p-3 border rounded">
 							<div class="text-center p-3 mb-2 " ng-class="getClass(${status})">
 								<h4>
 									<core:out value="${message}" escapeXml="true" />
@@ -29,45 +28,57 @@
 									style="width: 70%; margin: 0px auto; border-spacing: 10px"
 									ng-init="init(${transactioncode})">
 									<tr>
-										<th colspan="2" class="font-weight-bold text-center h5 ">Payment
+										<th colspan="2" class="font-weight-bold text-center h5 ">Transaction
 											Details</th>
 									</tr>
 									<tr>
 										<td colspan="2" style="border-bottom: 2px solid #005776"></td>
 									</tr>
 									<tr>
-										<td class=" font-weight-bold w-25 ">Transaction Code :</td>
-										<td class="col-md-5 "><core:out
+										<td class=" font-weight-bold w-25 ">Transaction Code</td>
+										<td class="col-md-5 ">: <core:out
 												value="${transactioncode}" escapeXml="true" /></td>
 									</tr>
+
 									<tr>
-										<td class=" font-weight-bold">Bill desk Reference No :</td>
-										<td class="col-md-5 "><core:out
+										<td class=" font-weight-bold w-25 ">Paid By</td>
+										<td class="col-md-5 ">: <core:out value="${payer}"
+												escapeXml="true" /></td>
+									</tr>
+									<tr>
+										<td class=" font-weight-bold w-25 ">Payment Date</td>
+										<td class="col-md-5 ">: <core:out
+												value="${transactiondate}" escapeXml="true" /></td>
+									</tr>
+									<tr>
+										<td class=" font-weight-bold">Bill desk Reference No</td>
+										<td class="col-md-5 ">: <core:out
 												value="${billdeskreferenceNo}" escapeXml="true" /></td>
 									</tr>
 
 									<tr>
-										<td class=" font-weight-bold">Bank Reference No :</td>
-										<td class="col-md-5 "><core:out
+										<td class=" font-weight-bold">Bank Reference No</td>
+										<td class="col-md-5 ">: <core:out
 												value="${bankreferenceno}" escapeXml="true" /></td>
 
 									</tr>
 									<tr>
-										<td class=" font-weight-bold">Amount :</td>
-										<td class="col-md-5 "><core:out value="${amount}"
+										<td class=" font-weight-bold">Amount</td>
+										<td class="col-md-5 ">: <core:out value="${amount}"
 												escapeXml="true" /></td>
 
 									</tr>
 								</table>
+								<form method="post" action="./generateReceipt.htm">
+									<input type="hidden" readonly name="transactioncode"
+										value="{{transactioncode}}" /> <input type="hidden"
+										name="${_csrf.parameterName}" value="${_csrf.token}" /> <input
+										type="submit" value="Generate Receipt"
+										class="btn btn-primary offset-4 col-md-2 " style="float: right;"/>
+								</form>
 						</div>
 
-						<form method="post" action="./generateReceipt.htm">
-							<input type="hidden" readonly name="transactioncode"
-								value="{{transactioncode}}" /> <input type="hidden"
-								name="${_csrf.parameterName}" value="${_csrf.token}" /> <input
-								type="submit" value="Generate Receipt"
-								class="btn btn-primary offset-4 col-md-2 " />
-						</form>
+
 
 						</core:if>
 

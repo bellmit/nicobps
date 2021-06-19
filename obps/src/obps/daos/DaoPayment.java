@@ -80,7 +80,11 @@ public class DaoPayment implements DaoPaymentInterface {
 	@Override
 	public boolean UpdatePayment(String paymentstatus, String responseparameters, Integer transactioncode,
 			Integer usercode) {
-
+		System.out.println("UpdatePayment");
+		System.out.println(paymentstatus);
+		System.out.println(responseparameters);
+		System.out.println(transactioncode);
+		System.out.println(usercode);
 		boolean response = false;
 		String sql = null;
 		try {

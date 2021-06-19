@@ -1,10 +1,13 @@
 package obps.controllers;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.rmi.CORBA.Util;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +46,9 @@ public class ControllerPayment {
 		return "payment/paymentTest";
 	}
 
-//	@PostMapping(value = "/paymentconfirmation.htm")
 	@RequestMapping(value = "/paymentconfirmation.htm", method = { RequestMethod.GET, RequestMethod.POST })
 	public String paymentConfirmation_Post(@RequestParam Map<String, String> params, Model model) {
- 
+
 		// need to get amount based on feecode
 		Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
 		System.out.println("feeDetails--" + feeDetails);
@@ -69,7 +71,7 @@ public class ControllerPayment {
 
 	@PostMapping(value = "/paymentinitialized.htm")
 	public ResponseEntity<Void> redirect(HttpServletRequest request, @RequestParam Map<String, String> params) {
-		 
+
 		String usercode = params.get("usercode");
 		String feecode = params.get("feecode");
 		String toprocesscode = params.get("toprocesscode");
@@ -80,27 +82,46 @@ public class ControllerPayment {
 				.build();
 	}
 
-	@RequestMapping(value = "/CommonPaymentResponse.htm", method = { RequestMethod.GET, RequestMethod.POST })
+	@GetMapping(value = "/CommonPaymentResponse.htm")
+	public String CommonPaymentResponse1_Get(@RequestParam Map<String, String> params, Model model) {
+		System.out.println("no resubmit:" + params);
+
+		model.addAttribute("status", params.get("status"));
+		model.addAttribute("transactioncode", params.get("transactioncode"));
+		model.addAttribute("amount", params.get("amount"));
+		model.addAttribute("message", params.get("message"));
+		model.addAttribute("processby", params.get("processby"));
+		model.addAttribute("transactiondate", params.get("transactiondate"));
+		return "payment/CommonPaymentResponse";
+	}
+
+	@PostMapping(value = "/CommonPaymentResponse.htm")
 	public String CommonPayment(@RequestParam Map<String, String> params, Model model) {
 		Integer transactioncode = serviceCommon.saveTransaction(params);
-	 
+		System.out.println("test for resubmission");
 		if (transactioncode != 0) {
 			serviceUtilInterface.updateApplicationflowremarks(params.get("applicationcode"), Integer.parseInt(params.get("modulecode").trim()), Integer.parseInt(params.get("toprocesscode").trim()),
 					Integer.parseInt(params.get("usercode").trim()), null, "Payment Complete");
+			List<Map<String, Object>> userdetails = serviceUtilInterface.getLicensee(Integer.parseInt(params.get("usercode").trim()));
+			model.addAttribute("processby", userdetails.get(0).get("applicantsname"));
 			model.addAttribute("status", "0300");
 			model.addAttribute("transactioncode", transactioncode);
 			model.addAttribute("amount", "0");
-			model.addAttribute("message", "Payment Completed");
+			model.addAttribute("message", "Application submitted succesfully");
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			Date date = new Date();
+			System.out.println(formatter.format(date));
+			model.addAttribute("transactiondate", formatter.format(date));
 
 		} else {
 			model.addAttribute("status", "NA");
 			model.addAttribute("transactioncode", "NA");
 			model.addAttribute("amount", "NA");
-			model.addAttribute("message", "Payment Registration Failed");
+			model.addAttribute("message", "Application submitted Failed");
 
 		}
 
-		return "payment/CommonPaymentResponse";
+		return "redirect:/CommonPaymentResponse.htm";
 	}
 
 	@PostMapping(path = "/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
@@ -108,7 +129,11 @@ public class ControllerPayment {
 
 		String message = null;
 		String response = params.get("msg");
-//		String response = "SPSCSKM|13|VHMP9856639406|314858|1.00|HMP|459200|03|INR|VDDIRECT|05-NA|NA|00000005.00|24-03-2021+13:30:58|0300|NA|jk.jammu|http|NA|NA|5|NA|NA|NA|PGS10001-Success|F3E1804EDFC2A60BF3DD135D4CC7C71DD38E6ECF67645A1CFD8AA7606151B0D0";
+		// --------below is a test string response for success payment
+		// overwrite the 2nd pipe value to current transaction code..
+		// comment out the hash validation to see result
+//		String response = "SPSCSKM|13|VHMP9856639406|314858|1.00|HMP|459200|03|INR|VDDIRECT|05-NA|NA|00000005.00|24-03-2021+13:30:58|0300|NA|jk.jammu|DCR52021A50C20101011|2|4|5|3|NA|NA|PGS10001-Success|F3E1804EDFC2A60BF3DD135D4CC7C71DD38E6ECF67645A1CFD8AA7606151B0D0";
+		// ----------------------------------
 		response = response.replace("%7C", "|");
 		response = response.replace("%3A", ":");
 		String[] words = response.toString().split("\\|");
@@ -125,11 +150,14 @@ public class ControllerPayment {
 			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
+					List<Map<String, Object>> userdetails = serviceUtilInterface.getLicensee(Integer.parseInt(usercode));
 					message = "Payment Successful. ";
+					model.addAttribute("payer", userdetails.get(0).get("applicantsname"));
 					model.addAttribute("transactioncode", words[1]);
 					model.addAttribute("billdeskreferenceNo", words[2]);
 					model.addAttribute("bankreferenceno", words[3]);
 					model.addAttribute("amount", words[4]);
+					model.addAttribute("transactiondate", words[13]);
 					model.addAttribute("message", message);
 					// ----------------UpdateTransaction
 					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
@@ -143,9 +171,7 @@ public class ControllerPayment {
 					break;
 				case "0399":
 					message = "Payment Unsucessful - Invalid Authentication in Bank / Cancelled By User.";
-					// ----------------UpdateTransaction
 					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
-
 					break;
 				case "NA":
 					message = "Invalid Input in Payment Request. Please Contact Admin.";
