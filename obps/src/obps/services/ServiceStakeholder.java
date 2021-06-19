@@ -91,7 +91,19 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public String ulbRegistration(Integer officecode, Integer usercode) {
-		String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
+		String sql="select count(*)::int from  nicobps.useroffices " + 
+				"where officecode IN ( " + 
+				"	select officecode  " + 
+				"	from masters.offices  " + 
+				"	where isregisteringoffice='N' and registeringofficecode=? " + 
+				") " + 
+				"and usercode=?";
+		List<Map<String, Object>> count=SUI.listGeneric(sql, new Object[] {officecode,usercode});
+		if(!count.isEmpty()) {
+			if((Integer)count.get(0).get("count")>0)
+				return "ALREADY_REPORTED";
+		}
+		sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
 				+ "    VALUES (?, ?, ?, ?, ?, ?)";
 		Integer servicetypecode = 1;
 		CommonMap application = SUI.generateApplicationcode(officecode, 1, usercode, servicetypecode);

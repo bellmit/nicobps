@@ -8,10 +8,12 @@ app.controller("CommonCtrl", [
 		$scope.registerStakeholder = () => {
 			let data = "officecode=" + $scope.registeringofficecode;
 			commonInitService.http("POST", "ulbregistration.htm", data, function (response) {
-				if (response!=='false') {
+				if(response===ALREADY_REPORTED){
+					MsgBox("Office is already registered.");
+				}else if (response!=='false') {
 					jQuery("#form").find("input[name='applicationcode']").val(response);
 					jQuery("#form").submit();
-				} else {
+				}else {
 					MsgBox("Error! Please try again.");
 				}
 			}, function () {

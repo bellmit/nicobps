@@ -68,6 +68,9 @@ app.controller("CommonCtrl", [
 				data: "enclosurecode=" + enclosurecode + "&usercode=" + usercode,
 				success: function (response) {
 					if (response.length > 0) {
+						jQuery('#enclosures').closest('div').removeClass('h-50');
+						jQuery('#enclosures').closest('div').removeClass('h-100');
+						jQuery('#enclosures').closest('div').addClass('h-100');
 						jQuery('#enclosureWindow').html('<iframe src="data:' + detectMimeType(response) + ';base64,' + response + '"' +
 							'style="width:100%;height:calc(80vh);" frameborder="0"></iframe>');
 					} else {

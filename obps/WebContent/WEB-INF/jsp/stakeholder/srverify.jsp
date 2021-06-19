@@ -237,9 +237,9 @@
 					</table>
 				</div>
 				<div class="col-md-12 py-12 px-12" style="display: block">
-					<h5 style="border-bottom: 3px solid #005776">Documents</h5><h3>(click on document to view)</h3>
+					<h5 style="border-bottom: 3px solid #005776">Documents<span style='font-size: 15px'>(click on document to view)</span></h5>
 				</div>
-				<div class="col-md-4 py-2 px-2 h-100" style="display: block">
+				<div class="col-md-4 py-2 px-2 h-50" style="display: block">
 					<table class="table" id="enclosures">
 						<tr ng-repeat="item in Enclosures">
 							<td><span style="cursor: pointer"
