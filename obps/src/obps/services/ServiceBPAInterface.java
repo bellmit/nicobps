@@ -6,6 +6,7 @@ import java.util.Map;
 
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.util.application.CommonMap;
 
@@ -25,24 +26,37 @@ public interface ServiceBPAInterface {
 
 	List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE);
 
+	List<Map<String, Object>> listBPApplications(Integer USERCODE);
+	
 	List<Map<String, Object>> listNextProcess(String applicationcode);
 
 	List<Map<String, Object>> listOfficePaymentMode(String applicationcode);
+
+	List<Map<String, Object>> listSiteReportDetails(Integer USERCODE, String applicationcode);
 	
+	Map<String, Object> getBpaApplicationDetails(String applicationcode);
+
 	Map<String, Object> getBpaApplicationDetails(Integer USERCODE, String applicationcode);
 	
 	Map<String, Object> getApplicationFee(Integer USERCODE, String applicationcode, Integer bpaApplicationfeeCode);
 
-	Map<String, Object> getCurrentProcessTaskStatus(Integer uSERCODE, String applicationcode);
+	Map<String, Object> getCurrentProcessTaskStatus(Integer USERCODE, String applicationcode);
 
 	Map<String, Object> getEdcrDetails(Integer USERCODE, String edcrnumber);
 	
+	Map<String, Object> getEdcrDetailsV2(String appcode);
+	
 	Map<String, Object> getEdcrDetailsV2(Integer USERCODE, String appcode);
 
-	Map<String, Object> getPermitFee(Integer uSERCODE, String applicationcode, Integer bpaPermitfeeCode);
+	Map<String, Object> getPermitFee(Integer USERCODE, String applicationcode, Integer bpaPermitfeeCode);
+
 
 	/* CREATE */
-	boolean processAppPayment(Integer uSERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);
+	boolean checkAccessGrantStatus(Integer USERCODE, String appcode, String pathurl);
+	
+	boolean processAppPayment(Integer USERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);
+
+	boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 
 	boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response);
 
@@ -51,4 +65,5 @@ public interface ServiceBPAInterface {
 
 	boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer USERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response);
+
 }

@@ -9,11 +9,6 @@
 				cursor: pointer;
 				content: "";
 			}
-			.element-center{
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
 		</style>
 	</head>
 	<body ng-app="CommonApp" ng-controller="CommonCtrl">
@@ -23,13 +18,11 @@
 				<%@include file="../common/menutop.jsp"%>
 				<div class="container-fluid">
 					<h3 class="mt-4" style="font-size: 32px; border-bottom: 3px solid #005776">
-						Apply for building permit: Stepper 2 
+						My Applications
 					</h3>
-					<form>
-						<div class="element-center">
-							<button class="btn btn-outline-primary" ng-click="save()">Next</button>
-						</div>
-					</form>
+					<div class="table-responsive" id="displayRecordsDiv">
+                          <div id="displayRecords" style='width:100%;margin: 0px auto 50px auto; padding: 0px 20px'></div>
+                      </div>
 				</div>
 			</div>
 		</div>
@@ -37,8 +30,5 @@
 	<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
-	<script src="resources/js/application/bpa/buildingpermitsteptwo.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		const APPCODE = '${applicationcode}';
-	</script>
+	<script src="resources/js/application/bpa/inbox.js" type="text/javascript"></script>
 </html>

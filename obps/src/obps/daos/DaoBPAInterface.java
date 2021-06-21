@@ -4,9 +4,12 @@ import java.util.HashMap;
 
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 
 public interface DaoBPAInterface {
+
+	boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 
 	boolean processAppPayment(Integer uSERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);
 
@@ -17,5 +20,4 @@ public interface DaoBPAInterface {
 
 	boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer uSERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response);
-
 }

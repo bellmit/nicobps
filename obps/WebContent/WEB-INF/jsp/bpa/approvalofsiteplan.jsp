@@ -50,38 +50,8 @@
 						<ng-include src="'basicdetails.htm'"></ng-include>
 						<ng-include src="'scrutinydetails.htm'"></ng-include>
 						<ng-include src="'documentdetails.htm'"></ng-include>
+						<ng-include src="'sitereportdetails.htm'"></ng-include>
 						<ng-include src="'fileviewmodal.htm'"></ng-include>
-						<div class="card mb-4">
-							<div class="card-body">
-								<div class="card-title h4">Inspection Report</div>
-								<div class="row" style="display: none">
-									<div class="col">
-										<div class="form-group">
-											<label class="col-sm-12">Applicationcode</label>
-											<div class="col-sm-12">
-												<input type="text" name="applicationcode" class="form-control custom-form-control"
-													ng-model="bpa.applicationcode" value="" readonly />
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col">
-										<div class="form-group row">
-											<label class="col">Site Inspection Report<span class="fa fa-asterisk"></span></label>
-											<div class="col">
-												<div class="btn btn-outline-primary btn-sm float-left">
-													<input type="file" name="report" file-model="bpa.report" 
-														required><!-- ng-model="report"  -->
-													<span class="col" style="color:red"></span>
-													<span class="col" style="color:red" ng-if="bpa.error.report">{{bpa.error.report}}</span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
 						<ng-include src="'commonprocessingaction.htm'"></ng-include>
 					</form>
 				</div>
@@ -92,7 +62,7 @@
 	<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
-	<script src="resources/js/application/bpa/siteinspection.js" type="text/javascript"></script>
+	<script src="resources/js/application/bpa/approvalofsiteplan.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		const APPCODE = '${applicationcode}';
 	</script>

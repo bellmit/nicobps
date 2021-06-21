@@ -11,7 +11,9 @@
 			/* Always set the map height explicitly to define the size of the div
 			       * element that contains the map. */
 			#map {
+				position: absolute;
 				height: 100%;
+				width: 100%
 			}
 			
 			/* Optional: Makes the sample page fill the window. */

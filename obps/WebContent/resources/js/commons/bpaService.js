@@ -35,6 +35,9 @@ app.service("bpaService", [
       getBpaApplicationDetails: async function (callback, data = "") {
         CUS.getData('./getBpaApplicationDetails.htm', data, callback);
       },
+      getBpaApplicationDetailsV2: async function (callback, data = "") {
+        CUS.getData('./getBpaApplicationDetailsV2.htm', data, callback);
+      },
       getBpaApplicationFee: async function (callback, data = "") {
         CUS.getData('./getBpaApplicationFee.htm', data, callback);
       },
@@ -50,11 +53,17 @@ app.service("bpaService", [
       getEdcrDetailsV2: async function (callback, data = "") {
         CUS.getData('./getEdcrDetailsV2.htm', data, callback);
       },
+      getEdcrDetailsV3: async function (callback, data = "") {
+        CUS.getData('./getEdcrDetailsV3.htm', data, callback);
+      },
       getOfficePaymentMode: async function (callback, data = "") {
         CUS.getData('./getOfficePaymentMode.htm', data, callback);
       },
       listAppScrutinyDetailsForBPA: async function (callback, data = "") {
         CUS.getData("./listAppScrutinyDetailsForBPA.htm", data, callback);
+      },
+      listBPApplications: async function (callback, data = "") {
+        CUS.getData("./listbpapplications.htm", data, callback);
       },
       listOfficelocations: async function (callback, data = "") {
         CUS.getData("./listOfficelocations.htm", data, callback);
@@ -68,9 +77,13 @@ app.service("bpaService", [
       listSalutations: async function (callback, data = "") {
         CUS.getData("./listSalutations.htm", data, callback);
       },
+      listSiteReportDetails: async function (callback, data = "") {
+        CUS.getData('./listSiteReportDetails.htm', data, callback);
+      },
       test: async function (callback, data = "") {
         CUS.getData("./listTest.htm", data, callback);
       },
+      /* ACTION */
       getFloorName: function (data = null) {
         let name = "";
         switch (data) {
@@ -129,6 +142,10 @@ app.service("bpaService", [
 
         }
         return builtUpArea;
+      },
+      detectMimeType: (data) => {
+        console.log("MimeType: ", FileMimeType[data.toUpperCase().substr(0, 5)]);
+        return FileMimeType[data.toUpperCase().substr(0, 5)];
       }
     };
   },

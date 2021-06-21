@@ -6,6 +6,12 @@ const Ownershipsubtypes = {
   2: "Multiple Owner",
 };
 
+const FileMimeType = {
+  "JVBER": "application/pdf",
+  "/9J/4": "image/jpeg",
+  "IVBOR": "image/png"
+};
+
 var ApplicationFlow = function () {
   var ApplicationFlow = {
     applicationcode: '',
@@ -210,11 +216,6 @@ var SiteInspection = function () {
 };
 
 
-
-
-
-
-
 var Modal = function () {
   var Modal = {
     action: 1,
@@ -225,4 +226,45 @@ var Modal = function () {
   }
 
   return Modal;
+}
+
+var ModalFile = function () {
+  var ModalFile = {
+    title: null,
+    src: null,
+  }
+
+  return ModalFile;
+}
+
+var TaskStatus = function () {
+  var TaskStatus = {
+    taskdate: null,
+    username: '',
+    status: '',
+    remarks: '',
+  }
+  return TaskStatus;
+}
+
+
+var ProcessFlow = function () {
+  var ProcessFlow = {
+    applicationcode: '',
+    fromusercode: null,
+    tousercode: null,
+    fromprocesscode: null,
+    toprocesscode: null,
+    remarks: '',
+    init: (obj) => {
+      this.applicationcode = obj.applicationcode;
+      this.fromusercode = obj.fromusercode;
+      this.tousercode = obj.tousercode;
+      this.fromprocesscode = obj.fromprocesscode;
+      this.toprocesscode = obj.toprocesscode;
+      this.remarks = obj.remarks;
+      return this;
+    }
+  }
+  return ProcessFlow;
 }

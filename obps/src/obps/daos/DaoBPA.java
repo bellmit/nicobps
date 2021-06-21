@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
 import obps.models.BpaOwnerDetail;
+import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
@@ -43,6 +44,29 @@ public class DaoBPA implements DaoBPAInterface{
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+	public boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		boolean status = false;
+		try {
+			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null,
+					data.getRemarks(), data.getTousercode(), response);
+			if(!status) throw new Exception("Failed to update application flow");
+
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application processed successfully.");
+		} catch (Exception e) {
+			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
+			status = false;
+			e.printStackTrace();
+			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+		return status;
+	}
+
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public boolean processAppPayment(Integer USERCODE, BpaApplicationFee bpa, HashMap<String, Object> response) {
@@ -216,9 +240,10 @@ public class DaoBPA implements DaoBPAInterface{
 						+ "FROM masters.processflow PF        "
 						+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
 						+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
-						+ "WHERE PF.modulecode = ? AND PF.fromprocesscode = ?   " 
+						+ "INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode       "
+						+ "WHERE UP.usercode = ? AND PF.modulecode = ? AND PF.fromprocesscode = ?   " 
 						+ "AND PF.processflowstatus = 'N'";
-				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {BPAMODULECODE, BPAFIRSTPROCESSCODE}); 
+				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {USERCODE,BPAMODULECODE, BPAFIRSTPROCESSCODE}); 
 				if(list != null && !list.isEmpty()) {
 					map = list.get(0);
 					map.setValue1(bpa.getApplicationcode());
@@ -309,6 +334,7 @@ public class DaoBPA implements DaoBPAInterface{
 					tmap = tlist.get(0);
 					fromprocesscode = (Integer) tmap.get("fromprocesscode");
 					toprocesscode = (Integer) tmap.get("toprocesscode");
+					LOG.info("getCurrentProcessStatus"+tmap);
 				}
 			}
 			
@@ -323,9 +349,10 @@ public class DaoBPA implements DaoBPAInterface{
 						+ "FROM masters.processflow PF        "
 						+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
 						+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
-						+ "WHERE PF.modulecode = ? AND PF.fromprocesscode = ?   " 
+						+ "INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode       "
+						+ "WHERE UP.usercode = ? AND PF.modulecode = ? AND PF.fromprocesscode = ?   " 
 						+ "AND PF.processflowstatus = 'N'";
-				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {BPAMODULECODE, fromprocesscode}); 
+				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {USERCODE, BPAMODULECODE, fromprocesscode}); 
 				if(list != null && !list.isEmpty()) {
 					map = list.get(0);
 					map.setValue1(applicationcode);

@@ -19,7 +19,7 @@ app.controller("CommonCtrl", [
 		$scope.serverResponseInfo = false;
 		$scope.serverResponseSuccess = false;
 
-		$scope.bpa = new SiteInspection();
+		$scope.bpa = new ProcessFlow();
 		$scope.bpa.applicationcode = APPCODE;
 		// $scope.bpaEdcr = new BPA();
 		$scope.basicDetail = {};
@@ -28,6 +28,7 @@ app.controller("CommonCtrl", [
 		$scope.modal = new Modal();
 		$scope.taskStatus = new TaskStatus();
 		$scope.DocumentDetails = [];
+		$scope.SiteReportDetails = [];
 
 		/*GET*/
 		BS.getBpaApplicationDetailsV2((response) => {
@@ -63,9 +64,9 @@ app.controller("CommonCtrl", [
 			$scope.basicDetail.plotarea = $scope.planInfo.plotArea;
 		}, APPCODE);
 
-		/* $http.get('./listNextProcess.htm?applicationcode=' + $scope.bpa.applicationcode).then((response) => {
-		}, (errResponse) => {
-		}); */
+		BS.listSiteReportDetails((response) => {
+			$scope.SiteReportDetails = response;
+		}, APPCODE);
 
 		/*ACTION*/
 		$scope.getFloorArea = (occupanies) => {
@@ -110,6 +111,13 @@ app.controller("CommonCtrl", [
 		$scope.viewFile = (opt, data) => {
 			let fileContent = "";
 			switch (opt) {
+				case 2:
+					$scope.SiteReportDetails.forEach((o, x) => {
+						if (o.appenclosurecode == data) {
+							fileContent = 'data:' + BS.detectMimeType(o.enclosureimage) + ';base64,' + o.enclosureimage;
+						}
+					});
+					break;
 				default:
 					$scope.DocumentDetails.forEach((o, x) => {
 						if (o.appenclosurecode == data) {
@@ -157,24 +165,15 @@ app.controller("CommonCtrl", [
 
 		$scope.save = () => {
 			let data = {}, valid = false;
-			valid = $scope.validateForm();
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
 			data = $scope.bpa.init($scope.bpa);
-
-			if (!valid) {
-				$('#commonModal').modal('hide');
-				$timeout(() => {
-					alert("Please fill all mandatory fields");
-				}, 5);
-				return;
-			}
 
 			valid = $window.confirm("Are you sure you want to forward?");
 			if (!valid) return;
 
 			$('#commonModal').modal('hide');
-			CIS.save("POST", "./savebpasiteinspection.htm", data, (success) => {
+			CIS.save("POST", "./processbpapplication.htm", data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;
