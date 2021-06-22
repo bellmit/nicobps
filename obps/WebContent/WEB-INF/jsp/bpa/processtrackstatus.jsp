@@ -1,5 +1,4 @@
 <!-- @author Decent Khongstia -->
-<!DOCTYPE html>
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="card-title row">

@@ -1,5 +1,4 @@
 <!-- @author Decent Khongstia -->
-<!DOCTYPE html>
 <style type="text/css">
 	.iframe{
 		width: -webkit-fill-available;

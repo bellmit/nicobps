@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!-- @author Decent Khongstia -->
 <div class="card mb-4">
 	<div class="card-body">

@@ -77,7 +77,6 @@ public class DaoBPA implements DaoBPAInterface{
 			Map<String, Object> map = list.get(0);
 			Integer toprocesscode;
 			if (map != null) {
-				LOG.info(map.toString());
 				toprocesscode = Integer.valueOf(map.get("toprocesscode").toString());
 				String redirecturl = "paymentconfirmation.htm?modulecode=" + BPAMODULECODE
 						+ "&applicationcode=" + bpa.getApplicationcode() + "&usercode=" + USERCODE + "&feecode="
@@ -334,7 +333,6 @@ public class DaoBPA implements DaoBPAInterface{
 					tmap = tlist.get(0);
 					fromprocesscode = (Integer) tmap.get("fromprocesscode");
 					toprocesscode = (Integer) tmap.get("toprocesscode");
-					LOG.info("getCurrentProcessStatus"+tmap);
 				}
 			}
 			
@@ -344,23 +342,27 @@ public class DaoBPA implements DaoBPAInterface{
 			
 			String sql = "";
 			CommonMap map = new CommonMap();
-			try {
-				sql = "SELECT pageurl as key, processname as value      " 
-						+ "FROM masters.processflow PF        "
-						+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
-						+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
-						+ "INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode       "
-						+ "WHERE UP.usercode = ? AND PF.modulecode = ? AND PF.fromprocesscode = ?   " 
-						+ "AND PF.processflowstatus = 'N'";
-				List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {USERCODE, BPAMODULECODE, fromprocesscode}); 
-				if(list != null && !list.isEmpty()) {
-					map = list.get(0);
-					map.setValue1(applicationcode);
+			if(tousercode != null && tousercode.compareTo(-1) > 0) {
+				try {
+					sql = "SELECT pageurl as key, processname as value      " 
+							+ "FROM masters.processflow PF        "
+							+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
+							+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
+							+ "INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode       "
+							+ "WHERE UP.usercode = ? AND PF.modulecode = ? AND PF.fromprocesscode = ?   " 
+							+ "AND PF.processflowstatus = 'N'";
+					List<CommonMap> list = SUI.listCommonMap(sql, new Object[] {USERCODE, BPAMODULECODE, fromprocesscode}); 
+					if(list != null && !list.isEmpty()) {
+						map = list.get(0);
+						map.setValue1(applicationcode);
+					}
+					response.put("nextProcess", map);
+				}catch (Exception e) {
+					response.put("nextProcess", map);
 				}
+			}else
 				response.put("nextProcess", map);
-			}catch (Exception e) {
-				response.put("nextProcess", map);
-			}
+			
 		}catch (Exception e) {
 			status = false;
 		}
