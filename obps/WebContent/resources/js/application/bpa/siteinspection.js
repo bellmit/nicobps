@@ -120,7 +120,6 @@ app.controller("CommonCtrl", [
 			$scope.fileModal.src = $sce.trustAsResourceUrl(fileContent);
 		}
 
-
 		/*CREATE*/
 		$scope.reject = () => {
 			let data = {}, valid = false;

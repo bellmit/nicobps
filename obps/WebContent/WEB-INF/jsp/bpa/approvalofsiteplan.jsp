@@ -44,8 +44,12 @@
 				<div class="container-fluid">
 					<h3 class="mt-4"
 						style="font-size: 32px; border-bottom: 3px solid #005776">
-						Apply for building permit: Site Inspection</h3>
+						Apply for building permit: Approval of Site Plan</h3>
 					<form name="bpaform">
+						<div class="card-body">
+							<label class="h4">Application details</label>
+							<label class="h6 alert alert-dark">Application No. <core:out value="${applicationcode}"></core:out></label>
+						</div>
 						<ng-include src="'processtrackstatus.htm'"></ng-include>
 						<ng-include src="'basicdetails.htm'"></ng-include>
 						<ng-include src="'scrutinydetails.htm'"></ng-include>
