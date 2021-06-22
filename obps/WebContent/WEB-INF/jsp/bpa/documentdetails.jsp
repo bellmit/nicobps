@@ -6,15 +6,15 @@
 			<div class="card bg-light text-dark">
 		   		<div class="card-body">
 		   			<div class="row">
-		   				<label class="col">File</label>
-		   				<label class="col">Uploaded Date</label>
-		   				<label class="col"></label>
+		   				<label class="col"><small>File</small></label>
+		   				<label class="col"><small>Uploaded Date</small></label>
+		   				<label class="col"><small></small></label>
 		   			</div>
 		   			<div class="row">
 		   				<label class="col">{{D.enclosurename}}</label>
 		   				<label class="col">{{D.uploaddate}}</label>
 		   				<div class="col">
-		   					<button type="button" class="btn btn-warning text-capitalize" data-toggle="modal" data-target="#fileModal" 
+		   					<button type="button" class="btn btn-sm btn-warning text-capitalize" data-toggle="modal" data-target="#fileModal" 
 		   					ng-click="viewFile(1, D.appenclosurecode)">View File</button>
 		   				</div>
 		   			</div>

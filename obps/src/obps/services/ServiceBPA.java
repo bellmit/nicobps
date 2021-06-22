@@ -143,9 +143,10 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public List<Map<String, Object>> listSiteReportDetails(Integer USERCODE, String applicationcode) {
-		String sql = "SELECT appenclosurecode, applicationcode, enclosurecode, enclosureimage,   "
-				+ " TO_CHAR(entrydate, 'DD/MM/YYYY') entrydate      " 
-				+ "FROM nicobps.bpasiteinspectiondetails  " 
+		String sql = "SELECT SI.appenclosurecode, SI.applicationcode, SI.enclosurecode, SI.enclosureimage,   "
+				+ " TO_CHAR(SI.entrydate, 'DD/MM/YYYY') entrydate, E.enclosurename      " 
+				+ "FROM nicobps.bpasiteinspectiondetails SI "
+				+ "LEFT JOIN masters.enclosures E ON E.enclosurecode = SI.enclosurecode   " 
 				+ "WHERE applicationcode = ?  ";
 		return SUI.listGeneric(sql, new Object[] {applicationcode});
 	}
