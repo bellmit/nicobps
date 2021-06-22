@@ -2,13 +2,11 @@
 <form class="ng-scope" ng-app="applicationApp"
 	ng-controller="applicationController" id="applicationForm"
 	name="applicationForm" autocomplete="off">
-	
+		<script src="resources/js/application/bpa/uploadbpaenclouseres.js"></script>  
 	<input class="d-none" type="text" name="appcode" id="appcode"
 		value="<core:out value="${applicationcode}" escapeXml="true"></core:out>">
 	<div class="row">
-		<div class="col-md-12 py-12 px-12">
-			<h5 style="border-bottom: 3px solid #005776">Upload Bpa
-				Enclosures</h5>
+		<div class="col-md-12 py-12 px-12">									
 			<table id="entrytable">
 				<tr ng-repeat="L in listBpaEnclosures" id="tr{{$index}}">
 					<td><input type="checkbox" ng-model="L.ischecked"

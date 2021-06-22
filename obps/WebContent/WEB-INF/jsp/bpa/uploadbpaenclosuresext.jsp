@@ -1,37 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>OBPS | Upload Enclosures</title>
-	<!-- <meta charset="utf-8"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">        
-    <%@include file="../common/headerfiles.jsp" %>     
-	<script src="resources/js/application/bpa/uploadbpaenclouseres.js"></script>  		  	  
-</head>
-
-<body>
-	<%@include file="../common/headerext.jsp" %> 
-
-	<!-- Breadcrumb -->
-	<div class="bg-light">
-		<div class="container">
-			<ul class="breadcrumb bg-light pl-0">
-				<li><a href="login.htm">Home</a></li>
-				<li>Upload Bpa Enclosures</li>
-			</ul>
-		</div>
-	</div>
-
-	<div class="mb-5">
-		<div class="container">		
-			<div class="mt-5">
-				<%@include file="uploadbpaenclosures.jsp" %> 				 
-			</div>
-		</div>
-	</div>
-	
-
-	<%@include file="../common/footerext.jsp" %> 
-</body>
+<html>
+	<head>
+		<title>OBPS | Upload Enclosures</title>
+		<%@include file="../common/headerfiles.jsp" %>     		
+	</head>
+	<body>
+	<div class="d-flex" id="wrapper">
+		<%@include file="../common/menuside.jsp" %>  		   
+	    <div id="page-content-wrapper">	
+		  <%@include file="../common/menutop.jsp" %>     
+	      <div class="container-fluid">
+	     <h3 class="mt-4 mb-2" style="font-size: 32px; border-bottom: 3px solid #005776">
+						Apply for building permit:Upload 
+				Enclosures
+					</h3>
+	        
+	        <div class="row border rounded mr-5 ml-2">	        	        	     
+	        	<div class="col-md-12 py-4 px-5">	        		
+	        		<%@include file="uploadbpaenclosures.jsp" %> 			
+	        	</div>			        	 	
+	        </div>   	        
+	             
+	      </div>	      
+	    </div> 	    
+	  </div>
+	</body>
 </html>
 
 
