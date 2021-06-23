@@ -85,6 +85,7 @@ public class ControllerBpaProcessing {
 		LOG.info("URL: "+req.getServletPath());
 		HttpSession session = ControllerLogin.session();
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			return PARENT_URL_MAPPING.concat("/rejectedapplications");
 		}
 		return "redirect:login.htm";
