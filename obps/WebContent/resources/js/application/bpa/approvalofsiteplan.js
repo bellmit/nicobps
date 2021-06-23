@@ -141,7 +141,7 @@ app.controller("CommonCtrl", [
 			valid = $window.confirm("Are you sure you want to reject?");
 			if (!valid) return;
 
-			CIS.save("POST", "./rejectbpaTest.htm", data, (success) => {
+			CIS.save("POST", ProcessingUrl.bpaReject, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;
@@ -178,7 +178,7 @@ app.controller("CommonCtrl", [
 			if (!valid) return;
 
 			$('#commonModal').modal('hide');
-			CIS.save("POST", "./processbpapplication.htm", data, (success) => {
+			CIS.save("POST", ProcessingUrl.bpaProcess, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;

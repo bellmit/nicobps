@@ -98,7 +98,35 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "ORDER BY SL.salutationdescription";
 		return SUI.listCommonMap(sql);
 	}
-
+	
+	@Override
+	public List<Map<String, Object>> listApplictionsCurrentProcessStatus(Integer USERCODE) {
+		String sql = "SELECT AFR.applicationcode, PF.flowname AS status,   "
+				+ "      UL.fullname AS updatedby , TUL.fullname AS assignee,   "
+				+ "      TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks,   "
+				+ "      PR.processname processname, NPR.processname nextprocessname,   "
+				+ "		 TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate,  "
+				+ "      RUL.fullname AS rejectedby, RA.remarks AS rejectremarks, Ra.entrusted, TO_CHAR(RA.entrydate,'DD/MM/YYYY') rejectdate  "
+				+ "FROM nicobps.applicationflowremarks AFR     " + "INNER JOIN (  "
+				+ "	SELECT applicationcode, MAX(entrydate)entrydate  "
+				+ "	FROM nicobps.applicationflowremarks AFR     " + "	WHERE modulecode = AFR.modulecode  "
+				+ "	GROUP BY applicationcode  "
+				+ ")AF ON (AF.applicationcode, AF.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
+				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = AFR.applicationcode  "
+				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode) AND PF.processflowstatus = 'N'      "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode    "
+				+ "INNER JOIN masters.processes NPR ON NPR.processcode = PF.toprocesscode AND AFR.modulecode = NPR.modulecode    "
+				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode    "
+				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AFR.tousercode    "
+				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AFR.applicationcode  "
+				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode    " + "WHERE   "
+				+ "	AFR.modulecode = ?   " 
+				+ "	AND   " 
+				+ "	APP.usercode = ? " 
+				+ "ORDER BY APP.entrydate";
+		return SUI.listGeneric(sql, new Object[] {BPAMODULECODE, USERCODE});
+	}
+	
 	@Override
 	public List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE) {
 		String sql = "SELECT EDCR.usercode, EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,       "
@@ -131,8 +159,6 @@ class ServiceBPA implements ServiceBPAInterface {
 		return SUI.listGeneric(sql, new Object[] { USERCODE, USERCODE });
 	}
 	
-	
-
 	@Override
 	public List<Map<String, Object>> listBPApplications(Integer USERCODE) {
 		String sql = "SELECT EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,       "
@@ -158,8 +184,22 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	ORDER BY PU.urlcode  "
 				+ ")UP ON CASE WHEN AF.tousercode IS NOT NULL THEN UP.usercode = AF.tousercode AND UP.urlcode = PU.urlcode   "
 				+ "	ELSE UP.urlcode = PU.urlcode   " 
-				+ "       END  " 
-				+ "WHERE UP.usercode = ?";
+				+ "       END  "
+				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode  " 
+				+ "WHERE UP.usercode = ?  "
+				+ "AND RA.applicationcode IS NULL";
+		return SUI.listGeneric(sql, new Object[] {USERCODE});
+	}
+	
+	@Override
+	public List<Map<String, Object>> listRejectedApplications(Integer USERCODE) {
+		String sql = "SELECT RA.slno, RA.applicationcode, RA.remarks, RA.entrusted, TO_CHAR(RA.entrydate, 'DD/MM/YYYY') rejectdate,  "
+				+ "       UL.fullname as username, TUL.usercode   " 
+				+ "FROM nicobps.bparejectapplications RA  "
+				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.applicationcode = RA.applicationcode  "
+				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = RA.usercode  "
+				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = RA.usercode AND TUL.usercode = ?  "; 
+		
 		return SUI.listGeneric(sql, new Object[] {USERCODE});
 	}
 
@@ -185,7 +225,6 @@ class ServiceBPA implements ServiceBPAInterface {
 		return null;
 	}
 
-	
 	@Override
 	public List<Map<String, Object>> listOfficePaymentMode(String applicationcode) {
 		String sql = "SELECT PM.paymentmodecode, PM.paymentmodedescription, PM.mode   "
@@ -296,15 +335,26 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public Map<String, Object> getCurrentProcessTaskStatus(Integer USERCODE, String applicationcode) {
-		String sql = "SELECT AFR.applicationcode, PF.officecode, PF.flowname AS status, AFR.fromprocesscode, AFR.toprocesscode, PU.pageurl, " 
-				+ "      UL.fullname AS updatedby, TUL.fullname AS assignee, PR.processname, TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks  "
-				+ "FROM nicobps.applicationflowremarks AFR   "
-				+ "INNER JOIN masters.processflow PF on PF.toprocesscode=AFR.toprocesscode and processflowstatus='N' AND PF.modulecode=AFR.modulecode   "
-				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode  "
-				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode  "
-				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AFR.tousercode  "
-				+ "LEFT JOIN masters.pageurls PU on PU.urlcode=PF.urlcode   "
-				+ "WHERE afrcode=(SELECT max(afrcode) FROM nicobps.applicationflowremarks WHERE modulecode=? AND applicationcode=?::text) ";
+		String sql = "SELECT AFR.applicationcode, PF.flowname AS status,   "
+				+ "      UL.fullname AS updatedby , TUL.fullname AS assignee,   "
+				+ "      TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks,   "
+				+ "      PR.processname processname, NPR.processname nextprocessname,   "
+				+ "      RUL.fullname AS rejectedby, RA.remarks AS rejectremarks, Ra.entrusted, TO_CHAR(RA.entrydate,'DD/MM/YYYY') rejectdate  "
+				+ "FROM nicobps.applicationflowremarks AFR     " 
+				+ "INNER JOIN (  "
+				+ "	SELECT applicationcode, MAX(entrydate)entrydate  "
+				+ "	FROM nicobps.applicationflowremarks AFR     " 
+				+ "	WHERE modulecode = AFR.modulecode  "
+				+ "	GROUP BY applicationcode  "
+				+ ")AF ON (AF.applicationcode, AF.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
+				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode) AND PF.processflowstatus = 'N'      "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode    "
+				+ "INNER JOIN masters.processes NPR ON NPR.processcode = PF.toprocesscode AND AFR.modulecode = NPR.modulecode    "
+				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode    "
+				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AFR.tousercode    "
+				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AFR.applicationcode  "
+				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode    "
+				+ "WHERE AFR.modulecode = ? AND AFR.applicationcode = ?";
 		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPAMODULECODE, applicationcode});
 		if(list != null && !list.isEmpty())
 			return list.get(0);
@@ -386,13 +436,14 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "AND PF.processflowstatus = 'N'       "
 				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
 				+ "INNER JOIN nicobps.userpages UP ON UP.urlcode =  PU.urlcode AND UP.usercode = ?     "
+				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode   "
 				+ "WHERE 1=1 "
 				+ "AND AF.applicationcode = ?  " 
 				+ "AND AF.modulecode = ?     "
 				+ "AND CASE WHEN AF.tousercode IS NOT NULL THEN AF.tousercode = ? ELSE 1=1 END     "
-				+ "AND PU.pageurl = ?";
+				+ "AND PU.pageurl = ?  "
+				+ "AND RA.applicationcode IS NULL";
 		pathurl = pathurl.replaceFirst("/", "");
-		LOG.info("pathurl: "+pathurl);
 		return SUI.getStringObject(sql, new Object[] {USERCODE, appcode, BPAMODULECODE, USERCODE, pathurl}).equals(String.valueOf(1));
 	}
 
@@ -411,6 +462,11 @@ class ServiceBPA implements ServiceBPAInterface {
 		return DBI.processBPApplication(data, response);
 	}
 	
+	@Override
+	public boolean rejectBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		return DBI.rejectBPApplication(data, response);
+	}
+
 	@Override
 	public boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response) {
 		return DBI.saveBPA(bpa, USERCODE, response);

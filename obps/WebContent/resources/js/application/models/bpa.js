@@ -12,6 +12,12 @@ const FileMimeType = {
   "IVBOR": "image/png"
 };
 
+const ProcessingUrl = {
+  bpaReject: "rejectbpapplication.htm",
+  bpaProcess: "processbpapplication.htm",
+  bpaSiteInspection: "savebpasiteinspection.htm",
+};
+
 var ApplicationFlow = function () {
   var ApplicationFlow = {
     applicationcode: '',

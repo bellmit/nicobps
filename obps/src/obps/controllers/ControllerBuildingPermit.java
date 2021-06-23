@@ -102,6 +102,18 @@ public class ControllerBuildingPermit {
 		return "redirect:login.htm";
 	}
 	
+	@GetMapping(value = "/bpatrackstatus.htm")
+	public String bpaTrackStatus(Model model, String applicationcode) {
+		LOG.info("URL: bpatrackstatus.htm");
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			model.addAttribute("applicationcode", applicationcode);
+			return PARENT_URL_MAPPING.concat("/trackstatus");
+		}
+		return "redirect:login.htm";
+	}
+	
 	@GetMapping(value = "/buildingpermit.htm")
 	public String buildingPermit(Model model) {
 		LOG.info("URL: buildingpermit.htm");
@@ -159,6 +171,11 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/listAppScrutinyDetailsForBPA.htm")
 	public @ResponseBody List<Map<String, Object>> listApplicationsScrutinyDetails() {
 		return SBI.listAppScrutinyDetailsForBPA(USERCODE);
+	};
+	
+	@GetMapping(value = "/listApplictionsCurrentProcessStatus.htm")
+	public @ResponseBody List<Map<String, Object>> listApplictionsCurrentProcessStatus() {
+		return SBI.listApplictionsCurrentProcessStatus(USERCODE);
 	};
 
 	@GetMapping(value = "/listNextProcess.htm")

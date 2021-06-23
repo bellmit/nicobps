@@ -59,6 +59,9 @@ app.service("bpaService", [
       getOfficePaymentMode: async function (callback, data = "") {
         CUS.getData('./getOfficePaymentMode.htm', data, callback);
       },
+      listApplictionsCurrentProcessStatus: async function (callback, data = "") {
+        CUS.getData("./listApplictionsCurrentProcessStatus.htm", data, callback);
+      },
       listAppScrutinyDetailsForBPA: async function (callback, data = "") {
         CUS.getData("./listAppScrutinyDetailsForBPA.htm", data, callback);
       },
@@ -73,6 +76,9 @@ app.service("bpaService", [
       },
       listOwnershiptypes: async function (callback, data = "") {
         CUS.getData("./listOwnershiptypes.htm", data, callback);
+      },
+      listRejectedApplications: async function (callback, data = "") {
+        CUS.getData("./listRejectedApplications.htm", data, callback);
       },
       listRelationshiptypes: async function (callback, data = "") {
         CUS.getData("./listRelationshiptypes.htm", data, callback);

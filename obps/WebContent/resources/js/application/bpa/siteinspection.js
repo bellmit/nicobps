@@ -45,11 +45,7 @@ app.controller("CommonCtrl", [
 		}, APPCODE);
 
 		BS.getCurrentProcessTaskStatus((response) => {
-			$scope.taskStatus.taskdate = response.taskdate;
-			$scope.taskStatus.status = response.status;
-			$scope.taskStatus.remarks = response.remarks;
-			$scope.taskStatus.updatedby = response.updatedby;
-			$scope.taskStatus.assignee = response.assignee;
+			$scope.taskStatus = response;
 		}, APPCODE);
 
 		BS.getEdcrDetailsV3((response) => {
@@ -129,7 +125,7 @@ app.controller("CommonCtrl", [
 			valid = $window.confirm("Are you sure you want to reject?");
 			if (!valid) return;
 
-			CIS.save("POST", "./rejectbpaTest.htm", data, (success) => {
+			CIS.save("POST", ProcessingUrl.bpaReject, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;
@@ -175,7 +171,7 @@ app.controller("CommonCtrl", [
 			if (!valid) return;
 
 			$('#commonModal').modal('hide');
-			CIS.save("POST", "./savebpasiteinspection.htm", data, (success) => {
+			CIS.save("POST", ProcessingUrl.bpaSiteInspection, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;

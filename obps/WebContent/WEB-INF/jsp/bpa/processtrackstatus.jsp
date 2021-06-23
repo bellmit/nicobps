@@ -5,7 +5,7 @@
 			<label class="col-sm-6 h5">Task Status</label>
 			<label class="col-sm-6 text-right"></label>
 		</div>
-		<div class="form-group row">
+		<div class="form-group row" ng-if="taskStatus.rejectdate == null || taskStatus.rejectdate == ''">
 			<div class="col">
 				<label class="col"><small>Date</small></label>
 				<label class="col">{{taskStatus.taskdate}}</label>
@@ -25,6 +25,24 @@
 			<div class="col">
 				<label class="col"><small>Remarks</small></label>
 				<label class="col">{{taskStatus.remarks}}</label>
+			</div>
+		</div>
+		<div class="form-group row" ng-if="taskStatus.rejectdate != null && taskStatus.rejectdate != ''">
+			<div class="col">
+				<label class="col"><small>Date</small></label>
+				<label class="col">{{taskStatus.rejectdate}}</label>
+			</div>
+			<div class="col">
+				<label class="col"><small>Rejected By</small></label>	
+				<label class="col">{{taskStatus.rejectedby}}</label>
+			</div>
+			<div class="col">
+				<label class="col"><small>Status</small></label>
+				<label class="col">Rejected</label>
+			</div>
+ 			<div class="col">
+				<label class="col"><small>Remarks</small></label>
+				<label class="col">{{taskStatus.rejectremarks}}</label>
 			</div>
 		</div>
 	</div>

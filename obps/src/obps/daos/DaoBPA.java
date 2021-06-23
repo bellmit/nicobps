@@ -44,29 +44,6 @@ public class DaoBPA implements DaoBPAInterface{
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
-	
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
-	public boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
-		boolean status = false;
-		try {
-			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null,
-					data.getRemarks(), data.getTousercode(), response);
-			if(!status) throw new Exception("Failed to update application flow");
-
-			response.put("code", HttpStatus.CREATED.value());
-			response.put("msg", "Success: Application processed successfully.");
-		} catch (Exception e) {
-			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
-			status = false;
-			e.printStackTrace();
-			LOG.log(Level.SEVERE, e.getLocalizedMessage());
-		}
-		return status;
-	}
-
-
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public boolean processAppPayment(Integer USERCODE, BpaApplicationFee bpa, HashMap<String, Object> response) {
@@ -102,6 +79,53 @@ public class DaoBPA implements DaoBPAInterface{
 		}
 		return status;
 	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+	public boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		boolean status = false;
+		try {
+			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null,
+					data.getRemarks(), data.getTousercode(), response);
+			if(!status) throw new Exception("Failed to update application flow");
+
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application processed successfully.");
+		} catch (Exception e) {
+			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
+			status = false;
+			e.printStackTrace();
+			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+		return status;
+	}
+
+	
+	@Override
+	public boolean rejectBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		boolean status = false;
+		try {
+			String sql = "INSERT INTO nicobps.bparejectapplications(  "
+					+ "    slno, applicationcode, remarks, usercode, entrusted, entrydate)  "
+					+ "VALUES ((SELECT COALESCE(MAX(slno), 0)+1 FROM nicobps.bparejectapplications), ?, ?, ?, 'FOR NOW - NA', now())";
+			status = jdbcTemplate.update(sql,
+					new Object[] { data.getApplicationcode(), data.getRemarks(), data.getFromusercode() }) > 0;
+
+			if(!status) throw new Exception("Failed to update application flow");
+
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application rejected successfully.");		
+		} catch (Exception e) {
+			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
+			status = false;
+			e.printStackTrace();
+			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+		return status;
+	}
+
 	
 	/*
 	 * @Override
@@ -149,7 +173,7 @@ public class DaoBPA implements DaoBPAInterface{
 	 * status = false; e.printStackTrace(); LOG.log(Level.SEVERE,
 	 * e.getLocalizedMessage()); } return status; }
 	 */
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response) {

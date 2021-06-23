@@ -26,9 +26,13 @@ public interface ServiceBPAInterface {
 
 	List<CommonMap> listSalutations();
 
+	List<Map<String, Object>> listApplictionsCurrentProcessStatus(Integer USERCODE);
+	
 	List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE);
 
 	List<Map<String, Object>> listBPApplications(Integer USERCODE);
+	
+	List<Map<String, Object>> listRejectedApplications(Integer USERCODE);
 	
 	List<Map<String, Object>> listNextProcess(String applicationcode);
 
@@ -60,6 +64,8 @@ public interface ServiceBPAInterface {
 
 	boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 
+	boolean rejectBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
+	
 	boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response);
 
 	boolean saveBPAStepTwo(BpaApplication bpa, Integer USERCODE, Integer fromprocesscode,
@@ -67,5 +73,7 @@ public interface ServiceBPAInterface {
 
 	boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer USERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response);
+
+
 
 }

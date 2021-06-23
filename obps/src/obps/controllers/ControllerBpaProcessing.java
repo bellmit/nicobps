@@ -80,6 +80,16 @@ public class ControllerBpaProcessing {
 			return "redirect:login.htm";
 	}
 
+	@GetMapping(value = "/bparejectedapplications.htm")
+	public String bpaRejectedApplications(HttpServletRequest req) {
+		LOG.info("URL: "+req.getServletPath());
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			return PARENT_URL_MAPPING.concat("/rejectedapplications");
+		}
+		return "redirect:login.htm";
+	}
+
 	@GetMapping(value = "/bpasiteinspection.htm")
 	public String bpaSiteInspection(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
 		LOG.info("URL: "+req.getServletPath());
@@ -180,6 +190,11 @@ public class ControllerBpaProcessing {
 		return SBI.listNextProcessingUsers(USERCODE, applicationcode);
 	};
 	
+	@GetMapping(value = "/listRejectedApplications.htm")
+	public @ResponseBody List<Map<String, Object>> listRejectedApplications() {
+		return SBI.listRejectedApplications(USERCODE);
+	};
+	
 	@GetMapping(value = "/listSiteReportDetails.htm")
 	public @ResponseBody List<Map<String, Object>> listSiteReportDetails(@RequestParam(name = "param") String applicationcode) {
 		return SBI.listSiteReportDetails(USERCODE, applicationcode);
@@ -195,6 +210,20 @@ public class ControllerBpaProcessing {
 
 		data.setFromusercode(USERCODE);
 		if (SBI.processBPApplication(data, response)) {
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		} else
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@PostMapping(value = "/rejectbpapplication.htm")
+	public ResponseEntity<HashMap<String, Object>> rejectBPApplication(@RequestBody BpaProcessFlow data,
+			BindingResult bindingResult) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		if (USERCODE == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+		
+		data.setFromusercode(USERCODE);
+		if (SBI.rejectBPApplication(data, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

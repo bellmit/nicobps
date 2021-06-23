@@ -45,11 +45,8 @@ app.controller("CommonCtrl", [
 		}, APPCODE);
 
 		BS.getCurrentProcessTaskStatus((response) => {
-			$scope.taskStatus.taskdate = response.taskdate;
-			$scope.taskStatus.status = response.status;
-			$scope.taskStatus.remarks = response.remarks;
-			$scope.taskStatus.updatedby = response.updatedby;
-			$scope.taskStatus.assignee = response.assignee;
+			console.log("getCurrentProcessTaskStatus: ", response);
+			$scope.taskStatus = response;
 		}, APPCODE);
 
 		BS.getEdcrDetailsV3((response) => {
@@ -137,22 +134,22 @@ app.controller("CommonCtrl", [
 		/*CREATE*/
 		$scope.reject = () => {
 			let data = {}, valid = false;
-			data = $scope.rejectData;
+
+			if ($scope.modal.remarks == null || $scope.modal.remarks == "") {
+				alert("Please enter remarks");
+				return false;
+			}
+			data.applicationcode = $scope.bpa.applicationcode;
+			data.remarks = $scope.modal.remarks;
 			valid = $window.confirm("Are you sure you want to reject?");
 			if (!valid) return;
 
-			CIS.save("POST", "./rejectbpaTest.htm", data, (success) => {
+			$('#commonModal').modal('hide');
+			CIS.save("POST", ProcessingUrl.bpaReject, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;
-					try {
-						$scope.serverMsg += "\nNext Process: " + success.nextProcess.value;
-						$timeout(() => {
-							let url = success.nextProcess.key + "?applicationcode=" + success.nextProcess.value1;
-							$window.location.href = url;
-						}, 4500);
-					} catch (e) { }
-
+					$timeout(() => { $window.location.reload(); }, 2900);
 				} else {
 					$scope.serverResponseFail = true;
 				}
@@ -178,7 +175,7 @@ app.controller("CommonCtrl", [
 			if (!valid) return;
 
 			$('#commonModal').modal('hide');
-			CIS.save("POST", "./processbpapplication.htm", data, (success) => {
+			CIS.save("POST", ProcessingUrl.bpaProcess, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;
