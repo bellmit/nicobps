@@ -1,4 +1,4 @@
-<!-- @author Decent Khongstia -->
+ <!-- @author Decent Khongstia  -->
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="card-title row">
@@ -12,16 +12,16 @@
 			</div>
 			<div class="col">
 				<label class="col"><small>Updated By</small></label>	
-				<label class="col">{{taskStatus.fullname}}</label>
+				<label class="col">{{taskStatus.updatedby}}</label>
 			</div>
 			<div class="col">
 				<label class="col"><small>Status</small></label>
 				<label class="col">{{taskStatus.status}}</label>
 			</div>
-<!-- 			<div class="col"> -->
-<!-- 				<label class="col"><small>Current Owner</small></label> -->
-<!-- 				<label class="col">NA</label> -->
-<!-- 			</div> -->
+ 			<div class="col"> 
+ 				<label class="col"><small>Assigned to</small></label> 
+ 				<label class="col">{{(taskStatus.assignee != null && taskStatus.assignee != "")? taskStatus.assignee: 'NA'}}</label> 
+ 			</div> 
 			<div class="col">
 				<label class="col"><small>Remarks</small></label>
 				<label class="col">{{taskStatus.remarks}}</label>

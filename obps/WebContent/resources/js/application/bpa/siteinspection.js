@@ -28,6 +28,7 @@ app.controller("CommonCtrl", [
 		$scope.modal = new Modal();
 		$scope.taskStatus = new TaskStatus();
 		$scope.DocumentDetails = [];
+		$scope.Users = [];
 
 		/*GET*/
 		BS.getBpaApplicationDetailsV2((response) => {
@@ -45,9 +46,10 @@ app.controller("CommonCtrl", [
 
 		BS.getCurrentProcessTaskStatus((response) => {
 			$scope.taskStatus.taskdate = response.taskdate;
-			$scope.taskStatus.status = response.flowname;
+			$scope.taskStatus.status = response.status;
 			$scope.taskStatus.remarks = response.remarks;
-			$scope.taskStatus.fullname = response.fullname;
+			$scope.taskStatus.updatedby = response.updatedby;
+			$scope.taskStatus.assignee = response.assignee;
 		}, APPCODE);
 
 		BS.getEdcrDetailsV3((response) => {
@@ -63,9 +65,9 @@ app.controller("CommonCtrl", [
 			$scope.basicDetail.plotarea = $scope.planInfo.plotArea;
 		}, APPCODE);
 
-		/* $http.get('./listNextProcess.htm?applicationcode=' + $scope.bpa.applicationcode).then((response) => {
-		}, (errResponse) => {
-		}); */
+		BS.listNextProcessingUsers((response) => {
+			$scope.Users = response;
+		}, APPCODE);
 
 		/*ACTION*/
 		$scope.getFloorArea = (occupanies) => {

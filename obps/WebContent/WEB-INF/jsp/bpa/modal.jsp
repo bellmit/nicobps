@@ -16,7 +16,7 @@
       		<div class="col">
       			<select class="form-control custom-form-control"
       				ng-model="modal.usercode"
-      				ng-options="U.usercode as U.username for U in Users">
+      				ng-options="U.key as U.value for U in Users">
 					<option value=null selected disabled>Select user</option>
       			</select>
       		</div>

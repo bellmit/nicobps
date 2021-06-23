@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.services.ServiceBPAInterface;
+import obps.util.application.CommonMap;
 
 @Controller
 public class ControllerBpaProcessing {
@@ -172,6 +173,11 @@ public class ControllerBpaProcessing {
 	@GetMapping(value = "/listbpapplications.htm")
 	public @ResponseBody List<Map<String, Object>> listBPApplications() {
 		return SBI.listBPApplications(USERCODE);
+	};
+
+	@GetMapping(value = "/listNextProcessingUsers.htm")
+	public @ResponseBody List<CommonMap> listNextProcessingUsers(@RequestParam(name = "param") String applicationcode) {
+		return SBI.listNextProcessingUsers(USERCODE, applicationcode);
 	};
 	
 	@GetMapping(value = "/listSiteReportDetails.htm")

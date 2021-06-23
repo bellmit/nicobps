@@ -46,9 +46,10 @@ app.controller("CommonCtrl", [
 
 		BS.getCurrentProcessTaskStatus((response) => {
 			$scope.taskStatus.taskdate = response.taskdate;
-			$scope.taskStatus.status = response.flowname;
+			$scope.taskStatus.status = response.status;
 			$scope.taskStatus.remarks = response.remarks;
-			$scope.taskStatus.fullname = response.fullname;
+			$scope.taskStatus.updatedby = response.updatedby;
+			$scope.taskStatus.assignee = response.assignee;
 		}, APPCODE);
 
 		BS.getEdcrDetailsV3((response) => {
@@ -62,6 +63,10 @@ app.controller("CommonCtrl", [
 			$scope.basicDetail.edcrnumber = $scope.EDCR.edcrnumber;
 			$scope.basicDetail.occupancy = ($scope.occupancy != null && $scope.occupancy.type != null) ? ($scope.occupancy.type).join(",") : "NA";
 			$scope.basicDetail.plotarea = $scope.planInfo.plotArea;
+		}, APPCODE);
+
+		BS.listNextProcessingUsers((response) => {
+			$scope.Users = response;
 		}, APPCODE);
 
 		BS.listSiteReportDetails((response) => {

@@ -14,6 +14,8 @@ public interface ServiceBPAInterface {
 	
 	Integer getApplicationOfficecode(String applicationcode); 
 	
+	List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode);
+	
 	List<CommonMap> listOfficelocations();
 
 	List<CommonMap> listOfficelocations(Integer officecode);

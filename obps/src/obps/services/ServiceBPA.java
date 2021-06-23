@@ -36,6 +36,28 @@ class ServiceBPA implements ServiceBPAInterface {
 	}
 	
 	@Override
+	public List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode) {
+		String sql = "SELECT U.usercode AS key, U.fullname AS value  " + "FROM nicobps.applicationflowremarks AFR   "
+				+ "INNER JOIN(  " 
+				+ "	SELECT applicationcode, MAX(entrydate) entrydate  	  "
+				+ "	FROM nicobps.applicationflowremarks    " 
+				/* + "		WHERE modulecode = 2  " */
+				+ "	GROUP BY applicationcode  "
+				+ ")T ON (T.applicationcode, T.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
+				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode )= (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode)  "
+				+ "INNER JOIN (  " + "	SELECT PU.urlcode, PU.pageurl,   "
+				+ "	       UP.usercode, UL.username, UL.fullname  " 
+				+ "	FROM masters.pageurls PU  "
+				+ "	INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode  "
+				+ "	INNER JOIN nicobps.userlogins UL ON UL.usercode = UP.usercode  "
+				+ "	ORDER BY UP.usercode, UP.urlcode  " 
+				+ ")U ON U.urlcode = PF.urlcode  "
+				+ "WHERE U.usercode <> ? AND AFR.applicationcode = ?  " 
+				+ "ORDER BY U.fullname ";
+		return SUI.listCommonMap(sql, new Object[] {usercode, applicationcode});
+	}
+
+	@Override
 	public List<CommonMap> listOfficelocations() {
 		String sql = "SELECT O.locationcode AS key, O.locationname AS value, nomenclature AS value1 "
 				+ "FROM masters.officelocations O " 
@@ -274,11 +296,13 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public Map<String, Object> getCurrentProcessTaskStatus(Integer USERCODE, String applicationcode) {
-		String sql = "SELECT pf.*,pu.pageurl,pu.parent,pu.parenticon, UL.fullname, PR.processname, TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks "
+		String sql = "SELECT AFR.applicationcode, PF.officecode, PF.flowname AS status, AFR.fromprocesscode, AFR.toprocesscode, PU.pageurl, " 
+				+ "      UL.fullname AS updatedby, TUL.fullname AS assignee, PR.processname, TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks  "
 				+ "FROM nicobps.applicationflowremarks AFR   "
-				+ "INNER JOIN masters.processflow PF on PF.fromprocesscode=AFR.toprocesscode and processflowstatus='N' AND PF.modulecode=AFR.modulecode   "
+				+ "INNER JOIN masters.processflow PF on PF.toprocesscode=AFR.toprocesscode and processflowstatus='N' AND PF.modulecode=AFR.modulecode   "
 				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode  "
 				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode  "
+				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AFR.tousercode  "
 				+ "LEFT JOIN masters.pageurls PU on PU.urlcode=PF.urlcode   "
 				+ "WHERE afrcode=(SELECT max(afrcode) FROM nicobps.applicationflowremarks WHERE modulecode=? AND applicationcode=?::text) ";
 		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPAMODULECODE, applicationcode});
