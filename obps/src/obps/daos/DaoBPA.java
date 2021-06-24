@@ -93,7 +93,7 @@ public class DaoBPA implements DaoBPAInterface{
 			response.put("msg", "Success: Application processed successfully.");
 		} catch (Exception e) {
 			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
+			response.put("msg", "Error: Failed to process application.");
 			status = false;
 			e.printStackTrace();
 			LOG.log(Level.SEVERE, e.getLocalizedMessage());
@@ -366,7 +366,7 @@ public class DaoBPA implements DaoBPAInterface{
 			
 			String sql = "";
 			CommonMap map = new CommonMap();
-			if(tousercode != null && tousercode.compareTo(-1) > 0) {
+			if(tousercode == null || tousercode.compareTo(0) < 0) {
 				try {
 					sql = "SELECT pageurl as key, processname as value      " 
 							+ "FROM masters.processflow PF        "
@@ -384,7 +384,7 @@ public class DaoBPA implements DaoBPAInterface{
 				}catch (Exception e) {
 					response.put("nextProcess", map);
 				}
-			}else
+			}else 
 				response.put("nextProcess", map);
 			
 		}catch (Exception e) {

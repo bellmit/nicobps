@@ -16,6 +16,12 @@ const ProcessingUrl = {
   bpaReject: "rejectbpapplication.htm",
   bpaProcess: "processbpapplication.htm",
   bpaSiteInspection: "savebpasiteinspection.htm",
+  bpaStructuralCheck: "bpastructuralcheck.htm",
+  bpaCheckingOfBpp: "bpacheckingofbpp.htm",
+  bpaScrutinyOfBpp: "bpascrutinyofbpp.htm",
+  bpaTechnicalApproval: "bpatechnicalapproval.htm",
+  bpaAdministrativeApproval: "bpaadministrativeapproval.htm",
+  bpaPayment: "bpapayment.htm",
 };
 
 var ApplicationFlow = function () {

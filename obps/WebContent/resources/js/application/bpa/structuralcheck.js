@@ -11,7 +11,7 @@ app.controller("CommonCtrl", [
 	"commonInitService",
 	"bpaService",
 	function ($sce, $scope, $http, $timeout, $window, CIS, BS) {
-		console.log("BPA: Site Inspection");
+		console.log("BPA: Structural Check");
 
 		let data = "";
 		$scope.serverResponseError = false;
@@ -27,10 +27,9 @@ app.controller("CommonCtrl", [
 		$scope.fileModal = new ModalFile();
 		$scope.modal = new Modal();
 		$scope.taskStatus = new TaskStatus();
-
 		$scope.DocumentDetails = [];
-		$scope.OwnerDetails = [];
 		$scope.SiteReportDetails = [];
+		$scope.OwnerDetails = [];
 
 		/*GET*/
 		BS.getBpaApplicationDetailsV2((response) => {
@@ -49,8 +48,11 @@ app.controller("CommonCtrl", [
 		}, APPCODE);
 
 		BS.getCurrentProcessTaskStatus((response) => {
-			console.log("getCurrentProcessTaskStatus: ", response);
-			$scope.taskStatus = response;
+			$scope.taskStatus.taskdate = response.taskdate;
+			$scope.taskStatus.status = response.status;
+			$scope.taskStatus.remarks = response.remarks;
+			$scope.taskStatus.updatedby = response.updatedby;
+			$scope.taskStatus.assignee = response.assignee;
 		}, APPCODE);
 
 		BS.getEdcrDetailsV3((response) => {
@@ -138,22 +140,22 @@ app.controller("CommonCtrl", [
 		/*CREATE*/
 		$scope.reject = () => {
 			let data = {}, valid = false;
-
-			if ($scope.modal.remarks == null || $scope.modal.remarks == "") {
-				alert("Please enter remarks");
-				return false;
-			}
-			data.applicationcode = $scope.bpa.applicationcode;
-			data.remarks = $scope.modal.remarks;
+			data = $scope.rejectData;
 			valid = $window.confirm("Are you sure you want to reject?");
 			if (!valid) return;
 
-			$('#commonModal').modal('hide');
 			CIS.save("POST", ProcessingUrl.bpaReject, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;
-					$timeout(() => { $window.location.reload(); }, 2900);
+					try {
+						$scope.serverMsg += "\nNext Process: " + success.nextProcess.value;
+						$timeout(() => {
+							let url = success.nextProcess.key + "?applicationcode=" + success.nextProcess.value1;
+							$window.location.href = url;
+						}, 4500);
+					} catch (e) { }
+
 				} else {
 					$scope.serverResponseFail = true;
 				}

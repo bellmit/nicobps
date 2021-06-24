@@ -37,7 +37,24 @@ public class ControllerBpaProcessing {
 	
 	@Autowired
 	private ServiceBPAInterface SBI;
-
+	
+	@GetMapping(value = "/bpaadministrativeapproval.htm")
+	public String bpaAdministrativeApproval(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: "+req.getServletPath());
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("bpainbox.htm");
+			
+			model.addAttribute("applicationcode", applicationcode);
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
+			return PARENT_URL_MAPPING.concat("/administrativeapproval");
+		}
+		return "redirect:login.htm";
+	}
+	
 	@GetMapping(value = "/bpaapproval.htm")
 	public String bpaApproval(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
 		LOG.info("URL: "+req.getServletPath());
@@ -72,6 +89,23 @@ public class ControllerBpaProcessing {
 		return "redirect:login.htm";
 	}
 	
+	@GetMapping(value = "/bpacheckingofbpp.htm")
+	public String bpaCheckingOfBpp(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: "+req.getServletPath());
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("bpainbox.htm");
+			
+			model.addAttribute("applicationcode", applicationcode);
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
+			return PARENT_URL_MAPPING.concat("/checkingofbpp");
+		}
+		return "redirect:login.htm";
+	}
+	
 	@GetMapping(value = "/bpainbox.htm")
 	public String bpaInbox() {
 		if(USERCODE != null)
@@ -91,8 +125,8 @@ public class ControllerBpaProcessing {
 		return "redirect:login.htm";
 	}
 
-	@GetMapping(value = "/bpasiteinspection.htm")
-	public String bpaSiteInspection(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
+	@GetMapping(value = "/bpascrutinyofbpp.htm")
+	public String bpaScrutinyOfBpp(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
 		LOG.info("URL: "+req.getServletPath());
 		HttpSession session = ControllerLogin.session();
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
@@ -103,7 +137,7 @@ public class ControllerBpaProcessing {
 			model.addAttribute("applicationcode", applicationcode);
 			appcode = applicationcode;
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/siteinspection");
+			return PARENT_URL_MAPPING.concat("/scrutinyofbpp");
 		}
 		return "redirect:login.htm";
 	}
@@ -125,8 +159,59 @@ public class ControllerBpaProcessing {
 		return "redirect:login.htm";
 	}
 	
+	@GetMapping(value = "/bpasiteinspection.htm")
+	public String bpaSiteInspection(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: "+req.getServletPath());
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("bpainbox.htm");
+			
+			model.addAttribute("applicationcode", applicationcode);
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
+			return PARENT_URL_MAPPING.concat("/siteinspection");
+		}
+		return "redirect:login.htm";
+	}
+	
+	@GetMapping(value = "/bpastructuralcheck.htm")
+	public String bpaStructuralCheck(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: "+req.getServletPath());
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("bpainbox.htm");
+			
+			model.addAttribute("applicationcode", applicationcode);
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
+			return PARENT_URL_MAPPING.concat("/structuralcheck");
+		}
+		return "redirect:login.htm";
+	}
+	
+	@GetMapping(value = "/bpatechnicalapproval.htm")
+	public String bpaTechnicalApproval(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: "+req.getServletPath());
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("bpainbox.htm");
+			
+			model.addAttribute("applicationcode", applicationcode);
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
+			return PARENT_URL_MAPPING.concat("/technicalapproval");
+		}
+		return "redirect:login.htm";
+	}
+	
 	@GetMapping(value = "/commonprocessingaction.htm")
-	public String commonprocessingaction() {
+	public String commonProcessingAction() {
 		LOG.info("URL: commonprocessingaction.htm");
 		if(SBI.checkAccessGrantStatus(USERCODE, appcode, pathurl))
 			return PARENT_URL_MAPPING.concat("/commonprocessingaction");
@@ -144,6 +229,12 @@ public class ControllerBpaProcessing {
 	public String modal() {
 		LOG.info("URL: fileviewmodal.htm");
 		return PARENT_URL_MAPPING.concat("/fileviewmodal");
+	}
+	
+	@GetMapping(value = "/ownerdetails.htm")
+	public String ownerDetails() {
+		LOG.info("URL: ownerdetails.htm");
+		return PARENT_URL_MAPPING.concat("/ownerdetails");
 	}
 	
 	@GetMapping(value = "/processtrackstatus.htm")
@@ -181,16 +272,16 @@ public class ControllerBpaProcessing {
 		return SBI.getEdcrDetailsV2(applicationcode);
 	};
 	
+	@GetMapping(value = "/listNextProcessingUsers.htm")
+	public @ResponseBody List<CommonMap> listNextProcessingUsers(@RequestParam(name = "param") String applicationcode) {
+		return SBI.listNextProcessingUsers(USERCODE, applicationcode);
+	};
+
 	@GetMapping(value = "/listbpapplications.htm")
 	public @ResponseBody List<Map<String, Object>> listBPApplications() {
 		return SBI.listBPApplications(USERCODE);
 	};
 
-	@GetMapping(value = "/listNextProcessingUsers.htm")
-	public @ResponseBody List<CommonMap> listNextProcessingUsers(@RequestParam(name = "param") String applicationcode) {
-		return SBI.listNextProcessingUsers(USERCODE, applicationcode);
-	};
-	
 	@GetMapping(value = "/listRejectedApplications.htm")
 	public @ResponseBody List<Map<String, Object>> listRejectedApplications() {
 		return SBI.listRejectedApplications(USERCODE);

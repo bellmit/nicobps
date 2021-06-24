@@ -8,15 +8,29 @@
 				<hr style="margin: 0"/>
 			</label>
 			<div class="row col-sm-12">
-				<small class="col">eDCR Number</small> <small class="col">Scrutiny
-					Report</small>
+				<div class="col">
+					<small class="col">eDCR Number</small>
+					<label class="col">{{basicDetail.edcrnumber}}</label> 
+				</div>
+				<div class="col">
+					<small class="col">Scrutiny Report</small>
+					<label class="col">
+						<a ng-href="{{EDCR.planinfoobject.planReport}}">ScrutinyReport.pdf</a>
+					</label>
+				</div>
+				<div class="col">
+					<small class="col">Building Plan</small>
+					<label class="col">
+						<a ng-href="{{EDCR.planinfoobject.dxfFile}}">buildingPlan.dxf</a>
+					</label>
+				</div>
 			</div>
-			<div class="row col-sm-12">
+			<!-- <div class="row col-sm-12">
 				<label class="col">{{basicDetail.edcrnumber}}</label> 
 				<label class="col">
 					<a ng-href="{{EDCR.planinfoobject.planReport}}">ScrutinyReport.pdf</a> <br>
 				</label>
-			</div>
+			</div> -->
 		</div>
 		<div class="form-group">
 			<label class="col-sm-12"><small>Proposed Building Details</small>

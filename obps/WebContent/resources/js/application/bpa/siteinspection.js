@@ -27,7 +27,9 @@ app.controller("CommonCtrl", [
 		$scope.fileModal = new ModalFile();
 		$scope.modal = new Modal();
 		$scope.taskStatus = new TaskStatus();
+
 		$scope.DocumentDetails = [];
+		$scope.OwnerDetails = [];
 		$scope.Users = [];
 
 		/*GET*/
@@ -40,7 +42,9 @@ app.controller("CommonCtrl", [
 			$scope.basicDetail.holdingno = response.holdingno;
 			$scope.basicDetail.landregistrationno = response.landregistrationno;
 			$scope.basicDetail.landregistrationdetails = response.landregistrationdetails;
-			$scope.basicDetail.OwnerDetails = response.ownerdetails;
+			$scope.basicDetail.ownershiptypename = response.ownershiptypename;
+			$scope.basicDetail.ownershipsubtype = response.ownershipsubtype;
+			$scope.OwnerDetails = response.ownerdetails;
 			$scope.DocumentDetails = response.documentdetails;
 		}, APPCODE);
 
@@ -182,8 +186,8 @@ app.controller("CommonCtrl", [
 								let url = success.nextProcess.key + "?applicationcode=" + success.nextProcess.value1;
 								$window.location.href = url;
 							}, 2900);
-						}
-						$timeout(() => { $window.location.reload(); }, 2900);
+						} else
+							$timeout(() => { $window.location.reload(); }, 2900);
 					} catch (e) { }
 
 				} else {

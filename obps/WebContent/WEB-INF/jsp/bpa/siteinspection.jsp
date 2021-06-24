@@ -53,6 +53,7 @@
 						<ng-include src="'processtrackstatus.htm'"></ng-include>
 						<ng-include src="'basicdetails.htm'"></ng-include>
 						<ng-include src="'scrutinydetails.htm'"></ng-include>
+						<ng-include src="'ownerdetails.htm'"></ng-include>
 						<ng-include src="'documentdetails.htm'"></ng-include>
 						<ng-include src="'fileviewmodal.htm'"></ng-include>
 						<div class="card mb-4">

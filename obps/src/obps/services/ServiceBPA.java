@@ -244,19 +244,22 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "       BPA.plotgiscoordinates, BPA.officelocationcode, BPA.landregistrationdetails,   "
 				+ "       BPA.landregistrationno, BPA.plotidentifier1, BPA.plotidentifier2, BPA.plotidentifier3,   "
 				+ "       BPA.holdingno, BPA.entrydate,"
-				+ "		  OL.locationname  " 
+				+ "		  OL.locationname, OW.ownershiptypename    " 
 				+ "FROM nicobps.bpaapplications  BPA "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode  "
-				+ "INNER JOIN masters.officelocations OL ON OL.locationcode = BPA.officelocationcode  " 
+				+ "INNER JOIN masters.officelocations OL ON OL.locationcode = BPA.officelocationcode  "
+				+ "INNER JOIN masters.ownershiptypes OW ON OW.ownershiptypecode = BPA.ownershiptypecode   " 
 				+ "WHERE BPA.applicationcode = ? ";
 		applications = SUI.listGeneric(sql, new Object[] {applicationcode});
 		
 		if(applications != null && !applications.isEmpty()) {
 			application = applications.get(0);
-			sql = "SELECT ownerdetailcode, applicationcode, salutationcode, ownername,   "
-					+ "       relationshiptypecode, relationname, mobileno, emailid, address,   "
-					+ "       entrydate  "
-					+ "FROM nicobps.bpaownerdetails  " 
+			sql = "SELECT O.ownerdetailcode, O.applicationcode, O.salutationcode, O.ownername,     "
+					+ "       O.relationshiptypecode, O.relationname, O.mobileno, O.emailid, O.address,     "
+					+ "       TO_CHAR(O.entrydate, 'DD/MM/YYYY') entrydate,  " 
+					+ "       R.relationshiptypename  "
+					+ "FROM nicobps.bpaownerdetails O    "
+					+ "INNER JOIN masters.relationshiptypes R ON R.relationshiptypecode = O.relationshiptypecode  " 
 					+ "WHERE applicationcode = ?";
 			details = SUI.listGeneric(sql, new Object[] {applicationcode});
 			if(details  != null && !details .isEmpty())

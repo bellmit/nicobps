@@ -44,7 +44,7 @@
 				<div class="container-fluid">
 					<h3 class="mt-4"
 						style="font-size: 32px; border-bottom: 3px solid #005776">
-						Apply for building permit: Approval of Site Plan</h3>
+						Apply for building permit: Administrative Approval</h3>
 					<form name="bpaform">
 						<div class="card-body">
 							<label class="h4">Application details</label>
@@ -67,7 +67,7 @@
 	<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
-	<script src="resources/js/application/bpa/approvalofsiteplan.js" type="text/javascript"></script>
+	<script src="resources/js/application/bpa/administrativeapproval.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		const APPCODE = '${applicationcode}';
 	</script>
