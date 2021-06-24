@@ -52,7 +52,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/administrativeapproval");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpaapproval.htm")
@@ -69,7 +69,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/approval");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpaapprovalofsiteplan.htm")
@@ -86,7 +86,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/approvalofsiteplan");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpacheckingofbpp.htm")
@@ -103,7 +103,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/checkingofbpp");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpainbox.htm")
@@ -111,7 +111,7 @@ public class ControllerBpaProcessing {
 		if(USERCODE != null)
 			return PARENT_URL_MAPPING.concat("/inbox");
 		else
-			return "redirect:login.htm";
+			return REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/bparejectedapplications.htm")
@@ -122,7 +122,7 @@ public class ControllerBpaProcessing {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			return PARENT_URL_MAPPING.concat("/rejectedapplications");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/bpascrutinyofbpp.htm")
@@ -139,7 +139,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/scrutinyofbpp");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpascrutinyofdocumentsandsiteplan.htm")
@@ -156,7 +156,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/scrutinyofdocumentsandsiteplan");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpasiteinspection.htm")
@@ -173,7 +173,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/siteinspection");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpastructuralcheck.htm")
@@ -190,7 +190,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/structuralcheck");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpatechnicalapproval.htm")
@@ -207,7 +207,7 @@ public class ControllerBpaProcessing {
 			pathurl = req.getServletPath();
 			return PARENT_URL_MAPPING.concat("/technicalapproval");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/commonprocessingaction.htm")

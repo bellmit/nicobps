@@ -27,12 +27,14 @@ app.controller("CommonCtrl", [
           $scope.serverResponseSuccess = true;
           try {
             $scope.serverMsg += "\nNext Process: " + success.nextProcess.value;
-            $timeout(() => {
-              let url = success.nextProcess.key + "?applicationcode=" + BPA.applicationcode;
-              $window.location.href = url;
-            }, 2500);
+            if (success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != '') {
+              $timeout(() => {
+                let url = success.nextProcess.key + "?applicationcode=" + BPA.applicationcode;
+                $window.location.href = url;
+              }, 2500);
+            } else
+              $timeout(() => { $window.location.reload(); }, 2500);
           } catch (e) { }
-
         } else {
           $scope.serverResponseFail = true;
         }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,11 @@ public class ControllerBuildingPermit {
 	private static final Logger LOG = Logger.getLogger(ControllerBuildingPermit.class.toGenericString());
 	private static final String PARENT_URL_MAPPING = "/bpa";
 	private static final String REDIRECT_MAPPING = "redirect:";
-	private static Integer USERCODE;
 	private static final Integer BPA_APPLICATIONFEE_CODE = 5;
 	private static final Integer BPA_PERMITFEE_CODE = 6;
+	private static String appcode;
+	private static String pathurl;
+	private static Integer USERCODE;
 	
 	@Autowired
 	private ServiceBPAInterface SBI;
@@ -59,47 +62,63 @@ public class ControllerBuildingPermit {
 			model.addAttribute("edcrnumber", edcrnumber);
 			return PARENT_URL_MAPPING.concat("/apply");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/buildingpermitsteptwo.htm")
-	public String bpaApplyTwo(Model model, @RequestParam(required = false) String applicationcode) {
+	public String bpaApplyTwo(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
 		LOG.info("URL: buildingpermitsteptwo.htm");
+		HttpSession session = ControllerLogin.session();
+		
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("buildingpermit.htm");
+			
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
+			model.addAttribute("applicationcode", applicationcode);
+			model.addAttribute("isactionallowed", SBI.checkAccessGrantStatus(USERCODE, appcode, pathurl)?1:0);
+			return PARENT_URL_MAPPING.concat("/buildingpermitsteptwo");
+		}
+		return REDIRECT_MAPPING.concat("login.htm");
+	}
+	
+	@GetMapping(value = "/bpapayappfee.htm")
+	public String bpaPayAppFee(HttpServletRequest req, Model model, String applicationcode) {
+		LOG.info("URL: bpapayappfee.htm");
 		HttpSession session = ControllerLogin.session();
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			if(applicationcode == null || applicationcode.isEmpty())
 				return REDIRECT_MAPPING.concat("buildingpermit.htm");
 			
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
 			model.addAttribute("applicationcode", applicationcode);
-			return PARENT_URL_MAPPING.concat("/buildingpermitsteptwo");
-		}
-		return "redirect:login.htm";
-	}
-	
-	@GetMapping(value = "/bpapayappfee.htm")
-	public String bpaPayAppFee(Model model, String applicationcode) {
-		LOG.info("URL: bpapayappfee.htm");
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			model.addAttribute("applicationcode", applicationcode);
+			model.addAttribute("isactionallowed", SBI.checkAccessGrantStatus(USERCODE, appcode, pathurl)?1:0);
 			model.addAttribute("officecode", SBI.getApplicationOfficecode(applicationcode));
 			return PARENT_URL_MAPPING.concat("/payappfee");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpapaypermfee.htm")
-	public String bpaPayPermFee(Model model, String applicationcode) {
+	public String bpaPayPermFee(HttpServletRequest req, Model model, String applicationcode) {
 		LOG.info("URL: bpapaypermfee.htm");
 		HttpSession session = ControllerLogin.session();
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+			if(applicationcode == null || applicationcode.isEmpty())
+				return REDIRECT_MAPPING.concat("buildingpermit.htm");
+			
+			appcode = applicationcode;
+			pathurl = req.getServletPath();
 			model.addAttribute("applicationcode", applicationcode);
+			model.addAttribute("isactionallowed", SBI.checkAccessGrantStatus(USERCODE, appcode, pathurl)?1:0);
 			return PARENT_URL_MAPPING.concat("/paypermfee");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/bpatrackstatus.htm")
@@ -111,7 +130,7 @@ public class ControllerBuildingPermit {
 			model.addAttribute("applicationcode", applicationcode);
 			return PARENT_URL_MAPPING.concat("/trackstatus");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
 	@GetMapping(value = "/buildingpermit.htm")
@@ -122,7 +141,7 @@ public class ControllerBuildingPermit {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			return PARENT_URL_MAPPING.concat("/buildingpermit");
 		}
-		return "redirect:login.htm";
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/googlemap.htm")

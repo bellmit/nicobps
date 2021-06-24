@@ -26,8 +26,11 @@
 						Apply for building permit: Stepper 2 
 					</h3>
 					<form>
-						<div class="element-center">
+						<div class="element-center" ng-if="${isactionallowed} == 1">
 							<button class="btn btn-outline-primary" ng-click="save()">Next</button>
+						</div>
+						<div class="element-center" ng-if="${isactionallowed} != 1">
+							Click<a ng-href="bpatrackstatus.htm">&nbsp;here&nbsp;</a> to check status of your application.
 						</div>
 					</form>
 				</div>

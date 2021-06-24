@@ -294,7 +294,7 @@ public class DaoBPA implements DaoBPAInterface{
 		boolean status = false;
 		try {
 			String sql = "";
-			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode, "Building Permit Application Step 2 complete", USERCODE, response);
+			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode, "Building Permit Application Step 2 complete", null, response);
 			if(!status) throw new Exception("Failed to update application flow");
 
 			response.put("code", HttpStatus.CREATED.value());
@@ -366,8 +366,11 @@ public class DaoBPA implements DaoBPAInterface{
 			
 			String sql = "";
 			CommonMap map = new CommonMap();
+			LOG.info("tousercode: "+tousercode);
 			if(tousercode == null || tousercode.compareTo(0) < 0) {
 				try {
+					LOG.info("INSIDE: ");
+					LOG.info("fromprocesscode: "+fromprocesscode);
 					sql = "SELECT pageurl as key, processname as value      " 
 							+ "FROM masters.processflow PF        "
 							+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
@@ -382,10 +385,13 @@ public class DaoBPA implements DaoBPAInterface{
 					}
 					response.put("nextProcess", map);
 				}catch (Exception e) {
+					LOG.info("Error: "+e);
 					response.put("nextProcess", map);
 				}
-			}else 
+			}else {
+				LOG.info("Else: ");
 				response.put("nextProcess", map);
+			}
 			
 		}catch (Exception e) {
 			status = false;
