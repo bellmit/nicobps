@@ -24,6 +24,13 @@ const ProcessingUrl = {
   bpaPayment: "bpapayment.htm",
 };
 
+const Timeout = {
+	OneSecond: 1000,
+	Reload: 2900,
+	ThreeSecond: 3000,
+	TwoSecond: 2000,
+};
+
 var ApplicationFlow = function () {
   var ApplicationFlow = {
     applicationcode: '',

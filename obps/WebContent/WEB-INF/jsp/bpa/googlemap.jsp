@@ -44,7 +44,7 @@
 			<div class="input-group">
 				<input id="gmapaddress" class="form-control" type="textbox" value="Sydney, NSW" ng-model="gmapAddress"/>
 				<div class="input-group-append">
-					<input id="submit" type="button" value="Geocode" />
+					<input id="submit" type="button" value="Search" />
 				</div> 
 			</div>
 		</div>

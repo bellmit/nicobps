@@ -57,66 +57,37 @@
 										</div>
 									</div>
 								</div>
-							<div class="row">
-								<div class="col">
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title">Fee Estimate</h5>
-											<div class="form-group mt-5 row">
-												<label for="appfee" class="col-sm-4 card-subtitle">Application Fee</label>
-												<div class="col-sm-8">
-													<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
-													<input type="number" class="custom-form-control-borderless" ng-model="bpa.amount" readonly><br/>
-												</div>
-											</div>
-											<div class="form-group">
-												<div class="col-sm-5 divider"></div>
-											</div>
-											<div class="form-group row">
-												<label for="appfee" class="col-sm-4 sfont-weight-bold">Total Amount</label>
-												<div class="col-sm-8">
-													<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
-													<input type="number" class="custom-form-control-borderless" ng-model="bpa.amount" readonly><br/>
-												</div>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row mt-3">
-								<div class="col">
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title">Payment Mode</h5>
-											<div class="form-group row">
-<!-- 												<label for="appfee" class="col-sm-4 sfont-weight-bold">Payment Mode</label> -->
-												<div class="col-sm-5">
-													<select class="form-control custom-form-control" name="paymentmode" 
-														ng-model="bpa.paymentmode" ng-options="P.paymentmodecode as P.mode for P in PayModes"
-														required>
-													</select>
-													<div class="col" ng-if="bpaform.paymentmode.$touched || bpaform.paymentmode.$dirty" style="color:red">
-														<span ng-show="bpaform.paymentmode.$error.required">Required</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row mt-5">
+								<div class="row">
 									<div class="col">
-										<div class="form-group">
-											<label class="col-sm-12 mb-3"></label>
-											<div class="col-sm-12">
-												<div class="btn-group dropup mt-5">
-													<button type="button" class="btn btn-primary btn-lg dropdown-toggle" data-toggle="dropdown" style="min-width: 10rem">Action</button>
-													<div class="dropdown-menu">
-														<button class="dropdown-item btn-outline-primary" type="button" ng-click="pay()" ng-disabled="bpaform.$invalid">Pay</button>
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title">Fee Estimate</h5>
+												<div class="form-group mt-5 row">
+													<label for="appfee" class="col-sm-4 card-subtitle">Application Fee</label>
+													<div class="col-sm-8">
+														<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
+														<input type="number" class="custom-form-control-borderless" ng-model="bpa.amount" readonly><br/>
 													</div>
 												</div>
+												<div class="form-group">
+													<div class="col-sm-5 divider"></div>
+												</div>
+												<div class="form-group row">
+													<label for="appfee" class="col-sm-4 sfont-weight-bold">Total Amount</label>
+													<div class="col-sm-8">
+														<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
+														<input type="number" class="custom-form-control-borderless" ng-model="bpa.amount" readonly><br/>
+													</div>
+												</div>
+												
 											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row mt-2">
+									<div class="form-group">
+										<div class="col-sm-12">
+											<button class="btn btn-outline-primary" type="button" ng-click="pay()" ng-disabled="bpaform.$invalid">Make Payment</button>
 										</div>
 									</div>
 								</div>

@@ -32,7 +32,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-outline-primary" ng-click="modalAction(modal.remarks)">{{modal.actionname}}</button>
+        <modal-button></modal-button>
       </div>
     </div>
   </div>

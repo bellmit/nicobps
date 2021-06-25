@@ -24,6 +24,7 @@ function initMap() {
 
 	var scope = angular.element($("#appId")).scope();
 	document.getElementById("pickCityBtn").addEventListener("click", () => {
+		console.log("marker.position: ",marker.position);
 		scope.$apply(function () {
 			scope.setGoogleMapLocation({ lat: marker.position.lat(), lng: marker.position.lng() });
 		});
@@ -35,7 +36,9 @@ function initMap() {
 			position: event.latLng,
 			map,
 		});
-		map.setCenter(event.latLng);
+		setTimeout(() => {map.setCenter(event.latLng);}, 1000);
+		
+		//map.setCenter(event.latLng);
 
 		scope.$apply(function () {
 			scope.setGoogleMapLocation(event.latLng.toJSON());

@@ -299,7 +299,7 @@ app.controller("CommonCtrl", [
             $timeout(() => {
               let url = success.nextProcess.key+"?applicationcode="+success.nextProcess.value1;
               $window.location.href = url;
-            },4500);
+            },Timeout.Reload);
           }catch(e){}
           
         }else{

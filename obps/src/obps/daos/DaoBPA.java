@@ -51,28 +51,30 @@ public class DaoBPA implements DaoBPAInterface{
 		try {
 			String sql = "";
 			List<Map<String, Object>> list = SUI.getCurrentProcessStatus(BPAMODULECODE, bpa.getApplicationcode());
-			Map<String, Object> map = list.get(0);
-			Integer toprocesscode;
-			if (map != null) {
+			Map<String, Object> map = (list != null && !list.isEmpty())?list.get(0): new HashMap<>();
+			Integer toprocesscode = null;
+			
+			if (map.containsKey("toprocesscode") ) 
 				toprocesscode = Integer.valueOf(map.get("toprocesscode").toString());
-				String redirecturl = "paymentconfirmation.htm?modulecode=" + BPAMODULECODE
-						+ "&applicationcode=" + bpa.getApplicationcode() + "&usercode=" + USERCODE + "&feecode="
-						+ bpa.getFeecode() + "&feeamount=" + bpa.getTotalamount() + "&toprocesscode=" + toprocesscode;
-				map.clear();
-				map.put("key", redirecturl);
-				map.put("value", "");
-				map.put("value1", bpa.getApplicationcode());
-				response.put("nextProcess", map);
-				response.put("code", HttpStatus.CREATED.value());
-				response.put("msg", "Success: Application saved successfully.");
-				status = true;
-			} else {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", "Error: Failed to get processcode.");
-			}
+			 
+			String redirecturl = "paymentconfirmation.htm?modulecode=" + BPAMODULECODE
+					+ "&applicationcode=" + bpa.getApplicationcode() + "&usercode=" + USERCODE + "&feecode="
+					+ bpa.getFeecode() + "&feeamount=" + bpa.getTotalamount() + "&toprocesscode=" + toprocesscode;
+			map.clear();
+			map.put("key", redirecturl);
+			map.put("value", "");
+			map.put("value1", bpa.getApplicationcode());
+			response.put("nextProcess", map);
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application saved successfully.");
+			status = true;
+			/*
+			 * } else { response.put("code", HttpStatus.BAD_REQUEST.value());
+			 * response.put("msg", "Error: Failed to get processcode."); }
+			 */
 		} catch (Exception e) {
 			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
+			response.put("msg", "Error: Failed to process building permit application - fee payment.");
 			status = false;
 			e.printStackTrace();
 			LOG.log(Level.SEVERE, e.getLocalizedMessage());

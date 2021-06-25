@@ -12,7 +12,6 @@ app.controller("CommonCtrl", [
   "bpaService",
   function ($scope, $http, $timeout, $compile, $window, CIS, BS) {
     console.log("BPA-STEP II");
-    console.log("APPCODE: ", APPCODE);
 
     $scope.BPA = new BPA();
 
@@ -31,9 +30,9 @@ app.controller("CommonCtrl", [
               $timeout(() => {
                 let url = success.nextProcess.key + "?applicationcode=" + BPA.applicationcode;
                 $window.location.href = url;
-              }, 2500);
+              }, Timeout.Reload);
             } else
-              $timeout(() => { $window.location.reload(); }, 2500);
+              $timeout(() => { $window.location.reload(); }, Timeout.Reload);
           } catch (e) { }
         } else {
           $scope.serverResponseFail = true;

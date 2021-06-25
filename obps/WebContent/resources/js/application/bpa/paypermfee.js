@@ -60,13 +60,18 @@ app.controller("CommonCtrl", [
 			CIS.save("POST", "./bpapaypermfee.htm", data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
-					$scope.serverResponseSuccess = true;
-					try {
-						$timeout(() => {
-							let url = success.nextProcess.key;
-							$window.location.href = url;
-						}, 4500);
-					} catch (e) { }
+					$scope.serverMsg = "You will be redirect to a different page to complete payment.";
+					$scope.serverResponseInfo = true;
+					if(success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != ''){
+						try {
+							$timeout(() => {
+								let url = success.nextProcess.key;
+								$window.location.href = url;
+							}, Timeout.TwoSecond);
+						} catch (e) { }
+					}else{
+						$time(() => $window.location.reload(), Timeout.TwoSecond);
+					} 
 
 				} else {
 					$scope.serverResponseFail = true;

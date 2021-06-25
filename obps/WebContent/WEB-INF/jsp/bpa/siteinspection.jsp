@@ -50,12 +50,12 @@
 							<label class="h4">Application details</label>
 							<label class="h6 alert alert-dark">Application No. <core:out value="${applicationcode}"></core:out></label>
 						</div>
-						<ng-include src="'processtrackstatus.htm'"></ng-include>
-						<ng-include src="'basicdetails.htm'"></ng-include>
-						<ng-include src="'scrutinydetails.htm'"></ng-include>
-						<ng-include src="'ownerdetails.htm'"></ng-include>
-						<ng-include src="'documentdetails.htm'"></ng-include>
-						<ng-include src="'fileviewmodal.htm'"></ng-include>
+						<task-status></task-status>
+						<basic-details></basic-details>
+						<scrutiny-details></scrutiny-details>
+						<owner-details></owner-details>
+						<document-details></document-details>
+						<file-view-modal></file-view-modal>
 						<div class="card mb-4">
 							<div class="card-body">
 								<div class="card-title h4">Inspection Report</div>
@@ -87,7 +87,7 @@
 								</div>
 							</div>
 						</div>
-						<ng-include src="'commonprocessingaction.htm'"></ng-include>
+						<common-processing-action></common-processing-action>
 					</form>
 				</div>
 			</div>
@@ -97,6 +97,7 @@
 	<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
+	<script src="resources/js/application/bpa/directives/common.js" type="text/javascript"></script>
 	<script src="resources/js/application/bpa/siteinspection.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		const APPCODE = '${applicationcode}';

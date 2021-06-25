@@ -76,7 +76,7 @@ app.controller("CommonCtrl", [
 						$timeout(() => {
 							let url = success.nextProcess.key;
 							$window.location.href = url;
-						}, 1000);
+						}, Timeout.TwoSecond);
 					} catch (e) {
 					}
 

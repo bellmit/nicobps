@@ -10,12 +10,14 @@
 								class="btn btn-primary btn-lg dropdown-toggle"
 								data-toggle="dropdown" style="min-width: 10rem">Action</button>
 							<div class="dropdown-menu">
-								<button class="dropdown-item btn-outline-primary" type="button"
+								<!-- <button class="dropdown-item btn-outline-primary" type="button"
 									data-toggle="modal" data-target="#commonModal"
 									ng-click="setModalTitle(1)">Forward</button>
 								<button class="dropdown-item btn-outline-danger" type="button"
 									data-toggle="modal" data-target="#commonModal"
-									ng-click="setModalTitle(2)">Reject</button>
+									ng-click="setModalTitle(2)">Reject</button> -->
+								<forward-button></forward-button>
+								<reject-button></reject-button>
 							</div>
 						</div>
 					</div>
@@ -34,6 +36,6 @@
 					ng-if="serverResponseSuccess">{{serverMsg}}</span>
 			</div>
 		</div>
-		<div ng-include="'modal.htm'"></div>
+		<modal-action></modal-action>
 	</div>
 </div>
