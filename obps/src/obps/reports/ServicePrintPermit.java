@@ -29,8 +29,7 @@ public class ServicePrintPermit implements ServicePrintPermitInterface {
 		} else if (criteria.equals("byowner")) {
 			sql += " lower(bo.ownername) like lower('%" + ownername + "%') ;";
 		} else if (criteria.equals("byentrydate")) {
-			sql += " ba.entrydate>=to_date('" + fromentrydate + "','dd-mm-yyyy') and ba.entrydate<=to_date('"
-					+ toentrydate + "','dd-mm-yyyy') ;";
+			sql += "  DATE(ba.entrydate) BETWEEN to_date('" + fromentrydate + "','dd-mm-yyyy') and to_date('"+ toentrydate + "','dd-mm-yyyy') ;";
 		}
 
 		return SUI.listGeneric(sql);

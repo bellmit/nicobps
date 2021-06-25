@@ -5,6 +5,11 @@
 <link
 	href="resources/js/vendor/bootstrap/vendor/jquery-ui/jquery-ui.css"
 	rel="stylesheet" />
+<style>
+.card-header:hover {
+	cursor: pointer;
+}
+</style>
 </head>
 <body ng-app="PermitApp" ng-controller="permitCtrl">
 	<div class="d-flex" id="wrapper">
@@ -17,7 +22,7 @@
 					Permits</h3>
 				<div class="row">
 					<div class="col-md-12">
-						<form class=""   id="form1">
+						<form class="" id="form1">
 							<!--  Search Criteria -->
 							<div class="card  bg-light">
 								<div class="card-header bg-dark text-white ">Search
@@ -71,7 +76,8 @@
 														<label class="col-2 control-label">EDCR Number : </label>
 														<div class="col-4 ">
 															<input type="text" id="edcrnumber" name="edcrnumber"
-																ng-model="edcrnumber" class="form-control text-uppercase" />
+																ng-model="edcrnumber"
+																class="form-control text-uppercase" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyedcrnumber"
@@ -134,7 +140,7 @@
 														<div class="col-3 input-group date">
 															<input type="text" id="fromentrydate"
 																name="fromentrydate" ng-model="fromentrydate"
-																class="form-control" autocomplete="off"/>
+																class="form-control" autocomplete="off" />
 															<div class="input-group-append">
 																<span class="input-group-text bg-white"><i
 																	class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -144,7 +150,8 @@
 														<label class="col-1 control-label"> To : </label>
 														<div class="col-3 input-group">
 															<input type="text" id="toentrydate" name="toentrydate"
-																ng-model="toentrydate" class="form-control" autocomplete="off"/>
+																ng-model="toentrydate" class="form-control"
+																autocomplete="off" />
 															<div class="input-group-append">
 																<span class="input-group-text bg-white"><i
 																	class="fa fa-calendar" aria-hidden="true"></i></span>
@@ -185,10 +192,9 @@
 
 						</form>
 						<form method="post" action="./printPermit.htm" id="printPermit">
-							<input type="hidden" readonly  name="param_edcrnumber" 
-								 value="{{param_edcrnumber}}" /> <input
-								type="hidden" name="${_csrf.parameterName}"
-								value="${_csrf.token}" />
+							<input type="hidden" readonly name="param_edcrnumber"
+								value="{{param_edcrnumber}}" /> <input type="hidden"
+								name="${_csrf.parameterName}" value="${_csrf.token}" />
 						</form>
 					</div>
 				</div>
@@ -198,7 +204,7 @@
 
 </body>
 <script>
-
+	
 </script>
 <script src="resources/js/application/reports/printpermit.js"></script>
 </html>

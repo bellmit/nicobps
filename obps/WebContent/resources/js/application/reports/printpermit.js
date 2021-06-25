@@ -119,47 +119,54 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 		});
 	};
 
-});
+	jQuery(".collapse").on('shown.bs.collapse hidden.bs.collapse', function() {
+		jQuery('#form1')[0].reset();
+		jQuery("#displayRecords").html("");
+		jQuery("#searchresults").addClass("d-none");
+		$scope.from.datepicker("option", "maxDate", "0");
+		$scope.to.datepicker("option", "maxDate", "0");
 
-$(document).ready(function() {
 
-	$(".collapse").on('shown.bs.collapse hidden.bs.collapse', function() {
-		$('#form1')[0].reset();
-		$("#displayRecords").html("");
-		$("#searchresults").addClass("d-none");
 	});
 
 
-	var dateFormat = "dd-mm-yy", from = $("#fromentrydate").datepicker(
+	$scope.dateFormat = "dd-mm-yy";
+	$scope.from = jQuery("#fromentrydate").datepicker(
 		{
 			defaultDate: "0",
 			changeMonth: true,
-			dateFormat: dateFormat,
+			dateFormat: $scope.dateFormat,
 			maxDate: "0"
 
 		}).on("change", function() {
-			to.datepicker("option", "minDate", getDate(this));
-		}), to = $("#toentrydate").datepicker({
-			defaultDate: "0",
-			changeMonth: true,
-			dateFormat: dateFormat,
-			maxDate: "0"
-
-		}).on("change", function() {
-			from.datepicker("option", "maxDate", getDate(this));
+			$scope.to.datepicker("option", "minDate", $scope.getDate(this));
 		});
 
-	function getDate(element) {
-		var date;
+	$scope.to = jQuery("#toentrydate").datepicker({
+		defaultDate: "0",
+		changeMonth: true,
+		dateFormat: $scope.dateFormat,
+		maxDate: "0"
+
+	}).on("change", function() {
+		$scope.from.datepicker("option", "maxDate", $scope.getDate(this));
+	});
+
+	$scope.getDate = function(element) {
+
 		try {
-			date = $.datepicker.parseDate(dateFormat, element.value);
+			$scope.date = $.datepicker.parseDate($scope.dateFormat, element.value);
 		} catch (error) {
-			date = null;
+			$scope.date = null;
 		}
 
-		return date;
+		return $scope.date;
 	}
+
+
 });
+
+
 
 
 
