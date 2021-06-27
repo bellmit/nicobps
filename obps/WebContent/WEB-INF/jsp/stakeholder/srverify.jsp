@@ -55,6 +55,10 @@
 .dropup:hover .dropbtn {
 	background-color: #2980B9;
 }
+#content tr:hover{ 
+	background-color: #dee2e6;
+	cursor: pointer; 
+}
 </style>
 </head>
 <body ng-app="CommonApp" ng-controller="CommonCtrl">
@@ -67,25 +71,31 @@
 				<div class="row">
 					<div class="col-md-12 py-4 px-5">
 						<table class="table">
-							<tr>
-								<th>Licence</th>
-								<th>Office</th>
-								<th>Firm/Individual</th>
-								<th>Firm/Applicant Name</th>
-								<th>District</th>
-								<th>Status</th>
-								<th></th>
-							</tr>
-							<tr ng-repeat='item in Licensees'>
-								<td>{{item.licenseetypename}}</td>
-								<td>{{item.officename1}}</td>
-								<td>{{item.firmindividual=='I'?'Individual':'Firm'}}</td>
-								<td>{{item.firmindividual=='I'?item.applicantsname:item.firmname}}</td>
-								<td>{{item.districtname}}</td>
-								<td>{{item.nextprocessname}}</td>
-								<td><input type="button" value="View Details"
-									ng-click="viewDetails(item)" /></td>
-							</tr>
+							<thead>
+								<tr>
+									<th>Application Code</th>
+									<th>Licence</th>
+									<th>Office</th>
+									<th>Firm/Individual</th>
+									<th>Firm/Applicant Name</th>
+									<th>District</th>
+									<th>Status</th>
+									<!-- <th></th> -->
+								</tr>
+							</thead>
+							<tbody id='content'>
+								<tr ng-repeat='item in Licensees' ng-click="viewDetails(item)">
+									<td>{{item.applicationcode}}</td>
+									<td>{{item.licenseetypename}}</td>
+									<td>{{item.officename1}}</td>
+									<td>{{item.firmindividual=='I'?'Individual':'Firm'}}</td>
+									<td>{{item.firmindividual=='I'?item.applicantsname:item.firmname}}</td>
+									<td>{{item.districtname}}</td>
+									<td>{{item.nextprocessname}}</td>
+									<!--<td><input type="button" value="View Details"
+									ng-click="viewDetails(item)" /></td>-->
+								</tr>
+							</tbody>
 						</table>
 					</div>
 
@@ -97,42 +107,19 @@
 		style="display:block">
 		<div class="container-fluid h-100" style="display: block">
 			<div class="row h-100" style="display: flex">
-				<!-- <div class="col-md-12 py-2 px-2" style="display: block">
-					<table class="table">
-						<tr>
-							<th>Applicant Details</th>
-						</tr>
-						<tbody>
-							<tr>
-								<td style="padding-top: 5px; padding-bottom: 5px; border: none;"><span
-									style="font-style: italic">Name&nbsp;&nbsp;:&nbsp;</span>{{applicant.firmindividual=='I'?applicant.applicantsname:applicant.firmname}}</td>
-							</tr>
-							<tr>
-								<td style="padding-top: 5px; padding-bottom: 5px; border: none;"><span
-									style="font-style: italic">Address&nbsp;&nbsp;:&nbsp;</span>{{applicant.preaddressline1+'
-									'+applicant.preaddressline2+','+applicant.pervillagetown}}</td>
-							</tr>
-							<tr>
-								<td style="padding-top: 5px; padding-bottom: 5px; border: none;"><span
-									style="font-style: italic">District&nbsp;&nbsp;:&nbsp;</span>{{applicant.districtname}}</td>
-							</tr>
-							<tr>
-								<td style="padding-top: 5px; padding-bottom: 5px; border: none;"><span
-									style="font-style: italic">{{applicant.firmindividual=='I'?'Individual':'Firm'}}</span></td>
-							</tr>
-							<tr>
-								<td style="padding-top: 5px; padding-bottom: 5px; border: none;"><span
-									style="font-style: italic">Licensee
-										type&nbsp;&nbsp;:&nbsp;</span>{{applicant.licenseetypename}}</td>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div> -->
 				<div class="col-md-12 py-4">
 					<h5 style="border-bottom: 3px solid #005776">License Details</h5>
 					<table id="entrytable">
 						<tr>
+							<td>
+								<div class="form-group">
+									<label for="applicationcode" class="">Licensee Type </span></label> <input
+										id="applicationcode" type="text"
+										ng-value="applicant.applicationcode" class="form-control"
+										readonly="readonly">
+
+								</div>
+							</td>
 							<td>
 								<div class="form-group">
 									<label for="licenseetypecode" class="">Licensee Type </span></label> <input
@@ -150,6 +137,8 @@
 
 								</div>
 							</td>
+						</tr>
+						<tr>
 							<td>
 								<div class="form-group">
 									<label for="firmindividual" class="">Firm/Individual</label> <input
@@ -159,8 +148,6 @@
 
 								</div>
 							</td>
-						</tr>
-						<tr>
 							<td>
 								<div class="form-group">
 									<label for="firmname" ng-if="signupDetails.firmindividual!='F'">Firm
@@ -176,6 +163,8 @@
 										class="form-control" readonly="readonly">
 								</div>
 							</td>
+						</tr>
+						<tr>
 							<td>
 								<div class="form-group">
 									<label for="gender" class="">Gender</label> <input id="gender"
@@ -183,8 +172,6 @@
 										class="form-control" readonly="readonly">
 								</div>
 							</td>
-						</tr>
-						<tr>
 							<td>
 								<div class="form-group">
 									<label for="mobileno" class="">Mobile No.</label> <input

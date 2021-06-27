@@ -9,7 +9,7 @@ app.controller("CommonCtrl", [
 			let data = "officecode=" + $scope.registeringofficecode;
 			commonInitService.http("POST", "ulbregistration.htm", data, function (response) {
 				if(response===ALREADY_REPORTED){
-					MsgBox("Office is already registered.");
+					MsgBox("Office is already registered and valid.");
 				}else if (response!=='false') {
 					jQuery("#form").find("input[name='applicationcode']").val(response);
 					jQuery("#form").submit();
