@@ -44,7 +44,7 @@ app.controller("CommonCtrl", [
 				'overlayShow': false,
 				'modal': false,
 				'height': 'auto',
-				'width': '450px'
+				'width': '500px'
 			});
 		};
 		$scope.updateStakeholder = (applicant, process) => {

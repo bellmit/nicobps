@@ -30,7 +30,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public List<Map<String, Object>> listLicensees() {
-		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,app.officecode,"
+		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,off.officecode,off.officename1,"
 				+ "u.mobileno,u.username as email FROM nicobps.licensees l "
 				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
 				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
@@ -40,6 +40,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' and pf.modulecode=1 "
 				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode "
 				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
+				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
 				+ "INNER JOIN masters.states s on s.statecode=d.statecode ORDER BY l.entrydate DESC ";
 		return SUI.listGeneric(sql);
 	}
@@ -68,20 +69,22 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
 			List<Map<String, Object>> list = SUI.getAllNextProcessflows(1, nextprocessode);
 			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
-				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-				String sql2 = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) VALUES (?, ?, ?, ?, ?) ";
+//				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+				String sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) VALUES (?, ?, ?, ?, ?) ";
 				Calendar c = Calendar.getInstance();
 				c.setTime(new Date());
 				c.add(Calendar.YEAR, 1);
 				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
 
-					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
+//					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
 					SUI.update("nicobps.licenseeofficesvalidities", sql,
 							new Object[] { applicationcode, usercode, i.get("officecode"), new Date(), c.getTime() });
 				}
 				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
 				for (Integer urlcode : new Integer[] { 11, 12, 13 }) {
-					jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
+					try {
+						jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
+					}catch(Exception e) {}
 				}
 			}
 			return true;
@@ -91,13 +94,15 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public String ulbRegistration(Integer officecode, Integer usercode) {
-		String sql="select count(*)::int from  nicobps.useroffices " + 
+		String sql="select count(*)::int from  nicobps.licenseeofficesvalidities " + 
 				"where officecode IN ( " + 
 				"	select officecode  " + 
 				"	from masters.offices  " + 
 				"	where isregisteringoffice='N' and registeringofficecode=? " + 
 				") " + 
-				"and usercode=?";
+				"and usercode=? " + 
+				"and validfrom < CURRENT_TIMESTAMP " + 
+				"and validto > CURRENT_TIMESTAMP ";
 		List<Map<String, Object>> count=SUI.listGeneric(sql, new Object[] {officecode,usercode});
 		if(!count.isEmpty()) {
 			if((Integer)count.get(0).get("count")>0)

@@ -69,6 +69,7 @@
 						<table class="table">
 							<tr>
 								<th>Licence</th>
+								<th>Office</th>
 								<th>Firm/Individual</th>
 								<th>Firm/Applicant Name</th>
 								<th>District</th>
@@ -77,6 +78,7 @@
 							</tr>
 							<tr ng-repeat='item in Licensees'>
 								<td>{{item.licenseetypename}}</td>
+								<td>{{item.officename1}}</td>
 								<td>{{item.firmindividual=='I'?'Individual':'Firm'}}</td>
 								<td>{{item.firmindividual=='I'?item.applicantsname:item.firmname}}</td>
 								<td>{{item.districtname}}</td>
@@ -142,6 +144,14 @@
 							</td>
 							<td>
 								<div class="form-group">
+									<label for="officecode" class="">Office </span></label> <input
+										id="officecode" type="text" ng-value="applicant.officename1"
+										class="form-control" readonly="readonly">
+
+								</div>
+							</td>
+							<td>
+								<div class="form-group">
 									<label for="firmindividual" class="">Firm/Individual</label> <input
 										id="firmindividual" type="text"
 										ng-value="applicant.firmindividual=='I'?'Individual':'Firm'"
@@ -149,6 +159,8 @@
 
 								</div>
 							</td>
+						</tr>
+						<tr>
 							<td>
 								<div class="form-group">
 									<label for="firmname" ng-if="signupDetails.firmindividual!='F'">Firm
@@ -157,8 +169,6 @@
 										readonly="readonly">
 								</div>
 							</td>
-						</tr>
-						<tr>
 							<td>
 								<div class="form-group">
 									<label for="fullname" class="">Applicant's Name </label> <input
@@ -184,8 +194,9 @@
 							</td>
 							<td>
 								<div class="form-group">
-									<label for="email" class="">Email </label> 
-									<input id="email" type="text" ng-value="applicant.email" class="form-control" readonly="readonly">
+									<label for="email" class="">Email </label> <input id="email"
+										type="text" ng-value="applicant.email" class="form-control"
+										readonly="readonly">
 								</div>
 							</td>
 						</tr>
@@ -198,46 +209,59 @@
 							<td>
 								<div class="form-group">
 									<label for="preaddressline1" class="">Address Line - 1</label>
-									<input id="preaddressline1" type="text" ng-value="applicant.preaddressline1" class="form-control" readonly="readonly">
+									<input id="preaddressline1" type="text"
+										ng-value="applicant.preaddressline1" class="form-control"
+										readonly="readonly">
 								</div>
 							</td>
 							<td>
 								<div class="form-group">
 									<label for="preaddressline2" class="">Address Line - 2</label>
-									<input id="preaddressline2" type="text" ng-value="applicant.preaddressline2" class="form-control" readonly="readonly">
+									<input id="preaddressline2" type="text"
+										ng-value="applicant.preaddressline2" class="form-control"
+										readonly="readonly">
 								</div>
 							</td>
 							<td>
 								<div class="form-group">
-									<label for="previllagetown" class="">Village/Town</label> 
-									<input id="preaddressline1" type="text" ng-value="applicant.previllagetown" class="form-control" readonly="readonly">
-								</div> 
+									<label for="previllagetown" class="">Village/Town</label> <input
+										id="preaddressline1" type="text"
+										ng-value="applicant.previllagetown" class="form-control"
+										readonly="readonly">
+								</div>
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<div class="form-group">
-									<label for="prestatecode" class="">State</label> 
-									<input id="prestatecode" type="text" ng-value="applicant.statename" class="form-control" readonly="readonly">
-								</div> 
-							</td>
-							<td>
-								<div class="form-group">
-									<label for="predistrictcode" class="">District </label> 
-									<input id="predistrictcode" type="text" ng-value="applicant.districtname" class="form-control" readonly="readonly">
+									<label for="prestatecode" class="">State</label> <input
+										id="prestatecode" type="text" ng-value="applicant.statename"
+										class="form-control" readonly="readonly">
 								</div>
 							</td>
 							<td>
 								<div class="form-group">
-									<label for="prepincode" class="">Pin Code</label> 
-									<input id="prepincode" type="text" ng-value="applicant.prepincodex" class="form-control" readonly="readonly">
+									<label for="predistrictcode" class="">District </label> <input
+										id="predistrictcode" type="text"
+										ng-value="applicant.districtname" class="form-control"
+										readonly="readonly">
+								</div>
+							</td>
+							<td>
+								<div class="form-group">
+									<label for="prepincode" class="">Pin Code</label> <input
+										id="prepincode" type="text" ng-value="applicant.prepincodex"
+										class="form-control" readonly="readonly">
 								</div>
 							</td>
 						</tr>
 					</table>
 				</div>
 				<div class="col-md-12 py-12 px-12" style="display: block">
-					<h5 style="border-bottom: 3px solid #005776">Documents<span style='font-size: 15px'>(click on document to view)</span></h5>
+					<h5 style="border-bottom: 3px solid #005776">
+						Documents<span style='font-size: 15px'>(click on document
+							to view)</span>
+					</h5>
 				</div>
 				<div class="col-md-4 py-2 px-2 h-50" style="display: block">
 					<table class="table" id="enclosures">
@@ -269,12 +293,12 @@
 	</div>
 	<div style="display: none">
 		<div id="remarksTable"
-			style="width: 100%; height: 40vh; display: flex; align-items: center">
+			style="width: 100%; height: 50vh; display: flex; align-items: center">
 			<table class="table">
 				<tr>
 					<td>Remarks</td>
 					<td><textarea ng-model="process.remarks"
-							style="width: 300px; height: 150px;"></textarea></td>
+							style="width: 350px; height: 200px;"></textarea></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center"><button class="btn btn-primary"
