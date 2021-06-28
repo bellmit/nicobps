@@ -9,8 +9,10 @@ app.controller('applicationController', function($scope)
     $scope.applicationEnclosures = {};   
     loadForm();
     	
-    $scope.submitDetails = function() {      	    
-    	$scope.applicationEnclosures.listEnclosures=JSON.stringify($scope.listEnclosures);   	        
+    $scope.submitDetails = function() {  
+  	    
+    	$scope.applicationEnclosures.listEnclosures=JSON.stringify($scope.listEnclosures);   
+    	    alert("list enclosures"+$scope.applicationEnclosures.listEnclosures)  	        
         if(validateDetails($scope.applicationEnclosures))
         {      	      	     
         	submitEnclosureDetails($scope.applicationEnclosures);

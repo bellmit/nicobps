@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
+import obps.validators.UploadEnclosuresValidatorInterface;
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
@@ -48,7 +50,8 @@ public class ControllerUserManagement {
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
-
+	@Autowired
+	private UploadEnclosuresValidatorInterface uploadBpaEnclosuersValidatorInterface;
 	@Resource
 	private Environment environment;
 
@@ -206,12 +209,20 @@ public class ControllerUserManagement {
 		} else {
 			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
 		}
-
-		if (serviceUserManagementInterface.submitEnclosureDetails(param)) {
-			return ResponseEntity.ok(new String("The documents have been uploaded successfully."));
-		} else {
-			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+		System.out.println("validate file param controller"+param);
+		Log.info("validate file param controller"+param);
+		//validate file
+		if(uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
+			System.out.println("validated file!");
+			if (serviceUserManagementInterface.submitEnclosureDetails(param)) {
+				return ResponseEntity.ok(new String("The documents have been uploaded successfully."));
+			} else {
+				return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+			}
+		}else {
+			return ResponseEntity.badRequest().body(new String("Invalid File!Documents could not be uploaded!"));
 		}
+		
 	}
 
 	// =================================Change

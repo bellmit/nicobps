@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import obps.services.ServiceUploadBpaEnclosuersInterface;
 import obps.util.application.ServiceUtilInterface;
+import obps.validators.UploadEnclosuresValidatorInterface;
 
 //@RestController
 @Controller
@@ -31,6 +32,9 @@ public class ControllerUploadBpaEnclosures {
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 	private ServiceUploadBpaEnclosuersInterface ServiceUploadBpaEnclosuersInterface;
+	
+	@Autowired
+	private UploadEnclosuresValidatorInterface uploadBpaEnclosuersValidatorInterface;
 
 	@RequestMapping("/bpauploadenc.htm")
 	public String uploadbpaenclosuresext(Model model, @RequestParam String applicationcode) {
@@ -63,13 +67,17 @@ public class ControllerUploadBpaEnclosures {
 			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
 		}
 
-		if (ServiceUploadBpaEnclosuersInterface.submitBpaEnclosureDetails(param)) {
-			System.out.println("in controller inside if  submitBpaEnclosureDetails(param))");
-			return ResponseEntity.ok(new String("Documents uploaded successfully!"));
+		
+			if (ServiceUploadBpaEnclosuersInterface.submitBpaEnclosureDetails(param)) {
+				System.out.println("in controller inside if  submitBpaEnclosureDetails(param))");
+				return ResponseEntity.ok(new String("Documents uploaded successfully!"));
 
-		} else {
-			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
-		}
+			} else {
+				return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+			}
+		
+		
+		
 	}
 
 }
