@@ -191,11 +191,7 @@
 							<!--End of Search result -->
 
 						</form>
-						<form method="post" action="./printPermit.htm" id="printPermit">
-							<input type="hidden" readonly name="param_edcrnumber"
-								value="{{param_edcrnumber}}" /> <input type="hidden"
-								name="${_csrf.parameterName}" value="${_csrf.token}" />
-						</form>
+						
 					</div>
 				</div>
 			</div>

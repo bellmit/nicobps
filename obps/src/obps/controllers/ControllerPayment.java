@@ -61,6 +61,9 @@ public class ControllerPayment {
 		model.addAttribute("usercode", params.get("usercode"));
 		model.addAttribute("feeamount", params.get("feeamount"));
 		model.addAttribute("toprocesscode", params.get("toprocesscode"));
+		
+		List<Map<String, Object>> userdetails = serviceUtilInterface.getLicensee(Integer.parseInt(params.get("usercode").trim()));
+		model.addAttribute("processby", userdetails.get(0).get("applicantsname"));
 
 //		}
 

@@ -39,17 +39,11 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 
 
 
-	$scope.printpermit = function(edcrno) {
+	$scope.printpermit = function(edcrnumber) {
 
-		console.log("edcr " + edcrno);
+		console.log("edcrnumber : " + edcrnumber);
 
-		$scope.param_edcrnumber = edcrno;
-
-		console.log("value : " + $scope.param_edcrnumber);
-		$timeout(function() {
-			$("#printPermit").submit();
-		}, 1);
-
+		window.open("./Report?status=2&edcrnumber=" + edcrnumber);
 
 	};
 

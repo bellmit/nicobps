@@ -15,6 +15,15 @@ app.controller('responseController', function($scope) {
 		else
 			return "bg-warning text-black";
 	}
+
+
+	$scope.print = function() {
+		console.log("print");
+
+		window.open("./Report?status=1&transactioncode=" + $scope.transactioncode);
+
+
+	}
 });
 
 

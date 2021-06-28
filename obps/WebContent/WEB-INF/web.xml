@@ -26,7 +26,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<!--SPRING SECURITY CONFIGURATION END -->
-	
+
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
@@ -34,9 +34,9 @@
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
-	        <param-name>contextConfigLocation</param-name>
-	        <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
-	    </init-param>	 
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -44,64 +44,72 @@
 		<url-pattern>*.htm</url-pattern>
 	</servlet-mapping>
 
-  <servlet>
-        <servlet-name>Captcha</servlet-name>
-        <servlet-class>obps.util.common.Captcha</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Captcha</servlet-name>
-        <url-pattern>/jcaptcha.jpg</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>CaptchaLogin</servlet-name>
-        <servlet-class>obps.util.common.CaptchaLogin</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CaptchaLogin</servlet-name>
-        <url-pattern>/jcaptchalogin.jpg</url-pattern>
-    </servlet-mapping>
-    
-    
-    <session-config>
-        <!--<session-timeout>10</session-timeout>-->
-        <session-timeout>-1</session-timeout>
-        <tracking-mode>COOKIE</tracking-mode>
-    </session-config>	
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Deny all HTTP methods except GET and POST</web-resource-name>
-            <url-pattern>/*</url-pattern>
-            <http-method>TRACE</http-method>
-            <http-method>PUT</http-method>
-            <http-method>OPTIONS</http-method>
-            <http-method>DELETE</http-method>         
-        </web-resource-collection>
-        <auth-constraint/>
-    </security-constraint>	
+	<servlet>
+		<servlet-name>Captcha</servlet-name>
+		<servlet-class>obps.util.common.Captcha</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Captcha</servlet-name>
+		<url-pattern>/jcaptcha.jpg</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>CaptchaLogin</servlet-name>
+		<servlet-class>obps.util.common.CaptchaLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CaptchaLogin</servlet-name>
+		<url-pattern>/jcaptchalogin.jpg</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Report</servlet-name>
+		<servlet-class>obps.util.common.Report</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Report</servlet-name>
+		<url-pattern>/Report</url-pattern>
+	</servlet-mapping>
+	
+	<session-config>
+		<!--<session-timeout>10</session-timeout> -->
+		<session-timeout>-1</session-timeout>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Deny all HTTP methods except GET and POST</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>TRACE</http-method>
+			<http-method>PUT</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>DELETE</http-method>
+		</web-resource-collection>
+		<auth-constraint />
+	</security-constraint>
 	<welcome-file-list>
 		<welcome-file>redirect.jsp</welcome-file>
-	</welcome-file-list>    
-    <!--ERROR PAGES STARTS-->
-    <error-page>
-        <error-code>400</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>403</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>405</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <!--ERROR PAGES ENDS-->  
+	</welcome-file-list>
+	<!--ERROR PAGES STARTS -->
+	<error-page>
+		<error-code>400</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>405</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+	<!--ERROR PAGES ENDS -->
 
 </web-app>

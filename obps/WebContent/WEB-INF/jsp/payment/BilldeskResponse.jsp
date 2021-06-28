@@ -15,7 +15,8 @@
 					<div class="col-md-10 ">
 
 
-						<div class=" col-md-10 bg-light text-black  m-4 p-3 border rounded">
+						<div
+							class=" col-md-10 bg-light text-black  m-4 p-3 border rounded">
 							<div class="text-center p-3 mb-2 " ng-class="getClass(${status})">
 								<h4>
 									<core:out value="${message}" escapeXml="true" />
@@ -68,14 +69,12 @@
 												escapeXml="true" /></td>
 
 									</tr>
+									<tr>
+										<td colspan="2"><input type="button" value="Print"
+											class="btn btn-primary  col-md-2 " style="float: right;"
+											ng-click="print()" /></td>
+									</tr>
 								</table>
-								<form method="post" action="./generateReceipt.htm">
-									<input type="hidden" readonly name="transactioncode"
-										value="{{transactioncode}}" /> <input type="hidden"
-										name="${_csrf.parameterName}" value="${_csrf.token}" /> <input
-										type="submit" value="Generate Receipt"
-										class="btn btn-primary offset-4 col-md-2 " style="float: right;"/>
-								</form>
 						</div>
 
 

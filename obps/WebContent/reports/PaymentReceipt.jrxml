@@ -2,17 +2,29 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PaymentReceipt" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="11"/>
-	<parameter name="transactionno" class="java.lang.String"/>
-	<parameter name="date" class="java.lang.String"/>
-	<parameter name="paymentgateway" class="java.lang.String"/>
-	<parameter name="paymode" class="java.lang.String"/>
-	<parameter name="amount" class="java.lang.String"/>
-	<parameter name="payresponse" class="java.lang.String"/>
-	<parameter name="applicationcode" class="java.lang.String"/>
-	<parameter name="feetype" class="java.lang.String"/>
-	<parameter name="payername" class="java.lang.String"/>
-	<parameter name="transactioncode" class="java.lang.String"/>
+	<property name="ireport.y" value="23"/>
+	<parameter name="transactioncode" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select t.transactioncode,t.responseparameters,atm.applicationcode,ft.feetypedescription,
+pm.mode,pm.paymentmodedescription,t.paymentstatus,ul.fullname,fm.feeamount
+ from nicobps.transactions t
+ inner join nicobps.applicationstransactionmap atm on t.transactioncode=atm.transactioncode
+ inner join masters.feemaster fm on fm.feecode=t.feecode
+ inner join masters.feetypes ft on ft.feetypecode=fm.feetypecode
+ inner join masters.paymentmodes pm on pm.paymentmodecode=t.paymentmodecode
+ inner join nicobps.userlogins ul on ul.usercode=t.usercode  where t.transactioncode=$P{transactioncode};]]>
+	</queryString>
+	<field name="transactioncode" class="java.lang.Long"/>
+	<field name="responseparameters" class="java.lang.String"/>
+	<field name="applicationcode" class="java.lang.String"/>
+	<field name="feetypedescription" class="java.lang.String"/>
+	<field name="mode" class="java.lang.String"/>
+	<field name="paymentmodedescription" class="java.lang.String"/>
+	<field name="paymentstatus" class="java.lang.String">
+		<fieldDescription><![CDATA[  I for Initiated, S for Success, F for Failed, A for Aborted ]]></fieldDescription>
+	</field>
+	<field name="fullname" class="java.lang.String"/>
+	<field name="feeamount" class="java.lang.Integer"/>
 	<title>
 		<band height="40" splitType="Stretch">
 			<staticText>
@@ -38,71 +50,19 @@
 	<detail>
 		<band height="433" splitType="Stretch">
 			<staticText>
-				<reportElement x="40" y="152" width="150" height="20" />
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Transaction Reference No.  :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="40" y="182" width="40" height="20" />
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Date :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="40" y="214" width="118" height="20" />
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Payment Gateway :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="40" y="281" width="100" height="20" />
+				<reportElement x="40" y="192" width="100" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Payment Mode:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="40" y="311" width="62" height="20" />
+				<reportElement x="40" y="222" width="62" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Amount :]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="40" y="342" width="118" height="20" />
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Payment Response:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="190" y="152" width="319" height="20" />
-				<textFieldExpression><![CDATA[$P{transactionno}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="80" y="182" width="429" height="20" />
-				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="158" y="214" width="351" height="20" />
-				<textFieldExpression><![CDATA[$P{paymentgateway}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="140" y="281" width="369" height="20" />
-				<textFieldExpression><![CDATA[$P{paymode}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="102" y="311" width="407" height="20" />
-				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="158" y="342" width="351" height="20" />
-				<textFieldExpression><![CDATA[$P{payresponse}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="40" y="54" width="100" height="20" />
 				<textElement>
@@ -117,25 +77,13 @@
 				</textElement>
 				<text><![CDATA[Fee Type :]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="102" y="121" width="407" height="20" />
-				<textFieldExpression><![CDATA[$P{feetype}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="140" y="54" width="369" height="20" />
-				<textFieldExpression><![CDATA[$P{applicationcode}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="40" y="248" width="83" height="20" />
+				<reportElement x="40" y="159" width="83" height="20" />
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Payer Name : ]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="123" y="248" width="386" height="20" />
-				<textFieldExpression><![CDATA[$P{payername}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="40" y="87" width="118" height="20" />
 				<textElement>
@@ -144,8 +92,28 @@
 				<text><![CDATA[Transaction Code :]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="158" y="87" width="351" height="20" />
-				<textFieldExpression><![CDATA[$P{transactioncode}]]></textFieldExpression>
+				<reportElement x="158" y="87" width="365" height="20" />
+				<textFieldExpression><![CDATA[$F{transactioncode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="54" width="383" height="20" />
+				<textFieldExpression><![CDATA[$F{applicationcode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="121" width="369" height="20" />
+				<textFieldExpression><![CDATA[$F{feetypedescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="192" width="383" height="20" />
+				<textFieldExpression><![CDATA[$F{paymentmodedescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="159" width="400" height="20" />
+				<textFieldExpression><![CDATA[$F{fullname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="222" width="369" height="20" />
+				<textFieldExpression><![CDATA[$F{feeamount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

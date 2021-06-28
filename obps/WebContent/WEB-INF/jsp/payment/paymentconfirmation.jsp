@@ -10,12 +10,12 @@
 		<div id="page-content-wrapper">
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
-				
+
 				<core:choose>
 					<core:when test="${feeamount eq '0'}">
-<!-- 					<h3 class="mt-4" -->
-<!-- 					style="font-size: 32px; border-bottom: 3px solid #005776">Payment -->
-<!-- 					Confirmation</h3> -->
+						<!-- 					<h3 class="mt-4" -->
+						<!-- 					style="font-size: 32px; border-bottom: 3px solid #005776">Payment -->
+						<!-- 					Confirmation</h3> -->
 						<form class="ng-scope" id="paymentForm" name="paymentForm"
 							autocomplete="off" action="./CommonPaymentResponse.htm"
 							method="post">
@@ -37,12 +37,12 @@
 												<td colspan="2" style="border-bottom: 2px solid #005776"></td>
 											</tr>
 											<tr>
-												<td class=" font-weight-bold w-25 ">Application Code</td>
+												<td class=" font-weight-bold w-50 ">Application Code</td>
 												<td class="col-xs-5 ">:${applicationcode}</td>
 											</tr>
 											<tr>
-												<td class=" font-weight-bold">Fee Code</td>
-												<td class="col-xs-5 ">: ${feecode}</td>
+												<td class=" font-weight-bold ">Applicant Name</td>
+												<td class="col-xs-5 ">:${processby}</td>
 											</tr>
 											<tr>
 												<td class=" font-weight-bold">Fee Type</td>
@@ -89,8 +89,8 @@
 															</core:when>
 															<core:otherwise>
 																<input type="button"
-																	class="offset-5 col-md-2  btn btn-warning" value="Submit"
-																	ng-click="submitDetails();" />
+																	class="offset-5 col-md-2  btn btn-warning"
+																	value="Submit" ng-click="submitDetails();" />
 
 															</core:otherwise>
 														</core:choose>
@@ -107,9 +107,9 @@
 						</form>
 					</core:when>
 					<core:otherwise>
-					<h3 class="mt-4"
-					style="font-size: 32px; border-bottom: 3px solid #005776">Payment
-					Confirmation</h3>
+						<h3 class="mt-4"
+							style="font-size: 32px; border-bottom: 3px solid #005776">Payment
+							Confirmation</h3>
 						<form class="ng-scope" id="paymentForm" name="paymentForm"
 							autocomplete="off" action="./paymentinitialized.htm"
 							method="post">
@@ -131,12 +131,12 @@
 												<td colspan="2" style="border-bottom: 2px solid #005776"></td>
 											</tr>
 											<tr>
-												<td class=" font-weight-bold w-25 ">Application Code</td>
+												<td class=" font-weight-bold w-50 ">Application Code</td>
 												<td class="col-xs-5 ">:${applicationcode}</td>
 											</tr>
 											<tr>
-												<td class=" font-weight-bold">Fee Code</td>
-												<td class="col-xs-5 ">: ${feecode}</td>
+												<td class=" font-weight-bold ">Applicant Name</td>
+												<td class="col-xs-5 ">: ${processby}</td>
 											</tr>
 											<tr>
 												<td class=" font-weight-bold">Fee Type</td>

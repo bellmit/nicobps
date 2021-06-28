@@ -33,7 +33,7 @@
 									<td colspan="2" style="border-bottom: 2px solid #005776"></td>
 								</tr>
 								<tr>
-									<td class=" font-weight-bold w-25 ">Transaction ID :</td>
+									<td class=" font-weight-bold w-25 ">Reference ID :</td>
 									<td class="col-md-5 "><core:out value="${transactioncode}"
 											escapeXml="true" /></td>
 								</tr>
@@ -57,12 +57,17 @@
 								<tr>
 									<td colspan="2" style="border-bottom: 2px solid #005776"></td>
 								</tr>
+								<tr>
+									<td colspan="2"><input type="button" value="Print"
+										class="btn btn-primary  col-md-2 " style="float: right;"
+										ng-click="print()" /></td>
+								</tr>
 							</table>
 						</div>
 					</div>
 				</div>
 
-			</div>
+			</div> 
 		</div>
 	</div>
 

@@ -1,4 +1,4 @@
-package obps.reports;
+package obps.services;
 
 import java.util.List;
 import java.util.Map;
