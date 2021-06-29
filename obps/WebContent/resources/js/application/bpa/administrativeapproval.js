@@ -44,7 +44,7 @@ app.controller("CommonCtrl", [
 			if (!valid) return;
 
 			$('#commonModal').modal('hide');
-			CIS.save("POST", ProcessingUrl.bpaProcess, data, (success) => {
+			CIS.save("POST", ProcessingUrl.bpaApprove, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverResponseSuccess = true;

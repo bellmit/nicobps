@@ -140,7 +140,7 @@
 					<div class="col-sm-12">
 						<div class="input-group">
 							<input type="text" class="form-control custom-form-control" name="plotgiscoordinates"
-								ng-model="BPA.plotgiscoordinates" maxlength="99" readonly required
+								ng-model="BPA.plotgiscoordinates" maxlength="99" readonly 
 								data-toggle="modal" data-target="#gmapModal"/>
 <!-- 								ng-mousedown="toggleGmapModal()"  -->
 							<div class="input-group-append">
@@ -150,7 +150,7 @@
 							</div>
 						</div>
 						<div class="col" ng-if="bpaform.plotgiscoordinates.$touched" style="color:red">
-							<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span>
+<!-- 							<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span> -->
 						</div>
 					</div>
 				</div>
@@ -161,10 +161,9 @@
 					<div class="col-sm-12">
 						<select class="form-control custom-form-control" name="officelocationcode"
 							ng-model="BPA.officelocationcode"
-							ng-options="O.key as O.value for O in Officelocations"
-							reqiured>
-							<option selected="selected" disabled="disabled">Select
-								Options</option>
+							ng-options="O.key as (O.value) for O in Officelocations"
+							required>
+							<option selected="selected" disabled="disabled" value="">Select Options</option>
 						</select>
 						<div class="col" ng-if="bpaform.officelocationcode.$touched" style="color:red">
 							<span ng-show="bpaform.officelocationcode.$error.required">Required</span>
@@ -185,9 +184,9 @@
 					<label class="col">Plot No./Khata No.</label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plotno"
-							ng-model="BPA.plotidentifier1" maxlength="10" pattern-alpha-numeric required/>
+							ng-model="BPA.plotidentifier1" maxlength="10" pattern-alpha-numeric/>
 						<div class="col" ng-if="bpaform.plotno.$touched" style="color:red">
-							<span ng-show="bpaform.plotno.$error.required">Required</span>
+<!-- 							<span ng-show="bpaform.plotno.$error.required">Required</span> -->
 						</div>
 					</div>
 				</div>
@@ -198,9 +197,9 @@
 						No.</label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="holdingno"
-							ng-model="BPA.holdingno" maxlength="5" pattern-alpha-numeric required/>
+							ng-model="BPA.holdingno" maxlength="5" pattern-alpha-numeric/>
 						<div class="col" ng-if="bpaform.holdingno.$touched" style="color:red">
-							<span ng-show="bpaform.holdingno.$error.required">Required</span>
+<!-- 							<span ng-show="bpaform.holdingno.$error.required">Required</span> -->
 						</div>
 					</div>
 				</div>
@@ -212,9 +211,9 @@
 					<label class="col">Land Registration No</label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="landregistrationno"
-							ng-model="BPA.landregistrationno" maxlength="20" pattern-alpha-numeric required/>
+							ng-model="BPA.landregistrationno" maxlength="20" pattern-alpha-numeric/>
 						<div class="col" ng-if="bpaform.landregistrationno.$touched" style="color:red">
-							<span ng-show="bpaform.landregistrationno.$error.required">Required</span>
+<!-- 							<span ng-show="bpaform.landregistrationno.$error.required">Required</span> -->
 						</div>
 					</div>
 				</div>
@@ -224,9 +223,9 @@
 					<label class="col-sm-12">Office where land is registered</label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="landregdetails"
-							ng-model="BPA.landregistrationdetails" maxlength="99" pattern-alpha-numeric required/>
+							ng-model="BPA.landregistrationdetails" maxlength="99" pattern-alpha-numeric/>
 						<div class="col" ng-if="bpaform.landregdetails.$touched" style="color:red">
-							<span ng-show="bpaform.landregdetails.$error.required">Required</span>
+<!-- 							<span ng-show="bpaform.landregdetails.$error.required">Required</span> -->
 						</div>
 					</div>
 					
@@ -251,7 +250,7 @@
 							ng-model="BPA.ownershiptypecode"
 							ng-options="O.key as O.value for O in Ownertypes"
 							required>
-							<option selected readonly>Select Owner Type</option>
+							<option selected readonly value="">Select Owner Type</option>
 						</select>
 						<div class="col" ng-if="bpaform.ownershiptypecode.$touched" style="color:red">
 							<span ng-show="bpaform.ownershiptypecode.$error.required">Required</span>
@@ -268,7 +267,7 @@
 							ng-options="value as value for (key, value) in OwnerSubtypes"
 							ng-change="addOwner()"
 							required>
-							<option selected readonly>Select Owner Subtype</option>
+							<option selected readonly value="">Select Owner Subtype</option>
 						</select>
 						<div class="col" ng-if="bpaform.ownershipsubtype.$touched" style="color:red">
 							<span ng-show="bpaform.ownershipsubtype.$error.required">Required</span>
@@ -289,13 +288,13 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
-							<label class="col-sm-12">Salution</label>
+							<label class="col-sm-12">Salutation</label>
 							<div class="col-sm-12">
 								<select class="form-control custom-form-control" name="salutationcode{{$index}}"
 									ng-model="OD.salutationcode"
 									ng-options="S.key as S.value for S in Salutations"
 									required>
-									<option selected readonly>Select Salutation</option>
+									<option selected readonly value="">Select Salutation</option>
 								</select>
 								<div class="col" ng-if="bpaform['salutationcode'+($index)].$touched" style="color:red">
 									<span ng-show="bpaform['salutationcode'+($index)].$error.required">Required</span>
@@ -335,9 +334,9 @@
 							<label class="col">Email</label>
 							<div class="col-sm-12">
 								<input type="text" class="form-control custom-form-control" name="emailid{{$index}}"
-									ng-model="OD.emailid" maxlength="99" pattern-email required>
+									ng-model="OD.emailid" maxlength="99" pattern-email>
 								<div class="col" ng-if="bpaform['emailid'+($index)].$touched || bpaform['emailid'+($index)].$dirty" style="color:red">
-									<span ng-show="bpaform['emailid'+($index)].$error.required">Required<br></span>
+<!-- 									<span ng-show="bpaform['emailid'+($index)].$error.required">Required<br></span> -->
 									<span ng-show="bpaform['emailid'+($index)].$error.invalid">Invalid emailid</span>
 								</div>
 							</div>
@@ -393,12 +392,6 @@
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="row" ng-if="BPA.ownershipsubtype == 'Multiple Owner'"> -->
-<!-- 				<div style="text-align: center; margin: auto;"> -->
-<!-- 					<input type="button" class="btn btn-outline-primary" value="Add Owner" -->
-<!-- 						ng-click="addOwner()"> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 		</div>
 	</div>
 </div>

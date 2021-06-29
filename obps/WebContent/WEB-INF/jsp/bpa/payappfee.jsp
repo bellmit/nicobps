@@ -42,7 +42,7 @@
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
 				<h3 class="mt-4" style="font-size: 32px; border-bottom: 3px solid #005776">
-					Apply for building permit: Pay Application Fee
+					Pay Application Fee
 				</h3>
 				<form id="form">
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> 

@@ -12,16 +12,19 @@ const FileMimeType = {
   "IVBOR": "image/png"
 };
 
+const FeeType = {
+	FormAndScrutinizationFee: "FormScrutinizationFee",
+	FormAndEarthquakeFee: "FormAndEarthquakeFee",
+	TDRFee: "TDRFee",
+	PermitFee: "PermitFee",
+}
+
 const ProcessingUrl = {
   bpaReject: "rejectbpapplication.htm",
   bpaProcess: "processbpapplication.htm",
   bpaSiteInspection: "savebpasiteinspection.htm",
-  bpaStructuralCheck: "bpastructuralcheck.htm",
-  bpaCheckingOfBpp: "bpacheckingofbpp.htm",
-  bpaScrutinyOfBpp: "bpascrutinyofbpp.htm",
-  bpaTechnicalApproval: "bpatechnicalapproval.htm",
-  bpaAdministrativeApproval: "bpaadministrativeapproval.htm",
-  bpaPayment: "bpapayment.htm",
+  bpaApprove: "approvebpapplication.htm",
+  bpaMakePayment: "bpamakepayment.htm",
 };
 
 const Timeout = {
@@ -262,6 +265,7 @@ var TaskStatus = function () {
     username: '',
     status: '',
     remarks: '',
+    nextprocessname: '',
   }
   return TaskStatus;
 }

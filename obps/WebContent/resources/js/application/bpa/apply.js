@@ -42,14 +42,14 @@ app.controller("CommonCtrl", [
       $scope.gmapAddress = ($scope.planInfo.district).toLocaleLowerCase();
       $scope.occupancy = edcr.extractPlanOccupancy($scope.EDCR);
       $scope.BPA = $scope.BPA.extractFromEdcrObject($scope.EDCR);
+      $scope.listOfficelocations();
     }, EDCRNUMBER);
 
     $scope.listOfficelocations = () => {
       BS.listOfficelocations((response) => {
         $scope.Officelocations = response;
-      }, (data = ""));
+      }, (data = $scope.EDCR.officecode));
     };
-    $scope.listOfficelocations();
 
     $scope.listOwnershiptypes = () => {
       BS.listOwnershiptypes((response) => {
@@ -116,13 +116,13 @@ app.controller("CommonCtrl", [
       }
 
       bpa.plotgiscoordinates.$touched = true;
-      if (
+      /*if (
         bpa.plotgiscoordinates.$modelValue == null ||
         bpa.plotgiscoordinates.$modelValue == ""
       ) {
         bpa.plotgiscoordinates.$error.invalid = true;
         flag = false;
-      }
+      }*/
 
       bpa.officelocationcode.$touched = true;
       if (
@@ -135,44 +135,44 @@ app.controller("CommonCtrl", [
       }
 
       bpa.plotno.$touched = true;
-      if (
+      /*if (
         bpa.plotno.$modelValue == null ||
         bpa.plotno.$modelValue == "" ||
         bpa.plotno.$modelValue == "-1"
       ) {
         bpa.plotno.$error.invalid = true;
         flag = false;
-      }
+      }*/
 
       bpa.holdingno.$touched = true;
-      if (
+      /*if (
         bpa.holdingno.$modelValue == null ||
         bpa.holdingno.$modelValue == "" ||
         bpa.holdingno.$modelValue == "-1"
       ) {
         bpa.holdingno.$error.invalid = true;
         flag = false;
-      }
+      }*/
 
       bpa.landregistrationno.$touched = true;
-      if (
+      /*if (
         bpa.landregistrationno.$modelValue == null ||
         bpa.landregistrationno.$modelValue == "" ||
         bpa.landregistrationno.$modelValue == "-1"
       ) {
         bpa.landregistrationno.$error.invalid = true;
         flag = false;
-      }
+      }*/
 
       bpa.landregdetails.$touched = true;
-      if (
+      /*if (
         bpa.landregdetails.$modelValue == null ||
         bpa.landregdetails.$modelValue == "" ||
         bpa.landregdetails.$modelValue == "-1"
       ) {
         bpa.landregdetails.$error.invalid = true;
         flag = false;
-      }
+      }*/
 
       bpa.ownershiptypecode.$touched = true;
       if (
@@ -228,8 +228,7 @@ app.controller("CommonCtrl", [
 
         bpa["emailid" + i].$touched = true;
         if (
-          bpa["emailid" + i].$modelValue == null ||
-          bpa["emailid" + i].$modelValue == "" ||
+          bpa["emailid" + i].$modelValue != null && bpa["emailid" + i].$modelValue != "" &&
           !PATTERN_EMAIL.test(bpa["emailid" + i].$modelValue)
         ) {
           bpa["emailid" + i].$error.invalid = true;
@@ -316,7 +315,6 @@ app.controller("CommonCtrl", [
         $scope.serverResponseInfo= false;
         $scope.serverResponseSuccess = false;
         $scope.serverMsg = "";
-        // $scope.BPA = new BPA();
       }, 5000);
     };
   },

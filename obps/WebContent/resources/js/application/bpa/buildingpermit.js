@@ -41,6 +41,9 @@ app.controller("CommonCtrl", [
             "title": "EDCR Number",
             "data": "edcrnumber"
           }, {
+              "title": "Application code",
+              "data": "applicationcode"
+        }, {
             "title": "Next Process",
             "data": "processname",
             render: (data, type, row, meta) => {

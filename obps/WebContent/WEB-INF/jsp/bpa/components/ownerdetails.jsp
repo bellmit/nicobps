@@ -30,7 +30,7 @@
 				</div>
 				<div class="col-sm-3">
 					<label class="col-sm-12"><small>Email</small></label> 
-					<label class="col-sm-12">{{O.emailid}}</label>
+					<label class="col-sm-12">{{(basicDetail.emailid != null && basicDetail.emailid != '')?basicDetail.emailid: 'NA'}}</label>
 				</div>
 				<div class="col-sm-3">
 					<label class="col-sm-12"><small>Guardian's Name</small></label> 

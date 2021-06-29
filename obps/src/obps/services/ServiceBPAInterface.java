@@ -44,7 +44,9 @@ public interface ServiceBPAInterface {
 
 	Map<String, Object> getBpaApplicationDetails(Integer USERCODE, String applicationcode);
 	
-	Map<String, Object> getApplicationFee(Integer USERCODE, String applicationcode, Integer bpaApplicationfeeCode);
+	Map<String, Object> getBPAFee(Integer uSERCODE, String applicationcode, Integer feetypecode);
+	
+//	Map<String, Object> getApplicationFee(Integer USERCODE, String applicationcode, Integer bpaApplicationfeeCode);
 
 	Map<String, Object> getCurrentProcessTaskStatus(Integer USERCODE, String applicationcode);
 
@@ -53,12 +55,18 @@ public interface ServiceBPAInterface {
 	Map<String, Object> getEdcrDetailsV2(String appcode);
 	
 	Map<String, Object> getEdcrDetailsV2(Integer USERCODE, String appcode);
+	
+	/*
+	 * Map<String, Object> getPermitFee(Integer USERCODE, String applicationcode,
+	 * Integer bpaPermitfeeCode);
+	 */
 
-	Map<String, Object> getPermitFee(Integer USERCODE, String applicationcode, Integer bpaPermitfeeCode);
-
-
-	/* CREATE */
 	boolean checkAccessGrantStatus(Integer USERCODE, String appcode, String pathurl);
+	
+	boolean checkIfBuildingPermitAlreadyApplied(Integer USERCODE, String edcrnumber);
+	
+	/* CREATE */
+	boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 	
 	boolean processAppPayment(Integer USERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);
 
@@ -74,6 +82,5 @@ public interface ServiceBPAInterface {
 	boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer USERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response);
 
-
-
+	
 }

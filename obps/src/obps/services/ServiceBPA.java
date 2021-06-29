@@ -7,22 +7,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import obps.daos.DaoBPAInterface;
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
-import obps.models.BpaOwnerDetail;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
+import obps.util.application.BPACalculatorConstants;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 
 @Service("BPAService")
 class ServiceBPA implements ServiceBPAInterface {
 	private static final Logger LOG = Logger.getLogger(ServiceBPA.class.toGenericString());
-	private static final Integer BPAMODULECODE = 2;
 	@Autowired
 	private ServiceUtilInterface SUI;
 
@@ -41,10 +47,9 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "INNER JOIN(  " 
 				+ "	SELECT applicationcode, MAX(entrydate) entrydate  	  "
 				+ "	FROM nicobps.applicationflowremarks    " 
-				/* + "		WHERE modulecode = 2  " */
 				+ "	GROUP BY applicationcode  "
 				+ ")T ON (T.applicationcode, T.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
-				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode )= (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode)  "
+				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode)= (AFR.modulecode, AFR.toprocesscode)  "
 				+ "INNER JOIN (  " + "	SELECT PU.urlcode, PU.pageurl,   "
 				+ "	       UP.usercode, UL.username, UL.fullname  " 
 				+ "	FROM masters.pageurls PU  "
@@ -52,9 +57,13 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	INNER JOIN nicobps.userlogins UL ON UL.usercode = UP.usercode  "
 				+ "	ORDER BY UP.usercode, UP.urlcode  " 
 				+ ")U ON U.urlcode = PF.urlcode  "
-				+ "WHERE U.usercode <> ? AND AFR.applicationcode = ?  " 
+				+ "LEFT JOIN (	" + 
+				" SELECT usercode FROM nicobps.licensees  " + 
+				") L ON L.usercode  = U.usercode  "
+				+ "WHERE AFR.applicationcode = ?  "
+				+ "AND L.usercode IS NULL " 
 				+ "ORDER BY U.fullname ";
-		return SUI.listCommonMap(sql, new Object[] {usercode, applicationcode});
+		return SUI.listCommonMap(sql, new Object[] {applicationcode});
 	}
 
 	@Override
@@ -101,7 +110,7 @@ class ServiceBPA implements ServiceBPAInterface {
 	
 	@Override
 	public List<Map<String, Object>> listApplictionsCurrentProcessStatus(Integer USERCODE) {
-		String sql = "SELECT AFR.applicationcode, PF.flowname AS status,   "
+		String sql = "SELECT AFR.applicationcode, BPA.edcrnumber, PF.flowname AS status,   "
 				+ "      UL.fullname AS updatedby , TUL.fullname AS assignee,   "
 				+ "      TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks,   "
 				+ "      PR.processname processname, NPR.processname nextprocessname,   "
@@ -113,6 +122,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	GROUP BY applicationcode  "
 				+ ")AF ON (AF.applicationcode, AF.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = AFR.applicationcode  "
+				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.applicationcode = APP.applicationcode  "
 				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode) AND PF.processflowstatus = 'N'      "
 				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode    "
 				+ "INNER JOIN masters.processes NPR ON NPR.processcode = PF.toprocesscode AND AFR.modulecode = NPR.modulecode    "
@@ -124,7 +134,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	AND   " 
 				+ "	APP.usercode = ? " 
 				+ "ORDER BY APP.entrydate";
-		return SUI.listGeneric(sql, new Object[] {BPAMODULECODE, USERCODE});
+		return SUI.listGeneric(sql, new Object[] {BPACalculatorConstants.MODULE_CODE, USERCODE});
 	}
 	
 	@Override
@@ -140,7 +150,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode      "
 				+ "	GROUP BY applicationcode)    "
 				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode     "
-				+ "INNER JOIN masters.processflow PF ON PF.toprocesscode = PR.processcode  AND PF.modulecode = PR.modulecode AND PF.processflowstatus = 'N'    "
+				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.toprocesscode) = (APP.officecode, PR.modulecode, PR.processcode) AND PF.processflowstatus = 'N'    "
 				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode    " 
 				+ "INNER JOIN (  "
 				+ "	SELECT UP.usercode, UP.urlcode, PU.pageurl, PU.submenu  " 
@@ -175,7 +185,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "INNER JOIN nicobps.userlogins FUL ON FUL.usercode = AF.fromusercode  "
 				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AF.tousercode  "
 				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode     "
-				+ "INNER JOIN masters.processflow PF ON PF.toprocesscode = PR.processcode  AND PF.modulecode = PR.modulecode AND PF.processflowstatus = 'N'    "
+				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.toprocesscode,  PF.processflowstatus) = (APP.officecode, PR.modulecode, PR.processcode, 'N')    "
 				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode    " 
 				+ "INNER JOIN (  "
 				+ "	SELECT UP.usercode, UP.urlcode, PU.pageurl, PU.submenu  " 
@@ -189,6 +199,27 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "WHERE UP.usercode = ?  "
 				+ "AND RA.applicationcode IS NULL";
 		return SUI.listGeneric(sql, new Object[] {USERCODE});
+	}
+	
+	@Override
+	public List<Map<String, Object>> listNextProcess(String applicationcode) {
+		List<Map<String, Object>> list = SUI.getCurrentProcessStatus(BPACalculatorConstants.MODULE_CODE, applicationcode);
+		if(list != null) {
+			Map<String, Object> map = list.get(0);
+			if(map != null) {
+				return SUI.getAllNextProcessflows(BPACalculatorConstants.MODULE_CODE, Integer.valueOf(map.get("fromprocesscode").toString()));
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> listOfficePaymentMode(String applicationcode) {
+		String sql = "SELECT PM.paymentmodecode, PM.paymentmodedescription, PM.mode   "
+				+ "FROM masters.paymentmodes PM   "
+				+ "INNER JOIN masters.officespaymentmodes OPM ON OPM.paymentmodecode = PM.paymentmodecode   "
+				+ "WHERE OPM.officecode = ?";
+		return SUI.listGeneric(sql, new Object[] { getApplicationOfficecode(applicationcode) });
 	}
 	
 	@Override
@@ -211,27 +242,6 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "LEFT JOIN masters.enclosures E ON E.enclosurecode = SI.enclosurecode   " 
 				+ "WHERE applicationcode = ?  ";
 		return SUI.listGeneric(sql, new Object[] {applicationcode});
-	}
-	
-	@Override
-	public List<Map<String, Object>> listNextProcess(String applicationcode) {
-		List<Map<String, Object>> list = SUI.getCurrentProcessStatus(BPAMODULECODE, applicationcode);
-		if(list != null) {
-			Map<String, Object> map = list.get(0);
-			if(map != null) {
-				return SUI.getAllNextProcessflows(BPAMODULECODE, Integer.valueOf(map.get("fromprocesscode").toString()));
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public List<Map<String, Object>> listOfficePaymentMode(String applicationcode) {
-		String sql = "SELECT PM.paymentmodecode, PM.paymentmodedescription, PM.mode   "
-				+ "FROM masters.paymentmodes PM   "
-				+ "INNER JOIN masters.officespaymentmodes OPM ON OPM.paymentmodecode = PM.paymentmodecode   "
-				+ "WHERE OPM.officecode = ?";
-		return SUI.listGeneric(sql, new Object[] { getApplicationOfficecode(applicationcode) });
 	}
 	
 	@Override
@@ -324,16 +334,119 @@ class ServiceBPA implements ServiceBPAInterface {
 	}
 
 	@Override
-	public Map<String, Object> getApplicationFee(Integer USERCODE, String applicationcode,
+	public Map<String, Object> getBPAFee(Integer USERCODE, String applicationcode, 	
 			Integer feetypecode) {
-		String sql = "SELECT F.feecode, F.feeamount, F.officecode " + 
-				"FROM masters.feemaster F " + 
-				"WHERE officecode=? and feetypecode=?";
+		Map<String, Object> response = new HashMap<>();
+		
+		String sql = "SELECT F.*, FT.feetypedescription  " 
+				+ "FROM masters.feemaster F "
+				+ "INNER JOIN masters.feetypes FT ON FT.feetypecode = F.feetypecode " 
+				+ "WHERE F.officecode=? and F.feetypecode=?";
 		List<Map<String, Object>> list = SUI.listGeneric(sql,
 				new Object[] { getApplicationOfficecode(applicationcode), feetypecode });
-		if(list != null)
-			return list.get(0);
+		if(list != null && !list.isEmpty()) {
+			response = list.get(0);
+			JSONObject json = new JSONObject(list.get(0));
+			if(json.containsKey("feejson") && json.get("feejson") != null) {
+				Map<String, Object> edcrObject = getEdcrDetailsV2(USERCODE, applicationcode);
+				List<Map<String, Object>> fees = new ArrayList<>();
+		
+				JSONObject edcrJson = new JSONObject(), fee = new JSONObject();
+				try {
+					JSONParser parser = new JSONParser();  
+					edcrJson = (JSONObject) parser.parse((String)edcrObject.get("planinfoobject"));
+					DocumentContext edcrContext = JsonPath.parse(edcrJson.toString());	
+					
+					PGobject pgo = new PGobject();		
+					pgo = (PGobject) json.get("feejson");
+					fee = (JSONObject) parser.parse(pgo.toString());  
+					JSONArray feeTypes = (JSONArray) fee.get("feeTypes");
+					if(feeTypes!= null && !feeTypes.isEmpty())
+						calculateFeeType(feeTypes, edcrContext, fees, response);
+					
+					if(fees!=null && !fees.isEmpty()) {
+						response.remove("feejson");
+						response.put("calculatedFee", fees);
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return response;
+		}
 		return new HashMap<String, Object>();
+	}
+
+	private void calculateFeeType(JSONArray feeTypes, DocumentContext edcrContext, List<Map<String, Object>> fees, Map<String, Object> response) {
+		Double amount = Double.valueOf(0), finalAmount = Double.valueOf(0);
+		Map<String, Object> fee = new HashMap<>();
+		String calcutionFeeType = "", calcutionFeeTypeName = "";
+		net.minidev.json.JSONArray jsona = new net.minidev.json.JSONArray();
+		for(Object feeType: feeTypes) {
+			JSONObject calculationType = (JSONObject) feeType;
+			DocumentContext calcContext = JsonPath.parse(calculationType.toString());
+			
+			calcutionFeeType = (String) calculationType.get("feeType");
+			calcutionFeeTypeName = (String) calculationType.get("feeTypeName");
+			amount = Double.valueOf(calculationType.get("amount").toString());
+			
+			fee = new HashMap<>();
+			fee.put("code", calcutionFeeType);
+			fee.put("name", calcutionFeeTypeName);
+			if(calculationType.containsKey("calsiLogic")) {
+				amount = Double.valueOf(0);
+				if(calcutionFeeType.equals(BPACalculatorConstants.FEETYPE_FORM_SCRUTINIZATION_FEE)) {
+					net.minidev.json.JSONArray blockTotalFloors = edcrContext.read("planDetail.blocks.*.building.totalFloors");
+					Double plotArea = ((Double) edcrContext.read("planDetail.plot.area"));
+					jsona = (net.minidev.json.JSONArray) calcContext.read("calsiLogic.*.tolerancelimit");
+					Double plotAreaLimit = ((Double) jsona.get(0));
+					Double lowerLimitValue = Double.valueOf(0), upperLimitValue = Double.valueOf(0);
+					
+					if(blockTotalFloors != null && !blockTotalFloors.isEmpty()) {
+						int blockno = 0;
+						List<Map<String, Object>> subFee = new ArrayList<>();
+						for(Object obj: blockTotalFloors) {
+							blockno++;
+							Integer totalFloor = (Integer) obj;
+							for(int i = 1; i <= totalFloor; i++) {
+								Double amt = Double.valueOf(0);
+								jsona = (net.minidev.json.JSONArray) calcContext.read("calsiLogic.*.floors."+i+".lowerLimit");
+								lowerLimitValue = (Double.valueOf(jsona.get(0).toString()));
+								jsona = (net.minidev.json.JSONArray) calcContext.read("calsiLogic.*.floors."+i+".upperLimit");
+								upperLimitValue = (Double.valueOf(jsona.get(0).toString()));
+								if (plotArea.compareTo(plotAreaLimit) <= 0) {
+									amount += lowerLimitValue;
+									amt = lowerLimitValue;
+								} else {
+									amount += upperLimitValue;
+									amt = upperLimitValue;
+								}
+								fee = new HashMap<>();
+								fee.put("name", String.format("Block %s Floor %s", blockno, i));
+								fee.put("amount", amt);
+								subFee.add(fee);
+							}
+						}
+						finalAmount += amount;
+						
+						fee = new HashMap<>();
+						fee.put("code", calcutionFeeType);
+						fee.put("name", calcutionFeeTypeName);
+						fee.put("amount", amount);
+						fee.put("plotArea", plotArea);
+						fee.put("details", subFee);
+						fees.add(fee);
+					}
+				}
+			}else {
+				finalAmount += amount;
+				fee.put("amount", amount);
+				fees.add(fee);
+			}
+			response.remove("feeamount");
+			response.put("feeamount", finalAmount);
+		}
 	}
 
 	@Override
@@ -358,7 +471,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AFR.applicationcode  "
 				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode    "
 				+ "WHERE AFR.modulecode = ? AND AFR.applicationcode = ?";
-		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPAMODULECODE, applicationcode});
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPACalculatorConstants.MODULE_CODE, applicationcode});
 		if(list != null && !list.isEmpty())
 			return list.get(0);
 		return null;
@@ -408,22 +521,6 @@ class ServiceBPA implements ServiceBPAInterface {
 		return null;
 	}
 
-	
-	@Override
-	public Map<String, Object> getPermitFee(Integer USERCODE, String applicationcode, 	
-			Integer feetypecode) {
-		String sql = "SELECT F.feecode, F.feeamount " + 
-				"FROM masters.feemaster F " + 
-				"WHERE officecode=? and feetypecode=?";
-		List<Map<String, Object>> list = SUI.listGeneric(sql,
-				new Object[] { getApplicationOfficecode(applicationcode), feetypecode });
-		if(list != null)
-			return list.get(0);
-		return new HashMap<String, Object>();
-	}
-
-
-	/* CREATE */
 	@Override
 	public boolean checkAccessGrantStatus(Integer USERCODE, String appcode, String pathurl) {
 		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag     " 
@@ -447,12 +544,26 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "AND PU.pageurl = ?  "
 				+ "AND RA.applicationcode IS NULL";
 		pathurl = pathurl.replaceFirst("/", "");
-		return SUI.getStringObject(sql, new Object[] {USERCODE, appcode, BPAMODULECODE, USERCODE, pathurl}).equals(String.valueOf(1));
+		return SUI.getStringObject(sql, new Object[] {USERCODE, appcode, BPACalculatorConstants.MODULE_CODE, USERCODE, pathurl}).equals(String.valueOf(1));
+	}
+
+	@Override
+	public boolean checkIfBuildingPermitAlreadyApplied(Integer USERCODE, String edcrnumber) {
+		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag "
+				+ "FROM nicobps.bpaapplications "
+				+ "WHERE edcrnumber = ?";
+		return SUI.getStringObject(sql, new Object[] {edcrnumber}).equals(String.valueOf(1));
+	}
+
+	/* CREATE */
+	@Override
+	public boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		return DBI.approveBPApplication(data, response);
 	}
 
 	@Override
 	public boolean processAppPayment(Integer USERCODE, BpaApplicationFee bpa, HashMap<String, Object> response) {
-		Map<String, Object> map = getApplicationFee(USERCODE, bpa.getApplicationcode(), bpa.getFeetypecode());
+		Map<String, Object> map = getBPAFee(USERCODE, bpa.getApplicationcode(), bpa.getFeetypecode());
 		if(map != null) {
 			bpa.setTotalamount(Double.valueOf(map.get("feeamount").toString()));
 			bpa.setFeecode(Integer.valueOf(map.get("feecode").toString()));
@@ -462,6 +573,10 @@ class ServiceBPA implements ServiceBPAInterface {
 	
 	@Override
 	public boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		/*
+		 * if(data.getTousercode() == null || data.getTousercode() < 0)
+		 * data.setTousercode(data.getFromusercode());
+		 */
 		return DBI.processBPApplication(data, response);
 	}
 	

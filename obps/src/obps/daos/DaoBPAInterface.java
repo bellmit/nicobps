@@ -9,6 +9,8 @@ import obps.models.BpaSiteInspection;
 
 public interface DaoBPAInterface {
 
+	boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
+
 	boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 
 	boolean processAppPayment(Integer uSERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);

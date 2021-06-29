@@ -43,7 +43,7 @@
 				<%@include file="../common/menutop.jsp"%>
 				<div class="container-fluid">
 					<h3 class="mt-4" style="font-size: 32px; border-bottom: 3px solid #005776">
-						Apply for building permit: Site Inspection
+						{{taskStatus.nextprocessname}}
 					</h3>
 					<form name="bpaform">
 						<div class="card-body">

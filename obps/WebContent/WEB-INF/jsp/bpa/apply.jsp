@@ -10,7 +10,6 @@
 				align-items: center;
 				max-width: 550px;
                 max-height: 650px;
-                
             }
             .custom-modal-content{
                 margin: auto;
@@ -22,6 +21,11 @@
             .custom-modal-body{
             	padding: 0px;
             }
+            .element-center{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 		</style>
 		<script type="text/javascript">
         </script>
@@ -37,23 +41,28 @@
 						Apply for building permit
 					</h3>
 					<form id="msform" name="bpaform">
-						<div ng-include="'bpaform.htm'"></div>
-						<!-- GoogleMap Modal -->
-						<div class="modal fade" id="gmapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-						  <div class="modal-dialog modal-lg custom-modal-dialog" role="document">
-						    <div class="modal-content custom-modal-content">
-						      <div class="modal-body custom-modal-body">
-						      		<div ng-include="'googlemap.htm'"></div>
-						      </div>
-						      <div class="modal-footer">
-						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						        <button type="button" class="btn btn-primary" id="pickCityBtn" data-dismiss="modal">Pick Your City</button>
-						      </div>
-						    </div> 
-						  </div>
+						<div ng-if="${isalreadyapplied} != 1">
+							<div ng-include="'bpaform.htm'"></div>
+							<!-- GoogleMap Modal -->
+							<div class="modal fade" id="gmapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+							  <div class="modal-dialog modal-lg custom-modal-dialog" role="document">
+							    <div class="modal-content custom-modal-content">
+							      <div class="modal-body custom-modal-body">
+							      		<div ng-include="'googlemap.htm'"></div>
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							        <button type="button" class="btn btn-primary" id="pickCityBtn" data-dismiss="modal">Pick Your City</button>
+							      </div>
+							    </div> 
+							  </div>
+							</div>
+							<!-- End: GoogleMap Modal -->
 						</div>
-						<!-- End: GoogleMap Modal -->
                    	</form>
+                   	<div class="element-center" ng-if="${isalreadyapplied} == 1">
+						Click<a ng-href="bpatrackstatus.htm">&nbsp;here&nbsp;</a> to check status of your application.
+					</div>
 				</div>
 			</div>
 		</div>

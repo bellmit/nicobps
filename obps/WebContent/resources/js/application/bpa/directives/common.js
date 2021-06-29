@@ -10,8 +10,7 @@ app.directive("testButton",[ "$compile", "bpaService",
 	  }
 
 	  function linkFn(scope, elem, attr) {
-	    scope.name = 'Add Widget2';
-	    console.log("scope widget22: ", scope);
+	    scope.name = 'Add Widget';
 	    scope.add = () => {
 	      const newScope = scope.$new(true);
 	      newScope.export = (data) => alert(data);
@@ -73,46 +72,6 @@ app.directive("modalButton", ["$compile", "$timeout", "$window", "commonInitServ
 			}, Timeout.ThreeSecond);
 		};
 		
-//		scope.forward  = () => {
-//			let data = {}, valid = false;
-//			scope.bpa.tousercode = scope.modal.usercode;
-//			scope.bpa.remarks = scope.modal.remarks;
-//			data = scope.bpa.init(scope.bpa);
-//
-//			valid = $window.confirm("Are you sure you want to forward?");
-//			if (!valid) return;
-//
-//			$('#commonModal').modal('hide');
-//			CIS.save("POST", ProcessingUrl.bpaProcess, data, (success) => {
-//				scope.serverMsg = success.msg;
-//				if (success.code == '201') {
-//					scope.serverResponseSuccess = true;
-//					try {
-//						if (success.nextProcess.key != null) {
-//							scope.serverMsg += "\nNext Process: " + success.nextProcess.value;
-//							$timeout(() => {
-//								let url = success.nextProcess.key + "?applicationcode=" + success.nextProcess.value1;
-//								$window.location.href = url;
-//							}, Timeout.Reload);
-//						} else
-//							$timeout(() => { $window.location.reload(); }, Timeout.Reload);
-//					} catch (e) { }
-//
-//				} else {
-//					scope.serverResponseFail = true;
-//				}
-//			}, (error) => {
-//				try {
-//					scope.serverMsg = error.msg;
-//				} catch (e) {
-//					scope.serverMsg = "Internal server error";
-//				}
-//				scope.serverResponseError = true;
-//			});
-//
-//			scope.clearAfterCreateProcess();
-//		};
-		
 		scope.reject = () => {
 			let data = {}, valid = false;
 
@@ -149,7 +108,6 @@ app.directive("modalButton", ["$compile", "$timeout", "$window", "commonInitServ
 }]);
 
 //Page
-
 app.directive("basicDetails",["$compile", "bpaService", function($compile, BS) {
 	return {
     	template: '<ng-include src="\'basicdetails.htm\'"></ng-include>',
@@ -253,7 +211,7 @@ app.directive("scrutinyDetails",["$compile", "bpaService", function($compile, BS
 	};
 }]);
 
-app.directive("siteReportDetails",["$compile", "bpaService", function taskStatus($compile, BS) {
+app.directive("siteReportDetails",["$compile", "bpaService", function ($compile, BS) {
 	return {
 		template: '<ng-include src="\'sitereportdetails.htm\'"></ng-include>',
 		link: action
@@ -266,7 +224,7 @@ app.directive("siteReportDetails",["$compile", "bpaService", function taskStatus
 	};
 }]);
 
-app.directive("taskStatus",["$compile", "bpaService", function taskStatus($compile, BS) {
+app.directive("taskStatus",["$compile", "bpaService", function ($compile, BS) {
 	return {
 		template: '<ng-include src="\'processtrackstatus.htm\'"></ng-include>',
 		link: action
@@ -294,7 +252,6 @@ app.directive("fileViewModal",["$compile", "$sce", "bpaService", function($compi
 			let fileContent = "";
 			switch (opt) {
 				case 2:
-					console.log("SiteReport");
 					scope.SiteReportDetails.forEach((o, x) => {
 						if (o.appenclosurecode == data) {
 							fileContent = 'data:' + BS.detectMimeType(o.enclosureimage) + ';base64,' + o.enclosureimage;
@@ -302,7 +259,6 @@ app.directive("fileViewModal",["$compile", "$sce", "bpaService", function($compi
 					});
 					break;
 				default:
-					console.log("DocumentDetails");
 					scope.DocumentDetails.forEach((o, x) => {
 						if (o.appenclosurecode == data) {
 							fileContent = 'data:' + BS.detectMimeType(o.enclosureimage) + ';base64,' + o.enclosureimage;

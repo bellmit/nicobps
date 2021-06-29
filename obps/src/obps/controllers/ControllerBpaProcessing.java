@@ -30,6 +30,7 @@ import obps.util.application.CommonMap;
 public class ControllerBpaProcessing {
 	private static final Logger LOG = Logger.getLogger(ControllerBuildingPermit.class.toGenericString());
 	private static final String PARENT_URL_MAPPING = "/bpa";
+	private static final String COMPONENT_URL_MAPPING = "/bpa/components";
 	private static final String REDIRECT_MAPPING = "redirect:";
 	private static Integer USERCODE;
 	private static String appcode;
@@ -108,10 +109,12 @@ public class ControllerBpaProcessing {
 	
 	@GetMapping(value = "/bpainbox.htm")
 	public String bpaInbox() {
-		if(USERCODE != null)
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			return PARENT_URL_MAPPING.concat("/inbox");
-		else
-			return REDIRECT_MAPPING.concat("login.htm");
+		}
+		return REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/bparejectedapplications.htm")
@@ -210,11 +213,12 @@ public class ControllerBpaProcessing {
 		return REDIRECT_MAPPING.concat("login.htm");
 	}
 	
+	/* COMPONENTS */
 	@GetMapping(value = "/commonprocessingaction.htm")
 	public String commonProcessingAction() {
 		LOG.info("URL: commonprocessingaction.htm");
 		if(SBI.checkAccessGrantStatus(USERCODE, appcode, pathurl))
-			return PARENT_URL_MAPPING.concat("/commonprocessingaction");
+			return COMPONENT_URL_MAPPING.concat("/commonprocessingaction");
 		else
 			return "";
 	}
@@ -222,37 +226,37 @@ public class ControllerBpaProcessing {
 	@GetMapping(value = "/documentdetails.htm")
 	public String documentDetails() {
 		LOG.info("URL: documentdetails.htm");
-		return PARENT_URL_MAPPING.concat("/documentdetails");
+		return COMPONENT_URL_MAPPING.concat("/documentdetails");
 	}
 
 	@GetMapping(value = "/fileviewmodal.htm")
 	public String modal() {
 		LOG.info("URL: fileviewmodal.htm");
-		return PARENT_URL_MAPPING.concat("/fileviewmodal");
+		return COMPONENT_URL_MAPPING.concat("/fileviewmodal");
 	}
 	
 	@GetMapping(value = "/ownerdetails.htm")
 	public String ownerDetails() {
 		LOG.info("URL: ownerdetails.htm");
-		return PARENT_URL_MAPPING.concat("/ownerdetails");
+		return COMPONENT_URL_MAPPING.concat("/ownerdetails");
 	}
 	
 	@GetMapping(value = "/processtrackstatus.htm")
 	public String processTrackStatus() {
 		LOG.info("URL: processtrackstatus.htm");
-		return PARENT_URL_MAPPING.concat("/processtrackstatus");
+		return COMPONENT_URL_MAPPING.concat("/processtrackstatus");
 	}
 
 	@GetMapping(value = "/scrutinydetails.htm")
 	public String scrutinyDetails() {
 		LOG.info("URL: scrutinydetails.htm");
-		return PARENT_URL_MAPPING.concat("/scrutinydetails");
+		return COMPONENT_URL_MAPPING.concat("/scrutinydetails");
 	}
 	
 	@GetMapping(value = "/sitereportdetails.htm")
 	public String siteReportDetails() {
 		LOG.info("URL: sitereportdetails.htm");
-		return PARENT_URL_MAPPING.concat("/sitereportdetails");
+		return COMPONENT_URL_MAPPING.concat("/sitereportdetails");
 	}
 
 
@@ -293,6 +297,20 @@ public class ControllerBpaProcessing {
 	};
 
 	/* CREATE */
+	@PostMapping(value = "/approvebpapplication.htm")
+	public ResponseEntity<HashMap<String, Object>> approveApplication(@RequestBody BpaProcessFlow data,
+			BindingResult bindingResult) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		if (USERCODE == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+		
+		data.setFromusercode(USERCODE);
+		if (SBI.approveBPApplication(data, response)) 
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		else
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	@PostMapping(value = "/processbpapplication.htm")
 	public ResponseEntity<HashMap<String, Object>> processbpapplication(@RequestBody BpaProcessFlow data,
 			BindingResult bindingResult) {

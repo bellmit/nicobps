@@ -42,7 +42,7 @@
 				<div class="container-fluid">
 					<h3 class="mt-4"
 						style="font-size: 32px; border-bottom: 3px solid #005776">
-						{{Fees.feetypedescription}}
+						Apply for building permit: {{Fees.feetypedescription}}
 					</h3>
 					<form name="bpaform">
 						<div class="card">
@@ -70,24 +70,11 @@
 														<input type="number" class="custom-form-control-borderless" ng-model="bpa.amount" readonly><br/>
 													</div>
 												</div>
-												<div class="form-group mt-5" ng-repeat="F in Fees.calculatedFee">
-													<div class="col row" ng-if="F.code != FeeType.FormAndScrutinizationFee">
-														<label for="appfee" class="col-sm-4 card-subtitle">{{($index+1)+' - '+F.name}}</label>
-														<div class="col-sm-8">
-															<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
-															<span class="custom-form-control-borderless">{{F.amount}}</span>
-														</div>
-													</div>
-													<div ng-if="F.code == FeeType.FormAndScrutinizationFee">
-														<label for="appfee" class="col-sm-12 card-subtitle mb-3">{{($index+1)+' - '+F.name}}</label>
-														<label for="appfee" class="col-sm-12 card-subtitle mb-3">Plot area = {{F.plotArea}} m<sup>2</sup></label>
-														<div class="row col-sm-12 card-subtitle mb-2" ng-repeat="D in F.details">
-															<label for="appfee" class="col-sm-4 card-subtitle">{{D.name}}</label>
-															<div class="col-sm-8">
-																<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
-																<span class="custom-form-control-borderless">{{D.amount}}</span>
-															</div>
-														</div>
+												<div class="form-group mt-5 row" ng-repeat="F in Fees.calculatedFee">
+													<label for="appfee" class="col-sm-4 card-subtitle">{{F.name}}</label>
+													<div class="col-sm-8">
+														<i class="fa fa-inr" style="font-size: small; font-weight: normal"></i>
+														<span class="custom-form-control-borderless">{{F.amount}}</span>
 													</div>
 												</div>
 												<div class="form-group">
@@ -131,7 +118,7 @@
 	<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
-	<script src="resources/js/application/bpa/paypermfee.js" type="text/javascript"></script>
+	<script src="resources/js/application/bpa/commonfeepayment.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		const APPCODE = '${applicationcode}';
 	</script>

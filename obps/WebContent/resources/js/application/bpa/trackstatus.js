@@ -39,7 +39,12 @@ app.controller("CommonCtrl", [
 						}
 					}, {
 						"title": "Application code",
-						"data": "applicationcode"
+						"data": "applicationcode",
+						render: (data, type, row, meta) => {
+							let content = '<b>'+data+'</b>';
+							content += '<br><small>eDCRNumber:</small> '+row.edcrnumber;
+							return content;
+						}
 					}, {
 						"title": "Updated By",
 						"data": "updatedby",

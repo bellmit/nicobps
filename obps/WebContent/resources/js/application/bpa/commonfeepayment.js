@@ -23,18 +23,25 @@ app.controller("CommonCtrl", [
 
 		$scope.Fees = [];
 		$scope.PayModes = [];
-		
-		$scope.FeeType = FeeType;
 
 
 		/* GET */
 		BS.getBpaPermitFee((response) => {
 			$scope.Fees = response;
 			if($scope.Fees != null){
-				$scope.bpa.feetypecode = $scope.Fees.feetypecode;
-				let len = Object.keys($scope.Fees).length;
-				if (len > 0)
-					$scope.bpa.amount = $scope.Fees.feeamount;
+				console.log("$scope.Fees: ", $scope.Fees);
+				if($scope.Fees.calculatedFee != null){
+					$scope.bpa.amount = 0;
+					$scope.Fees.calculatedFee.forEach((o, x) => {
+						console.log(o);
+						$scope.bpa.amount += parseFloat(o.amount)
+						console.log("$scope.bpa.amount: ",$scope.bpa.amount);
+					});
+				}else{
+					let len = Object.keys($scope.Fees).length;
+					if (len > 0)
+						$scope.bpa.amount = $scope.Fees.feeamount;
+				}
 			}
 		}, $scope.bpa.applicationcode);
 
@@ -61,8 +68,7 @@ app.controller("CommonCtrl", [
 			valid = $window.confirm("Are you sure you want to submit?");
 			if (!valid) return;
 
-//			CIS.save("POST", "./bpapaypermfees.htm", data, (success) => {
-			CIS.save("POST", ProcessingUrl.bpaMakePayment, data, (success) => {
+			CIS.save("POST", "./bpapaypermfee.htm", data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverMsg = "You will be redirect to a different page to complete payment.";

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
 import obps.services.ServiceBPAInterface;
+import obps.util.application.BPACalculatorConstants;
 import obps.util.application.CommonMap;
 
 @Controller
@@ -30,9 +31,8 @@ public class ControllerBuildingPermit {
 
 	private static final Logger LOG = Logger.getLogger(ControllerBuildingPermit.class.toGenericString());
 	private static final String PARENT_URL_MAPPING = "/bpa";
+	private static final String COMPONENT_URL_MAPPING = "/bpa/components";
 	private static final String REDIRECT_MAPPING = "redirect:";
-	private static final Integer BPA_APPLICATIONFEE_CODE = 5;
-	private static final Integer BPA_PERMITFEE_CODE = 6;
 	private static String appcode;
 	private static String pathurl;
 	private static Integer USERCODE;
@@ -41,18 +41,6 @@ public class ControllerBuildingPermit {
 	private ServiceBPAInterface SBI;
 
 	/* Page-URLs */
-	@GetMapping(value = "/basicdetails.htm")
-	public String basicDetails(Model model) {
-		LOG.info("URL: basicdetails.htm");
-		return PARENT_URL_MAPPING.concat("/basicdetails");
-	}
-	
-	@GetMapping(value = "/bpaform.htm")
-	public String basicDetailsForm(Model model) {
-		LOG.info("URL: bpaform.htm");
-		return PARENT_URL_MAPPING.concat("/bpaform");
-	}
-
 	@GetMapping(value = "/applybuildingpermit.htm")
 	public String bpaApply(Model model, @RequestParam String edcrnumber) {
 		LOG.info("URL: applyBuildingPermit.htm");
@@ -60,6 +48,7 @@ public class ControllerBuildingPermit {
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
 			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
 			model.addAttribute("edcrnumber", edcrnumber);
+			model.addAttribute("isalreadyapplied", SBI.checkIfBuildingPermitAlreadyApplied(USERCODE, edcrnumber)?1:0);
 			return PARENT_URL_MAPPING.concat("/apply");
 		}
 		return REDIRECT_MAPPING.concat("login.htm");
@@ -143,17 +132,30 @@ public class ControllerBuildingPermit {
 		}
 		return REDIRECT_MAPPING.concat("login.htm");
 	}
-
+	
+	/* COMPONENTS */
+	@GetMapping(value = "/basicdetails.htm")
+	public String basicDetails(Model model) {
+		LOG.info("URL: basicdetails.htm");
+		return COMPONENT_URL_MAPPING.concat("/basicdetails");
+	}
+	
+	@GetMapping(value = "/bpaform.htm")
+	public String basicDetailsForm(Model model) {
+		LOG.info("URL: bpaform.htm");
+		return COMPONENT_URL_MAPPING.concat("/bpaform");
+	}
+	
 	@GetMapping(value = "/googlemap.htm")
 	public String googleMap() {
 		LOG.info("URL: googlemap.htm");
-		return PARENT_URL_MAPPING.concat("/googlemap");
+		return COMPONENT_URL_MAPPING.concat("/googlemap");
 	}
 
 	@GetMapping(value = "/modal.htm")
 	public String modal() {
 		LOG.info("URL: modal.htm");
-		return PARENT_URL_MAPPING.concat("/modal");
+		return COMPONENT_URL_MAPPING.concat("/modal");
 	}
 
 	/* GET */
@@ -164,12 +166,12 @@ public class ControllerBuildingPermit {
 	
 	@GetMapping(value = "/getBpaApplicationFee.htm")
 	public @ResponseBody Map<String, Object> getApplicationFee(@RequestParam(name = "param") String applicationcode) {
-		return SBI.getApplicationFee(USERCODE, applicationcode, BPA_APPLICATIONFEE_CODE);	
+		return SBI.getBPAFee(USERCODE, applicationcode, BPACalculatorConstants.APPLICATION_FEE_CODE);	
 	};
 
 	@GetMapping(value = "/getBpaPermitFee.htm")
 	public @ResponseBody Map<String, Object> getBpaPermitFee(@RequestParam(name = "param") String applicationcode) {
-		return SBI.getPermitFee(USERCODE, applicationcode, BPA_PERMITFEE_CODE);	
+		return SBI.getBPAFee(USERCODE, applicationcode, BPACalculatorConstants.PERMIT_FEE_CODE);	
 	};
 	
 	@GetMapping(value = "/getEdcrDetails.htm")
@@ -226,24 +228,30 @@ public class ControllerBuildingPermit {
 	}
 	
 	/* CREATE */
-	@PostMapping("/bpapayappfee.htm")
-	public ResponseEntity<HashMap<String, Object>> bpaPayAppFee(@RequestBody BpaApplicationFee bpa) {
+	/*
+	 * @PostMapping("/bpapayappfee.htm") public ResponseEntity<HashMap<String,
+	 * Object>> bpaPayAppFee(@RequestBody BpaApplicationFee bpa) { HashMap<String,
+	 * Object> response = new HashMap<String, Object>(); LOG.info(bpa.toString());
+	 * bpa.setFeetypecode(BPA_APPLICATIONFEE_CODE); if (USERCODE == null) return new
+	 * ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+	 * if(SBI.processAppPayment(USERCODE, bpa, response)) return new
+	 * ResponseEntity<>(response, HttpStatus.CREATED); else return new
+	 * ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR); }
+	 * 
+	 * @PostMapping("/bpapaypermfee.htm") public ResponseEntity<HashMap<String,
+	 * Object>> bpaPayPermFee(@RequestBody BpaApplicationFee bpa) { HashMap<String,
+	 * Object> response = new HashMap<String, Object>(); LOG.info(bpa.toString());
+	 * bpa.setFeetypecode(BPA_PERMITFEE_CODE); if (USERCODE == null) return new
+	 * ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+	 * if(SBI.processAppPayment(USERCODE, bpa, response)) return new
+	 * ResponseEntity<>(response, HttpStatus.CREATED); else return new
+	 * ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR); }
+	 */
+	
+	@PostMapping("/bpamakepayment.htm")
+	public ResponseEntity<HashMap<String, Object>> bpaMakePayment(@RequestBody BpaApplicationFee bpa) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
-		bpa.setFeetypecode(BPA_APPLICATIONFEE_CODE);
-		if (USERCODE == null)
-			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-		if(SBI.processAppPayment(USERCODE, bpa, response))
-			return new ResponseEntity<>(response, HttpStatus.CREATED);
-		else
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-	@PostMapping("/bpapaypermfee.htm")
-	public ResponseEntity<HashMap<String, Object>> bpaPayPermFee(@RequestBody BpaApplicationFee bpa) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-		LOG.info(bpa.toString());
-		bpa.setFeetypecode(BPA_PERMITFEE_CODE);
 		if (USERCODE == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 		if(SBI.processAppPayment(USERCODE, bpa, response))

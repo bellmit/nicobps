@@ -9,7 +9,7 @@
         </button>
       </div>
       <div class="modal-body">
-      	<div class="col">
+      	<div class="col" ng-if="Users != null && Users.length > 0">
       		<label class="col">
       			Assignee Name
       		</label>
@@ -17,7 +17,7 @@
       			<select class="form-control custom-form-control"
       				ng-model="modal.usercode"
       				ng-options="U.key as U.value for U in Users">
-					<option value=null selected disabled>Select user</option>
+					<option value="" selected disabled>Self</option>
       			</select>
       		</div>
       	</div>

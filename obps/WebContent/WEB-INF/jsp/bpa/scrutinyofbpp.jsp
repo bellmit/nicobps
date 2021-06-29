@@ -44,7 +44,8 @@
 				<div class="container-fluid">
 					<h3 class="mt-4"
 						style="font-size: 32px; border-bottom: 3px solid #005776">
-						Apply for building permit: Scrutiny of BPP</h3>
+						{{taskStatus.nextprocessname}}
+					</h3>
 					<form name="bpaform">
 						<div class="card-body">
 							<label class="h4">Application details</label>

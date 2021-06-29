@@ -49,21 +49,21 @@
 				</div>
 				<div class="col">
 					<label class="col-sm-12"><small>Plot No./Khata No.</small></label>
-					<label class="col-sm-12">{{basicDetail.plotidentifier1}}</label>
+					<label class="col-sm-12">{{(basicDetail.plotidentifier1 != null && basicDetail.plotidentifier1 != '')?basicDetail.plotidentifier1: 'NA'}}</label>
 				</div>
 				<div class="col">
 					<label class="col-sm-12"><small>Holding No.</small></label>
-					<label class="col-sm-12">{{basicDetail.holdingno}}</label>
+					<label class="col-sm-12">{{(basicDetail.holdingno != null && basicDetail.holdingno != '')?basicDetail.holdingno: 'NA'}}</label>
 				</div>
 				<div class="col">
 					<label class="col-sm-12"><small>Land Registration No.</small></label>
-					<label class="col-sm-12">{{basicDetail.landregistrationno}}</label>
+					<label class="col-sm-12">{{(basicDetail.landregistrationno != null && basicDetail.landregistrationno != '')?basicDetail.landregistrationno: 'NA'}}</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col">
 					<label class="col-sm-12"><small>Land Registration Details</small></label>
-					<label class="col-sm-12">{{basicDetail.landregistrationdetails}}</label>
+					<label class="col-sm-12">{{(basicDetail.landregistrationdetails != null && basicDetail.landregistrationdetails != '')?basicDetail.landregistrationdetails: 'NA'}}</label>
 				</div>
 			</div>
 		</div>
