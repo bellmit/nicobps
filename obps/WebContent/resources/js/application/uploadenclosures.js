@@ -12,7 +12,7 @@ app.controller('applicationController', function($scope)
     $scope.submitDetails = function() {  
   	    
     	$scope.applicationEnclosures.listEnclosures=JSON.stringify($scope.listEnclosures);   
-    	    alert("list enclosures"+$scope.applicationEnclosures.listEnclosures)  	        
+    	//alert("list enclosures"+$scope.applicationEnclosures.listEnclosures)  	        
         if(validateDetails($scope.applicationEnclosures))
         {      	      	     
         	submitEnclosureDetails($scope.applicationEnclosures);
@@ -58,7 +58,8 @@ function loadForm() {
                   var item={};
                   item.ischecked=false;
                   item.enclosurecode=row.key;
-                  item.enclosurename=row.value;       
+                  item.enclosurename=row.value;
+				  item.usercode=row.value1;       				  
                   item.filecontant="";               
 			      scope.listEnclosures.push(item);
 			    })          	                    
@@ -89,7 +90,7 @@ function submitEnclosureDetails(applicationEnclosures)
             loadForm();                                     
         },
         error: function(request, status, error) {    
-        	alert(status+" : "+JSON.stringify(request));        
+        	//alert(status+" : "+JSON.stringify(request));        
             jQuery('#successMsg').html("* "+request.responseText).show();           
         }
     }); 
