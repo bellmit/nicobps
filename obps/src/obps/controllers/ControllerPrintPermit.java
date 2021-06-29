@@ -25,7 +25,7 @@ public class ControllerPrintPermit {
 	@GetMapping(value = "/printPermit.htm")
 	public String printpermit() {
 
-		return "reports/printpermit";
+		return "bpa/printpermit";
 
 	}
 

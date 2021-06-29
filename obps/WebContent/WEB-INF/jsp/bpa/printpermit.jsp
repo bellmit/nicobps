@@ -202,5 +202,5 @@
 <script>
 	
 </script>
-<script src="resources/js/application/reports/printpermit.js"></script>
+<script src="resources/js/application/bpa/printpermit.js"></script>
 </html>
