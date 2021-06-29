@@ -86,8 +86,8 @@ public class Report extends HttpServlet {
 		} catch (IOException | SQLException | JRException | BeansException e) {
 			out = response.getWriter();
 			response.sendRedirect("error.jsp");
-			// System.out.println("Exception thrown by class " + this.getClass() + " at " +
-			// new java.util.Date() + " :: " + e);
+			 System.out.println("Exception thrown by class " + this.getClass() + " at " +
+			 new java.util.Date() + " :: " + e);
 			// Logger.getLogger(Report.class.getName()).log(Level.SEVERE, null, e);
 		} finally {
 			try {

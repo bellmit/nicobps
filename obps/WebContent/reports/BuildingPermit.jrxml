@@ -3,8 +3,10 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="applicationcode" class="java.lang.String"/>
-	<parameter name="edcrnumber" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1 ]]>
+	</queryString>
+	<field name="?column?" class="java.lang.Integer"/>
 	<title>
 		<band height="55" splitType="Stretch">
 			<staticText>
@@ -28,19 +30,7 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="168" splitType="Stretch">
-			<staticText>
-				<reportElement x="50" y="14" width="59" height="20" />
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Edcr No :]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="109" y="14" width="424" height="20" />
-				<textFieldExpression><![CDATA[$P{edcrnumber}]]></textFieldExpression>
-			</textField>
-		</band>
+		<band height="168" splitType="Stretch"/>
 	</detail>
 	<pageFooter>
 		<band height="54" splitType="Stretch"/>
