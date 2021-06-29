@@ -59,6 +59,7 @@ public class ControllerUploadBpaEnclosures {
 			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
 		}
 		String usercode = (String) request.getSession().getAttribute("usercode");
+//		String usercode = "10";
 		String appenclosurecode = ServiceUploadBpaEnclosuersInterface.getMaxAppEnclosureCode() + "";
 		param.put("appenclosurecode", appenclosurecode);
 		if (usercode != null) {

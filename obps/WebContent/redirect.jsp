@@ -1,1 +1,1 @@
-<% response.sendRedirect("home.htm"); %>
+<% response.sendRedirect("bpauploadenc.htm"); %>

@@ -1,5 +1,5 @@
 jQuery(document).ready(function () {
-
+  
 });
 
 var app = angular.module("applicationApp", ["checklist-model"]);
@@ -79,7 +79,7 @@ function submitBpaEnclosureDetails(applicationEnclosures) {
             });
 
             jQuery('#successMsg').html("* " + data).show();
-            // window.location="bpapayappfee.htm"; 		                          
+            window.location="bpasiteinspection.htm"; 		                          
         },
         error: function (request, status, error) {
             alert("inn error");
