@@ -270,7 +270,6 @@ var TaskStatus = function () {
   return TaskStatus;
 }
 
-
 var ProcessFlow = function () {
   var ProcessFlow = {
     applicationcode: '',
