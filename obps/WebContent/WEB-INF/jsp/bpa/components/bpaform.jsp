@@ -1,45 +1,11 @@
 <!-- @author Decent Khongstia -->
-<style type="text/css">
-	.custom-form-control {
-		background-color: inherit;
-		border: none;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.150);
-		border-radius: 0px;
-	}
-	
-	.custom-form-control[readonly] {
-		background-color: inherit;
-		opacity: 0.7;
-	}
-	
-	.minus i, .plus i{
-		color: rgba(0, 0, 0, 0.45);
-	    width: 1.5em;
-	    height: 1.5em;
-		line-height: 1.5em;
-	    display: block;
-	    font-size: 20px;
-	    text-align: center;
-	    border-radius: 50%;
-	    margin: 0 0.5em;
-	    padding: 0px;
-	    cursor: pointer;
-	}
-	.minus i{
-		background-color: rgba(220, 20, 60, 0.7);
-	}
-	.plus i{
-		background-color: rgba(0, 128, 128, 0.7);
-	}
-</style>
-
 <div class="card">
 	<div class="card-body">
 		<h5 class="card-title">Basic Details</h5>
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
-					<label class="col-sm-12">Building Plan Scrutiny Number</label>
+					<label class="col-sm-12">Building Plan Scrutiny Number<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control"
 							ng-model="BPA.edcrnumber" value="VALUE" readonly />
@@ -48,7 +14,7 @@
 			</div>
 			<div class="col">
 				<div class="form-group">
-					<label class="col">Occupancy</label>
+					<label class="col">Occupancy<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control"
 							ng-model="occupancy.type" readonly />
@@ -59,7 +25,7 @@
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
-					<label class="col-sm-12">Plot Area</label>
+					<label class="col-sm-12">Plot Area<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control"
 							ng-model="planInfo.plotArea" value="VALUE" readonly />
@@ -85,7 +51,7 @@
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
-					<label class="col-sm-12">Addressline1</label>
+					<label class="col-sm-12">Addressline1<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plotaddressline1"
 							ng-model="BPA.plotaddressline1" maxlength="99" pattern-address required/>
@@ -108,7 +74,7 @@
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
-					<label class="col-sm-12">Town/Village</label>
+					<label class="col-sm-12">Town/Village<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plottownvillage"
 							ng-model="BPA.plotvillagetown" maxlength="99" pattern-alpha required/>
@@ -120,7 +86,7 @@
 			</div>
 			<div class="col">
 				<div class="form-group">
-					<label class="col">Pincode</label>
+					<label class="col">Pincode<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plotpincode"
 							ng-model="BPA.plotpincode" maxlength="6" pattern-number pattern-pincode required>
@@ -157,7 +123,7 @@
 			</div>
 			<div class="col">
 				<div class="form-group">
-					<label class="col">Ward/Block/Sub-District</label>
+					<label class="col">Ward/Block/Sub-District<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<select class="form-control custom-form-control" name="officelocationcode"
 							ng-model="BPA.officelocationcode"
@@ -244,7 +210,7 @@
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
-					<label class="col-sm-12">Owner Type</label>
+					<label class="col-sm-12">Owner Type<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<select class="form-control custom-form-control" name="ownershiptypecode"
 							ng-model="BPA.ownershiptypecode"
@@ -260,7 +226,7 @@
 			</div>
 			<div class="col">
 				<div class="form-group">
-					<label class="col">Type of Owner - Subtype</label>
+					<label class="col">Type of Owner - Subtype<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
 						<select class="form-control custom-form-control" name="ownershipsubtype"
 							ng-model="BPA.ownershipsubtype"
@@ -288,7 +254,7 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
-							<label class="col-sm-12">Salutation</label>
+							<label class="col-sm-12">Salutation<span class="fa fa-asterisk"></span></label>
 							<div class="col-sm-12">
 								<select class="form-control custom-form-control" name="salutationcode{{$index}}"
 									ng-model="OD.salutationcode"
@@ -304,7 +270,7 @@
 					</div>
 					<div class="col">
 						<div class="form-group">
-							<label class="col">Owner Name</label>
+							<label class="col">Owner Name<span class="fa fa-asterisk"></span></label>
 							<div class="col-sm-12">
 								<input type="text" class="form-control custom-form-control" name="ownername{{$index}}"
 									ng-model="OD.ownername" maxlength="50" pattern-alpha required>
@@ -318,7 +284,7 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
-							<label class="col-sm-12">Mobile No.</label>
+							<label class="col-sm-12">Mobile No.<span class="fa fa-asterisk"></span></label>
 							<div class="col-sm-12">
 								<input type="text" class="form-control custom-form-control" name="mobileno{{$index}}"
 									ng-model="OD.mobileno" maxlength="10" pattern-number pattern-mobile required> 
@@ -346,7 +312,7 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
-							<label class="col-sm-12">Father's/Mother's/Guardian Name</label>
+							<label class="col-sm-12">Father's/Mother's/Guardian Name<span class="fa fa-asterisk"></span></label>
 							<div class="col-sm-12">
 								<input type="text" class="form-control custom-form-control"  name="relationname{{$index}}"
 									ng-model="OD.relationname" maxlength="50" pattern-alpha required>
@@ -358,7 +324,7 @@
 					</div>
 					<div class="col">
 						<div class="form-group">
-							<label class="col">Relationship</label>
+							<label class="col">Relationship<span class="fa fa-asterisk"></span></label>
 							<div class="col-sm-12">
 								<div class="row">
 									<div class="form-check" style="margin: 0 1em"
@@ -380,7 +346,7 @@
 				<div class="row">
 					<div class="col-sm-6">
 						<div class="form-group">
-							<label class="col-sm-12">Residential Address</label>
+							<label class="col-sm-12">Residential Address<span class="fa fa-asterisk"></span></label>
 							<div class="col-sm-12">
 								<input type="text" class="form-control custom-form-control"  name="address{{$index}}"
 									ng-model="OD.address" maxlength="99" pattern-address required>

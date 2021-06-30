@@ -6,7 +6,6 @@
 		<%@include file="../common/headerfiles.jsp"%>
 		<style type="text/css">
 			#displayRecordsTable{
-/* 				cursor: pointer; */
 				content: "";
 			}
 		</style>

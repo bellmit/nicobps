@@ -72,7 +72,14 @@ app.controller("CommonCtrl", [
 				}, 5);
 				return;
 			}
-
+			if ($scope.modal.usercode == null || $scope.modal.usercode == "") {
+				alert("Please select user");
+				return false;
+			}
+			if ($scope.modal.remarks == null || $scope.modal.remarks == "") {
+				alert("Please enter remarks");
+				return false;
+			}
 			valid = $window.confirm("Are you sure you want to forward?");
 			if (!valid) return;
 

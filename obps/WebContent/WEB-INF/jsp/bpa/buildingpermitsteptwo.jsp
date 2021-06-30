@@ -9,12 +9,8 @@
 				cursor: pointer;
 				content: "";
 			}
-			.element-center{
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
 		</style>
+		<link href="resources/css/bpa-style.css" rel="stylesheet"/>
 	</head>
 	<body ng-app="CommonApp" ng-controller="CommonCtrl">
 		<div class="d-flex" id="wrapper">

@@ -36,10 +36,15 @@ app.controller("CommonCtrl", [
 		/*ACTION*/
 		$scope.forward  = () => {
 			let data = {}, valid = false;
+			if ($scope.modal.remarks == null || $scope.modal.remarks == "") {
+				alert("Please enter remarks");
+				return false;
+			}
+			
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
 			data = $scope.bpa.init($scope.bpa);
-
+			
 			valid = $window.confirm("Are you sure you want to forward?");
 			if (!valid) return;
 

@@ -4,38 +4,8 @@
 	<head>
 		<title>OBPS</title>
 		<%@include file="../common/headerfiles.jsp"%>
-		<style type="text/css">
-			.btn-wrapper{
-			    display: flex;
-			    align-items: center;
-			    justify-content: center;
-			    flex-direction: row;
-			}
-			.custom-form-control {
-				background-color: inherit;
-				border: none;
-				border-bottom: 1px solid rgba(0, 0, 0, 0.150);
-				border-radius: 0px;
-			}
-			
-			.custom-form-control[readonly] {
-				background-color: inherit;
-				opacity: 0.7;
-			}
-			hr{
-/* 			    font-size: 32px; */
-			    border: none;
-    			border-bottom: 1px solid rgba(0, 87, 118, 0.8);
-			}
-			.fa-asterisk{
-				font-size: 8px;
-				color: rgba(220, 53, 70, 1);
-				padding-left: 0.125em;
-				vertical-align: middle;
-			}
-		</style>
+		<link href="resources/css/bpa-style.css" rel="stylesheet"/>
 	</head>
-	</script>
 	<body ng-app="CommonApp" ng-controller="CommonCtrl">
 		<div class="d-flex" id="wrapper">
 			<%@include file="../common/menuside.jsp"%>

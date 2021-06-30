@@ -11,19 +11,19 @@
       <div class="modal-body">
       	<div class="col" ng-if="Users != null && Users.length > 0">
       		<label class="col">
-      			Assignee Name
+      			Assignee Name<span class="fa fa-asterisk"></span>
       		</label>
       		<div class="col">
       			<select class="form-control custom-form-control"
       				ng-model="modal.usercode"
       				ng-options="U.key as U.value for U in Users">
-					<option value="" selected disabled>Self</option>
+					<option value="" selected disabled>Select User</option>
       			</select>
       		</div>
       	</div>
       	<div class="col">
       		<label class="col">
-      			Remarks
+      			Remarks<span class="fa fa-asterisk"></span>
       		</label>
       		<div class="col">
       			<textarea class="form-control" style="width: 100%; height: 100px; min-height:100px; max-height: 250px;" ng-model="modal.remarks"></textarea>
