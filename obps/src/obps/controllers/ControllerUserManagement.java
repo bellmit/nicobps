@@ -1,6 +1,11 @@
 package obps.controllers;
 
 import java.util.Map;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,11 +13,11 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,24 +25,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
-import obps.util.common.Utilty;
+import obps.util.common.UtilFile;
 import obps.validators.UploadEnclosuresValidatorInterface;
-import obps.models.FeeMaster;
-import obps.models.FeeTypes;
-import obps.models.LicenseesRegistrationsm;
-import obps.models.Occupancies;
 import obps.models.Pageurls;
-import obps.models.SubOccupancies;
-import obps.models.Usages;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
 
@@ -184,7 +183,12 @@ public class ControllerUserManagement {
 	@GetMapping(value = "/initUploadEnclosuresForm.htm")
 	public @ResponseBody Map<String, Object> initUploadEnclosuresForm(HttpServletRequest request) {
 		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1")));
+		String usercode = (String) request.getSession().getAttribute("usercode");
+		if (usercode != null) {			
+			data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
+		} else {
+			data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1")));
+		}				
 		return data;
 	}
 
@@ -225,8 +229,70 @@ public class ControllerUserManagement {
 		
 	}
 
-	// =================================Change
-	// Password====================================//
+	@RequestMapping(value = "/output.htm", method = RequestMethod.GET)
+    public String showFile(HttpServletRequest request,HttpServletResponse response,
+    		@RequestParam(value="usercode", required=true) String usercode,
+    		@RequestParam(value="enclosurecode", required=true) String enclosurecode)
+    {
+        String successUrel="output";
+        try
+        {
+    		String sql = "SELECT enclosureimage FROM nicobps.licenseesenclosures WHERE usercode=? AND enclosurecode=?";
+    		Object[] criteria = { Integer.valueOf(usercode),Short.valueOf(enclosurecode) };	        
+            byte[] binaryFile = serviceUtilInterface.getBytes(sql,criteria);
+            //System.out.println("File Size : "+binaryFile.length);
+            //writeBytesToFile(binaryFile);
+            //response.getOutputStream().write(binaryFile);
+
+            String enclosurename="enclosure"+enclosurecode;
+            String ContentType = UtilFile.getFileContentType(binaryFile);
+            
+            if(ContentType.contentEquals("application/pdf")) {
+            	enclosurename+=".pdf";
+            }else {
+            	enclosurename+=".jpg";
+            }
+            
+            response.setContentType(ContentType);
+            response.setHeader("Content-Disposition", "filename="+enclosurename);
+            response.setContentLength(binaryFile.length);
+            OutputStream os = response.getOutputStream();
+
+            try {
+               os.write(binaryFile , 0, binaryFile.length);
+            } catch (Exception excp) {
+               //handle error
+            } finally {
+                os.close();
+            }         
+        }catch(Exception e) {
+        	System.out.println("Exception :: "+e);
+            //successUrel="rdirect:error.jsp";           
+        }
+        return successUrel;
+    }    	
+	
+    private static void writeBytesToFile(byte[] bytes)throws IOException {
+    	
+      String fileOutput="D:\\enc";
+      String ContentType = UtilFile.getFileContentType(bytes);
+      
+      System.out.println("ContentType : "+ContentType);
+      if(ContentType.contentEquals("application/pdf")) {
+    	  fileOutput+=".pdf";
+      }else {
+    	  fileOutput+=".jpg";
+      }    	
+    	
+    	 System.out.println("File Size :: "+bytes.length);
+//        try (FileOutputStream fos = new FileOutputStream(fileOutput)) {
+//                fos.write(bytes);
+//        }    	 
+    	 Path path = Paths.get(fileOutput);
+         Files.write(path, bytes);    	     	 
+    }	
+	
+	// =================================Change Password====================================//
 	@RequestMapping("/changepassword.htm")
 	public String changepassword() {
 		return "changepassword";

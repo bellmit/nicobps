@@ -168,6 +168,16 @@ public class ServiceUtil implements ServiceUtilInterface {
 		Object[] criteria = { modulecode };
 		return this.listCommonMap(sql, criteria);
 	}
+	@Override
+	public List<CommonMap> listEnclosures(final Short modulecode,Integer usercode) {
+		//String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,CASE WHEN usercode IS NULL THEN -1 ELSE usercode END AS value1 FROM masters.enclosures E   "
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,usercode AS value1 FROM masters.enclosures E   "		
+				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
+				+ "LEFT OUTER JOIN nicobps.licenseesenclosures L ON L.enclosurecode=M.enclosurecode AND L.usercode=? "
+				+ "WHERE M.modulecode=? ";
+		Object[] criteria = { usercode,modulecode };
+		return this.listCommonMap(sql, criteria);
+	}	
 
 	@Override
 	public List<CommonMap> listOccupancies() {

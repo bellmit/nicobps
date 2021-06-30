@@ -14,7 +14,12 @@
 				   </td>    
 				   <td ng-if="L.ischecked==false">
 						<input type="file" id="file_{{$index}}" name="file_{{$index}}" disabled />
-				   </td>    
+				   </td>   
+					<td>					   
+						<span ng-if="L.usercode!=null" >
+							<a  href="output.htm?usercode={{L.usercode}}&enclosurecode={{L.enclosurecode}}" target="_blank">View Enclosures</a>
+						</span>						
+				   </td>   				    
 			   </tr>
 			</table>         			        							     			     																													 													   
     	</div>	
