@@ -12,7 +12,7 @@
 			width: 60%;
 		}
 	}
-	img{
+	.img{
 		display: flex;
 		height: auto;
 		margin: auto;
@@ -30,7 +30,7 @@
       </div>
    		<iframe ng-src="{{fileModal.src}}" class="iframe" ng-if="fileModal.mimetype == 'application/pdf'"></iframe>
 		<div style="height: calc(80vh); overflow-y: scroll" ng-if="fileModal.mimetype != 'application/pdf'">
-			<img ng-src="{{fileModal.src}}" ng-if="fileModal.mimetype != 'application/pdf'"/>
+			<img class="img" ng-src="{{fileModal.src}}" ng-if="fileModal.mimetype != 'application/pdf'"/>
 		</div>
     </div>
   </div>
