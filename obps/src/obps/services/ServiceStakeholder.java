@@ -64,6 +64,16 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	}
 
 	@Override
+	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode, String remarks) {
+		if (SUI.updateApplicationflowremarks(applicationcode, 1,
+				Integer.valueOf(SUI.getNextProcessflow(1, applicationcode).get("toprocesscode").toString()), usercode,
+				null, remarks)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer nextprocessode, String remarks) {
 		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
@@ -74,6 +84,8 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				Calendar c = Calendar.getInstance();
 				c.setTime(new Date());
 				c.add(Calendar.YEAR, 1);
+				c.set(Calendar.MONTH, 3);
+				c.set(Calendar.DAY_OF_MONTH, 31);
 				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
 
 //					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
@@ -84,7 +96,8 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				for (Integer urlcode : new Integer[] { 11, 12, 13 }) {
 					try {
 						jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
-					}catch(Exception e) {}
+					} catch (Exception e) {
+					}
 				}
 			}
 			return true;
@@ -94,18 +107,13 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public String ulbRegistration(Integer officecode, Integer usercode) {
-		String sql="select count(*)::int from  nicobps.licenseeofficesvalidities " + 
-				"where officecode IN ( " + 
-				"	select officecode  " + 
-				"	from masters.offices  " + 
-				"	where isregisteringoffice='N' and registeringofficecode=? " + 
-				") " + 
-				"and usercode=? " + 
-				"and validfrom < CURRENT_TIMESTAMP " + 
-				"and validto > CURRENT_TIMESTAMP ";
-		List<Map<String, Object>> count=SUI.listGeneric(sql, new Object[] {officecode,usercode});
-		if(!count.isEmpty()) {
-			if((Integer)count.get(0).get("count")>0)
+		String sql = "select count(*)::int from  nicobps.licenseeofficesvalidities " + "where officecode IN ( "
+				+ "	select officecode  " + "	from masters.offices  "
+				+ "	where isregisteringoffice='N' and registeringofficecode=? " + ") " + "and usercode=? "
+				+ "and validfrom < CURRENT_TIMESTAMP " + "and validto > CURRENT_TIMESTAMP ";
+		List<Map<String, Object>> count = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!count.isEmpty()) {
+			if ((Integer) count.get(0).get("count") > 0)
 				return "ALREADY_REPORTED";
 		}
 		sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) "
@@ -121,23 +129,6 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		} else {
 			return "false";
 		}
-	}
-
-	@Override
-	public boolean processPayment(Integer usercode, String applicationcode, Integer feecode, Integer fee,
-			Integer nextprocessode) {
-		String sql = "INSERT INTO nicobps.transactions(transactioncode, usercode, feecode, amount, paymentstatus, sentparameters, "
-				+ "						responseparameters, bankcode, responsetext1, responsetext2, responsetext3,entrydate) "
-				+ "    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE);";
-		Integer maxtransactioncode = SUI.getMax("nicobps", "transactions", "transactioncode");
-		String payStatus = "S", sentparameters = "", responseparameters = "", bankcode = "", responsetext1 = "",
-				responsetext2 = "", responsetext3 = "";
-		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, "Payment complete")) {
-			return SUI.update("nicobps.transactions", sql,
-					new Object[] { maxtransactioncode + 1, usercode, feecode, fee, payStatus, sentparameters,
-							responseparameters, bankcode, responsetext1, responsetext2, responsetext3 });
-		}
-		return false;
 	}
 
 }

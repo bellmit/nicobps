@@ -63,8 +63,8 @@ app.service("commonInitService", function($http) {
 			async: false,
 //			contentType: "application/json; charset=utf-8",
 			data: data,
-			success: function (res) {
-				successCallback(res);
+			success: function (res,status,xhr) {
+				successCallback(res,xhr);
 			},
 			error: function (xhr) {
 				MsgBox("Unable to process request.");

@@ -33,31 +33,41 @@ public class ControllerStakeholder {
 	}
 
 	@GetMapping("/ulbregistration.htm")
-	public String ulbregistration(Model model, HttpServletRequest req) {
+	public String ulbregistration(Model model, String errorMsg) {
 		model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
+		model.addAttribute("errorMsg", errorMsg);
 		return "stakeholder/ulbregistration";
 	}
 
 	@PostMapping("/ulbregistration.htm")
-	public @ResponseBody String ulbRegistration(Integer officecode, HttpServletRequest req) {
-		return SSI.ulbRegistration(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
+	public String ulbRegistration(Model model,Integer officecode,HttpServletRequest req) {
+		
+		String applicationcode=SSI.ulbRegistration(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
+//		String applicationcode="ALREADY_REPORTED";
+		if(applicationcode.equals("ALREADY_REPORTED")||applicationcode.equals("false")) {
+			model.addAttribute("errorMsg",applicationcode);
+			return "redirect:ulbregistration.htm";
+		}
+		Map<String, Object> url=serviceUtilInterface.getCurrentProcessStatus(1, applicationcode).get(0);
+		return "redirect:"+url.get("pageurl")+"?applicationcode="+applicationcode+"&officecode="+officecode;
 	}
 
-	@GetMapping("/paysuccess.htm")
-	public String paysuccess(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount) {
-		return "stakeholder/payresponse";
+	@GetMapping("/skregistrationconfirmation.htm")
+	public String paysuccess(Model model,Integer officecode,String applicationcode,HttpServletRequest req) {
+		SSI.updateStakeholder(officecode, applicationcode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()),"Verification Pending");
+		model.addAttribute("applicationcode",applicationcode);
+		return "stakeholder/skregistrationconfirmation";
 	}
 
 	@GetMapping("/paysrappfee.htm")
 	public String paysrappfeepost(HttpServletRequest req, String applicationcode, Integer feecode, Integer feeamount,
 			Integer officecode) {
-
-//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-//				feecode, feeamount,
-//				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
+		Map<String, Object> fee = SSI.getFeeMaster(officecode,
+				Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 1);
 		return "redirect:paymentconfirmation.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
-				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode=" + feecode
-				+ "&feeamount=" + feeamount + "&toprocesscode="
+				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode="
+				+ Integer.valueOf(fee.get("feecode").toString()) + "&feeamount="
+				+ Integer.valueOf(fee.get("feeamount").toString()) + "&toprocesscode="
 				+ (Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode");
 	}
 
@@ -65,9 +75,6 @@ public class ControllerStakeholder {
 	public String paysrregfee(HttpServletRequest req, String applicationcode, Integer officecode) {
 		Map<String, Object> fee = SSI.getFeeMaster(officecode,
 				Integer.valueOf(req.getSession().getAttribute("usercode").toString()), 2);
-//		SSI.processPayment(Integer.valueOf(req.getSession().getAttribute("usercode").toString()), applicationcode,
-//				Integer.valueOf(fee.get("feecode").toString()), Integer.valueOf(fee.get("feeamount").toString()),
-//				(Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode"));
 		return "redirect:paymentconfirmation.htm?modulecode=1&applicationcode=" + applicationcode + "&usercode="
 				+ Integer.valueOf(req.getSession().getAttribute("usercode").toString()) + "&feecode="
 				+ Integer.valueOf(fee.get("feecode").toString()) + "&feeamount="

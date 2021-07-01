@@ -16,26 +16,26 @@
 					Registration</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5 row" >
-						<div class="col-md-6 py-4 px-5">
-							<h4>Select Registering Office</h4> 
-							<select ng-model='registeringofficecode'
-								style="min-width: 350px;"
-								ng-change="getOffices(registeringofficecode)">
-								<core:forEach items="${registeringoffices}" var="item">
-									<option value="${item.officecode}">${item.officename1}</option>
-								</core:forEach>
-							</select>
-							<form id="form" style="display:none;" method="get" action="./paysrappfee.htm">
-								<input type="hidden" name='applicationcode' value=""/>
-								<input type="hidden" name='officecode' value="{{registeringofficecode}}"/>
-								<input type="hidden" name='feeamount' value="{{fee.feeamount}}"/>
-								<input type="hidden" name='feecode' value="{{fee.feecode}}"/>
-								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+						<h4>Select Registering Office</h4>
+					</div> 
+					<div class="col-md-12 py-4 px-5 row" >
+						<div class="col-md-6 px-5">
+							<form id="form" method="POST" action="ulbregistration.htm?${_csrf.parameterName}=${_csrf.token}">
+								<select class="my-2" name='officecode' ng-model='registeringofficecode' ng-value='registeringofficecode' 
+									style="min-width: 100%;"
+									ng-change="getOffices(registeringofficecode)">
+									<core:forEach items="${registeringoffices}" var="item">
+										<option value="${item.officecode}">${item.officename1}</option>
+									</core:forEach>
+								</select>
 							</form>
 						</div> 
-						<div class="col-md-6 px-5 pt-5" >
-							<button class="btn btn-primary" ng-disabled="registeringofficecode==0" ng-click="registerStakeholder()">Proceed to Pay</button>
+						<div class="col-md-6 px-5" >
+							<button class="btn btn-primary" ng-disabled="registeringofficecode==0" ng-click="registerStakeholder()">Register</button>
 						</div>
+					<core:if test="${errorMsg ne null}">
+						<span class="mt-4 pl-5" style="color:red">${(errorMsg=='ALREADY_REPORTED')?'Office is already registered and valid.':'Please try again.' }</span> 
+					</core:if>
 					<span class="mt-4 pl-5" ng-show="fee!==-1">Application Fees applicable : <span style="font-style: bold">{{fee.feeamount}}/-</span></span> 
 					</div>
 					<div class="col-md-12 pb-4 px-5 mt-1">
