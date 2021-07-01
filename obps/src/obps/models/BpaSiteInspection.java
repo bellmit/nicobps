@@ -17,6 +17,7 @@ public class BpaSiteInspection implements Serializable {
 
 	private String applicationcode;
 	private String report;
+	private List<BpaQuestionnaire> questionnaires;
 	private List<String> reports;
 	private byte[] imageFile;
 	private List<byte[]> imageFiles;
@@ -40,7 +41,14 @@ public class BpaSiteInspection implements Serializable {
 		this.report = report;
 	}
 
-	
+	public List<BpaQuestionnaire> getQuestionnaires() {
+		return questionnaires;
+	}
+
+	public void setQuestionnaires(List<BpaQuestionnaire> questionnaires) {
+		this.questionnaires = questionnaires;
+	}
+
 	public List<String> getReports() {
 		return reports;
 	}
@@ -102,24 +110,16 @@ public class BpaSiteInspection implements Serializable {
 		this.remarks = remarks;
 	}
 
-	/*
-	 * public class SiteReports { String file; private byte[] imageFile;
-	 * 
-	 * public String getFile() { return file; }
-	 * 
-	 * public void setFile(String file) { this.file = file; }
-	 * 
-	 * public byte[] getImageFile() { return imageFile; }
-	 * 
-	 * public void setImageFile(String file) { try { this.imageFile =
-	 * Base64.getDecoder().decode(file.split(",")[1]); } catch (Exception e) {
-	 * this.imageFile = null; } }
-	 * 
-	 * public void setImageFile(byte[] imageFile) { this.imageFile = imageFile; }
-	 * 
-	 * @Override public String toString() { return "SiteReports [file=" + file +
-	 * ", imageFile=" + Arrays.toString(imageFile) + "]"; }
-	 * 
-	 * }
-	 */
+	public String toStringAll() {
+		return "BpaSiteInspection [applicationcode=" + applicationcode + ", report=" + report + ", questionnaires="
+				+ questionnaires + ", reports=" + reports + ", imageFile=" + Arrays.toString(imageFile)
+				+ ", imageFiles=" + imageFiles + ", tousercode=" + tousercode + ", remarks=" + remarks + "]";
+	}
+	
+	@Override
+	public String toString() {
+		return "BpaSiteInspection [applicationcode=" + applicationcode + ", questionnaires="
+				+ questionnaires + ", imageFile=" + Arrays.toString(imageFile)
+				+ ", imageFiles=" + imageFiles + ", tousercode=" + tousercode + ", remarks=" + remarks + "]";
+	}
 }

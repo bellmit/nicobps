@@ -86,8 +86,11 @@ app.service("bpaService", [
       listSalutations: async function (callback, data = "") {
         CUS.getData("./listSalutations.htm", data, callback);
       },
+      listSiteInspectionQuestionnaires: async function (callback, data = "") {
+        CUS.getData('./listSiteInspectionQuestionnaires.htm', data, callback);
+      },
       listSiteReportDetails: async function (callback, data = "") {
-        CUS.getData('./listSiteReportDetails.htm', data, callback);
+    	  CUS.getData('./listSiteReportDetails.htm', data, callback);
       },
       test: async function (callback, data = "") {
         CUS.getData("./listTest.htm", data, callback);

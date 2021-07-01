@@ -347,6 +347,12 @@ public class ControllerBpaProcessing {
 		return SBI.listRejectedApplications(usercode);
 	};
 
+	@GetMapping(value = "/listSiteInspectionQuestionnaires.htm")
+	public @ResponseBody List<Map<String, Object>> listSiteInspectionQuestionnaires(
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.listSiteInspectionQuestionnaires(applicationcode);
+	};
+
 	@GetMapping(value = "/listSiteReportDetails.htm")
 	public @ResponseBody List<Map<String, Object>> listSiteReportDetails(
 			@ModelAttribute("SESSION_USERCODE") Integer usercode,
@@ -407,6 +413,7 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode,
 			@RequestParam(name = "processcode", required = false) Integer fromprocesscode, Model model,
 			BindingResult bindingResult) {
+		LOG.info("bpa: "+bpa);
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		/*
 		 * String base64ImageString = bpa.get("report").toString(); final Pattern mime =

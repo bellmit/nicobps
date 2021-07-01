@@ -20,7 +20,6 @@ app.controller("CommonCtrl", [
 		$scope.serverResponseSuccess = false;
 
 		$scope.bpa = new SiteInspection();
-//		$scope.bpa.reports = new Array(2);
 		$scope.basicDetail = {};
 		$scope.Blocks = {};
 		$scope.EDCR = {};
@@ -30,15 +29,21 @@ app.controller("CommonCtrl", [
 
 		$scope.DocumentDetails = [];
 		$scope.OwnerDetails = [];
+		$scope.Questionnaires = [];
 		$scope.Users = [];
 
 		$scope.bpa.applicationcode = APPCODE;
 
+		/*GET*/
+		BS.listSiteInspectionQuestionnaires((response) => {
+			$scope.Questionnaires = response;
+		}, APPCODE);
+		
 		/*ACTION*/
 		$scope.addRemoveMoreFile = (opt) => {
 			switch(opt){
 				case 1:
-					$scope.bpa.reports.push({file:null});
+					$scope.bpa.reports.push(null);
 					break;
 				default:
 					$scope.bpa.reports.pop();
@@ -59,13 +64,16 @@ app.controller("CommonCtrl", [
 		$scope.validateForm = () => {
 			let status = true;
 			let form = $scope.bpa;
-			form.report.$touched = true;
-			if (form.report == null || form.report == undefined || form.report == "") {
-				status = false;
-				form.error.report = "Required";
-				$timeout(() => form.error.report = '', 3000);
+			if(form.reports != null && form.reports.length > 0){
+				form.error = new Array();
+				for(let x = 0; x < form.reports.length; x ++){
+					if(form.reports[x] == undefined || form.reports[x] == null || form.reports[x] == ''){
+						status = false;
+						form.error[x]= true;
+						$timeout(() => form.error[x]= false, 3000);
+					}
+				}
 			}
-
 			return status;
 		};
 
@@ -75,16 +83,17 @@ app.controller("CommonCtrl", [
 			valid = $scope.validateForm();
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
+			$scope.bpa.questionnaires = $scope.bpa.initQuestionnaires($scope.Questionnaires);
 			data = $scope.bpa.init($scope.bpa);
-
-			console.log("data: ",data)
-//			if (!valid) {
-//				$('#commonModal').modal('hide');
-//				$timeout(() => {
-//					alert("Please fill all mandatory fields");
-//				}, 5);
-//				return;
-//			}
+			console.log("f-data: ",data)
+			if (!valid) {
+				$('#commonModal').modal('hide');
+				$timeout(() => {
+					alert("Please fill all mandatory fields");
+				}, 5);
+				return;
+			}
+			
 			if ($scope.modal.usercode == null || $scope.modal.usercode == "") {
 				alert("Please select user");
 				return false;

@@ -305,6 +305,29 @@ public class DaoBPA implements DaoBPAInterface{
 			status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
 			if(!status) throw new Exception("Failed to update siteinspection details");
 			
+			if(bpa.getQuestionnaires() != null && !bpa.getQuestionnaires().isEmpty()) {
+				sql = "INSERT INTO nicobps.applicationsquestionaires(  "
+						+ "    aqcode, modulecode, processcode, questioncode, response, remarks,   " 
+						+ "    entrydate)  "
+						+ "VALUES ((SELECT COALESCE(MAX(aqcode), 0)+1 FROM nicobps.applicationsquestionaires), ?, ?, ?, ?, ?, now())";
+				
+				List<Map<String, Object>> tlist = new ArrayList<Map<String,Object>>();
+				Map<String, Object> tmap = new HashMap<String, Object>();
+				tlist = SUI.getCurrentProcessStatus(BPAConstants.MODULE_CODE, bpa.getApplicationcode());
+
+				params.clear();
+				if(tlist != null && !tlist.isEmpty()) {
+					tmap = tlist.get(0);
+					Integer processcode = (Integer) tmap.get("fromprocesscode");
+					bpa.getQuestionnaires().forEach(q -> {
+						params.add(new Object[] { BPAConstants.MODULE_CODE, processcode, q.getQuestioncode(),
+								q.getResponse(), q.getRemarks() });
+					});
+				}
+				status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
+				if(!status) throw new Exception("Failed to update siteinspection questionnaires");
+			}
+			
 			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode, bpa.getRemarks(), bpa.getTousercode(), response);
 			if(!status) throw new Exception("Failed to update application flow");
 
@@ -325,8 +348,6 @@ public class DaoBPA implements DaoBPAInterface{
 			Integer tousercode, HashMap<String, Object> response) {
 		boolean status = false;
 		try {
-			// TODO: handle exception
-			
 			List<Map<String, Object>> tlist = new ArrayList<Map<String,Object>>();
 			Map<String, Object> tmap = new HashMap<String, Object>();
 			Integer toprocesscode = 0;

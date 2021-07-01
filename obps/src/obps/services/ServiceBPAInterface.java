@@ -38,6 +38,8 @@ public interface ServiceBPAInterface {
 
 	List<Map<String, Object>> listOfficePaymentMode(String applicationcode);
 
+	List<Map<String, Object>> listSiteInspectionQuestionnaires(String applicationcode);
+	
 	List<Map<String, Object>> listSiteReportDetails(Integer USERCODE, String applicationcode);
 
 	Map<String, Object> getBpaApplicationDetails(String applicationcode);

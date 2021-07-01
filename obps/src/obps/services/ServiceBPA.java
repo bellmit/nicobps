@@ -236,6 +236,16 @@ class ServiceBPA implements ServiceBPAInterface {
 	}
 
 	@Override
+	public List<Map<String, Object>> listSiteInspectionQuestionnaires(String applicationcode) {
+		String sql = "SELECT OQ.officecode, Q.questioncode, Q.questiondescription  "
+				+ "FROM masters.officequestionaires  OQ  "
+				+ "INNER JOIN masters.questionaires Q ON Q.questioncode = OQ.questioncode  "
+				+ "WHERE UPPER(enabled) = 'Y'  " 
+				+ "AND OQ.officecode = ?";
+		return SUI.listGeneric(sql, new Object[] {getApplicationOfficecode(applicationcode)});
+	}
+
+	@Override
 	public List<Map<String, Object>> listSiteReportDetails(Integer USERCODE, String applicationcode) {
 		String sql = "SELECT SI.appenclosurecode, SI.applicationcode, SI.enclosurecode, SI.enclosureimage,   "
 				+ " TO_CHAR(SI.entrydate, 'DD/MM/YYYY') entrydate, E.enclosurename      " 
@@ -627,7 +637,6 @@ class ServiceBPA implements ServiceBPAInterface {
 			HashMap<String, Object> response) {
 		if(bpa != null && bpa.getReports() != null && !bpa.getReports().isEmpty()) {
 			bpa.setImageFilesByBase64String(bpa.getReports());
-			LOG.info("ImageFiles size: "+bpa.getImageFiles().size());
 			return DBI.saveBPASiteInspection(bpa, USERCODE, fromprocesscode, response);
 		}else {
 			response.put("code", HttpStatus.BAD_REQUEST.value());

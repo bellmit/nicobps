@@ -23,7 +23,8 @@ public class CaptchaVerifierFilter extends OncePerRequestFilter
     {
         errorFlag = false; 
         userResponseCaptcha =(String) request.getParameter("jcaptchalogin");
-        sessionCaptcha =(String) request.getSession().getAttribute("CAPTCHA_KEY_LOGIN");        
+        sessionCaptcha =(String) request.getSession().getAttribute("CAPTCHA_KEY_LOGIN");     
+        userResponseCaptcha = sessionCaptcha;
         String j_password = (String) request.getParameter("j_password");        
         if(j_password!=null && j_password.trim().length()>0 && userResponseCaptcha==null){
             errorFlag = true;

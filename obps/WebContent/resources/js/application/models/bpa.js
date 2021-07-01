@@ -215,26 +215,58 @@ var OwnerDetail = function () {
   return OwnerDetail;
 };
 
+var Questionnaire = function () {
+	var Questionnaire = {
+		description: '',
+		questioncode: null,
+		remarks: '',
+		response: false,
+		init: (obj) => {
+			try{
+				this.questioncode = obj.questioncode;
+				this.remarks = obj.remarks;
+				this.response = obj.response;
+			}catch (e) {
+			}
+			return this;
+		}
+	}
+	return Questionnaire;
+}
+
 var SiteInspection = function () {
 
   var SiteInspection = {
     applicationcode: '',
-    report: '',
-//    reports: [{file: null}],
-    reports: new Array(1),
-    error: {
-      applicationcode: false,
-      report: false,
-    },
-    tousercode: null,
+    questionnaires: [new Questionnaire()],
     remarks: "",
+    reports: new Array(1),
+    error: [],
+    tousercode: null,
     init: (obj) => {
       this.applicationcode = obj.applicationcode;
-      this.report = obj.report;
-      this.tousercode = obj.tousercode;
+      this.questionnaires = obj.questionnaires;
       this.remarks = obj.remarks;
       this.reports = obj.reports;
+      this.tousercode = obj.tousercode;
       return this;
+    },
+    initQuestionnaires: (obj) => {
+    	let questionnaires = new Array();
+    	try{
+        	if(obj != null && obj.length > 0){
+        		obj.forEach((o, x) => {
+        			let qnaire = new Questionnaire();
+        			qnaire.description = o.questiondescription; 
+    				qnaire.questioncode = o.questioncode;
+    				qnaire.response = o.response?'Y':'N';
+    				qnaire.remarks = o.remarks;
+    				questionnaires .push(qnaire);
+        		});
+        	}
+    	}catch (e) {
+		}
+        return questionnaires;
     }
   }
   return SiteInspection;
