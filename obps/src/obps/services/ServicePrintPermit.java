@@ -15,21 +15,26 @@ public class ServicePrintPermit implements ServicePrintPermitInterface {
 	private ServiceUtilInterface SUI;
 
 	@Override
-	public List<Map<String, Object>> getPermitList(String applicationcode, String edcrnumber, String ownername,
-			String fromentrydate, String toentrydate, String criteria) {
+	public List<Map<String, Object>> getPermitList(String applicationcode, String permitnumber, String edcrnumber,
+			String ownername, String fromentrydate, String toentrydate, String criteria) {
 
-		String sql = " select ba.applicationcode,ba.edcrnumber,bo.ownername,to_char(ba.entrydate, 'DD-MM-YYYY') as entrydate,ba.landregistrationdetails,ba.ownershipsubtype from nicobps.bpaapplications ba "
+		String sql = "select ba.applicationcode,ba.edcrnumber,bo.ownername,"
+				+ " ba.landregistrationdetails,ba.ownershipsubtype,bap.permitnumber,bap.remarks,"
+				+ " to_char(bap.entrydate, 'DD-MM-YYYY') as entrydate" + " from nicobps.bpaapplications ba "
 				+ " inner join nicobps.bpaownerdetails bo on ba.applicationcode=bo.applicationcode "
-				+ " inner join nicobps.applicationflowremarks af on ba.applicationcode=af.applicationcode " + " where ";
+				+ " inner join nicobps.bpaapproveapplications bap on ba.applicationcode=bap.applicationcode  "
+				+ " where ";
 
 		if (criteria.equals("byappcode")) {
 			sql += " upper(ba.applicationcode)=upper('" + applicationcode + "') ;";
 		} else if (criteria.equals("byedcrno")) {
-			sql += "upper( ba.edcrnumber)=upper('" + edcrnumber + "') ;";
+			sql += "upper(ba.edcrnumber)=upper('" + edcrnumber + "') ;";
 		} else if (criteria.equals("byowner")) {
 			sql += " lower(bo.ownername) like lower('%" + ownername + "%') ;";
 		} else if (criteria.equals("byentrydate")) {
-			sql += "  DATE(ba.entrydate) BETWEEN to_date('" + fromentrydate + "','dd-mm-yyyy') and to_date('"+ toentrydate + "','dd-mm-yyyy') ;";
+			sql += "  DATE(bap.entrydate) BETWEEN to_date('" + fromentrydate + "','dd-mm-yyyy') and to_date('"+ toentrydate + "','dd-mm-yyyy') ;";
+		} else if (criteria.equals("bypermitno")) {
+			sql += " upper(bap.permitnumber)=upper('" + permitnumber + "') ;";
 		}
 
 		return SUI.listGeneric(sql);
