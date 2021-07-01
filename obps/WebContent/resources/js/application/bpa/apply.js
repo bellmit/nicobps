@@ -97,6 +97,10 @@ app.controller("CommonCtrl", [
     $scope.validateForm = () => {
       let flag = true;
       let bpa = $scope.bpaform;
+      
+      bpa.edcrnumber.$touched = true;
+      bpa.plotarea.$touched = true;
+      bpa.occupancy.$touched = true;
       bpa.plotaddressline1.$touched = true;
       if (
         bpa.plotaddressline1.$modelValue == null ||

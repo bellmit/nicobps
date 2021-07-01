@@ -20,6 +20,7 @@ app.controller("CommonCtrl", [
 		$scope.serverResponseSuccess = false;
 
 		$scope.bpa = new SiteInspection();
+//		$scope.bpa.reports = new Array(2);
 		$scope.basicDetail = {};
 		$scope.Blocks = {};
 		$scope.EDCR = {};
@@ -34,6 +35,17 @@ app.controller("CommonCtrl", [
 		$scope.bpa.applicationcode = APPCODE;
 
 		/*ACTION*/
+		$scope.addRemoveMoreFile = (opt) => {
+			switch(opt){
+				case 1:
+					$scope.bpa.reports.push({file:null});
+					break;
+				default:
+					$scope.bpa.reports.pop();
+			}
+			
+		};
+		
 		$scope.clearAfterCreateProcess = () => {
 			$timeout(() => {
 				$scope.serverResponseError = false;
@@ -65,13 +77,14 @@ app.controller("CommonCtrl", [
 			$scope.bpa.remarks = $scope.modal.remarks;
 			data = $scope.bpa.init($scope.bpa);
 
-			if (!valid) {
-				$('#commonModal').modal('hide');
-				$timeout(() => {
-					alert("Please fill all mandatory fields");
-				}, 5);
-				return;
-			}
+			console.log("data: ",data)
+//			if (!valid) {
+//				$('#commonModal').modal('hide');
+//				$timeout(() => {
+//					alert("Please fill all mandatory fields");
+//				}, 5);
+//				return;
+//			}
 			if ($scope.modal.usercode == null || $scope.modal.usercode == "") {
 				alert("Please select user");
 				return false;

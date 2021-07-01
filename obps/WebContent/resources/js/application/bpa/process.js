@@ -1,6 +1,7 @@
 /**
  * @author Decent Khongstia
  */
+
 app.controller("CommonCtrl", [
 	"$sce",
 	"$scope",
@@ -10,7 +11,7 @@ app.controller("CommonCtrl", [
 	"commonInitService",
 	"bpaService",
 	function ($sce, $scope, $http, $timeout, $window, CIS, BS) {
-		console.log("BPA: Scrutiny of BPP");
+		console.log("BPA: Common Process");
 
 		let data = "";
 		$scope.serverResponseError = false;
@@ -43,11 +44,10 @@ app.controller("CommonCtrl", [
 				alert("Please enter remarks");
 				return false;
 			}
-			
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
 			data = $scope.bpa.init($scope.bpa);
-			
+
 			valid = $window.confirm("Are you sure you want to forward?");
 			if (!valid) return;
 

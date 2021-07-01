@@ -16,349 +16,411 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.context.annotation.SessionScope;
 
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.services.ServiceBPAInterface;
+import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
 
 @Controller
+@SessionAttributes({ "SESSION_PATHURL", "SESSION_USERCODE" })
 public class ControllerBpaProcessing {
 	private static final Logger LOG = Logger.getLogger(ControllerBuildingPermit.class.toGenericString());
-	private static final String PARENT_URL_MAPPING = "/bpa";
-	private static final String COMPONENT_URL_MAPPING = "/bpa/components";
-	private static final String REDIRECT_MAPPING = "redirect:";
-	private static Integer USERCODE;
-	private static String appcode;
+
 	private static String pathurl;
-	
+
 	@Autowired
 	private ServiceBPAInterface SBI;
+
+	@ModelAttribute("SESSION_USERCODE")
+	Integer getSessionUsercode() {
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			return Integer.valueOf(session.getAttribute("usercode").toString());
+		}
+		return null;
+	}
 	
+	@GetMapping(value = "/bpaprocess.htm")
+	public String bpaProcess(HttpServletRequest req, @ModelAttribute("SESSION_USERCODE") Integer usercode, Model model,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("bpaprocess");
+		if (usercode != null) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
+			model.addAttribute("applicationcode", applicationcode);
+			String pageurl = BPAConstants.getProcessPage(model.getAttribute(BPAConstants.SESSION_PATHURL).toString());
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+
+		}
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
+	}
+
 	@GetMapping(value = "/bpaadministrativeapproval.htm")
-	public String bpaAdministrativeApproval(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaAdministrativeApproval(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
-			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/administrativeapproval");
-		}
-		return REDIRECT_MAPPING.concat("login.htm");
-	}
-	
-	@GetMapping(value = "/bpaapproval.htm")
-	public String bpaApproval(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
 			
-			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/approval");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/administrativeapproval"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	@GetMapping(value = "/bpaapprovalofsiteplan.htm")
-	public String bpaApprovalSitePlan(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaApprovalSitePlan(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
+			
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/approvalofsiteplan");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/approvalofsiteplan"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
+
 	}
-	
+
 	@GetMapping(value = "/bpacheckingofbpp.htm")
-	public String bpaCheckingOfBpp(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaCheckingOfBpp(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
+			
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/checkingofbpp");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/checkingofbpp"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	@GetMapping(value = "/bpainbox.htm")
-	public String bpaInbox() {
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			return PARENT_URL_MAPPING.concat("/inbox");
+	public String bpaInbox(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		if (usercode != null) {
+			return BPAConstants.PARENT_URL_MAPPING.concat("/inbox");
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/bparejectedapplications.htm")
-	public String bpaRejectedApplications(HttpServletRequest req) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			return PARENT_URL_MAPPING.concat("/rejectedapplications");
+	public String bpaRejectedApplications(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		if (usercode != null) {
+			return BPAConstants.PARENT_URL_MAPPING.concat("/rejectedapplications");
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
 
 	@GetMapping(value = "/bpascrutinyofbpp.htm")
-	public String bpaScrutinyOfBpp(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaScrutinyOfBpp(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		LOG.info("usercode: "+usercode);
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
+			
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/scrutinyofbpp");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/scrutinyofbpp"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	@GetMapping(value = "/bpascrutinyofdocumentsandsiteplan.htm")
-	public String bpaScrutinyOfDocumentsAndSitePlan(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
+	public String bpaScrutinyOfDocumentsAndSitePlan(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
 			
-			appcode = applicationcode;
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/scrutinyofdocumentsandsiteplan");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/*
+			 * return
+			 * BPAConstants.PARENT_URL_MAPPING.concat("/scrutinyofdocumentsandsiteplan");
+			 */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	@GetMapping(value = "/bpasiteinspection.htm")
-	public String bpaSiteInspection(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaSiteInspection(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
+			
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/siteinspection");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/siteinspection"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	@GetMapping(value = "/bpastructuralcheck.htm")
-	public String bpaStructuralCheck(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaStructuralCheck(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
+			
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/structuralcheck");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/structuralcheck"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	@GetMapping(value = "/bpatechnicalapproval.htm")
-	public String bpaTechnicalApproval(HttpServletRequest req, Model model, @RequestParam(required = false) String applicationcode) {
-		LOG.info("URL: "+req.getServletPath());
-		HttpSession session = ControllerLogin.session();
-		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
-			USERCODE = Integer.valueOf(session.getAttribute("usercode").toString());
-			if(applicationcode == null || applicationcode.isEmpty())
-				return REDIRECT_MAPPING.concat("bpainbox.htm");
-			
+	public String bpaTechnicalApproval(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: " + req.getServletPath());
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+
 			model.addAttribute("applicationcode", applicationcode);
-			appcode = applicationcode;
 			pathurl = req.getServletPath();
-			return PARENT_URL_MAPPING.concat("/technicalapproval");
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
+			String pageurl = BPAConstants.getProcessPage(pathurl);
+			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
+			/* return BPAConstants.REDIRECT_MAPPING.concat("bpaprocess.htm"); */
+			/* return BPAConstants.PARENT_URL_MAPPING.concat("/technicalapproval"); */
 		}
-		return REDIRECT_MAPPING.concat("login.htm");
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
-	
+
 	/* COMPONENTS */
 	@GetMapping(value = "/commonprocessingaction.htm")
-	public String commonProcessingAction() {
+	public String commonProcessingAction(@ModelAttribute("SESSION_PATHURL") String pathurl,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestParam String applicationcode) {
 		LOG.info("URL: commonprocessingaction.htm");
-		if(SBI.checkAccessGrantStatus(USERCODE, appcode, pathurl))
-			return COMPONENT_URL_MAPPING.concat("/commonprocessingaction");
+		LOG.info("applicationcode: "+applicationcode);
+		/* if (SBI.checkActionAccessGrantStatus(USERCODE, appcode)) */
+		if (SBI.checkPageAccessGrantStatus(usercode, applicationcode, pathurl))
+			return BPAConstants.COMPONENT_URL_MAPPING.concat("/commonprocessingaction");
 		else
 			return "";
 	}
-	
+
+	@GetMapping(value = "/commonprocessingdetails.htm")
+	public String commonProcessingDetails() {
+		LOG.info("URL: commonprocessingdetails.htm");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/commonprocessingdetails");
+	}
+
 	@GetMapping(value = "/documentdetails.htm")
 	public String documentDetails() {
 		LOG.info("URL: documentdetails.htm");
-		return COMPONENT_URL_MAPPING.concat("/documentdetails");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/documentdetails");
 	}
 
 	@GetMapping(value = "/fileviewmodal.htm")
 	public String modal() {
 		LOG.info("URL: fileviewmodal.htm");
-		return COMPONENT_URL_MAPPING.concat("/fileviewmodal");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/fileviewmodal");
 	}
-	
+
 	@GetMapping(value = "/ownerdetails.htm")
 	public String ownerDetails() {
 		LOG.info("URL: ownerdetails.htm");
-		return COMPONENT_URL_MAPPING.concat("/ownerdetails");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/ownerdetails");
 	}
-	
+
 	@GetMapping(value = "/processtrackstatus.htm")
 	public String processTrackStatus() {
 		LOG.info("URL: processtrackstatus.htm");
-		return COMPONENT_URL_MAPPING.concat("/processtrackstatus");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/processtrackstatus");
 	}
 
 	@GetMapping(value = "/scrutinydetails.htm")
 	public String scrutinyDetails() {
 		LOG.info("URL: scrutinydetails.htm");
-		return COMPONENT_URL_MAPPING.concat("/scrutinydetails");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/scrutinydetails");
 	}
-	
+
 	@GetMapping(value = "/sitereportdetails.htm")
 	public String siteReportDetails() {
 		LOG.info("URL: sitereportdetails.htm");
-		return COMPONENT_URL_MAPPING.concat("/sitereportdetails");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/sitereportdetails");
 	}
-
 
 	/* GET */
 	@GetMapping(value = "/getBpaApplicationDetailsV2.htm")
-	public @ResponseBody Map<String, Object> getBpaApplicationDetailsV2(@RequestParam(name = "param") String applicationcode) {
-		return SBI.getBpaApplicationDetails(applicationcode);	
+	public @ResponseBody Map<String, Object> getBpaApplicationDetailsV2(
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.getBpaApplicationDetails(applicationcode);
 	};
 
 	@GetMapping(value = "/getCurrentProcessTaskStatus.htm")
-	public @ResponseBody Map<String, Object> getCurrentProcessTaskStatus(@RequestParam(name = "param") String applicationcode) {
-		return SBI.getCurrentProcessTaskStatus(USERCODE, applicationcode);
+	public @ResponseBody Map<String, Object> getCurrentProcessTaskStatus(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.getCurrentProcessTaskStatus(usercode, applicationcode);
 	};
-	
+
 	@GetMapping(value = "/getEdcrDetailsV3.htm")
-	public @ResponseBody Map<String, Object> getEdcrDetailsByApplicationcode(@RequestParam(name = "param") String applicationcode) {
+	public @ResponseBody Map<String, Object> getEdcrDetailsByApplicationcode(
+			@RequestParam(name = "param") String applicationcode) {
 		return SBI.getEdcrDetailsV2(applicationcode);
 	};
-	
+
 	@GetMapping(value = "/listNextProcessingUsers.htm")
-	public @ResponseBody List<CommonMap> listNextProcessingUsers(@RequestParam(name = "param") String applicationcode) {
-		return SBI.listNextProcessingUsers(USERCODE, applicationcode);
+	public @ResponseBody List<CommonMap> listNextProcessingUsers(@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.listNextProcessingUsers(usercode, applicationcode);
 	};
 
 	@GetMapping(value = "/listbpapplications.htm")
-	public @ResponseBody List<Map<String, Object>> listBPApplications() {
-		return SBI.listBPApplications(USERCODE);
+	public @ResponseBody List<Map<String, Object>> listBPApplications(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		return SBI.listBPApplications(usercode);
 	};
 
 	@GetMapping(value = "/listRejectedApplications.htm")
-	public @ResponseBody List<Map<String, Object>> listRejectedApplications() {
-		return SBI.listRejectedApplications(USERCODE);
+	public @ResponseBody List<Map<String, Object>> listRejectedApplications(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		return SBI.listRejectedApplications(usercode);
 	};
-	
+
 	@GetMapping(value = "/listSiteReportDetails.htm")
-	public @ResponseBody List<Map<String, Object>> listSiteReportDetails(@RequestParam(name = "param") String applicationcode) {
-		return SBI.listSiteReportDetails(USERCODE, applicationcode);
+	public @ResponseBody List<Map<String, Object>> listSiteReportDetails(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.listSiteReportDetails(usercode, applicationcode);
 	};
 
 	/* CREATE */
 	@PostMapping(value = "/approvebpapplication.htm")
-	public ResponseEntity<HashMap<String, Object>> approveApplication(@RequestBody BpaProcessFlow data,
+	public ResponseEntity<HashMap<String, Object>> approveApplication(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		if (USERCODE == null)
+		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-		
-		data.setFromusercode(USERCODE);
-		if (SBI.approveBPApplication(data, response)) 
+
+		data.setFromusercode(usercode);
+		if (SBI.approveBPApplication(data, response))
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@PostMapping(value = "/processbpapplication.htm")
-	public ResponseEntity<HashMap<String, Object>> processbpapplication(@RequestBody BpaProcessFlow data,
+	public ResponseEntity<HashMap<String, Object>> processbpapplication(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		if (USERCODE == null)
+
+		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
-		data.setFromusercode(USERCODE);
+		data.setFromusercode(usercode);
 		if (SBI.processBPApplication(data, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@PostMapping(value = "/rejectbpapplication.htm")
-	public ResponseEntity<HashMap<String, Object>> rejectBPApplication(@RequestBody BpaProcessFlow data,
+	public ResponseEntity<HashMap<String, Object>> rejectBPApplication(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		if (USERCODE == null)
+
+		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-		
-		data.setFromusercode(USERCODE);
+
+		data.setFromusercode(usercode);
 		if (SBI.rejectBPApplication(data, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@PostMapping(value = "/savebpasiteinspection.htm")
 	public ResponseEntity<HashMap<String, Object>> saveBPASiteInspection(@RequestBody BpaSiteInspection bpa,
-			@RequestParam(name = "processcode", required = false) Integer fromprocesscode,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(name = "processcode", required = false) Integer fromprocesscode, Model model,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		bpa.setImageFile(bpa.getReport());
 		/*
 		 * String base64ImageString = bpa.get("report").toString(); final Pattern mime =
 		 * Pattern.compile("^data:([a-zA-Z0-9]+/[a-zA-Z0-9]+).*,.*"); final Matcher
 		 * matcher = mime.matcher(base64ImageString); if (!matcher.find()) LOG.info("");
 		 * else LOG.info(matcher.group(1).toLowerCase());
 		 */
-		if (USERCODE == null)
+		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
-		if (SBI.saveBPASiteInspection(bpa, USERCODE, fromprocesscode, response)) {
+		if (SBI.saveBPASiteInspection(bpa, usercode, fromprocesscode, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	
+
 }

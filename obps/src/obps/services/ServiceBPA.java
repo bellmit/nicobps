@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.jayway.jsonpath.DocumentContext;
@@ -22,7 +23,7 @@ import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
-import obps.util.application.BPACalculatorConstants;
+import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 
@@ -134,7 +135,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	AND   " 
 				+ "	APP.usercode = ? " 
 				+ "ORDER BY APP.entrydate";
-		return SUI.listGeneric(sql, new Object[] {BPACalculatorConstants.MODULE_CODE, USERCODE});
+		return SUI.listGeneric(sql, new Object[] {BPAConstants.MODULE_CODE, USERCODE});
 	}
 	
 	@Override
@@ -203,11 +204,11 @@ class ServiceBPA implements ServiceBPAInterface {
 	
 	@Override
 	public List<Map<String, Object>> listNextProcess(String applicationcode) {
-		List<Map<String, Object>> list = SUI.getCurrentProcessStatus(BPACalculatorConstants.MODULE_CODE, applicationcode);
+		List<Map<String, Object>> list = SUI.getCurrentProcessStatus(BPAConstants.MODULE_CODE, applicationcode);
 		if(list != null) {
 			Map<String, Object> map = list.get(0);
 			if(map != null) {
-				return SUI.getAllNextProcessflows(BPACalculatorConstants.MODULE_CODE, Integer.valueOf(map.get("fromprocesscode").toString()));
+				return SUI.getAllNextProcessflows(BPAConstants.MODULE_CODE, Integer.valueOf(map.get("fromprocesscode").toString()));
 			}
 		}
 		return null;
@@ -396,7 +397,7 @@ class ServiceBPA implements ServiceBPAInterface {
 			fee.put("name", calcutionFeeTypeName);
 			if(calculationType.containsKey("calsiLogic")) {
 				amount = Double.valueOf(0);
-				if(calcutionFeeType.equals(BPACalculatorConstants.FEETYPE_FORM_SCRUTINIZATION_FEE)) {
+				if(calcutionFeeType.equals(BPAConstants.FEETYPE_FORM_SCRUTINIZATION_FEE)) {
 					net.minidev.json.JSONArray blockTotalFloors = edcrContext.read("planDetail.blocks.*.building.totalFloors");
 					Double plotArea = ((Double) edcrContext.read("planDetail.plot.area"));
 					jsona = (net.minidev.json.JSONArray) calcContext.read("calsiLogic.*.tolerancelimit");
@@ -471,7 +472,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AFR.applicationcode  "
 				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode    "
 				+ "WHERE AFR.modulecode = ? AND AFR.applicationcode = ?";
-		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPACalculatorConstants.MODULE_CODE, applicationcode});
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {BPAConstants.MODULE_CODE, applicationcode});
 		if(list != null && !list.isEmpty())
 			return list.get(0);
 		return null;
@@ -521,8 +522,41 @@ class ServiceBPA implements ServiceBPAInterface {
 		return null;
 	}
 
+	
 	@Override
-	public boolean checkAccessGrantStatus(Integer USERCODE, String appcode, String pathurl) {
+	public boolean checkActionAccessGrantStatus(Integer USERCODE, String appcode) {
+		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag        " 
+				+ "FROM nicobps.applications APP        "
+				+ "INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (     	    "
+				+ "SELECT applicationcode, MAX(entrydate)   	     "
+				+ "FROM nicobps.applicationflowremarks     	    " 
+				+ "WHERE applicationcode = APP.applicationcode       "
+				+ "AND modulecode = APP.modulecode       	    " 
+				+ "GROUP BY applicationcode)         "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode          "
+				+ "INNER JOIN masters.processflow PF ON PF.toprocesscode = PR.processcode  AND PF.modulecode = PR.modulecode     "
+				+ "AND PF.processflowstatus = 'N'         "
+				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode         "
+				+ "INNER JOIN nicobps.userpages UP ON (UP.urlcode, UP.usercode ) = (PU.urlcode, CASE WHEN AF.tousercode IS NOT NULL THEN AF.tousercode ELSE UP.usercode END)   "
+				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode     "
+				+ "WHERE 1=1   " 
+				+ "AND UP.usercode = ?  " 
+				+ "AND AF.modulecode = ?       "
+				+ "AND AF.applicationcode = ?     " 
+				+ "AND RA.applicationcode IS NULL";
+		return SUI.getStringObject(sql, new Object[] {USERCODE, BPAConstants.MODULE_CODE, appcode}).equals(String.valueOf(1));
+	}
+
+	@Override
+	public boolean checkIfBuildingPermitAlreadyApplied(Integer USERCODE, String edcrnumber) {
+		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag "
+				+ "FROM nicobps.bpaapplications "
+				+ "WHERE edcrnumber = ?";
+		return SUI.getStringObject(sql, new Object[] {edcrnumber}).equals(String.valueOf(1));
+	}
+
+	@Override
+	public boolean checkPageAccessGrantStatus(Integer USERCODE, String appcode, String pathurl) {
 		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag     " 
 				+ "FROM nicobps.applications APP      "
 				+ "INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (     	  "
@@ -544,15 +578,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "AND PU.pageurl = ?  "
 				+ "AND RA.applicationcode IS NULL";
 		pathurl = pathurl.replaceFirst("/", "");
-		return SUI.getStringObject(sql, new Object[] {USERCODE, appcode, BPACalculatorConstants.MODULE_CODE, USERCODE, pathurl}).equals(String.valueOf(1));
-	}
-
-	@Override
-	public boolean checkIfBuildingPermitAlreadyApplied(Integer USERCODE, String edcrnumber) {
-		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag "
-				+ "FROM nicobps.bpaapplications "
-				+ "WHERE edcrnumber = ?";
-		return SUI.getStringObject(sql, new Object[] {edcrnumber}).equals(String.valueOf(1));
+		return SUI.getStringObject(sql, new Object[] {USERCODE, appcode, BPAConstants.MODULE_CODE, USERCODE, pathurl}).equals(String.valueOf(1));
 	}
 
 	/* CREATE */
@@ -599,7 +625,15 @@ class ServiceBPA implements ServiceBPAInterface {
 	@Override
 	public boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer USERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response) {
-		return DBI.saveBPASiteInspection(bpa, USERCODE, fromprocesscode, response);
+		if(bpa != null && bpa.getReports() != null && !bpa.getReports().isEmpty()) {
+			bpa.setImageFilesByBase64String(bpa.getReports());
+			LOG.info("ImageFiles size: "+bpa.getImageFiles().size());
+			return DBI.saveBPASiteInspection(bpa, USERCODE, fromprocesscode, response);
+		}else {
+			response.put("code", HttpStatus.BAD_REQUEST.value());
+			response.put("msg", "Error: no site inspection reports uploaded.");
+			return false;
+		}
 	}
 
 }

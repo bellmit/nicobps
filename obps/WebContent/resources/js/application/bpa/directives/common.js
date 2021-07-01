@@ -134,10 +134,15 @@ app.directive("basicDetails",["$compile", "bpaService", function($compile, BS) {
 
 app.directive("commonProcessingAction",["$compile", "bpaService", function($compile, BS) {
 	return {
-		template: '<ng-include src="\'commonprocessingaction.htm\'"></ng-include>',
+		template: '',
 		link: action
 	}
 	function action(scope, elem, attr) {
+		console.log("APPCODE : "+APPCODE);
+		scope.qp = 'commonprocessingaction.htm?applicationcode='+APPCODE;
+		const templ = '<ng-include src="\'commonprocessingaction.htm?applicationcode='+APPCODE+'\'"></ng-include>'; 
+		const compiledTempl = $compile(templ)(scope);
+		elem.append(compiledTempl);
 		scope.setModalTitle = (opt) => {
 			scope.modal = new Modal();
 			switch(opt){
@@ -254,14 +259,16 @@ app.directive("fileViewModal",["$compile", "$sce", "bpaService", function($compi
 				case 2:
 					scope.SiteReportDetails.forEach((o, x) => {
 						if (o.appenclosurecode == data) {
-							fileContent = 'data:' + BS.detectMimeType(o.enclosureimage) + ';base64,' + o.enclosureimage;
+							scope.fileModal.mimetype = BS.detectMimeType(o.enclosureimage)
+							fileContent = 'data:' + scope.fileModal.mimetype + ';base64,' + o.enclosureimage;
 						}
 					});
 					break;
 				default:
 					scope.DocumentDetails.forEach((o, x) => {
 						if (o.appenclosurecode == data) {
-							fileContent = 'data:' + BS.detectMimeType(o.enclosureimage) + ';base64,' + o.enclosureimage;
+							scope.fileModal.mimetype = BS.detectMimeType(o.enclosureimage)
+							fileContent = 'data:' + scope.fileModal.mimetype + ';base64,' + o.enclosureimage;
 						}
 					});
 			}

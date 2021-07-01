@@ -12,6 +12,12 @@
 			width: 60%;
 		}
 	}
+	img{
+		display: flex;
+		height: auto;
+		margin: auto;
+		width: 90%;
+	}
 </style>
  <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="fileModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -22,7 +28,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    	<iframe ng-src="{{fileModal.src}}" class="iframe"></iframe>
+   		<iframe ng-src="{{fileModal.src}}" class="iframe" ng-if="fileModal.mimetype == 'application/pdf'"></iframe>
+		<div style="height: calc(80vh); overflow-y: scroll" ng-if="fileModal.mimetype != 'application/pdf'">
+			<img ng-src="{{fileModal.src}}" ng-if="fileModal.mimetype != 'application/pdf'"/>
+		</div>
     </div>
   </div>
 </div>

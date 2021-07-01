@@ -220,6 +220,8 @@ var SiteInspection = function () {
   var SiteInspection = {
     applicationcode: '',
     report: '',
+//    reports: [{file: null}],
+    reports: new Array(1),
     error: {
       applicationcode: false,
       report: false,
@@ -231,6 +233,7 @@ var SiteInspection = function () {
       this.report = obj.report;
       this.tousercode = obj.tousercode;
       this.remarks = obj.remarks;
+      this.reports = obj.reports;
       return this;
     }
   }
@@ -254,6 +257,7 @@ var ModalFile = function () {
   var ModalFile = {
     title: null,
     src: null,
+    mimetype:null,
   }
 
   return ModalFile;

@@ -7,8 +7,11 @@
 				<div class="form-group">
 					<label class="col-sm-12">Building Plan Scrutiny Number<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
-						<input type="text" class="form-control custom-form-control"
-							ng-model="BPA.edcrnumber" value="VALUE" readonly />
+						<input type="text" class="form-control custom-form-control" name="edcrnumber"
+							ng-model="BPA.edcrnumber" value="VALUE" readonly required/>
+						<div class="col" ng-if="bpaform.edcrnumber.$touched || bpaform.edcrnumber.$dirty" style="color:red">
+							<span ng-show="bpaform.edcrnumber.$error.required">Required</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -16,8 +19,11 @@
 				<div class="form-group">
 					<label class="col">Occupancy<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
-						<input type="text" class="form-control custom-form-control"
-							ng-model="occupancy.type" readonly />
+						<input type="text" class="form-control custom-form-control" name="occupancy"
+							ng-model="occupancy.type" readonly required/>
+						<div class="col" ng-if="bpaform.occupancy.$touched || bpaform.occupancy.$dirty" style="color:red">
+							<span ng-show="bpaform.occupancy.$error.required">Required</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -27,8 +33,11 @@
 				<div class="form-group">
 					<label class="col-sm-12">Plot Area<span class="fa fa-asterisk"></span></label>
 					<div class="col-sm-12">
-						<input type="text" class="form-control custom-form-control"
-							ng-model="planInfo.plotArea" value="VALUE" readonly />
+						<input type="text" class="form-control custom-form-control" name="plotarea"
+							ng-model="planInfo.plotArea" value="VALUE" readonly required/>
+						<div class="col" ng-if="bpaform.plotarea.$touched || bpaform.plotarea.$dirty" style="color:red">
+							<span ng-show="bpaform.plotarea.$error.required">Required</span>
+						</div>
 					</div>
 				</div>
 			</div>
