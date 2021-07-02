@@ -105,6 +105,7 @@ public class ControllerBuildingPermit {
 	public String bpaTrackStatus(Model model, @ModelAttribute("SESSION_USERCODE") Integer usercode,
 			@RequestParam(required = false) String applicationcode) {
 		LOG.info("URL: bpatrackstatus.htm");
+		usercode = getSessionUsercode();
 		if (usercode != null && usercode > -1) {
 			model.addAttribute("applicationcode", applicationcode);
 			return BPAConstants.PARENT_URL_MAPPING.concat("/trackstatus");
@@ -115,6 +116,7 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/buildingpermit.htm")
 	public String buildingPermit(Model model, @ModelAttribute("SESSION_USERCODE") Integer usercode) {
 		LOG.info("URL: buildingpermit.htm");
+		usercode = getSessionUsercode();
 		if (usercode != null && usercode > -1) {
 			return BPAConstants.PARENT_URL_MAPPING.concat("/buildingpermit");
 		}
@@ -179,11 +181,13 @@ public class ControllerBuildingPermit {
 
 	@GetMapping(value = "/listAppScrutinyDetailsForBPA.htm")
 	public @ResponseBody List<Map<String, Object>> listApplicationsScrutinyDetails(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		usercode = getSessionUsercode();
 		return SBI.listAppScrutinyDetailsForBPA(usercode);
 	};
 	
 	@GetMapping(value = "/listApplictionsCurrentProcessStatus.htm")
 	public @ResponseBody List<Map<String, Object>> listApplictionsCurrentProcessStatus(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		usercode = getSessionUsercode();
 		return SBI.listApplictionsCurrentProcessStatus(usercode);
 	};
 
