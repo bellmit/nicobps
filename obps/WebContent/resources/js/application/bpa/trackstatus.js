@@ -89,11 +89,17 @@ app.controller("CommonCtrl", [
 						"data": "appdate",
 					}
 				],
-				"stateSave": true,
 				"createdRow": function (row, data, dataIndex) {
 					$compile(angular.element(row).contents())($scope);
 				}
 			});
+			
+			try{
+				console.log(APPCODE);
+				if(APPCODE != null && APPCODE != '' && APPCODE.length > 10){
+					table.search( APPCODE ).draw();
+				}
+			}catch (e) {}
 		}
 	},
 ]);

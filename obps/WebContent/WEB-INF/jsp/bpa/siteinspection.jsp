@@ -64,7 +64,7 @@
 										<div class="form-group row"ng-repeat="Q in Questionnaires | orderBy: 'Q.questiondescription'">
 											<div class="col-sm-7">
 												<input type="checkbox" name="response_{{$index}}" ng-model="Q.response"/>
-												{{$index+1}}: {{Q.questiondescription}}
+												<span>{{$index+1}}: {{Q.questiondescription}}</span>
 											</div>
 											<div class="col-sm-5">
 												<textarea rows="1" cols="10" name="remarks_{{$index}}" class="form-control textarea" 

@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.context.annotation.SessionScope;
 
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
@@ -42,8 +41,10 @@ public class ControllerBpaProcessing {
 
 	@ModelAttribute("SESSION_USERCODE")
 	Integer getSessionUsercode() {
+		LOG.info("SETTING SESSION_USERCODE");
 		HttpSession session = ControllerLogin.session();
 		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			LOG.info("INSIDE: "+Integer.valueOf(session.getAttribute("usercode").toString()));
 			return Integer.valueOf(session.getAttribute("usercode").toString());
 		}
 		return null;
@@ -75,7 +76,6 @@ public class ControllerBpaProcessing {
 				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
 
 			model.addAttribute("applicationcode", applicationcode);
-			
 			pathurl = req.getServletPath();
 			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
 			String pageurl = BPAConstants.getProcessPage(pathurl);
@@ -338,6 +338,7 @@ public class ControllerBpaProcessing {
 	@GetMapping(value = "/listbpapplications.htm")
 	public @ResponseBody List<Map<String, Object>> listBPApplications(
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		LOG.info("usercode: "+usercode);
 		return SBI.listBPApplications(usercode);
 	};
 

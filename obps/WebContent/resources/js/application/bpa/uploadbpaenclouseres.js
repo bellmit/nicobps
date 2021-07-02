@@ -77,9 +77,8 @@ function submitBpaEnclosureDetails(applicationEnclosures) {
             scope.$apply(function () {
                 scope.applicationEnclosures = {};
             });
-
             jQuery('#successMsg').html("* " + data).show();
-            window.location="bpasiteinspection.htm"; 		                          
+            window.location="bpatrackstatus.htm?applicationcode="+applicationEnclosures.applicationcode; 		                          
         },
         error: function (request, status, error) {
             alert("inn error");

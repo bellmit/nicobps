@@ -102,7 +102,8 @@ public class ControllerBuildingPermit {
 	}
 	
 	@GetMapping(value = "/bpatrackstatus.htm")
-	public String bpaTrackStatus(Model model, @ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestParam String applicationcode) {
+	public String bpaTrackStatus(Model model, @ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
 		LOG.info("URL: bpatrackstatus.htm");
 		if (usercode != null && usercode > -1) {
 			model.addAttribute("applicationcode", applicationcode);

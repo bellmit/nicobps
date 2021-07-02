@@ -30,4 +30,7 @@
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
 	<script src="resources/js/application/bpa/trackstatus.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		const APPCODE = '${applicationcode}';
+	</script>
 </html>
