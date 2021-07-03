@@ -75,6 +75,10 @@ body {
 </nav> 
 -->
 
+
+ <core:if test="${user eq null }" >
+     <core:redirect url = "login.htm"/>
+ </core:if>   
 <!-- Sidebar -->
 <div class="dashboard-bgcolor border-right" id="sidebar-wrapper">
 	<div class="sidebar-heading text-left text-white" style="font-size: 24px">

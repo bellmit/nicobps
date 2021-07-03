@@ -64,6 +64,10 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode);
 
+	public List<CommonMap> listEnclosures(final Short modulecode,Short licenseetypecode);
+	
+	public List<CommonMap> listEnclosures(final Short modulecode,Integer usercode,Short licenseetypecode);
+	
 	public List<CommonMap> listOccupancies();
 
 	public List<CommonMap> listSubOccupancies();

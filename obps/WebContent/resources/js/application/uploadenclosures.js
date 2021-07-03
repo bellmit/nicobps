@@ -1,101 +1,94 @@
-jQuery(document).ready(function() {        
+jQuery(document).ready(function () {  
+        
+    jQuery("#userresponsecaptcha").val("");            
     
-});
-
-var app = angular.module("applicationApp", ["checklist-model"]);
-app.controller('applicationController', function($scope)
-{			
-    $scope.listEnclosures = [];   
-    $scope.applicationEnclosures = {};   
-    loadForm();
-    	
-    $scope.submitDetails = function() {  
-  	    
-    	$scope.applicationEnclosures.listEnclosures=JSON.stringify($scope.listEnclosures);   
-    	//alert("list enclosures"+$scope.applicationEnclosures.listEnclosures)  	        
-        if(validateDetails($scope.applicationEnclosures))
-        {      	      	     
-        	submitEnclosureDetails($scope.applicationEnclosures);
-        }                                  
-    };     
-             
-});
-
-function validateDetails(applicationEnclosures)
-{
-	return true;
-}
-
-function addFile(id)  
-{	
-	var index = id.split("_")[1];				   
-	var scope = angular.element(jQuery("#applicationForm")).scope();
-	scope.$apply(function() {               	            	
-	  var file = document.querySelector("#"+id).files[0];			  
-	  if (file) 
-	  {
-	    var reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.addEventListener("load",function() 
-		{				
-			scope.listEnclosures[index].filecontant=reader.result;										
-		}, false);				
-	  }	      	  
-	});   
-}    	
-
-function loadForm() {	
-    jQuery.ajax({
-        url: "initUploadEnclosuresForm.htm",
-        dataType: 'json',
-        type: "GET",
-        success: function(data)
-        {        	    
-            var scope = angular.element(jQuery("#applicationForm")).scope();
-            scope.$apply(function() {               	            	
-            	scope.listEnclosures=[];
-                data.listEnclosures.forEach((row)=>{
-                  var item={};
-                  item.ischecked=false;
-                  item.enclosurecode=row.key;
-                  item.enclosurename=row.value;
-				  item.usercode=row.value1;       				  
-                  item.filecontant="";               
-			      scope.listEnclosures.push(item);
-			    })          	                    
-            });            
-        },
-        error: function(request, status, error) {
-            //alert(request.responseText);
-        }
+    jQuery('.chkbox').each(function(){
+        var id="file_"+jQuery(this).attr("id").split("_")[1];
+        if(jQuery(this).prop("checked")==true){
+            jQuery("#"+id).prop("disabled",false);
+        }else{
+            jQuery("#"+id).val("");
+            jQuery("#"+id).prop("disabled",true);            
+        }        
+    });     
+    
+    jQuery('.chkbox').click(function(){
+        var id="file_"+jQuery(this).attr("id").split("_")[1];
+        if(jQuery(this).prop("checked")==true){
+            jQuery("#"+id).prop("disabled",false);
+        }else{
+            jQuery("#"+id).val("");
+            jQuery("#"+id).prop("disabled",true);            
+        }        
+    });       
+    jQuery('.file').change(function(){
+        var fileContent = jQuery(this).val();
+        var checkimg = fileContent.toLowerCase();
+        if (!checkimg.match(PATTERN_FILE_ENC))
+        {
+            showMsg(jQuery(this).attr('id'), "Enclosoures should be of jpg/jpeg/png/pdf type");
+        }else{
+            showMsg(jQuery(this).attr('id'), "");
+        }        
     });
+    
+    /*
+    jQuery(".error").click(function(){
+        jQuery(this).text("");
+    });
+    */
+    
+}); 
+
+function onbeforeSubmit()
+{    
+    var count=0;
+    var status=0; 
+
+    if(jQuery('.chk_Y').length>0)
+    {
+        jQuery('.chk_Y').each(function(){
+            var id="file_"+jQuery(this).attr("id").split("_")[1];
+            if(jQuery(this).prop("checked")==true)
+            {
+                count++;
+                var fileContent = jQuery("#"+id).val();
+                if (fileContent === '')
+                {
+                    showMsg(id, "Please browse your enclosoures");
+                    status++;
+                }
+                else if (fileContent !== '')
+                {
+                    var checkimg = fileContent.toLowerCase();
+                    if (!checkimg.match(PATTERN_FILE_ENC))
+                    {
+                        showMsg(id, "Enclosure should be of jpg/jpeg/png/pdf type");
+                        status++;
+                    }else{
+                        showMsg(id, "");
+                    }
+                }
+            }else{
+                showMsg(id, "");
+            }
+        });      
+        if(count!=jQuery('.chk_Y').length){
+            showMsg("UploadEnc", "Please select all mandatory enclosures"); 
+            status=1;
+        }else{
+            showMsg("UploadEnc", "");      
+        }    
+        if(status>0){
+            return false;        
+        }        
+    }    
+  
+	if(jQuery.trim(jQuery("#userresponsecaptcha").val())===""){
+    	showMsg("UploadEnc", "Please enter captcha"); 
+    	 return false;   
+    }    
+
+   
+    return true;        
 }
-
-function submitEnclosureDetails(applicationEnclosures)
-{       			
-    var flag=confirm(" Click OK to register. Click Cancel if you want to review your entries");
-    if(!flag) {return false;}      
-    jQuery.ajax({
-        url: "submitEnclosureDetails.htm",        
-        data: applicationEnclosures,
-        type: "POST",
-        success: function(data)
-        {                   		 
-            var scope = angular.element(jQuery("#applicationForm")).scope();
-            scope.$apply(function() {               	            	
-            	scope.applicationEnclosures = {};       	                    
-            });          
-        	                
-            jQuery('#successMsg').html("* "+data).show();  
-            loadForm();                                     
-        },
-        error: function(request, status, error) {    
-        	//alert(status+" : "+JSON.stringify(request));        
-            jQuery('#successMsg').html("* "+request.responseText).show();           
-        }
-    }); 
-}	
-
-
-
-

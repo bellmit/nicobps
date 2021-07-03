@@ -182,6 +182,30 @@ public class ServiceUtil implements ServiceUtilInterface {
 		return this.listCommonMap(sql, criteria);
 	}
 
+	/////////////////////
+	@Override
+	public List<CommonMap> listEnclosures(final Short modulecode,Short licenseetypecode) 
+	{	
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "		
+				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "				
+				+ "WHERE E.enabled='Y' AND M.modulecode=? AND licenseetypecode=? "
+				+ "ORDER BY mandatory DESC,E.enclosurecode ";
+		Object[] criteria = { modulecode,licenseetypecode};
+		return this.listCommonMap(sql, criteria);
+	}	
+	@Override
+	public List<CommonMap> listEnclosures(final Short modulecode,Integer usercode,Short licenseetypecode) 
+	{	
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2 FROM masters.enclosures E   "		
+				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
+				+ "LEFT OUTER JOIN nicobps.licenseesenclosures LE ON LE.enclosurecode=M.enclosurecode AND LE.usercode=? "
+				+ "WHERE E.enabled='Y' AND  M.modulecode=? AND licenseetypecode=? "
+				+ "ORDER BY mandatory DESC,E.enclosurecode ";
+		Object[] criteria = { usercode,modulecode,licenseetypecode};
+		return this.listCommonMap(sql, criteria);
+	}		
+	/////////////////////	
+	
 	@Override
 	public List<CommonMap> listOccupancies() {
 		String sql = "SELECT T.occupancycode AS key, T.occupancyname AS value, T.occupancyalias AS value1 FROM masters.occupancies T ORDER BY T.occupancycode ";

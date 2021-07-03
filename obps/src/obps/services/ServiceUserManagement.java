@@ -11,6 +11,7 @@ import obps.daos.DaoUserManagementInterface;
 import obps.domains.DomainUserManagementInterface;
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.LicensEesenclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
@@ -59,14 +60,15 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 	}	
     
     @Override
-    public boolean submitEnclosureDetails(Map<String,Object> param) {
-    	return DaoUserManagementInterface.submitEnclosureDetails(param);
+    public boolean submitLicenseesenclosures(LicensEesenclosures licenseesenclosures)  {
+    	return DaoUserManagementInterface.submitLicenseesenclosures(licenseesenclosures);
     }
     
     @Override
     public void settUserSesson(HttpSession session,final String username) {
     	Userlogin user= DaoUserManagementInterface.getUserlogin(username);
     	session.setAttribute("usercode", user.getUsercode().toString());    	
+    	session.setAttribute("licenseetypecode", user.getLicenseetypecode()!=null?user.getLicenseetypecode().toString():null); 
     	session.setAttribute("user", user);
     	session.setAttribute("menu",DomainUserManagementInterface.processUrls(DaoUserManagementInterface.getPageUrls(user.getUsercode())));
     }

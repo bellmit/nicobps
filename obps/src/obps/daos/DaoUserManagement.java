@@ -20,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import obps.models.AppEnclosures;
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.LicensEesenclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Offices;
@@ -32,6 +34,7 @@ import obps.models.Userlogin;
 import obps.util.application.CommonMap;
 import obps.util.application.DaoUtil;
 import obps.util.application.DaoUtilInterface;
+import obps.util.application.ServiceUtilInterface;
 
 @Transactional
 @Repository("daoUserManagement")
@@ -39,6 +42,8 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	@Autowired private ServiceUtilInterface serviceUtilInterface;
 
 	@Autowired
 	private DaoUtilInterface daoUtilInterface;
@@ -192,6 +197,74 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
+	public boolean submitLicenseesenclosures(LicensEesenclosures licenseesenclosures) 
+	{
+		boolean response = false;
+		String sql = null;
+		try 
+		{
+			Integer usercode = Integer.valueOf(licenseesenclosures.getUsercode());
+
+			if (licenseesenclosures.getAppenclosures().size() > 0) 
+			{			
+				String sql_insert = "INSERT INTO nicobps.licenseesenclosures(usercode,enclosurecode,enclosureimage) VALUES(?,?,?)";
+				String sql_update = "UPDATE nicobps.licenseesenclosures SET enclosureimage=? WHERE usercode=? AND enclosurecode=?";
+				List<Object[]> list_insert = new ArrayList<>();
+				List<Object[]> list_update = new ArrayList<>();
+				for (AppEnclosures AE:licenseesenclosures.getAppenclosures()) 
+				{
+					if(AE.getEnclosurecode()!=null && AE.getFileContent()!=null) 
+					{
+						Short enclosurecode = Short.valueOf(AE.getEnclosurecode());
+						byte[] file = AE.getFileContent().getBytes();				
+						
+						String sql_check = "SELECT * FROM  nicobps.licenseesenclosures WHERE usercode=? AND enclosurecode=?";				
+						if(serviceUtilInterface.checkExistance(sql_check, new Object[] { usercode,Short.valueOf(AE.getEnclosurecode()) })) {
+							list_update.add(new Object[] { file,usercode, enclosurecode });
+						}else {
+							list_insert.add(new Object[] { usercode, enclosurecode, file });
+						}
+					}
+				}
+				response = (jdbcTemplate.batchUpdate(sql_insert, list_insert).length > 0 || jdbcTemplate.batchUpdate(sql_update, list_update).length > 0);
+				
+				if (response) {					
+					Long afrcode = Long.valueOf(licenseesenclosures.getAfrcode());
+					String applicationcode = usercode + "";
+					Short modulecode = Short.valueOf("1");
+					Short fromprocesscode = Short.valueOf("2");
+					Short toprocesscode = Short.valueOf("3");
+					Integer fromusercode = usercode;
+					String remarks = "Upload Enclosures";
+
+					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
+							+ "VALUES (?,?,?,?,?,?,?) ";
+					Object[] values2 = { afrcode, applicationcode, modulecode, fromprocesscode, toprocesscode,fromusercode, remarks };
+					response = jdbcTemplate.update(sql, values2) > 0;
+				}
+				if (response) {
+					Short urlcode = Short.valueOf("16");
+					String userpagecode = usercode + "U" + urlcode;
+
+					sql = "DELETE FROM nicobps.userpages WHERE usercode=? AND urlcode=?";
+					Object[] values1 = { usercode, urlcode };
+					jdbcTemplate.update(sql, values1);
+
+					sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+					Object[] values3 = { userpagecode, usercode, urlcode };
+					response = jdbcTemplate.update(sql, values3) > 0;
+				}
+			}
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.submitEnclosureDetails(Map<String,String> param) : " + e);
+		}
+		return response;
+	}	
+	
+	/*
+	@Override
 	public boolean submitEnclosureDetails(Map<String, Object> param) {
 		boolean response = false;
 		String sql = null;
@@ -253,14 +326,16 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		}
 		return response;
 	}
+	*/
 
 	@Override
 	public Userlogin getUserlogin(final String username) {
 		Userlogin user = new Userlogin();
 		try {
-			String sql = "SELECT u.usercode,username,fullname,mobileno,designation,officecode "
-					+ "FROM userlogins u LEFT JOIN nicobps.useroffices uo on u.usercode=uo.usercode "
-					+ "WHERE username=?";
+			//String sql = "SELECT usercode,username,fullname,mobileno,designation FROM userlogins WHERE username=?";
+			String sql = "SELECT UL.usercode,username,fullname,mobileno,designation,licenseetypecode FROM nicobps.userlogins UL "
+					   + "LEFT OUTER JOIN nicobps.licensees L ON L.usercode=UL.usercode "
+					   + "WHERE username=?";
 			Object[] criteria = { username };
 			user = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(Userlogin.class), criteria);
 		} catch (Exception e) {

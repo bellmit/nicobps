@@ -9,19 +9,11 @@ public class Userlogin {
 	private String mobileno;
 	private String designation;
 	private String userpassword;
-	private Integer officecode;
 	private List<Pageurls> mappedpages;
+	private Short licenseetypecode;
 
 	public Userlogin() {
 		super();
-	}
-
-	public Integer getOfficecode() {
-		return officecode;
-	}
-
-	public void setOfficecode(Integer officecode) {
-		this.officecode = officecode;
 	}
 
 	public Integer getUsercode() {
@@ -78,6 +70,14 @@ public class Userlogin {
 
 	public void setMappedpages(List<Pageurls> mappedpages) {
 		this.mappedpages = mappedpages;
+	}
+
+	public Short getLicenseetypecode() {
+		return licenseetypecode;
+	}
+
+	public void setLicenseetypecode(Short licenseetypecode) {
+		this.licenseetypecode = licenseetypecode;
 	}
 
 	@Override
