@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-public class LicensEesenclosures {
+public class LicenseEsenclosures {
 	private String usercode; 
     private String sessioncaptcha;    
     private String userresponsecaptcha; 	

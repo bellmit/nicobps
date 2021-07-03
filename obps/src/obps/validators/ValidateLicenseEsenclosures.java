@@ -11,10 +11,10 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import obps.models.AppEnclosures;
 import obps.util.common.Patterns;
 import obps.util.common.UtilFile;
-import obps.models.LicensEesenclosures;
+import obps.models.LicenseEsenclosures;
 
 @Component
-public class ValidateLicensEesenclosures implements Validator 
+public class ValidateLicenseEsenclosures implements Validator 
 {
 
     @Autowired
@@ -22,7 +22,7 @@ public class ValidateLicensEesenclosures implements Validator
 
     @Override
     public boolean supports(Class<?> type) {
-        return LicensEesenclosures.class.isAssignableFrom(type);
+        return LicenseEsenclosures.class.isAssignableFrom(type);
     }
 
 
@@ -34,9 +34,9 @@ public class ValidateLicensEesenclosures implements Validator
         String validate_enclosures_count = messages.getMessage("validate.enclosures_count", null, "invalid", null);
         String validate_enclosures_size = messages.getMessage("validate.enclosures_size", null, "invalid", null);
         
-        LicensEesenclosures licenseesenclosures = null;
-        if (o instanceof LicensEesenclosures) {
-        	licenseesenclosures = (LicensEesenclosures) o;
+        LicenseEsenclosures licenseesenclosures = null;
+        if (o instanceof LicenseEsenclosures) {
+        	licenseesenclosures = (LicenseEsenclosures) o;
         }
         
         boolean errorFlag = false;

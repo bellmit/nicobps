@@ -40,9 +40,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.validators.UploadEnclosuresValidatorInterface;
-import obps.validators.ValidateLicensEesenclosures;
+import obps.validators.ValidateLicenseEsenclosures;
 import obps.models.AppEnclosures;
-import obps.models.LicensEesenclosures;
+import obps.models.LicenseEsenclosures;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
@@ -62,7 +62,7 @@ public class ControllerUserManagement {
 	private Environment environment;
 
 	@Autowired
-	private ValidateLicensEesenclosures vle;
+	private ValidateLicenseEsenclosures vle;
 	
 	public static HttpSession session() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -182,7 +182,7 @@ public class ControllerUserManagement {
 
 	// =================================Upload Enclosures====================================//
 	@RequestMapping("/uploadenclosuresext.htm")
-	public String uploadenclosuresext(ModelMap model,@ModelAttribute("licenseesenclosures") LicensEesenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
+	public String uploadenclosuresext(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseEsenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
 	{			
 		model.addAttribute("successMsg","");         
 		String  usercode = (String) request.getSession().getAttribute("usercode");
@@ -195,7 +195,7 @@ public class ControllerUserManagement {
 	}
 	
 	@RequestMapping("/uploadenclosuresint.htm")
-	public String uploadenclosuresint(ModelMap model,@ModelAttribute("licenseesenclosures") LicensEesenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
+	public String uploadenclosuresint(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseEsenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
 	{			
 		model.addAttribute("successMsg","");     
 		String  usercode = (String) request.getSession().getAttribute("usercode");
@@ -208,7 +208,7 @@ public class ControllerUserManagement {
 	}
 	
     @RequestMapping(value = "submitLicenseesenclosures.htm",params = "_submit", method = RequestMethod.POST)
-    public String submitLicenseesenclosures(ModelMap model,@ModelAttribute("licenseesenclosures") LicensEesenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
+    public String submitLicenseesenclosures(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseEsenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
     {           	
     	Userlogin user = (Userlogin) request.getSession().getAttribute("user");
     	String successurl=user!=null?"uploadenclosuresint":"uploadenclosuresext";
