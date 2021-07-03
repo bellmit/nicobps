@@ -131,10 +131,10 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 					response = jdbcTemplate.update(sql, values3) > 0;
 				}
 			}
-			if (param.get("usertype") == null && param.get("usertype").equals("BACKEND_USER")) {
-				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-
-			}
+//			if (param.get("usertype") == null && param.get("usertype").equals("BACKEND_USER")) {
+//				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+//
+//			}
 		} catch (Exception e) {
 			e.getStackTrace();
 			response = false;
