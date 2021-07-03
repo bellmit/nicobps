@@ -64,7 +64,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 				processData: false,
 				data: data,
 				success: function(response) {
-					alert(response.status);
+					 
 					$timeout(function() {
 						$scope.edcrscrutiny = response;
 					}, 0);

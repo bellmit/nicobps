@@ -88,7 +88,7 @@ public class ServiceEdcrScrutiny {
 			};
 			valueMap.add("planFile", contentsAsResource);
 			valueMap.add("edcrRequest", edcrRequest);
-			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
+//			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
 			String serverUrl = env.getProperty("edcr.scrutitny.url");
 			RestTemplate restTemplate = new RestTemplate();
@@ -105,7 +105,7 @@ public class ServiceEdcrScrutiny {
 			}
 			String status = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
 
-			System.out.println(status);
+//			System.out.println(status);
 			
 			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
 			String edcrdetails = (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
@@ -139,7 +139,7 @@ public class ServiceEdcrScrutiny {
 			resp = e.getMessage();
 			e.printStackTrace();
 		}
-		System.out.println(respJson);
+		 
 		return respJson;
 	}
 
