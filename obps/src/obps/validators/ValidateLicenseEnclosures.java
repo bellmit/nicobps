@@ -11,7 +11,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import obps.models.AppEnclosures;
 import obps.util.common.Patterns;
 import obps.util.common.UtilFile;
-import obps.models.LicenseEsenclosures;
+import obps.models.LicenseesEnclosures;
 
 @Component
 public class ValidateLicenseEnclosures implements Validator 
@@ -22,7 +22,7 @@ public class ValidateLicenseEnclosures implements Validator
 
     @Override
     public boolean supports(Class<?> type) {
-        return LicenseEsenclosures.class.isAssignableFrom(type);
+        return LicenseesEnclosures.class.isAssignableFrom(type);
     }
 
 
@@ -34,9 +34,9 @@ public class ValidateLicenseEnclosures implements Validator
         String validate_enclosures_count = messages.getMessage("validate.enclosures_count", null, "invalid", null);
         String validate_enclosures_size = messages.getMessage("validate.enclosures_size", null, "invalid", null);
         
-        LicenseEsenclosures licenseesenclosures = null;
-        if (o instanceof LicenseEsenclosures) {
-        	licenseesenclosures = (LicenseEsenclosures) o;
+        LicenseesEnclosures licenseesenclosures = null;
+        if (o instanceof LicenseesEnclosures) {
+        	licenseesenclosures = (LicenseesEnclosures) o;
         }
         
         boolean errorFlag = false;

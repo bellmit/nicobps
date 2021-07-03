@@ -11,7 +11,7 @@ import obps.daos.DaoUserManagementInterface;
 import obps.domains.DomainUserManagementInterface;
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
-import obps.models.LicenseEsenclosures;
+import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
@@ -60,7 +60,7 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 	}	
     
     @Override
-    public boolean submitLicenseesenclosures(LicenseEsenclosures licenseesenclosures)  {
+    public boolean submitLicenseesenclosures(LicenseesEnclosures licenseesenclosures)  {
     	return DaoUserManagementInterface.submitLicenseesenclosures(licenseesenclosures);
     }
     

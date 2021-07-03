@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
-import obps.models.LicenseEsenclosures;
+import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
@@ -25,7 +25,7 @@ public interface ServiceUserManagementInterface {
 
 	public boolean createUser(Map<String, Object> param);
 
-	public boolean submitLicenseesenclosures(LicenseEsenclosures licenseesenclosures);
+	public boolean submitLicenseesenclosures(LicenseesEnclosures licenseesenclosures);
 
 	public void settUserSesson(HttpSession session, final String username);
 

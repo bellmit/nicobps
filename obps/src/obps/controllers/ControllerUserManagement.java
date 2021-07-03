@@ -42,7 +42,7 @@ import obps.util.common.UtilFile;
 import obps.validators.UploadEnclosuresValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
 import obps.models.AppEnclosures;
-import obps.models.LicenseEsenclosures;
+import obps.models.LicenseesEnclosures;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
@@ -182,7 +182,7 @@ public class ControllerUserManagement {
 
 	// =================================Upload Enclosures====================================//
 	@RequestMapping("/uploadenclosuresext.htm")
-	public String uploadenclosuresext(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseEsenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
+	public String uploadenclosuresext(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
 	{			
 		model.addAttribute("successMsg","");         
 		String  usercode = (String) request.getSession().getAttribute("usercode");
@@ -195,7 +195,7 @@ public class ControllerUserManagement {
 	}
 	
 	@RequestMapping("/uploadenclosuresint.htm")
-	public String uploadenclosuresint(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseEsenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
+	public String uploadenclosuresint(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
 	{			
 		model.addAttribute("successMsg","");     
 		String  usercode = (String) request.getSession().getAttribute("usercode");
@@ -208,7 +208,7 @@ public class ControllerUserManagement {
 	}
 	
     @RequestMapping(value = "submitLicenseesenclosures.htm",params = "_submit", method = RequestMethod.POST)
-    public String submitLicenseesenclosures(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseEsenclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
+    public String submitLicenseesenclosures(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
     {           	
     	Userlogin user = (Userlogin) request.getSession().getAttribute("user");
     	String successurl=user!=null?"uploadenclosuresint":"uploadenclosuresext";

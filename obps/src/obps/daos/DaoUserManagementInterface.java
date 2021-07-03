@@ -5,7 +5,7 @@ import java.util.Map;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
-import obps.models.LicenseEsenclosures;
+import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Pageurls;
@@ -16,7 +16,7 @@ import obps.models.Userlogin;
 public interface DaoUserManagementInterface {
 	public boolean createUser(Map<String, Object> param);
 
-	public boolean submitLicenseesenclosures(LicenseEsenclosures licenseesenclosures);
+	public boolean submitLicenseesenclosures(LicenseesEnclosures licenseesenclosures);
 
 	public Userlogin getUserlogin(final String username);
 

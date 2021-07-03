@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import obps.models.AppEnclosures;
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
-import obps.models.LicenseEsenclosures;
+import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Offices;
@@ -197,7 +197,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean submitLicenseesenclosures(LicenseEsenclosures licenseesenclosures) 
+	public boolean submitLicenseesenclosures(LicenseesEnclosures licenseesenclosures) 
 	{
 		boolean response = false;
 		String sql = null;
