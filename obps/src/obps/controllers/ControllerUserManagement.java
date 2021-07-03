@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,7 +55,7 @@ public class ControllerUserManagement {
 	@Resource
 	private Environment environment;
 
-	public static HttpSession ssn() {
+	public static HttpSession session() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest().getSession(true);
 	}
@@ -184,11 +185,12 @@ public class ControllerUserManagement {
 	public @ResponseBody Map<String, Object> initUploadEnclosuresForm(HttpServletRequest request) {
 		Map<String, Object> data = new LinkedHashMap<>();
 		String usercode = (String) request.getSession().getAttribute("usercode");
-		if (usercode != null) {			
-			data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
+		if (usercode != null) {
+			data.put("listEnclosures",
+					serviceUtilInterface.listEnclosures(Short.valueOf("1"), Integer.valueOf(usercode)));
 		} else {
 			data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1")));
-		}				
+		}
 		return data;
 	}
 
@@ -213,86 +215,85 @@ public class ControllerUserManagement {
 		} else {
 			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
 		}
-		System.out.println("validate file param controller"+param);
-		Log.info("validate file param controller"+param);
-		//validate file
-		if(uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
+		System.out.println("validate file param controller" + param);
+		Log.info("validate file param controller" + param);
+		// validate file
+		if (uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
 			System.out.println("validated file!");
 			if (serviceUserManagementInterface.submitEnclosureDetails(param)) {
 				return ResponseEntity.ok(new String("The documents have been uploaded successfully."));
 			} else {
 				return ResponseEntity.badRequest().body(new String("Unable to process request!"));
 			}
-		}else {
+		} else {
 			return ResponseEntity.badRequest().body(new String("Invalid File!Documents could not be uploaded!"));
 		}
-		
+
 	}
 
 	@RequestMapping(value = "/output.htm", method = RequestMethod.GET)
-    public String showFile(HttpServletRequest request,HttpServletResponse response,
-    		@RequestParam(value="usercode", required=true) String usercode,
-    		@RequestParam(value="enclosurecode", required=true) String enclosurecode)
-    {
-        String successUrel="output";
-        try
-        {
-    		String sql = "SELECT enclosureimage FROM nicobps.licenseesenclosures WHERE usercode=? AND enclosurecode=?";
-    		Object[] criteria = { Integer.valueOf(usercode),Short.valueOf(enclosurecode) };	        
-            byte[] binaryFile = serviceUtilInterface.getBytes(sql,criteria);
-            //System.out.println("File Size : "+binaryFile.length);
-            //writeBytesToFile(binaryFile);
-            //response.getOutputStream().write(binaryFile);
+	public String showFile(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "usercode", required = true) String usercode,
+			@RequestParam(value = "enclosurecode", required = true) String enclosurecode) {
+		String successUrel = "output";
+		try {
+			String sql = "SELECT enclosureimage FROM nicobps.licenseesenclosures WHERE usercode=? AND enclosurecode=?";
+			Object[] criteria = { Integer.valueOf(usercode), Short.valueOf(enclosurecode) };
+			byte[] binaryFile = serviceUtilInterface.getBytes(sql, criteria);
+			// System.out.println("File Size : "+binaryFile.length);
+			// writeBytesToFile(binaryFile);
+			// response.getOutputStream().write(binaryFile);
 
-            String enclosurename="enclosure"+enclosurecode;
-            String ContentType = UtilFile.getFileContentType(binaryFile);
-            
-            if(ContentType.contentEquals("application/pdf")) {
-            	enclosurename+=".pdf";
-            }else {
-            	enclosurename+=".jpg";
-            }
-            
-            response.setContentType(ContentType);
-            response.setHeader("Content-Disposition", "filename="+enclosurename);
-            response.setContentLength(binaryFile.length);
-            OutputStream os = response.getOutputStream();
+			String enclosurename = "enclosure" + enclosurecode;
+			String ContentType = UtilFile.getFileContentType(binaryFile);
 
-            try {
-               os.write(binaryFile , 0, binaryFile.length);
-            } catch (Exception excp) {
-               //handle error
-            } finally {
-                os.close();
-            }         
-        }catch(Exception e) {
-        	System.out.println("Exception :: "+e);
-            //successUrel="rdirect:error.jsp";           
-        }
-        return successUrel;
-    }    	
-	
-    private static void writeBytesToFile(byte[] bytes)throws IOException {
-    	
-      String fileOutput="D:\\enc";
-      String ContentType = UtilFile.getFileContentType(bytes);
-      
-      System.out.println("ContentType : "+ContentType);
-      if(ContentType.contentEquals("application/pdf")) {
-    	  fileOutput+=".pdf";
-      }else {
-    	  fileOutput+=".jpg";
-      }    	
-    	
-    	 System.out.println("File Size :: "+bytes.length);
+			if (ContentType.contentEquals("application/pdf")) {
+				enclosurename += ".pdf";
+			} else {
+				enclosurename += ".jpg";
+			}
+
+			response.setContentType(ContentType);
+			response.setHeader("Content-Disposition", "filename=" + enclosurename);
+			response.setContentLength(binaryFile.length);
+			OutputStream os = response.getOutputStream();
+
+			try {
+				os.write(binaryFile, 0, binaryFile.length);
+			} catch (Exception excp) {
+				// handle error
+			} finally {
+				os.close();
+			}
+		} catch (Exception e) {
+			System.out.println("Exception :: " + e);
+			// successUrel="rdirect:error.jsp";
+		}
+		return successUrel;
+	}
+
+	private static void writeBytesToFile(byte[] bytes) throws IOException {
+
+		String fileOutput = "D:\\enc";
+		String ContentType = UtilFile.getFileContentType(bytes);
+
+		System.out.println("ContentType : " + ContentType);
+		if (ContentType.contentEquals("application/pdf")) {
+			fileOutput += ".pdf";
+		} else {
+			fileOutput += ".jpg";
+		}
+
+		System.out.println("File Size :: " + bytes.length);
 //        try (FileOutputStream fos = new FileOutputStream(fileOutput)) {
 //                fos.write(bytes);
 //        }    	 
-    	 Path path = Paths.get(fileOutput);
-         Files.write(path, bytes);    	     	 
-    }	
-	
-	// =================================Change Password====================================//
+		Path path = Paths.get(fileOutput);
+		Files.write(path, bytes);
+	}
+
+	// =================================Change
+	// Password====================================//
 	@RequestMapping("/changepassword.htm")
 	public String changepassword() {
 		return "changepassword";
@@ -323,7 +324,10 @@ public class ControllerUserManagement {
 	}
 
 	@GetMapping("/createuser.htm")
-	public String createuser() {
+	public String createuser(Model model) {
+		model.addAttribute("officeList",
+				(session().getAttribute("usercode").equals("1")) ? serviceUtilInterface.listOffices()
+						: serviceUtilInterface.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString())));
 		return "initialization/createuser";
 	}
 
@@ -332,7 +336,7 @@ public class ControllerUserManagement {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
 		user.put("usercode", usercode);
-		user.put("usertype", "F");
+		user.put("usertype", "BACKEND_USER");
 
 		if (serviceUserManagementInterface.createUser(user)) {
 			response.put("code", 200);
@@ -358,10 +362,10 @@ public class ControllerUserManagement {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@GetMapping("/listUsers.htm")
-	public @ResponseBody List<Userlogin> listUsers() {
+	@GetMapping("/listOfficeUsers.htm")
+	public @ResponseBody List<Userlogin> listOfficeUsers() {
 
-		return serviceUserManagementInterface.listUsers();
+		return serviceUserManagementInterface.listOfficeUsers();
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -398,7 +402,5 @@ public class ControllerUserManagement {
 
 		return serviceUserManagementInterface.saveUserpages(userpages);
 	}
-
-	
 
 }

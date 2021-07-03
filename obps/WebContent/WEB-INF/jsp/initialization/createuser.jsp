@@ -20,6 +20,16 @@
 			                    <table class="entrytable" style="width:70%;margin: 0px auto; border-spacing: 10px"> 
 			                        
 			                        <tr class="form-group has-feedback">
+			                            <td class="title">Office:*</td>
+			                            <td class="col-xs-5 selectContainer">
+											<select class="form-control" id="officecode" ng-model="user.officecode" ng-init='user.officecode=${officeList[0].key }'>
+												<core:forEach items="${officeList}" var='i'>
+													<option value='${i.key}' selected='selected'>${i.value}</option>
+												</core:forEach>
+											</select>
+			                            </td>
+			                        </tr>
+			                        <tr class="form-group has-feedback">
 			                            <td class="title">Full Name:*</td>
 			                            <td class="col-xs-5 selectContainer">
 											<input type="text" class="form-control" id="fullname" name="fullname" maxlength="99"

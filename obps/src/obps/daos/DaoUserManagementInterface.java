@@ -27,7 +27,9 @@ public interface DaoUserManagementInterface {
 
 	public boolean updateUser(Userlogin user);
 
-	public List<Userlogin> listUsers();
+	public List<Userlogin> listOfficeUsers();
+
+	public List<Userlogin> listOfficeUsers(Integer office);
 
 	public boolean savePageurlsDao(Pageurls url);
 
@@ -35,6 +37,4 @@ public interface DaoUserManagementInterface {
 
 	public boolean mapUserpages(List<Map<String, Object>> upage);
 
-	
-	
 }

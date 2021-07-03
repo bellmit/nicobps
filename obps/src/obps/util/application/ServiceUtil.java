@@ -168,16 +168,19 @@ public class ServiceUtil implements ServiceUtilInterface {
 		Object[] criteria = { modulecode };
 		return this.listCommonMap(sql, criteria);
 	}
+
 	@Override
-	public List<CommonMap> listEnclosures(final Short modulecode,Integer usercode) {
-		//String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,CASE WHEN usercode IS NULL THEN -1 ELSE usercode END AS value1 FROM masters.enclosures E   "
-		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,usercode AS value1 FROM masters.enclosures E   "		
+	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode) {
+		// String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,CASE WHEN
+		// usercode IS NULL THEN -1 ELSE usercode END AS value1 FROM masters.enclosures
+		// E "
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,usercode AS value1 FROM masters.enclosures E   "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
 				+ "LEFT OUTER JOIN nicobps.licenseesenclosures L ON L.enclosurecode=M.enclosurecode AND L.usercode=? "
 				+ "WHERE M.modulecode=? ";
-		Object[] criteria = { usercode,modulecode };
+		Object[] criteria = { usercode, modulecode };
 		return this.listCommonMap(sql, criteria);
-	}	
+	}
 
 	@Override
 	public List<CommonMap> listOccupancies() {
@@ -221,6 +224,29 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public List<CommonMap> listOffices() {
 		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value FROM masters.offices T WHERE enabled='Y' ORDER BY T.officename1 ";
 		return this.listCommonMap(sql);
+	}
+
+	@Override
+	public List<CommonMap> listOffices(Integer officecode) {
+		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value FROM masters.offices T WHERE officecode=? ORDER BY T.officename1 ";
+		return this.listCommonMap(sql, new Object[] { officecode });
+	}
+
+	@Override
+	public List<CommonMap> listUserOffices(Integer usercode) {
+		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value "
+				+ "FROM masters.offices T INNER JOIN nicobps.useroffices uo on T.officecode=uo.officecode "
+				+ "WHERE usercode=? ORDER BY T.officename1 ";
+		return this.listCommonMap(sql, new Object[] { usercode });
+	}
+
+	@Override
+	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
+		String sql = "select * from nicobps.licenseeofficesvalidities b " + 
+				"inner join masters.offices c on b.officecode=c.officecode and c.enabled='Y' " + 
+				"where b.validto>current_date and b.usercode= ? ";
+		Object[] criteria = { usercode };
+		return this.listGeneric(sql, criteria);
 	}
 
 	@Override
@@ -328,16 +354,6 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "LEFT JOIN masters.offices off on off.officecode=app.officecode "
 				+ "WHERE app.modulecode=? and app.usercode=? ";
 		return this.listGeneric(sql, new Object[] { modulecode, usercode });
-	}
-
-	@Override
-	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
-		String sql = "select * from nicobps.useroffices a "
-				+ "inner join nicobps.licenseeofficesvalidities b  on a.officecode=b.officecode and a.usercode=b.usercode and b.validto>current_date "
-				+ "inner join masters.offices c on a.officecode=c.officecode and c.enabled='Y'  "
-				+ "where a.usercode= ?";
-		Object[] criteria = { usercode };
-		return this.listGeneric(sql, criteria);
 	}
 
 }

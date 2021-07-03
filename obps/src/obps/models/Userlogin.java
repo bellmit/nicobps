@@ -9,10 +9,19 @@ public class Userlogin {
 	private String mobileno;
 	private String designation;
 	private String userpassword;
+	private Integer officecode;
 	private List<Pageurls> mappedpages;
 
 	public Userlogin() {
 		super();
+	}
+
+	public Integer getOfficecode() {
+		return officecode;
+	}
+
+	public void setOfficecode(Integer officecode) {
+		this.officecode = officecode;
 	}
 
 	public Integer getUsercode() {

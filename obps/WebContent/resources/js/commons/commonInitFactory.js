@@ -1,13 +1,12 @@
 //Common Factories
 app.factory('commonInitFactory', function($http) {
 	return {	
-	listUsers : function(callback) {
-			$http.get("./listUsers.htm").success(
+		listUsers : function(callback) {
+			$http.get("./listOfficeUsers.htm").success(
 					function(response, status, headers, config) {
 						callback(response);
 					});
 		},		
-
 		listLicensees : function(callback) {
 			$http.get("./listLicensees.htm").success(
 					function(response, status, headers, config) {

@@ -24,6 +24,7 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
@@ -125,6 +126,10 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 					response = jdbcTemplate.update(sql, values3) > 0;
 				}
 			}
+			if (param.get("usertype") == null && param.get("usertype").equals("BACKEND_USER")) {
+				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+
+			}
 		} catch (Exception e) {
 			e.getStackTrace();
 			response = false;
@@ -152,12 +157,33 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public List<Userlogin> listUsers() {
+	public List<Userlogin> listOfficeUsers() {
 		List<Userlogin> list = null;
 		try {
-			String sql = "Select usercode, username, fullname, mobileno, designation, "
-					+ "       enabled, entrydate From nicobps.userlogins Order by username";
+			String sql = "Select u.usercode, username, fullname, mobileno, designation, "
+					+ "       u.enabled, u.entrydate, officename1 From nicobps.userlogins u "
+					+ "INNER JOIN nicobps.useroffices uo on u.usercode=uo.usercode "
+					+ "INNER JOIN masters.offices o on uo.officecode=o.officecode " + "Order by username";
 			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Userlogin>(Userlogin.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listUsers()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
+
+	@Override
+	public List<Userlogin> listOfficeUsers(Integer officecode) {
+		List<Userlogin> list = null;
+		try {
+			String sql = "Select u.usercode, username, fullname, mobileno, designation, "
+					+ "       u.enabled, u.entrydate, officename1 From nicobps.userlogins u "
+					+ "INNER JOIN nicobps.useroffices uo on u.usercode=uo.usercode "
+					+ "INNER JOIN masters.offices o on uo.officecode=o.officecode " + "where o.officecode=? "
+//					+ "or registeringofficecode=? "
+					+ "Order by username";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Userlogin>(Userlogin.class),
+					new Object[] { officecode });
 		} catch (Exception e) {
 			e.getStackTrace();
 			System.out.println("Error in DaoUserManagement.listUsers()  : " + e);
@@ -232,7 +258,9 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	public Userlogin getUserlogin(final String username) {
 		Userlogin user = new Userlogin();
 		try {
-			String sql = "SELECT usercode,username,fullname,mobileno,designation FROM userlogins WHERE username=?";
+			String sql = "SELECT u.usercode,username,fullname,mobileno,designation,officecode "
+					+ "FROM userlogins u LEFT JOIN nicobps.useroffices uo on u.usercode=uo.usercode "
+					+ "WHERE username=?";
 			Object[] criteria = { username };
 			user = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(Userlogin.class), criteria);
 		} catch (Exception e) {
@@ -375,6 +403,4 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		return response;
 	}
 
-	
-	
 }

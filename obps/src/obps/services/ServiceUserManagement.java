@@ -82,9 +82,15 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 	}    
     
     @Override
-    public List<Userlogin> listUsers(){    	    	
-		return DaoUserManagementInterface.listUsers();	
+    public List<Userlogin> listOfficeUsers(){    	    	
+		return DaoUserManagementInterface.listOfficeUsers();	
 	}    
+
+    @Override
+    public List<Userlogin> listOfficeUsers(Integer officecode){    	    	
+    	return DaoUserManagementInterface.listOfficeUsers(officecode);	
+    }    
+    
     @Override
     public List<Pageurls> listUrls(){    	    	
 		return DaoUserManagementInterface.getPageUrls();	
@@ -101,7 +107,7 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     @Override
     public List<Userlogin> listUserAndMappedPages() {
 
-		List<Userlogin> list = listUsers();
+		List<Userlogin> list = listOfficeUsers();
 		for (Userlogin user : list) {
 			user.setMappedpages(DaoUserManagementInterface.getMappedPageurls(user.getUsercode()));
 		}

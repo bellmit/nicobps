@@ -18,9 +18,6 @@ public interface ServiceUserManagementInterface {
 
 	public Long getMaxAfrCode();
 
-	
-
-
 	public boolean checkEmailExistance(final String username);
 
 	public boolean checkMobileExistance(final String mobileno);
@@ -35,7 +32,9 @@ public interface ServiceUserManagementInterface {
 
 	public boolean updateUser(Userlogin user);
 
-	public List<Userlogin> listUsers();
+	public List<Userlogin> listOfficeUsers();
+
+	public List<Userlogin> listOfficeUsers(Integer officecode);
 
 	public List<Pageurls> listUrls();
 
@@ -44,6 +43,5 @@ public interface ServiceUserManagementInterface {
 	public List<Userlogin> listUserAndMappedPages();
 
 	public String saveUserpages(List<Map<String, Object>> upages);
-
 
 }
