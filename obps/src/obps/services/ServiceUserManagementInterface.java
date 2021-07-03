@@ -41,7 +41,7 @@ public interface ServiceUserManagementInterface {
 
 	public String savePageurl(Pageurls url);
 
-	public List<Userlogin> listUserAndMappedPages();
+	public List<Userlogin> listUserAndMappedPages(Integer officecode);
 
 	public String saveUserpages(List<Map<String, Object>> upages);
 

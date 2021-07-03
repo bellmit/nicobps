@@ -64,6 +64,7 @@ app.controller("accesscontrolCtrl", [
         type: "GET",
         url: "./listUserAndMappedPages.htm",
         // dataType: "json",
+        data:"officecode="+jQuery('#officecode').val(),
         contentType: "application/json; charset=utf-8",
         success: function (response) {
           var scope = angular.element($("#accesscontrolCtrl")).scope();

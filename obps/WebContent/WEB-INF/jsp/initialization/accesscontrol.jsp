@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>OBPS | Create User</title>
+		<title>OBPS | Access Control</title>
 		<%@include file="../common/headerfiles.jsp" %>     		
 		<script src="resources/js/util/sha256.min.js"></script>
 		<style>
@@ -28,17 +28,24 @@
 	    <div id="page-content-wrapper">	
 		  <%@include file="../common/menutop.jsp" %>     
 	      <div class="container-fluid">
-	        <h3 class="mt-4" style="font-size:32px;">Create URL</h3>
+	        <h3 class="mt-4" style="font-size:32px;">Access Control</h3>
 	        
 	        <div class="row" ng-app="CommonApp">	         	
 	        	<div class="col-md-12 py-12 px-12">
 	        		<div class="containerBody" id="accesscontrolCtrl" ng-controller="accesscontrolCtrl">	        		
 		        		<form>
-		                    <table class="" style="width:100%;margin: 0px auto"> 
+		                    <table class="" style="width:100%;margin: 50px auto 0"> 
 		                        <tr class="form-group has-feedback">
-		                            <td class="title" style="width: 15%">Full Name :</td>
+		                            <td class="title" style="width: 15%"><b>Select Office* :</b></td>
 		                            <td>
-		                                <span >{{user.fullname}}</span>
+		                                <select id='officecode' style='width:230px'
+												class="form-control" 
+												ng-model="officecode"
+												ng-change='listUsers()'>
+													<core:forEach items="${officeList}" var='i'>
+														<option value='${i.key}' selected='selected'>${i.value}</option>
+													</core:forEach>
+										</select>
 		                            </td>                                     
 		                            <td rowspan="15" style="width:65%;border: 1px solid blue;">
 		                                <div style="width:100%;max-height:230px;overflow-y: auto ">
@@ -62,6 +69,12 @@
 		                            </td>
 		                        </tr> <tr><td>&nbsp;</td></tr>
 		                        <tr>
+		                            <td class="title">Full Name :</td>
+		                            <td >
+		                                <span >{{user.fullname}}</span>
+		                            </td>
+		                        </tr><tr><td>&nbsp;</td></tr>
+		                        <tr>
 		                            <td class="title">User Name :</td>
 		                            <td >
 		                                <span >{{user.username}}</span>
@@ -77,7 +90,6 @@
 		                        <tr >
 		                            <td colspan="2" align="center">
 		                                <input type="button" value="Save" ng-click="save()"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                                <input type="reset" value="RESET" ng-click="reset()"/>
 		                            </td>
 		                        </tr><tr><td>&nbsp;</td></tr>
 		                        <tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr>

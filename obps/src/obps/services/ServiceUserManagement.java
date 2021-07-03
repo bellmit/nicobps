@@ -107,9 +107,9 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		return (DaoUserManagementInterface.savePageurlsDao(url)) ? "Saved" : "Failed";
 	}
     @Override
-    public List<Userlogin> listUserAndMappedPages() {
+    public List<Userlogin> listUserAndMappedPages(Integer officecode) {
 
-		List<Userlogin> list = listOfficeUsers();
+		List<Userlogin> list = listOfficeUsers(officecode);
 		for (Userlogin user : list) {
 			user.setMappedpages(DaoUserManagementInterface.getMappedPageurls(user.getUsercode()));
 		}

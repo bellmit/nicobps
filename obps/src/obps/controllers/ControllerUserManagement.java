@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.validators.UploadEnclosuresValidatorInterface;
@@ -63,7 +64,7 @@ public class ControllerUserManagement {
 
 	@Autowired
 	private ValidateLicenseEnclosures vle;
-	
+
 	public static HttpSession session() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest().getSession(true);
@@ -179,122 +180,116 @@ public class ControllerUserManagement {
 
 	}
 
-
-	// =================================Upload Enclosures====================================//
+	// =================================Upload
+	// Enclosures====================================//
 	@RequestMapping("/uploadenclosuresext.htm")
-	public String uploadenclosuresext(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
-	{			
-		model.addAttribute("successMsg","");         
-		String  usercode = (String) request.getSession().getAttribute("usercode");
+	public String uploadenclosuresext(ModelMap model,
+			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
+			HttpServletRequest request) {
+		model.addAttribute("successMsg", "");
+		String usercode = (String) request.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
-		if(licenseetypecode!=null && usercode!=null) {
-			//model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));	
-			model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode),Short.valueOf(licenseetypecode)));			
-		}	 
+		if (licenseetypecode != null && usercode != null) {
+			// model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
+			model.addAttribute("enclosuresList", serviceUtilInterface.listEnclosures(Short.valueOf("1"),
+					Integer.valueOf(usercode), Short.valueOf(licenseetypecode)));
+		}
 		return "uploadenclosuresext";
 	}
-	
+
 	@RequestMapping("/uploadenclosuresint.htm")
-	public String uploadenclosuresint(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
-	{			
-		model.addAttribute("successMsg","");     
-		String  usercode = (String) request.getSession().getAttribute("usercode");
+	public String uploadenclosuresint(ModelMap model,
+			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
+			HttpServletRequest request) {
+		model.addAttribute("successMsg", "");
+		String usercode = (String) request.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
-		if(licenseetypecode!=null && usercode!=null) {
-			//model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));	
-			model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode),Short.valueOf(licenseetypecode)));			
-		}	 
+		if (licenseetypecode != null && usercode != null) {
+			// model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
+			model.addAttribute("enclosuresList", serviceUtilInterface.listEnclosures(Short.valueOf("1"),
+					Integer.valueOf(usercode), Short.valueOf(licenseetypecode)));
+		}
 		return "uploadenclosuresint";
 	}
-	
-    @RequestMapping(value = "submitLicenseesenclosures.htm",params = "_submit", method = RequestMethod.POST)
-    public String submitLicenseesenclosures(ModelMap model,@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures,BindingResult result,HttpServletRequest request) 
-    {           	
-    	Userlogin user = (Userlogin) request.getSession().getAttribute("user");
-    	String successurl=user!=null?"uploadenclosuresint":"uploadenclosuresext";
-    	
-		String  usercode = (String) request.getSession().getAttribute("usercode");
-		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");  
-		 model.addAttribute("successMsg","");     
-		if(usercode!=null && licenseetypecode!=null) 
-		{
-	               
-	        licenseesenclosures.setUsercode(usercode);
-	        licenseesenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
-	        vle.validate(licenseesenclosures, result);                
-	        if (!result.hasErrors()) 
-	        {   
-	    		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
-	    		licenseesenclosures.setAfrcode(afrcode);	        	
-	        	
-	            if(serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures))
-	            {
-	                model.addAttribute("successMsg","Documents uploaded successfull...!");                 
-	            }else{
-	                model.addAttribute("successMsg","Unable to upload documents...!");   
-	            }
-	        }                 		
-			if(licenseetypecode!=null && usercode!=null) {
-				model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode),Short.valueOf(licenseetypecode)));			
-			}				
-		}else {
-			successurl="redirect:login.htm";
-		}
- 	       
-   		return successurl;
-   		
-    }  	
-	
-/*
-	@GetMapping(value = "/initUploadEnclosuresForm.htm")
-	public @ResponseBody Map<String, Object> initUploadEnclosuresForm(HttpServletRequest request) {
-		Map<String, Object> data = new LinkedHashMap<>();
-		String usercode = (String) request.getSession().getAttribute("usercode");
-		if (usercode != null) {			
-			data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
-		} else {
-			data.put("listEnclosures", serviceUtilInterface.listEnclosures(Short.valueOf("1")));
-		}				
-		return data;
-	}
 
-	@PostMapping("/submitEnclosureDetails.htm")
-	public ResponseEntity<?> submitEnclosureDetails(@RequestParam Map<String, Object> param,
+	@RequestMapping(value = "submitLicenseesenclosures.htm", params = "_submit", method = RequestMethod.POST)
+	public String submitLicenseesenclosures(ModelMap model,
+			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
 			HttpServletRequest request) {
-		String usersessioncaptcha = (String) request.getSession().getAttribute("CAPTCHA_KEY");
-		String userresponsecaptcha = (String) param.get("userresponsecaptcha");
-
-		if (usersessioncaptcha == null || userresponsecaptcha == null
-				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
-			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
-		}
+		Userlogin user = (Userlogin) request.getSession().getAttribute("user");
+		String successurl = user != null ? "uploadenclosuresint" : "uploadenclosuresext";
 
 		String usercode = (String) request.getSession().getAttribute("usercode");
+		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
+		model.addAttribute("successMsg", "");
+		if (usercode != null && licenseetypecode != null) {
 
-		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
-		param.put("afrcode", afrcode);
+			licenseesenclosures.setUsercode(usercode);
+			licenseesenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
+			vle.validate(licenseesenclosures, result);
+			if (!result.hasErrors()) {
+				String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
+				licenseesenclosures.setAfrcode(afrcode);
 
-		if (usercode != null) {
-			param.put("usercode", usercode);
-		} else {
-			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
-		}
-		System.out.println("validate file param controller"+param);
-		Log.info("validate file param controller"+param);
-		//validate file
-		if(uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
-			System.out.println("validated file!");
-			if (serviceUserManagementInterface.submitEnclosureDetails(param)) {
-				return ResponseEntity.ok(new String("The documents have been uploaded successfully."));
-			} else {
-				return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+				if (serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures)) {
+					model.addAttribute("successMsg", "Documents uploaded successfull...!");
+				} else {
+					model.addAttribute("successMsg", "Unable to upload documents...!");
+				}
 			}
-		}else {
-			return ResponseEntity.badRequest().body(new String("Invalid File!Documents could not be uploaded!"));
+			if (licenseetypecode != null && usercode != null) {
+				model.addAttribute("enclosuresList", serviceUtilInterface.listEnclosures(Short.valueOf("1"),
+						Integer.valueOf(usercode), Short.valueOf(licenseetypecode)));
+			}
+		} else {
+			successurl = "redirect:login.htm";
 		}
-		
+
+		return successurl;
+
 	}
-*/
+
+	/*
+	 * @GetMapping(value = "/initUploadEnclosuresForm.htm") public @ResponseBody
+	 * Map<String, Object> initUploadEnclosuresForm(HttpServletRequest request) {
+	 * Map<String, Object> data = new LinkedHashMap<>(); String usercode = (String)
+	 * request.getSession().getAttribute("usercode"); if (usercode != null) {
+	 * data.put("listEnclosures",
+	 * serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(
+	 * usercode))); } else { data.put("listEnclosures",
+	 * serviceUtilInterface.listEnclosures(Short.valueOf("1"))); } return data; }
+	 * 
+	 * @PostMapping("/submitEnclosureDetails.htm") public ResponseEntity<?>
+	 * submitEnclosureDetails(@RequestParam Map<String, Object> param,
+	 * HttpServletRequest request) { String usersessioncaptcha = (String)
+	 * request.getSession().getAttribute("CAPTCHA_KEY"); String userresponsecaptcha
+	 * = (String) param.get("userresponsecaptcha");
+	 * 
+	 * if (usersessioncaptcha == null || userresponsecaptcha == null ||
+	 * !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) { return
+	 * ResponseEntity.badRequest().body(new
+	 * String("Please check your entered captcha!")); }
+	 * 
+	 * String usercode = (String) request.getSession().getAttribute("usercode");
+	 * 
+	 * String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
+	 * param.put("afrcode", afrcode);
+	 * 
+	 * if (usercode != null) { param.put("usercode", usercode); } else { return
+	 * ResponseEntity.badRequest().body(new String("Unable to process request!")); }
+	 * System.out.println("validate file param controller"+param);
+	 * Log.info("validate file param controller"+param); //validate file
+	 * if(uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
+	 * System.out.println("validated file!"); if
+	 * (serviceUserManagementInterface.submitEnclosureDetails(param)) { return
+	 * ResponseEntity.ok(new
+	 * String("The documents have been uploaded successfully.")); } else { return
+	 * ResponseEntity.badRequest().body(new String("Unable to process request!")); }
+	 * }else { return ResponseEntity.badRequest().body(new
+	 * String("Invalid File!Documents could not be uploaded!")); }
+	 * 
+	 * }
+	 */
 
 	@RequestMapping(value = "/output.htm", method = RequestMethod.GET)
 	public String showFile(HttpServletRequest request, HttpServletResponse response,
@@ -390,26 +385,43 @@ public class ControllerUserManagement {
 
 	@GetMapping("/createuser.htm")
 	public String createuser(Model model) {
-		model.addAttribute("officeList",
-				(session().getAttribute("usercode").equals("1")) ? serviceUtilInterface.listOffices()
-						: serviceUtilInterface.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString())));
+		model.addAttribute("officeList", (session().getAttribute("usercode").equals("1"))
+				? serviceUtilInterface.listOffices()
+				: serviceUtilInterface.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString())));
 		return "initialization/createuser";
 	}
 
 	@PostMapping(value = "/createuser.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> createUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
+		List<CommonMap> officelist = serviceUtilInterface
+				.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString()));
+		System.out.println((Integer) user.get("officecode"));
+		if (!session().getAttribute("usercode").equals("1")) {
+			boolean exist = false;
+			for (CommonMap c : officelist) {
+				if (c.getKey().equals(user.get("officecode").toString())) {
+					exist = true;
+					break;
+				}
+			}
+			if (!exist) {
+				response.put("code", 400);
+				response.put("msg", "Not Authorized to create user from selected office.");
+				return ResponseEntity.ok().body(response);
+			}
+		}
 		String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
 		user.put("usercode", usercode);
 		user.put("usertype", "BACKEND_USER");
 
 		if (serviceUserManagementInterface.createUser(user)) {
 			response.put("code", 200);
-			response.put("data", 1);
+			response.put("msg", "");
 			return ResponseEntity.ok().body(response);
 		}
-		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("code", 400);
+		response.put("msg", "");
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -428,9 +440,9 @@ public class ControllerUserManagement {
 	}
 
 	@GetMapping("/listOfficeUsers.htm")
-	public @ResponseBody List<Userlogin> listOfficeUsers() {
+	public @ResponseBody List<Userlogin> listOfficeUsers(Integer officecode) {
 
-		return serviceUserManagementInterface.listOfficeUsers();
+		return serviceUserManagementInterface.listOfficeUsers(officecode);
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -452,14 +464,17 @@ public class ControllerUserManagement {
 
 	///////////////////////////////////////////////////////////////////////////
 	@GetMapping("/accesscontrol.htm")
-	public String accesscontrol() {
+	public String accesscontrol(Model model) {
+		model.addAttribute("officeList", (session().getAttribute("usercode").equals("1"))
+				? serviceUtilInterface.listOffices()
+				: serviceUtilInterface.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString())));
 		return "initialization/accesscontrol";
 	}
 
 	@GetMapping(value = "/listUserAndMappedPages.htm")
-	public @ResponseBody List<Userlogin> listUserAndMappedPages() {
+	public @ResponseBody List<Userlogin> listUserAndMappedPages(Integer officecode) {
 
-		return serviceUserManagementInterface.listUserAndMappedPages();
+		return serviceUserManagementInterface.listUserAndMappedPages(officecode);
 	}
 
 	@PostMapping(value = "/saveUserpages.htm")

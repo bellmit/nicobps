@@ -31,8 +31,6 @@ app.factory('commonInitFactory', function($http) {
 						callback(response);
 					});
 		},	
-
-
 		listOffices : function(callback) {
 			$http.get("./listOffices.htm").success(
 					function(response, status, headers, config) {

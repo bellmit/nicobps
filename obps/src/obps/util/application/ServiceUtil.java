@@ -370,7 +370,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> getCurrentProcessStatus(Integer modulecode, Integer usercode) {
-		String sql = "SELECT app.applicationcode,off.officecode,off.officename1,pf.*,pu.pageurl,pu.parent,pu.parenticon FROM nicobps.applications app "
+		String sql = "SELECT app.applicationcode,off.officecode,off.officename1,pf.*,pu.pageurl,pu.parent,pu.parenticon,"
+				+ "(select to_char(min(entrydate),'DD-MON-YYYY') from nicobps.applications appdate where appdate.applicationcode=app.applicationcode)as entrydate FROM nicobps.applications app "
 				+ "INNER JOIN nicobps.applicationflowremarks afr on app.applicationcode=afr.applicationcode "
 				+ "		and afrcode=(select max(afrcode) from nicobps.applicationflowremarks afr where afr.applicationcode=app.applicationcode and afr.modulecode=app.modulecode) "
 				+ "INNER JOIN masters.processflow pf on pf.fromprocesscode=afr.toprocesscode and processflowstatus='N' and pf.modulecode=afr.modulecode "

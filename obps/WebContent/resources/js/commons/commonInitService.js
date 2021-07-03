@@ -24,7 +24,7 @@ app.service("commonInitService", function($http) {
             contentType: "application/json; charset=utf-8",
             data: angular.toJson(data, true),
             success: function (res) {
-           
+           console.log(res.code);
             	if(res.code === 201 || res.code === 200  || res.code === 203 || res === true){
             		successCallback(res);
             	}else{

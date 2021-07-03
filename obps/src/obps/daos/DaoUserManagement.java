@@ -64,7 +64,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 					+ "VALUES (?,?,?,?,?,?) ";
 			Object[] values = { usercode, ((String) param.get("username")).trim(),
 					((String) param.get("userpassword")).trim(), ((String) param.get("fullname")).trim(),
-					((String) param.get("mobileno")).trim(), ((String) param.get("designation")).trim() };
+					( param.get("mobileno")).toString().trim(), ((String) param.get("designation")).trim() };
 			response = jdbcTemplate.update(sql, values) > 0;
 
 			if (param.get("usertype") == null && param.get("licenseetypecode") != null
@@ -131,12 +131,12 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 					response = jdbcTemplate.update(sql, values3) > 0;
 				}
 			}
-//			if (param.get("usertype") == null && param.get("usertype").equals("BACKEND_USER")) {
-//				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-//
-//			}
+			if (param.get("usertype") != null && param.get("usertype").equals("BACKEND_USER")) {
+				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
+				response = jdbcTemplate.update(sql, new Object[] {usercode,param.get("officecode")}) > 0;
+			}
 		} catch (Exception e) {
-			e.getStackTrace();
+			e.printStackTrace();
 			response = false;
 			System.out.println("Error in DaoUserManagement.createUser(Map<String,String> param) : " + e);
 		}
@@ -366,7 +366,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	public List<Pageurls> getPageUrls() {
 		List<Pageurls> urls = null;
 		try {
-			String sql = "Select * From masters.pageurls ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu ";
+			String sql = "Select * From masters.pageurls where showinmenu='Y' ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu ";
 			urls = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Pageurls.class));
 		} catch (Exception e) {
 			System.out.println("Error in DaoUserManagement.getPageUrls() : " + e);
@@ -378,7 +378,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	public List<Pageurls> getPageUrls(final Integer usercode) {
 		List<Pageurls> urls = null;
 		try {
-			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url WHERE url.showinmenu != 'N' AND up.urlcode=url.urlcode AND up.usercode=? "
+			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url WHERE url.showinmenu != 'N' AND up.urlcode=url.urlcode AND up.usercode=? and showinmenu='Y' "
 					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
 			Object[] criteria = { usercode };
 			urls = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Pageurls.class), criteria);
@@ -438,7 +438,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		List<Map<String, Object>> rowList = null;
 		try {
 			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url "
-					+ "WHERE up.urlcode=url.urlcode and usercode=:usercode "
+					+ "WHERE up.urlcode=url.urlcode and usercode=:usercode and showinmenu='Y' "
 					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
 			MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("usercode", usercode);
 			rowList = (List<Map<String, Object>>) namedParameterJdbcTemplate.queryForList(sql, parameters);

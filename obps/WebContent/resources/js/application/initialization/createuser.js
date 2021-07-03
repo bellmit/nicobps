@@ -25,9 +25,10 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     $scope.trustHTML = function (post) {
         return $sce.trustAsHtml(post);
     };
-//    $scope.officeDesc = function (offc) {
-//    	return offc.officename1+((offc.officename2)?(', '+offc.officename2):'')+((offc.officename3)?(', '+offc.officename3):'');
-//    };
+// $scope.officeDesc = function (offc) {
+// return offc.officename1+((offc.officename2)?(',
+// '+offc.officename2):'')+((offc.officename3)?(', '+offc.officename3):'');
+// };
     
     $scope.edit = function (usercode) {
     	$scope.actionButton = 2;
@@ -51,13 +52,13 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 
     $scope.save = function () {
     	
-//        if($scope.userForm.$invalid)
-//            return false;
+// if($scope.userForm.$invalid)
+// return false;
     	$scope.user.userpassword=SHA256($scope.user.userpassword);
         $scope.method = "POST";
         $scope.urlEndpoint = "./createuser.htm";
     	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, () => {$scope.reset();$scope.listUsers(); alert(successMsg)}, () =>{alert(errorMsg)});
+        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, () => {$scope.reset();$scope.listUsers(); alert(successMsg)}, (res) =>{console.log(res);alert((res.msg.length>0)?res.msg:errorMsg)});
     };
     
     $scope.toggleUserStatus= function (usercode) {
@@ -117,7 +118,9 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
                     "render": function (data, type, row, meta) {
                     	let status = row.enabled == 'Y'?'Disable':'Enable';
                     	let div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="button-primary">Edit</button>';
-//                    		div += '<button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="toggleUserStatus(' + data + ')" class="button-primary">'+status+'</button></div>';
+// div += '<button style="padding:.1em; margin-right: .5em" value="Edit"
+// ng-click="toggleUserStatus(' + data + ')"
+// class="button-primary">'+status+'</button></div>';
                         return div;
                     }
                 }
@@ -177,26 +180,15 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 
         /* READ DATA */
 
-        $scope.listUsers = (usercode = 0) => {
-        	
-        	if(usercode == 0){
-        		commonInitFactory.listUsers((response)=>{
-            		$scope.users=response;
-            		$scope.setDataTable($scope.users);
-            	});
-        	}else{
-        		commonInitFactory.listUser((response)=>{
-        			$scope.users.forEach((o, x) => {
-        				if(o.usercode == usercode){
-        					$scope.users[x] = response;
-        				}
-        			});
-            		$scope.setDataTable($scope.users);
-            	}, usercode);
-        	}
+        $scope.listUsers = (officecode=$scope.user.officecode) => {
+        	if(officecode)
+        	commonInitService.httpSendJSON('GET','./listOfficeUsers.htm?officecode='+officecode,"",(response)=>{
+        		$scope.users=response;
+        		$scope.setDataTable($scope.users);
+        	});
         	
         };
-        $scope.listUsers();
+        $timeout(()=>{$scope.listUsers()},0);
         
     }]);
 

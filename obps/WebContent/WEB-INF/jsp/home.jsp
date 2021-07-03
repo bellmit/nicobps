@@ -19,8 +19,8 @@
 									<div class="bg-light p-4 b-dbcard">
 							        	<i class='fas ${(process.parenticon!=null)?process.parenticon:"fa-info-circle"} position-absolute' style="font-size:35px; right: 40px; top: 40px;"></i> 
 							        	<div class="row">
-							        		<h4 class="col-lg-6 text-left font-weight-bold">${process.officename1}</h4>	
-							        		<div class=col-lg-6">
+							        		<h5 class="col-lg-4 text-left font-weight-bold">${process.officename1}</h5>	
+							        		<div class="col-lg-4">
 								        		<h5 class="text-left font-weight-bold" style="padding-top: 3px;color:#005776">${process.flowname}</h5>	
 								        		<div>
 								        			<span style="font-size:13px;">
@@ -30,6 +30,10 @@
 								        			</span>
 								        		</div>						        		
 							        		</div>						        		
+							        		<div class="col-lg-4">
+							        			<div class='text-left'>Application No.   -<span class='font-weight-bold'>${process.applicationcode }</span></div>
+							        			<div class='text-left'>Application Date. -<span class='font-weight-bold'> ${process.entrydate }</span></div>								        		
+							        		</div>
 							      	  	</div>
 							        </div>
 							    </div>
