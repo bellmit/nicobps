@@ -14,7 +14,7 @@ import obps.util.common.UtilFile;
 import obps.models.LicenseEsenclosures;
 
 @Component
-public class ValidateLicenseEsenclosures implements Validator 
+public class ValidateLicenseEnclosures implements Validator 
 {
 
     @Autowired

@@ -40,7 +40,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.validators.UploadEnclosuresValidatorInterface;
-import obps.validators.ValidateLicenseEsenclosures;
+import obps.validators.ValidateLicenseEnclosures;
 import obps.models.AppEnclosures;
 import obps.models.LicenseEsenclosures;
 import obps.models.Pageurls;
@@ -62,7 +62,7 @@ public class ControllerUserManagement {
 	private Environment environment;
 
 	@Autowired
-	private ValidateLicenseEsenclosures vle;
+	private ValidateLicenseEnclosures vle;
 	
 	public static HttpSession session() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
