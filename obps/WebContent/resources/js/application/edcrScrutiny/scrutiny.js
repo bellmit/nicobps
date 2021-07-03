@@ -64,7 +64,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 				processData: false,
 				data: data,
 				success: function(response) {
-
+					alert(response.status);
 					$timeout(function() {
 						$scope.edcrscrutiny = response;
 					}, 0);
@@ -79,7 +79,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 							jQuery('#entrytable').css("visibility", "hidden");
 							jQuery('.edcrResp').css("visibility", "visible");
 							jQuery('#genReport').css("visibility", "visible");
-							if (response.status = "Accepted") {
+							if (response.status == "Accepted") {
 								jQuery('#edcrstatus').css("color", "green")
 							} else {
 								jQuery('#edcrstatus').css("color", "red")

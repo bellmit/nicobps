@@ -1,6 +1,7 @@
 package obps.services;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.json.simple.JSONArray;
@@ -94,8 +96,17 @@ public class ServiceEdcrScrutiny {
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(resp);
-			String edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
+			String edcrnumber = null;
+			if (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber") == null) {
+				String Applno = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("applicationNumber")).toString();
+				edcrnumber = "DCR" + Applno;
+			} else {
+				edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
+			}
 			String status = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
+
+			System.out.println(status);
+			
 			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
 			String edcrdetails = (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -113,23 +124,7 @@ public class ServiceEdcrScrutiny {
 				respJson.put("status", status);
 				respJson.put("edcrnumber", edcrnumber);
 				respJson.put("planReport", planReport);
-//				String sql = "INSERT INTO nicobps.applications(applicationslno, applicationcode, officecode, modulecode, usercode, servicetypecode) " + "    VALUES (?, ?, ?, ?, ?, ?)";
-//				Integer applicationslno = serviceUtilInterface.getMax("nicobps", "applications", "applicationslno");
-//				applicationslno++;
-//				Integer servicetypecode = 1;
-//				String applicationcode = String.format("%03d", Integer.parseInt(OfficeCode)) + "02" + String.format("%04d", Integer.parseInt(usercode))
-//						+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno);
-//				System.out.println(applicationcode);
-//				if (serviceUtilInterface.update("nicobps.applications", sql,
-//						new Object[] { applicationslno, applicationcode, Integer.parseInt(OfficeCode), 2, Integer.parseInt(usercode), servicetypecode })) {
-//					if (serviceUtilInterface.updateApplicationflowremarks(applicationcode, 2, 1, 2, Integer.parseInt(usercode), null, "Scrutiny complete")) {
-//						respJson = new JSONObject();
-//						respJson.put("status", status);
-//						respJson.put("edcrnumber", edcrnumber);
-//						respJson.put("planReport", planReport);
-//					}
-//				}
-
+				
 			} else {
 				respJson = new JSONObject();
 				respJson.put("status", "error");
@@ -138,13 +133,20 @@ public class ServiceEdcrScrutiny {
 				respJson.put("msg", "System Error: Please contact System Admin!");
 			}
 
-		}catch(
+		} catch (
 
-	Exception e)
-	{
+		Exception e) {
 			resp = e.getMessage();
 			e.printStackTrace();
-		}return respJson;
-}
+		}
+		System.out.println(respJson);
+		return respJson;
+	}
 
+	private String StringGenerator() {
+		final String uuid = UUID.randomUUID().toString().replace("-", "");
+		
+		uuid.substring(9);
+		return uuid;
+	}
 }
