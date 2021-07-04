@@ -44,43 +44,46 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     	
      if($scope.enclosureForm.$invalid)
         return false;
-        $scope.checkExist();
+       $scope.method = "POST";
+        $scope.urlEndpoint = "./initenclosures.htm";
+    	
+
+		commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, function (response) {
+		
+				if (response.data=="Success") {
+					MsgBox("Enclosures inserted successfully.");
+					$scope.reset();
+					$scope.listEnclosures();
+				} else if (response.data=="exist") {
+					MsgBox("Enclosure name already exist");
+					$scope.listEnclosures();
+				}else if (response.data=="m1") {
+					MsgBox("No Special Characters or Numbers allowed in Enclosure Name");
+					$scope.listEnclosures();
+				
+				}else if (response.data=="m2") {
+					MsgBox("No Special Characters or Numbers allowed in Enclosure Description");
+					$scope.listEnclosures();
+				}else if (response.data=="50") {
+					MsgBox("Enclosure Name Cannot be more than 50 characters");
+					$scope.listEnclosures();
+				
+				}else if (response.data=="255") {
+					MsgBox("Enclosure Description Cannot be more than 50 characters");
+					$scope.listEnclosures();
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				}
+			}, function () {
+				
+				alert("Error");
+			});
        
         
     	
   };
-  $scope.checkExist= function (){
-   
-
-    var data;
-    $.ajax({
-        url: "./checkExistEnclosure.htm",
-        type:"POST",
-        contentType: "application/json; charset=utf-8",
-         dataType: "json",
-        data: angular.toJson($scope.enclosures),
-        success: function (resp) {
-            data = resp;
-          
-           
-           
-        if(resp.data==-1)
-    	{
-        
-        $scope.method = "POST";
-        $scope.urlEndpoint = "./initenclosures.htm";
-    	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.enclosures, () => {$scope.reset();$scope.listEnclosures(); alert(successMsg)}, () =>{alert(errorMsg)});
-        }
-        else{
-        alert("Enclosure Name Already Exists");
-        }
-           
-        },
-        error: function () {
-        alert("ERROR")}
-    }); 
-}
+ 
 
 
    
@@ -93,7 +96,38 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
           
 	  $scope.method = "POST";
    $scope.urlEndpoint = "./updateinitenclosures.htm";
- 	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.enclosures, () => {$scope.reset();$scope.listEnclosures(), alert(successMsg)}, () => {alert(errorMsg)});
+
+commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, function (response) {
+		
+				if (response.data=="Success") {
+					MsgBox("Enclosures Updated successfully.");
+					$scope.reset();
+					$scope.listEnclosures();
+				} else if (response.data=="exist") {
+					MsgBox("Enclosure name already exist");
+					$scope.listEnclosures();
+				}else if (response.data=="m1") {
+					MsgBox("No Special Characters or Numbers allowed in Enclosure Name");
+					$scope.listEnclosures();
+				
+				}else if (response.data=="m2") {
+					MsgBox("No Special Characters or Numbers allowed in Enclosure Description");
+					$scope.listEnclosures();
+				}else if (response.data=="50") {
+					MsgBox("Enclosure Name Cannot be more than 50 characters");
+					$scope.listEnclosures();
+				
+				}else if (response.data=="255") {
+					MsgBox("Enclosure Description Cannot be more than 50 characters");
+					$scope.listEnclosures();
+				}
+				else if(response.data=="Error"){
+				alert("Enclosure Name Already exists");
+				}
+			}, function () {
+				
+				alert("Error");
+			});
   }
      
 /*-----------------------------------------------------------------------------------------------------------------------------------*/

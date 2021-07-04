@@ -29,10 +29,10 @@
 			                            </td>
 			                        </tr>
 			                        <tr class="form-group has-feedback">
-			                            <td class="title">Enclosure Description:*</td>
+			                            <td class="title">Enclosure Description:</td>
 			                            <td class="col-xs-5 selectContainer">
 											<input type="text" class="form-control" id="enclosuredescription" name="enclosuredescription" maxlength="99"
-												ng-model="enclosures.enclosuredescription" required autocomplete="off"/>        
+												ng-model="enclosures.enclosuredescription" autocomplete="off"/>        
 											<span id="enclosuredescriptionMsg"></span>
 <!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
 			                            </td>

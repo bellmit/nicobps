@@ -42,7 +42,7 @@ public class ServiceEnclosureManagement implements ServiceEnclosureManagementInt
    
     
 	@Override
-	public boolean updateInitEnclosure(Enclosures enclosure){    	    	
+	public boolean updateInitEnclosure(Map<String,Object> enclosure){    	    	
 		return DaoEnclosureManagementInterface.updateInitEnclosure(enclosure);	
 	} 
     
@@ -96,17 +96,14 @@ public class ServiceEnclosureManagement implements ServiceEnclosureManagementInt
 	public String saveOfficePayment(List<Map<String, Object>> officespayments) {
 		return (DaoEnclosureManagementInterface.mapOfficesPayments(officespayments)) ? "Mapped" : "Failed";
 	}
-	@Override
-	public boolean checkExistEnclosure(Map<String, Object> enclosures) {
-		return DaoEnclosureManagementInterface.checkExistEnclosure(enclosures);
-		
-	}
+	
 	
 	@Override
 	public boolean checkOffice(Map<String, Object> offices) {
 		return DaoEnclosureManagementInterface.checkExistOffice(offices);
 		
 	}
+	
     
    
 

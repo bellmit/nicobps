@@ -55,6 +55,28 @@ app.service("commonInitService", function($http) {
 			}            
 		});
 	}
+	this.save1 = (method, endpoint, data, successCallback, errorCallback)=>{
+
+	
+		$.ajax({
+            type: method,
+            url: endpoint,
+            dataType: "json",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: angular.toJson(data),
+            success: function (res) {
+           
+            		successCallback(res);
+            
+            },
+            error: function (res) {
+              
+                alert("Sorry, there was an error while trying to process the request.");
+                errorCallback(res);
+            }            
+        });
+	}
 	this.http = (method, endpoint, data, successCallback, errorCallback)=>{
 		$.ajax({
 			type: method,

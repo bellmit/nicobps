@@ -1,6 +1,8 @@
 package obps.daos;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.List;
 import java.util.Base64;
 import java.util.LinkedList;
@@ -51,6 +53,9 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		boolean response = false;
 		String sql = null;
 		Long enclosurecode = (Long) param.get("enclosurecode");
+		String enclosuredescription = "";
+		if(param.get("enclosuredescription")!=null)
+			enclosuredescription=((String) param.get("enclosuredescription")).trim();
 		
 		System.out.println("HERE");
 		try 
@@ -58,7 +63,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			sql = "INSERT INTO masters.enclosures(enclosurecode,enclosurename,enclosuredescription,enabled) "
 					+ "VALUES (?,?,?,?) ";
 			Object[] values = { enclosurecode, ((String) param.get("enclosurename")).trim(),
-					((String) param.get("enclosuredescription")).trim(),'Y' };
+					enclosuredescription,'Y' };
 			response = jdbcTemplate.update(sql, values) > 0;
 			
 						
@@ -68,6 +73,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			response = false;
 			System.out.println("Error in DaoUserManagement.initenclosure(Map<String,String> param) : " + e);
 		}
+		System.out.println(response);
 		return response;
 	}
 	@Override
@@ -137,15 +143,18 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	
 	
 	@Override
-	public boolean updateInitEnclosure(Enclosures enclosure) 
+	public boolean updateInitEnclosure(Map<String, Object> param) 
 	{
 		String sql = "";
 		boolean response = false;
+		String enclosuredescription = "";
+		if(param.get("enclosuredescription")!=null)
+			enclosuredescription=((String) param.get("enclosuredescription")).trim();
 		try 
 		{
 			sql = "UPDATE masters.enclosures SET enclosurename = ?, enclosuredescription = ? WHERE enclosurecode = ?";
-			Object[] param = new Object[] { enclosure.getEnclosurename(), enclosure.getEnclosuredescription(),enclosure.getEnclosurecode() };
-			response = jdbcTemplate.update(sql, param) > 0;
+			Object[] values = new Object[] { ((String) param.get("enclosurename")).trim(), enclosuredescription,param.get("enclosurecode") };
+			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
 			e.getStackTrace();
@@ -387,6 +396,35 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			response=true;
 		}
 		return response;
+	}
+	
+	@Override
+	public String validateInitEnclosure(Map<String, Object> param) {
+		String response = "";
+		String encldesc="";
+		String enclname=((String) param.get("enclosurename")).trim();
+		if(param.get("enclosuredescription")!=null)
+			encldesc=((String) param.get("enclosuredescription")).trim();
+		
+		 Pattern p = Pattern.compile("[^A-Za-z_ ]");
+	     Matcher m1 = p.matcher(enclname);
+	     Matcher m2 = p.matcher(encldesc);
+	     boolean b1 = m1.find();
+	     boolean b2 = m2.find();
+	     if (b1)
+	         response="m1";
+	      
+	     if (b2)
+	         response="m2";
+	     if(enclname.length()>50)
+	    	 response="50";
+	     if(encldesc.length()>255)
+	    	 response="255";
+	     
+	    	 
+		
+		return response;
+		
 	}
 
 	

@@ -17,7 +17,7 @@ public interface DaoEnclosureManagementInterface{
 
 	public List<Enclosures> listEnclosures();
 
-	public boolean updateInitEnclosure(Enclosures enclosure);
+	public boolean updateInitEnclosure(Map<String, Object> enclosure);
 
 	public boolean initoffices(Map<String, Object> param);
 
@@ -40,4 +40,6 @@ public interface DaoEnclosureManagementInterface{
 
 	public boolean checkExistEnclosure(Map<String, Object> param);
 	public boolean checkExistOffice(Map<String, Object> offices);
+
+	String validateInitEnclosure(Map<String, Object> param);
 }
