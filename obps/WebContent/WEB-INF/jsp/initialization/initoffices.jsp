@@ -87,7 +87,7 @@
 			                        <tr class="form-group has-feedback">
 			                            <td class="title">Email ID Password:</td>
 			                            <td class="col-xs-5 selectContainer">
-											<input type="text" class="form-control" id="emailidpassword" name="emailidpassword" maxlength="99"
+											<input type="password" class="form-control" id="emailidpassword" name="emailidpassword" maxlength="99"
 												ng-model="offices.emailidpassword"  autocomplete="off"/>        
 											<span id="emailidpasswordMsg"></span>
 <!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
@@ -105,7 +105,7 @@
 			                        <tr class="form-group has-feedback">
 			                            <td class="title">SMS Password:</td>
 			                            <td class="col-xs-5 selectContainer">
-											<input type="text" class="form-control" id="smspassword" name="smspassword" maxlength="99"
+											<input type="password" class="form-control" id="smspassword" name="smspassword" maxlength="99"
 												ng-model="offices.smspassword"  autocomplete="off"/>        
 											<span id="smspasswordMsg"></span>
 <!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->

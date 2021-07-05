@@ -51,6 +51,9 @@ public class ControllerInitEcnclosure {
 	private InitEnclosuresValidatorInterface initEnclosuresValidatorInterface;
 	
 	@Autowired
+	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
+	
+	@Autowired
 
 	private ServiceEnclosureManagementInterface serviceUserManagementInterface;
 	@Autowired
@@ -73,32 +76,21 @@ public class ControllerInitEcnclosure {
 		System.out.println("Enclosure Code"+enclosurecode);
 		enclosures.put("enclosurecode", enclosurecode);
 		String encl_name=((String) enclosures.get("enclosurename")).trim();
-		String sql = "Select * from  masters.enclosures where LOWER(enclosurename)=LOWER(?)";
+		String sql = "Select count(*) from  masters.enclosures where LOWER(enclosurename)=LOWER(?)";
 		Object[] values = {encl_name};
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
+		System.out.println("easdasd"+exist);
 		if(exist)
 			response.put("data", "exist");
 		else {
 			String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
-			if(validate=="m1") {
-				response.put("data", "m1");
-				return ResponseEntity.ok().body(response);
-			}
-			if(validate=="m2") {
-				response.put("data", "m2");
-				return ResponseEntity.ok().body(response);
-			}
-			if(validate=="50") {
-				response.put("data", "50");
-				return ResponseEntity.ok().body(response);
-			}
-			if(validate=="255") {
-				response.put("data", "255");
+			if(validate!="") {
+				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
 				
 			if (serviceUserManagementInterface.initenclosures(enclosures)) {
-//				response = "Success";	
+	
 				response.put("data", "Success");
 			}
 			else
@@ -123,20 +115,8 @@ public class ControllerInitEcnclosure {
 //			response.put("data", "exist");
 //		else {
 			String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
-			if(validate=="m1") {
-				response.put("data", "m1");
-				return ResponseEntity.ok().body(response);
-			}
-			if(validate=="m2") {
-				response.put("data", "m2");
-				return ResponseEntity.ok().body(response);
-			}
-			if(validate=="50") {
-				response.put("data", "50");
-				return ResponseEntity.ok().body(response);
-			}
-			if(validate=="255") {
-				response.put("data", "255");
+			if(validate!="") {
+				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
 				

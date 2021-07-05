@@ -16,7 +16,7 @@ public interface ServiceEnclosureManagementInterface {
 
 	boolean updateInitEnclosure(Map<String, Object> enclosures);
 
-	boolean updateinitoffices(Offices offices);
+	boolean updateinitoffices(Map<String, Object> offices);
 
 	List<Enclosures> listEnclosures();
 
@@ -32,10 +32,5 @@ public interface ServiceEnclosureManagementInterface {
 
 	String saveOfficePayment(List<Map<String, Object>> officespayments);
 
-	
-
-	
-
-	boolean checkOffice(Map<String, Object> offices);
 
 }

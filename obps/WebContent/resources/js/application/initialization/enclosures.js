@@ -118,11 +118,11 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
 					$scope.listEnclosures();
 				
 				}else if (response.data=="255") {
-					MsgBox("Enclosure Description Cannot be more than 50 characters");
+					MsgBox("Enclosure Description Cannot be more than 255 characters");
 					$scope.listEnclosures();
 				}
 				else if(response.data=="Error"){
-				alert("Enclosure Name Already exists");
+				MsgBox("Enclosure Name Already exists");
 				}
 			}, function () {
 				

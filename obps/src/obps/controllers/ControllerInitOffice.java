@@ -30,11 +30,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
+import obps.validators.InitOfficesValidatorInterface;
+import obps.daos.DaoEnclosureManagementInterface;
 import obps.models.Enclosures;
 import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceEnclosureManagementInterface;
+import obps.services.ServiceInitializationInterface;
 import obps.services.ServiceUserManagementInterface;
 
 //@RestController
@@ -47,6 +50,14 @@ public class ControllerInitOffice {
 	@Autowired
 
 	private ServiceEnclosureManagementInterface serviceUserManagementInterface;
+	@Autowired
+
+	private ServiceInitializationInterface serviceInitalizationInterface;
+	@Autowired
+	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
+	@Autowired
+
+	private InitOfficesValidatorInterface initOfficesValidatorInterface;
 	@Resource
 	private Environment environment;
 
@@ -64,28 +75,57 @@ public class ControllerInitOffice {
 		Long officecode = getMaxOfficeCode() +1;
 		System.out.println("Enclosure Code"+officecode);
 		offices.put("officecode", officecode);
+		String officename1=((String) offices.get("officename1")).trim();
+		String officename2=((String) offices.get("officename2")).trim();
+		String officename3="";
+		if(offices.get("officename3")!=null)
+		officename3=((String) offices.get("officename3")).trim();
+		String sql = "Select count(*) from  masters.offices where LOWER(officename1)=LOWER(?) AND LOWER(officename2)=LOWER(?) AND LOWER(officename3)=LOWER(?)";
+		Object[] values = {officename1,officename2,officename3 };
+		boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
+		System.out.println(exist);
+		if(exist)
+			response.put("data", "exist");
+		else
+		{
+			String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+			System.out.println("validate"+validate);
+			if(validate!="") {
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+			
+			
+	if (serviceUserManagementInterface.initoffices(offices)) {
+				
+				response.put("data", "Success");
+			}
+			else
+				response.put("data", "Error");
+		}
 		
-		if (serviceUserManagementInterface.initoffices(offices)) {
-			response.put("code", 201);
-			response.put("data", 1);
-		return ResponseEntity.ok().body(response);
-	}
-	response.put("code", 201);
-	response.put("data", -1);
+	
+		System.out.println(response);
 		return ResponseEntity.ok().body(response);
 	}
 	
 	@PostMapping(value = "/updateinitoffices.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> updateinitoffices(@RequestBody Offices offices) {
+	public ResponseEntity<HashMap<String, Object>> updateinitoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		if (serviceUserManagementInterface.updateinitoffices(offices)) {
-			response.put("code", 201);
-			response.put("data", 1);
+		String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+		System.out.println("validate"+validate);
+		if(validate!="") {
+			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-		response.put("code", 201);
-		response.put("data", -1);
+		
+		if (serviceUserManagementInterface.updateinitoffices(offices)) {
+			response.put("data", "Success");
+			return ResponseEntity.ok().body(response);
+		}
+		else
+			response.put("data", "Error");
+		
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -101,19 +141,7 @@ public class ControllerInitOffice {
 		return serviceUtilInterface.getMaxValue(sql);	
 		
 	}
-	@PostMapping(value = "/checkOffice.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> checkOffice(@RequestBody Map<String, Object> offices) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-		System.out.println("CHECK");
-		if (serviceUserManagementInterface.checkOffice(offices)) {
-			response.put("response", HttpStatus.CREATED);
-			response.put("data", 1);
-		return ResponseEntity.ok().body(response);
-	}
-	response.put("response", HttpStatus.OK);
-	response.put("data", -1);
-		return ResponseEntity.ok().body(response);
-	}
+
 
 	
 }

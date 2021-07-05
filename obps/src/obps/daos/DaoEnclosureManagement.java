@@ -82,7 +82,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		String sql = null;
 		Long officecode = (Long) param.get("officecode");
 		
-		System.out.println(officecode);
+		
 		String officename3="",officeshortname="",emailid="",emailidpassword="",smsusername="",smspassword="";
 		
 		if(param.get("officename3")!=null){
@@ -165,7 +165,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	}
 	
 	@Override
-	public boolean updateInitOffices(Offices offices) {
+	public boolean updateInitOffices(Map<String, Object> offices) {
 		String sql = "";
 		boolean response = false;
 		try 
@@ -176,17 +176,17 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 					+ "smspassword = ?"
 					+ " WHERE officecode = ?"					;
 			Object[] param = new Object[] { 
-					offices.getOfficename1(), 
-					offices.getOfficename2(),
-					offices.getOfficename3(), 
-					offices.getOfficeshortname(), 
-					offices.getSignatoryname(),
-					offices.getSignatorydesignation(), 
-					offices.getEmailid(), 
-					offices.getEmailidpassword(),
-					offices.getSmsusername(), 
-					offices.getSmspassword(),
-					offices.getOfficecode()
+					offices.get("officename1"), 
+					offices.get("officename2"),
+					offices.get("officename3"), 
+					offices.get("officeshortname"), 
+					offices.get("signatoryname"),
+					offices.get("signatorydesignation"), 
+					offices.get("emailid"), 
+					offices.get("emailid"),
+					offices.get("smsusername"), 
+					offices.get("smspassword"),
+					offices.get("officecode")
 					};
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {
@@ -347,43 +347,19 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		}
 		return response;
 	}
-	@Override
-	public boolean checkExistEnclosure(Map<String, Object> param) {
-		Boolean response = false;
-		Integer res=0;
-		String sql;
-		try {
-			String encl_name=((String) param.get("enclosurename")).trim();
-			sql = "Select count(*) from  masters.enclosures where enclosurename=?";
-//			Object[] values = {encl_name };
-			res = jdbcTemplate.queryForObject(sql, new Object[] { encl_name }, Integer.class);
-
-			System.out.println("Response"+res);
-			
-		}catch (Exception e) {
-			e.getStackTrace();
-			
-			System.out.println("Error in DaoUserManagement.initenclosure(Map<String,String> param) : " + e);
-		}
-		if(res>0) {
-			response=true;
-		}
-		return response;
-		
-	}
+	
+	
 	
 	@Override
-	public boolean checkExistOffice(Map<String, Object> param) {
+	public boolean checkExistance(String sql, Object[] values) {
 		Boolean response = false;
 		Integer res=0;
-		String sql;
+		
 		try {
-			String officename1=((String) param.get("officename1")).trim();
-			String officename2=((String) param.get("officename2")).trim();
-			String officename3=((String) param.get("officename3")).trim();
-			sql = "Select count(*) from  masters.offices where officename1=? AND officename2=? AND officename3=?";
-//			Object[] values = {encl_name };
-			res = jdbcTemplate.queryForObject(sql, new Object[] { officename1,officename2,officename3 }, Integer.class);
+			
+			
+
+			res = jdbcTemplate.queryForObject(sql, values, Integer.class);
 
 			System.out.println("Response"+res);
 			
@@ -400,6 +376,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	
 	@Override
 	public String validateInitEnclosure(Map<String, Object> param) {
+		System.out.println("asdsdd");
 		String response = "";
 		String encldesc="";
 		String enclname=((String) param.get("enclosurename")).trim();
@@ -414,8 +391,8 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	     if (b1)
 	         response="m1";
 	      
-	     if (b2)
-	         response="m2";
+//	     if (b2)
+//	         response="m2";
 	     if(enclname.length()>50)
 	    	 response="50";
 	     if(encldesc.length()>255)
@@ -425,6 +402,105 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		
 		return response;
 		
+	}
+	@Override
+	public String validateInitOffices(Map<String, Object> param) {
+		System.out.println(param);
+		String response = "";
+		Pattern p = Pattern.compile("[^A-Za-z_ ]");
+		String officename1,officename2,officename3="",officeshortname="",signatoryname="",signatorydesignation="",smsusername="",emailidpassword="",smspassword="";
+		officename1=((String) param.get("officename1")).trim();
+		Matcher of1 = p.matcher(officename1);
+		boolean b1 = of1.find();
+		if(b1)
+			response= "officename1";
+		officename2=((String) param.get("officename2")).trim();
+		Matcher of2 = p.matcher(officename2);
+		b1 = of2.find();
+		if(b1)
+			response = "officename2";
+		if(param.get("officename3")!=null){
+			officename3=((String) param.get("officename3")).trim();
+			Matcher of3 = p.matcher(officename3);
+			b1 = of3.find();
+			if(b1)
+				response = "officename3";
+		}
+		
+		if(param.get("signatoryname")!=null){
+			signatoryname=((String) param.get("signatoryname")).trim();
+			Matcher offsignatory = p.matcher(signatoryname);
+			b1 = offsignatory.find();
+			if(b1)
+				response = "offsignatory";
+		}
+		if(param.get("signatorydesignation")!=null){
+			signatorydesignation=((String) param.get("signatorydesignation")).trim();
+			Matcher offshortdes = p.matcher(signatorydesignation);
+			b1 = offshortdes.find();
+			if(b1)
+				response = "officeshortdes";
+		}
+		if(param.get("officeshortname")!=null){
+			officeshortname=((String) param.get("officeshortname")).trim();
+			Matcher offshort = p.matcher(officeshortname);
+			b1 = offshort.find();
+			if(b1)
+				response = "offshort";
+		}
+				
+		if(param.get("smsusername")!=null){
+			smsusername=((String) param.get("smsusername")).trim();
+			Matcher sms = p.matcher(smsusername);
+			b1 = sms.find();
+			if(b1)
+				response = "sms";
+		}
+		
+		if(param.get("emailid")=="")
+			System.out.println("asd");
+		else if(param.get("emailid")!=null){
+			String emailid=((String) param.get("emailid")).trim();
+			String regex = "^(.+)@(.+)$";
+		      final Pattern p2 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+	         Matcher matcher = p2.matcher(emailid);
+		    Boolean b= matcher.find();
+		    if(!b)
+		    response="emailidnotcorrect";
+		    if(emailid.length()>255)
+		    	 response="9";
+		}
+		if(param.get("emailidpassword")!=null){
+			emailidpassword=((String) param.get("emailidpassword")).trim();
+		}
+		if(param.get("smspassword")!=null){
+			smspassword=((String) param.get("smspassword")).trim();
+		}
+		
+		
+		 if(officename1.length()>255)
+	    	 response="1";
+	     if(officename2.length()>255)
+	    	 response="2";
+	     if(officename3.length()>255)
+	    	 response="3";
+	     if(officeshortname.length()>50)
+	    	 response="4";
+	     if(signatoryname.length()>255)
+	    	 response="5";
+	     if(signatorydesignation.length()>50)
+	    	 response="6";
+	     if(smsusername.length()>25)
+	    	 response="7";
+	     if(smspassword.length()>100)
+	    	 response="8";
+	     
+	     if(emailidpassword.length()>255)
+	    	 response="10";
+	     
+	     
+		
+		return response;
 	}
 
 	

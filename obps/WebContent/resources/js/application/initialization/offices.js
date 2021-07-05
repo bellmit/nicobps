@@ -46,48 +46,106 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
 	$scope.actionButton =1;
 };
 $scope.save = function () {
-		var data;
-    	$.ajax({
-        url: "./checkOffice.htm",
-        type:"POST",
-        contentType: "application/json; charset=utf-8",
-         dataType: "json",
-        data: angular.toJson($scope.offices),
-        success: function (resp) {
-            data = resp;
-         
-           
-           
-        if(resp.data==-1)
-    	{
-        
-        if($scope.offices.emailidpassword)  { 	
-    	
-   	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}
-       if($scope.offices.smspassword)  
+		
+   		if($scope.offices.emailidpassword)
+   	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);
+        if($scope.offices.smspassword)  
     	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
     	$scope.method = "POST";
         $scope.urlEndpoint = "./initoffices.htm";
     	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.offices, () => {$scope.reset();$scope.listOffices(); alert(successMsg)}, () =>{alert(errorMsg)});
-        }
-        else{
-        alert("Office Already Exists");
-        }
-           
-        },
-        error: function () {
-        alert("ERROR")}
-    }); 
-//    	if($scope.offices.emailidpassword)  { 	
-//    	
-//   	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}
-//       if($scope.offices.smspassword)  
-//    	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
-//    	$scope.method = "POST";
-//        $scope.urlEndpoint = "./initoffices.htm";
-//    	
-//        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.offices, () => {$scope.reset();$scope.listOffices(); alert(successMsg)}, () =>{alert(errorMsg)});
+        commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.offices, function (response) {
+		
+				if (response.data=="Success") {
+					MsgBox("Offices Inserted successfully.");
+					$scope.reset();
+					$scope.listOffices();
+				} else if (response.data=="exist") {
+					MsgBox("Offices name already exist");
+					$scope.listOffices();
+				}else if (response.data=="officename1") {
+					MsgBox("No Special Characters or Numbers allowed in Office Name1");
+					$scope.listOffices();
+				
+				}else if (response.data=="officename2") {
+					MsgBox("No Special Characters or Numbers allowed in Office Name2");
+					$scope.listOffices();
+				}else if (response.data=="officename3") {
+					MsgBox("No Special Characters or Numbers allowed in Office Name3");
+					$scope.listOffices();
+				}
+				else if (response.data=="offshort") {
+					MsgBox("No Special Characters or Numbers allowed in Office ShortHand Name");
+					$scope.listOffices();
+				
+				}else if (response.data=="offsignatory") {
+					MsgBox("No Special Characters or Numbers allowed in Signatory Name");
+					$scope.listOffices();
+				}
+				else if (response.data=="officeshortdes") {
+					MsgBox("No Special Characters or Numbers allowed in Signatory Designation");
+					$scope.listOffices();
+				}
+				else if (response.data=="sms") {
+					MsgBox("No Special Characters or Numbers allowed in SMS Username");
+					$scope.listOffices();
+				}
+				else if (response.data=="1") {
+					MsgBox("Office Name 1 Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="2") {
+					MsgBox("Office Name 2 Cannot be more than 255 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="3") {
+					MsgBox("Office Name 3 Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="4") {
+					MsgBox("Office Short Hand Name Cannot be more than 50 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="5") {
+					MsgBox("Signatory Name Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="6") {
+					MsgBox("Signatory Designation Cannot be more than 255 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="7") {
+					MsgBox("sms username Cannot be more than 25 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="8") {
+					MsgBox("sms password Cannot be more than 100 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="9") {
+					MsgBox("emailid Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="10") {
+					MsgBox("emailidpassword Cannot be more than 255 characters");
+					$scope.listOffices();
+				}else if (response.data=="emailidnotcorrect") {
+					MsgBox("Please Enter correct emailid");
+					$scope.listOffices();
+				}
+				
+				else if(response.data=="Error"){
+				alert("Office Already exists");
+				}
+				$scope.offices.emailidpassword="";
+				$scope.offices.smspassword="";
+				
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+			});
+
   };
 
   $scope.update = () => {
@@ -101,7 +159,98 @@ if($scope.offices.emailidpassword)  {
     	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
     	$scope.method = "POST";
         $scope.urlEndpoint = "./updateinitoffices.htm";
- 	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.offices, () => {$scope.reset();$scope.listOffices(), alert(successMsg)}, () => {alert(errorMsg)});
+         commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.offices, function (response) {
+		
+				if (response.data=="Success") {
+					MsgBox("Offices Updated successfully.");
+					$scope.reset();
+					$scope.listOffices();
+				} else if (response.data=="exist") {
+					MsgBox("Offices name already exist");
+					$scope.listOffices();
+				}else if (response.data=="officename1") {
+					MsgBox("No Special Characters or Numbers allowed in Office Name1");
+					$scope.listOffices();
+				
+				}else if (response.data=="officename2") {
+					MsgBox("No Special Characters or Numbers allowed in Office Name2");
+					$scope.listOffices();
+				}else if (response.data=="officename3") {
+					MsgBox("No Special Characters or Numbers allowed in Office Name3");
+					$scope.listOffices();
+				}
+				else if (response.data=="offshort") {
+					MsgBox("No Special Characters or Numbers allowed in Office ShortHand Name");
+					$scope.listOffices();
+				
+				}else if (response.data=="offsignatory") {
+					MsgBox("No Special Characters or Numbers allowed in Signatory Name");
+					$scope.listOffices();
+				}
+				else if (response.data=="officeshortdes") {
+					MsgBox("No Special Characters or Numbers allowed in Signatory Designation");
+					$scope.listOffices();
+				}
+				else if (response.data=="sms") {
+					MsgBox("No Special Characters or Numbers allowed in SMS Username");
+					$scope.listOffices();
+				}
+				else if (response.data=="1") {
+					MsgBox("Office Name 1 Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="2") {
+					MsgBox("Office Name 2 Cannot be more than 255 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="3") {
+					MsgBox("Office Name 3 Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="4") {
+					MsgBox("Office Short Hand Name Cannot be more than 50 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="5") {
+					MsgBox("Signatory Name Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="6") {
+					MsgBox("Signatory Designation Cannot be more than 255 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="7") {
+					MsgBox("sms username Cannot be more than 25 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="8") {
+					MsgBox("sms password Cannot be more than 100 characters");
+					$scope.listOffices();
+				}
+				else if (response.data=="9") {
+					MsgBox("emailid Cannot be more than 255 characters");
+					$scope.listOffices();
+				
+				}else if (response.data=="10") {
+					MsgBox("emailidpassword Cannot be more than 255 characters");
+					$scope.listOffices();
+				}else if (response.data=="emailidnotcorrect") {
+					MsgBox("Please Enter correct emailid");
+					$scope.listOffices();
+				}
+				
+				else if(response.data=="Error"){
+				alert("Office Already exists");
+				}
+				$scope.offices.emailidpassword="";
+				$scope.offices.smspassword="";
+				
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+			});
+ 	
   }
   
    $scope.setDataTable = function (obj) {

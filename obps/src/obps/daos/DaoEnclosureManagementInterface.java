@@ -22,7 +22,7 @@ public interface DaoEnclosureManagementInterface{
 	public boolean initoffices(Map<String, Object> param);
 
 	public List <Offices> listOffices();
-	public boolean updateInitOffices(Offices offices);
+	public boolean updateInitOffices(Map<String, Object> offices);
 
 	public List<Enclosures> getMappedEnclosures(Integer modulecode);
 
@@ -38,8 +38,11 @@ public interface DaoEnclosureManagementInterface{
 
 	public boolean mapOfficesPayments(List<Map<String, Object>> officespayments);
 
-	public boolean checkExistEnclosure(Map<String, Object> param);
-	public boolean checkExistOffice(Map<String, Object> offices);
+	
+	
 
 	String validateInitEnclosure(Map<String, Object> param);
+	String validateInitOffices(Map<String, Object> param);
+
+	boolean checkExistance(String sql, Object[] values);
 }
