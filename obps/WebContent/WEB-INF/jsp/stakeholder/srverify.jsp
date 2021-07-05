@@ -55,9 +55,10 @@
 .dropup:hover .dropbtn {
 	background-color: #2980B9;
 }
-#content tr:hover{ 
+
+#content tr:hover {
 	background-color: #dee2e6;
-	cursor: pointer; 
+	cursor: pointer;
 }
 </style>
 </head>
@@ -97,7 +98,7 @@
 								</tr>
 							</tbody>
 						</table>
-						
+
 					</div>
 
 				</div>
@@ -114,8 +115,8 @@
 						<tr>
 							<td>
 								<div class="form-group">
-									<label for="applicationcode" class="">Application No. </span></label> <input
-										id="applicationcode" type="text"
+									<label for="applicationcode" class="">Application No. </span></label>
+									<input id="applicationcode" type="text"
 										ng-value="applicant.applicationcode" class="form-control"
 										readonly="readonly">
 
@@ -252,10 +253,10 @@
 					</h5>
 				</div>
 				<div class="col-md-4 py-2 px-2 h-50" style="display: block">
-					<table class="table" id="enclosures">
-						<tr ng-repeat="item in Enclosures">
+					<table class="table mb-5" id="enclosures">
+						<tr ng-repeat="item in applicant.enclosures">
 							<td><span style="cursor: pointer"
-								ng-click="getEnclosure(applicant.usercode,item.key)">{{item.value}}</span>
+								ng-click="getEnclosure(applicant.usercode,item.enclosurecode)">{{item.enclosurename}}</span>
 							</td>
 						</tr>
 					</table>
@@ -277,7 +278,6 @@
 				<div class="col-md-8 py-2 px-2" id="enclosureWindow"></div>
 			</div>
 		</div>
-	</div>
 	</div>
 	<div style="display: none">
 		<div id="remarksTable"

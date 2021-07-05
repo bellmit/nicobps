@@ -15,7 +15,8 @@ app.controller("CommonCtrl", [
 		$scope.process = {};
 		$scope.viewDetails = (applicant) => {
 				jQuery('#enclosureWindow').html();
-				$scope.applicant = applicant;
+				$scope.applicant = angular.copy(applicant);
+				$scope.applicant.enclosures=JSON.parse($scope.applicant.enclosures.value);
 				jQuery.fancybox.close();
 				jQuery.fancybox({
 					href: '#detailView',

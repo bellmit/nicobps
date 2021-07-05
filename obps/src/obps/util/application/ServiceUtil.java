@@ -267,8 +267,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listUserOffices() {
-		Integer usercode =Integer.valueOf(session().getAttribute("usercode").toString());
-		if(usercode==1) {
+		Integer usercode = Integer.valueOf(session().getAttribute("usercode").toString());
+		if (usercode == 1) {
 			return listOffices();
 		}
 		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value "
@@ -312,12 +312,14 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> getLicensee(Integer usercode) {
-		String sql = "SELECT l.*,lt.*,d.*,s.statename,u.mobileno,u.username as email FROM nicobps.licensees l  "
+		String sql = "SELECT l.*,lt.*,d.*,s.statename,u.mobileno,u.username as email,"
+				+ "(SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures "
+				+ "FROM nicobps.licensees l  "
 				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
 				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
 				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
-				+ "INNER JOIN masters.states s on s.statecode=d.statecode " + "WHERE l.usercode=?"
-				+ "ORDER BY l.entrydate DESC ";
+				+ "INNER JOIN masters.states s on s.statecode=d.statecode "
+				+ "WHERE l.usercode=? ORDER BY l.entrydate DESC ";
 		return listGeneric(sql, new Object[] { usercode });
 	}
 

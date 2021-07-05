@@ -31,7 +31,9 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	@Override
 	public List<Map<String, Object>> listLicensees() {
 		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,off.officecode,off.officename1,"
-				+ "u.mobileno,u.username as email FROM nicobps.licensees l "
+				+ "u.mobileno,u.username as email,"
+				+ "(SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures"
+				+ " FROM nicobps.licensees l "
 				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
 				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
 				+ "INNER JOIN nicobps.applications app on app.usercode=l.usercode "
