@@ -46,7 +46,7 @@ app.controller("CommonCtrl", [
 				'height': 'auto',
 				'width': '500px'
 			});
-		};
+		};  
 		$scope.updateStakeholder = (applicant, process) => {
 			let data = "officecode="+applicant.officecode+"&applicationcode=" + applicant.applicationcode + "&usercode=" + applicant.usercode + "&toprocesscode=" + process.toprocesscode + "&remarks=" + process.remarks;
 			commonInitService.http("POST", "updateStakeholder.htm", data, function (response) {

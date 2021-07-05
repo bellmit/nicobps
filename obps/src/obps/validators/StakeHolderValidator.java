@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import obps.services.ServiceStakeholderInterface;
 
-@Service
+@Service 
 public class StakeHolderValidator implements StakeHolderValidatorInterface{
 	@Autowired
 	private ServiceStakeholderInterface SSI;

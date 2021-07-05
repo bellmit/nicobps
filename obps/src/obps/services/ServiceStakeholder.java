@@ -130,7 +130,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			return "false";
 		}
 	}
-
+  
 	@Override
 	public boolean validateStackHolder(String remarks) {
 		Boolean res = false;

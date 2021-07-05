@@ -17,7 +17,7 @@ public interface ServiceStakeholderInterface {
 	public Map<String, Object> getFeeMaster(Integer officecode, Integer usercode, Integer feetypecode);
 
 	public String ulbRegistration(Integer officecode, Integer usercode);
-
+ 
 	public boolean validateStackHolder(String remarks);
 
 }
