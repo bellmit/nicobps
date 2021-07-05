@@ -73,7 +73,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th>Application Code</th>
+									<th>Application No.</th>
 									<th>Licence</th>
 									<th>Office</th>
 									<th>Firm/Individual</th>
@@ -114,7 +114,7 @@
 						<tr>
 							<td>
 								<div class="form-group">
-									<label for="applicationcode" class="">Licensee Type </span></label> <input
+									<label for="applicationcode" class="">Application No. </span></label> <input
 										id="applicationcode" type="text"
 										ng-value="applicant.applicationcode" class="form-control"
 										readonly="readonly">

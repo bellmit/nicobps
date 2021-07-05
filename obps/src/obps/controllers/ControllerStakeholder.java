@@ -1,6 +1,7 @@
 package obps.controllers;
 
 import java.util.Base64;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class ControllerStakeholder {
 	private ServiceStakeholderInterface SSI;
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
+	private List<String> applicationCalled = new LinkedList<String>();
 
 	@GetMapping("/srverify.htm")
 	public String verification(Model model) {
@@ -40,22 +42,27 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/ulbregistration.htm")
-	public String ulbRegistration(Model model,Integer officecode,HttpServletRequest req) {
-		
-		String applicationcode=SSI.ulbRegistration(officecode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
+	public String ulbRegistration(Model model, Integer officecode, HttpServletRequest req) {
+
+		String applicationcode = SSI.ulbRegistration(officecode,
+				Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
 //		String applicationcode="ALREADY_REPORTED";
-		if(applicationcode.equals("ALREADY_REPORTED")||applicationcode.equals("false")) {
-			model.addAttribute("errorMsg",applicationcode);
+		if (applicationcode.equals("ALREADY_REPORTED") || applicationcode.equals("false")) {
+			model.addAttribute("errorMsg", applicationcode);
 			return "redirect:ulbregistration.htm";
 		}
-		Map<String, Object> url=serviceUtilInterface.getCurrentProcessStatus(1, applicationcode).get(0);
-		return "redirect:"+url.get("pageurl")+"?applicationcode="+applicationcode+"&officecode="+officecode;
+		Map<String, Object> url = serviceUtilInterface.getCurrentProcessStatus(1, applicationcode).get(0);
+		return "redirect:" + url.get("pageurl") + "?applicationcode=" + applicationcode + "&officecode=" + officecode;
 	}
 
 	@GetMapping("/skregistrationconfirmation.htm")
-	public String paysuccess(Model model,Integer officecode,String applicationcode,HttpServletRequest req) {
-		SSI.updateStakeholder(officecode, applicationcode, Integer.valueOf(req.getSession().getAttribute("usercode").toString()),"Verification Pending");
-		model.addAttribute("applicationcode",applicationcode);
+	public String paysuccess(Model model, Integer officecode, String applicationcode, HttpServletRequest req) {
+		if (!applicationCalled.contains(applicationcode)) {
+			SSI.updateStakeholder(officecode, applicationcode,
+					Integer.valueOf(req.getSession().getAttribute("usercode").toString()), "Verification Complete");
+			applicationCalled.add(applicationcode);
+		}
+		model.addAttribute("applicationcode", applicationcode);
 		return "stakeholder/skregistrationconfirmation";
 	}
 
@@ -86,7 +93,7 @@ public class ControllerStakeholder {
 	public @ResponseBody List<Map<String, Object>> listLicensees() {
 		return SSI.listLicensees();
 	}
-	
+
 	@PostMapping("/getLicensee.htm")
 	public @ResponseBody List<Map<String, Object>> getLicensee(Integer usercode) {
 		return serviceUtilInterface.getLicensee(usercode);
@@ -111,8 +118,8 @@ public class ControllerStakeholder {
 
 	@PostMapping("/updateStakeholder.htm")
 	public @ResponseBody boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
-			Integer toprocesscode, String remarks,ModelMap model) {
-		model.addAttribute("remarkserror","Size too big");
+			Integer toprocesscode, String remarks, ModelMap model) {
+		model.addAttribute("remarkserror", "Size too big");
 		return SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks);
 	}
 
