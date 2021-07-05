@@ -385,17 +385,14 @@ public class ControllerUserManagement {
 
 	@GetMapping("/createuser.htm")
 	public String createuser(Model model) {
-		model.addAttribute("officeList", (session().getAttribute("usercode").equals("1"))
-				? serviceUtilInterface.listOffices()
-				: serviceUtilInterface.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString())));
+		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
 		return "initialization/createuser";
 	}
 
 	@PostMapping(value = "/createuser.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> createUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		List<CommonMap> officelist = serviceUtilInterface
-				.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString()));
+		List<CommonMap> officelist = serviceUtilInterface.listUserOffices();
 		System.out.println((Integer) user.get("officecode"));
 		if (!session().getAttribute("usercode").equals("1")) {
 			boolean exist = false;
@@ -465,9 +462,7 @@ public class ControllerUserManagement {
 	///////////////////////////////////////////////////////////////////////////
 	@GetMapping("/accesscontrol.htm")
 	public String accesscontrol(Model model) {
-		model.addAttribute("officeList", (session().getAttribute("usercode").equals("1"))
-				? serviceUtilInterface.listOffices()
-				: serviceUtilInterface.listUserOffices(Integer.valueOf(session().getAttribute("usercode").toString())));
+		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
 		return "initialization/accesscontrol";
 	}
 

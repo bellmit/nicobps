@@ -22,7 +22,7 @@ public class ControllerCommon {
 
 	@PostMapping("/listOffices.htm")
 	public @ResponseBody List<CommonMap> listOffices() {
-		return serviceUtilInterface.listOffices();
+		return serviceUtilInterface.listUserOffices();
 	}
 
 	@PostMapping("/listOffices.htm/registeringoffice")

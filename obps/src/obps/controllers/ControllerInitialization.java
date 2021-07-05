@@ -254,7 +254,7 @@ public class ControllerInitialization {
 
 	@GetMapping("/initfeemaster.htm")
 	public String initfeemaster(Model model, HttpServletRequest req) {
-		model.addAttribute("offices", serviceUtilInterface.listOffices());
+		model.addAttribute("offices", serviceUtilInterface.listUserOffices());
 		model.addAttribute("licenseetypes", serviceUtilInterface.listLicenseetypes());
 		model.addAttribute("feetypes", serviceUtilInterface.listFeetypes());
 
