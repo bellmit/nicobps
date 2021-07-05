@@ -1,13 +1,23 @@
 package obps.util.application;
 
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service("serviceUtil")
 public class ServiceUtil implements ServiceUtilInterface {
+	public static HttpSession session() {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		return attr.getRequest().getSession(true);
+	}
+
 	@Autowired
 	private DaoUtilInterface daoUtilInterface;
 	// @Autowired private DomainUtilInterface domainUtilInterface;
@@ -184,28 +194,27 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	/////////////////////
 	@Override
-	public List<CommonMap> listEnclosures(final Short modulecode,Short licenseetypecode) 
-	{	
-		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "		
-				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "				
+	public List<CommonMap> listEnclosures(final Short modulecode, Short licenseetypecode) {
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "
+				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "WHERE E.enabled='Y' AND M.modulecode=? AND licenseetypecode=? "
 				+ "ORDER BY mandatory DESC,E.enclosurecode ";
-		Object[] criteria = { modulecode,licenseetypecode};
+		Object[] criteria = { modulecode, licenseetypecode };
 		return this.listCommonMap(sql, criteria);
-	}	
+	}
+
 	@Override
-	public List<CommonMap> listEnclosures(final Short modulecode,Integer usercode,Short licenseetypecode) 
-	{	
-		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2 FROM masters.enclosures E   "		
+	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode) {
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2 FROM masters.enclosures E   "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "LEFT OUTER JOIN nicobps.licenseesenclosures LE ON LE.enclosurecode=M.enclosurecode AND LE.usercode=? "
 				+ "WHERE E.enabled='Y' AND  M.modulecode=? AND licenseetypecode=? "
 				+ "ORDER BY mandatory DESC,E.enclosurecode ";
-		Object[] criteria = { usercode,modulecode,licenseetypecode};
+		Object[] criteria = { usercode, modulecode, licenseetypecode };
 		return this.listCommonMap(sql, criteria);
-	}		
-	/////////////////////	
-	
+	}
+	/////////////////////
+
 	@Override
 	public List<CommonMap> listOccupancies() {
 		String sql = "SELECT T.occupancycode AS key, T.occupancyname AS value, T.occupancyalias AS value1 FROM masters.occupancies T ORDER BY T.occupancycode ";
@@ -257,7 +266,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public List<CommonMap> listUserOffices(Integer usercode) {
+	public List<CommonMap> listUserOffices() {
+		Integer usercode =Integer.valueOf(session().getAttribute("usercode").toString());
+		if(usercode==1) {
+			return listOffices();
+		}
 		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value "
 				+ "FROM masters.offices T INNER JOIN nicobps.useroffices uo on T.officecode=uo.officecode "
 				+ "WHERE usercode=? ORDER BY T.officename1 ";
@@ -266,9 +279,9 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
-		String sql = "select * from nicobps.licenseeofficesvalidities b " + 
-				"inner join masters.offices c on b.officecode=c.officecode and c.enabled='Y' " + 
-				"where b.validto>current_date and b.usercode= ? ";
+		String sql = "select * from nicobps.licenseeofficesvalidities b "
+				+ "inner join masters.offices c on b.officecode=c.officecode and c.enabled='Y' "
+				+ "where b.validto>current_date and b.usercode= ? ";
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql, criteria);
 	}

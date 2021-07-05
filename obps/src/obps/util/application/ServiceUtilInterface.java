@@ -84,7 +84,7 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listOffices(Integer officecode);
 
-	public List<CommonMap> listUserOffices(Integer usercode);
+	public List<CommonMap> listUserOffices();
 
 	public List<Map<String, Object>> listRegisteringOffices();
 
