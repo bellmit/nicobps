@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -47,7 +48,18 @@ public class ControllerBpaProcessing {
 		}
 		return null;
 	}
-	
+
+	Integer getSessionUsercode(ModelMap model) {
+		model.remove(BPAConstants.SESSION_USERCODE);
+		HttpSession session = ControllerLogin.session();
+		if (session != null && session.getAttribute("user") != null && session.getAttribute("usercode") != null) {
+			Integer usercode = Integer.valueOf(session.getAttribute("usercode").toString());
+			model.addAttribute(BPAConstants.SESSION_USERCODE, usercode);
+			return usercode;
+		}
+		return null;
+	}
+
 	@GetMapping(value = "/bpaprocess.htm")
 	public String bpaProcess(HttpServletRequest req, @ModelAttribute("SESSION_USERCODE") Integer usercode, Model model,
 			@RequestParam(required = false) String applicationcode) {
@@ -94,7 +106,7 @@ public class ControllerBpaProcessing {
 				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
 
 			model.addAttribute("applicationcode", applicationcode);
-			
+
 			pathurl = req.getServletPath();
 			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
 			String pageurl = BPAConstants.getProcessPage(pathurl);
@@ -116,7 +128,7 @@ public class ControllerBpaProcessing {
 				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
 
 			model.addAttribute("applicationcode", applicationcode);
-			
+
 			pathurl = req.getServletPath();
 			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
 			String pageurl = BPAConstants.getProcessPage(pathurl);
@@ -128,8 +140,8 @@ public class ControllerBpaProcessing {
 	}
 
 	@GetMapping(value = "/bpainbox.htm")
-	public String bpaInbox(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
-		usercode = getSessionUsercode();
+	public String bpaInbox(ModelMap model, @ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		usercode = getSessionUsercode(model);
 		if (usercode != null) {
 			return BPAConstants.PARENT_URL_MAPPING.concat("/inbox");
 		}
@@ -137,8 +149,8 @@ public class ControllerBpaProcessing {
 	}
 
 	@GetMapping(value = "/bparejectedapplications.htm")
-	public String bpaRejectedApplications(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
-		usercode = getSessionUsercode();
+	public String bpaRejectedApplications(ModelMap model, @ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		usercode = getSessionUsercode(model);
 		if (usercode != null) {
 			return BPAConstants.PARENT_URL_MAPPING.concat("/rejectedapplications");
 		}
@@ -155,7 +167,7 @@ public class ControllerBpaProcessing {
 				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
 
 			model.addAttribute("applicationcode", applicationcode);
-			
+
 			pathurl = req.getServletPath();
 			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
 			String pageurl = BPAConstants.getProcessPage(pathurl);
@@ -176,7 +188,7 @@ public class ControllerBpaProcessing {
 				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
 
 			model.addAttribute("applicationcode", applicationcode);
-			
+
 			pathurl = req.getServletPath();
 			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
 			String pageurl = BPAConstants.getProcessPage(pathurl);
@@ -252,10 +264,10 @@ public class ControllerBpaProcessing {
 
 	/* COMPONENTS */
 	@GetMapping(value = "/commonprocessingaction.htm")
-	public String commonProcessingAction(@ModelAttribute("SESSION_PATHURL") String pathurl,
+	public String commonProcessingAction(ModelMap model, @ModelAttribute("SESSION_PATHURL") String pathurl,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestParam String applicationcode) {
 		LOG.info("URL: commonprocessingaction.htm");
-		LOG.info("applicationcode: "+applicationcode);
+		usercode = getSessionUsercode(model);
 		/* if (SBI.checkActionAccessGrantStatus(USERCODE, appcode)) */
 		if (SBI.checkPageAccessGrantStatus(usercode, applicationcode, pathurl))
 			return BPAConstants.COMPONENT_URL_MAPPING.concat("/commonprocessingaction");
@@ -332,16 +344,16 @@ public class ControllerBpaProcessing {
 	};
 
 	@GetMapping(value = "/listbpapplications.htm")
-	public @ResponseBody List<Map<String, Object>> listBPApplications(
+	public @ResponseBody List<Map<String, Object>> listBPApplications(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
-		usercode = getSessionUsercode();
+		usercode = getSessionUsercode(model);
 		return SBI.listBPApplications(usercode);
 	};
 
 	@GetMapping(value = "/listRejectedApplications.htm")
-	public @ResponseBody List<Map<String, Object>> listRejectedApplications(
+	public @ResponseBody List<Map<String, Object>> listRejectedApplications(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
-		usercode = getSessionUsercode();
+		usercode = getSessionUsercode(model);
 		return SBI.listRejectedApplications(usercode);
 	};
 
@@ -411,7 +423,7 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode,
 			@RequestParam(name = "processcode", required = false) Integer fromprocesscode, Model model,
 			BindingResult bindingResult) {
-		LOG.info("bpa: "+bpa);
+		LOG.info("bpa: " + bpa);
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		/*
 		 * String base64ImageString = bpa.get("report").toString(); final Pattern mime =
