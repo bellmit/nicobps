@@ -131,4 +131,15 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		}
 	}
 
+	@Override
+	public boolean validateStackHolder(String remarks) {
+		Boolean res = false;
+		int size = remarks.length();
+		System.out.println("Size"+size);
+		System.out.println("Remarks"+remarks);
+		if(size>500)
+			res=true;
+		return res;
+	}
+
 }

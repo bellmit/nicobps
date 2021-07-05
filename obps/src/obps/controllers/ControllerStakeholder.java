@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.services.ServiceStakeholderInterface;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
+import obps.validators.StakeHolderValidatorInterface;
 
 @Controller
 public class ControllerStakeholder {
@@ -25,6 +26,9 @@ public class ControllerStakeholder {
 	private ServiceStakeholderInterface SSI;
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
+	
+	@Autowired
+	private StakeHolderValidatorInterface stakeHolderValidatorInterface;
 
 	@GetMapping("/srverify.htm")
 	public String verification(Model model) {
@@ -110,10 +114,17 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/updateStakeholder.htm")
-	public @ResponseBody boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
+	public @ResponseBody String updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer toprocesscode, String remarks,ModelMap model) {
-		model.addAttribute("remarkserror","Size too big");
-		return SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks);
+		String res="false";
+		if(stakeHolderValidatorInterface.validateStackHolder(remarks))
+			res = "remarkserror";
+		else {
+			if(SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks))
+				res= "true";
+		}
+		
+		return res;
 	}
 
 	@PostMapping("/listNextProcess.htm")
