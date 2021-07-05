@@ -79,7 +79,7 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 	}    
     
     @Override
-    public boolean updateUser(Userlogin user){    	    	
+    public boolean updateUser(Map<String,Object>  user){    	    	
 		return DaoUserManagementInterface.updateUser(user);	
 	}    
     

@@ -31,7 +31,7 @@ public interface ServiceUserManagementInterface {
 
 	public boolean updatePassword(Map<String, Object> param);
 
-	public boolean updateUser(Userlogin user);
+	public boolean updateUser(Map<String, Object> user);
 
 	public List<Userlogin> listOfficeUsers();
 

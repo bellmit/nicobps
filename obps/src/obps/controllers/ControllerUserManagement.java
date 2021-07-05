@@ -41,7 +41,10 @@ import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.validators.UploadEnclosuresValidatorInterface;
+import obps.validators.UserManagementValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
+import obps.daos.DaoEnclosureManagementInterface;
+import obps.daos.DaoUserManagementInterface;
 import obps.models.AppEnclosures;
 import obps.models.LicenseesEnclosures;
 import obps.models.Pageurls;
@@ -56,9 +59,13 @@ public class ControllerUserManagement {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
+	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
+	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
 	@Autowired
 	private UploadEnclosuresValidatorInterface uploadBpaEnclosuersValidatorInterface;
+	@Autowired
+	private UserManagementValidatorInterface userManagementValidatorInterface;
 	@Resource
 	private Environment environment;
 
@@ -411,29 +418,62 @@ public class ControllerUserManagement {
 		String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
 		user.put("usercode", usercode);
 		user.put("usertype", "BACKEND_USER");
-
-		if (serviceUserManagementInterface.createUser(user)) {
+		
+		
+		String username=((String) user.get("username")).trim();
+		String sql = "Select count(*) from  nicobps.userlogins where LOWER(username)=LOWER(?)";
+		Object[] values = {username};
+		boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
+		System.out.println("easdasd"+exist);
+		if(exist)
+			response.put("data", "exist");
+		else {
+			String validate=userManagementValidatorInterface.validateCreateUser(user);
+			System.out.println("Validate"+validate);
+			if(validate!="") {
+				response.put("code", 200);
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+				
+			if (serviceUserManagementInterface.createUser(user)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				response.put("msg", "");
+				return ResponseEntity.ok().body(response);
+			}else {
 			response.put("code", 200);
-			response.put("msg", "");
+			response.put("data", "Error");
 			return ResponseEntity.ok().body(response);
+			}
 		}
-		response.put("code", 400);
-		response.put("msg", "");
+		
+		response.put("code", 200);
 		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping(value = "/updateuser.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> updateUser(@RequestBody Userlogin user) {
+	public ResponseEntity<HashMap<String, Object>> updateUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		if (serviceUserManagementInterface.updateUser(user)) {
+		String validate=userManagementValidatorInterface.validateCreateUser(user);
+		System.out.println("Validate"+validate);
+		if(validate!="") {
 			response.put("code", 200);
-			response.put("data", 1);
+			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+			
+		if (serviceUserManagementInterface.updateUser(user)) {
+			response.put("code", 200);
+			response.put("data", "Success");
+			response.put("msg", "");
+			return ResponseEntity.ok().body(response);
+		}else {
+		response.put("code", 200);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
+		}
+		
 	}
 
 	@GetMapping("/listOfficeUsers.htm")

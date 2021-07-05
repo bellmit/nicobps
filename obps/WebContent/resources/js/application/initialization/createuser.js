@@ -54,11 +54,83 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     	
 // if($scope.userForm.$invalid)
 // return false;
+//		$scope.validateUserForm();
+//		scope.repasswordMsg=""; 
     	$scope.user.userpassword=SHA256($scope.user.userpassword);
+    	$scope.user.repassword=SHA256($scope.user.repassword);
         $scope.method = "POST";
         $scope.urlEndpoint = "./createuser.htm";
     	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, () => {$scope.reset();$scope.listUsers(); alert(successMsg)}, (res) =>{console.log(res);alert((res.msg.length>0)?res.msg:errorMsg)});
+        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, function(response){
+        
+       
+       	if(response.data=="Success"){
+       		MsgBox("Users inserted successfully.");
+       		$scope.reset();
+       		$scope.listUsers();
+       	}else if(response.data=="exist"){
+       		MsgBox("User Already exists");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="Error"){
+       		MsgBox("Error");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="userlength"){
+       		MsgBox("Enclosure Name Cannot be more than 99 characters");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="passworddeoesnotmatch"){
+       		MsgBox("Passwords Do Not Match");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}
+       	else if(response.data=="fullname"){
+       		MsgBox("No Special Characters or Numbers allowed in Full Name");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="fullnamelength"){
+       		MsgBox("Full Name Cannot be more than 99 characters");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="mobile"){
+       		MsgBox("No Special Characters or Numbers allowed in Mobile No ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="mobilelength"){
+       		MsgBox("Mobile No Cannot be more than 10 characters ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="designation"){
+       		MsgBox("No Special Characters or Numbers allowed in Designation ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="designationlength"){
+       		MsgBox("Designation Cannot be more than 99 characters ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}
+       	
+       	
+       		
+        }, 
+        function(res) {
+        console.log(res);
+        alert((res.msg.length>0)?res.msg:errorMsg)
+        $scope.reset();
+       		$scope.listUsers();
+        }
+        );
     };
     
     $scope.toggleUserStatus= function (usercode) {
@@ -74,12 +146,83 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     };
     
     $scope.update = () => {
-	    if($scope.userForm.$invalid)
-             return false;             
+//	    if($scope.userForm.$invalid)
+//             return false;             
     	$scope.user.userpassword=SHA256($scope.user.userpassword);
+    	$scope.user.repassword=SHA256($scope.user.repassword);
+     
 	    $scope.method = "POST";
     	$scope.urlEndpoint = "./updateuser.htm";
-    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, () => {$scope.reset();$scope.listUsers(), alert(successMsg)}, () => {alert(errorMsg)});
+    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.user, function(response){
+        
+       
+       	if(response.data=="Success"){
+       		MsgBox("Users updated successfully.");
+       		$scope.reset();
+       		$scope.listUsers();
+       	}else if(response.data=="exist"){
+       		MsgBox("User Already exists");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="Error"){
+       		MsgBox("Users already exist");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="userlength"){
+       		MsgBox("Enclosure Name Cannot be more than 99 characters");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="passworddeoesnotmatch"){
+       		MsgBox("Passwords Do Not Match");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}
+       	else if(response.data=="fullname"){
+       		MsgBox("No Special Characters or Numbers allowed in Full Name");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="fullnamelength"){
+       		MsgBox("Full Name Cannot be more than 99 characters");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="mobile"){
+       		MsgBox("No Special Characters or Numbers allowed in Mobile No ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="mobilelength"){
+       		MsgBox("Mobile No Cannot be more than 10 characters ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="designation"){
+       		MsgBox("No Special Characters or Numbers allowed in Designation ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="designationlength"){
+       		MsgBox("Designation Cannot be more than 99 characters ");
+       		$scope.user.userpassword="";
+    	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}
+       	
+       	
+       		
+        }, 
+        function(res) {
+        console.log(res);
+        alert((res.msg.length>0)?res.msg:errorMsg)
+        $scope.reset();
+       		$scope.listUsers();
+        }
+        );
     }
      
 /*-----------------------------------------------------------------------------------------------------------------------------------*/
@@ -139,16 +282,11 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     
     $scope.validateUserForm = function() {
 
-        if($scope.department.key === "" || $scope.department.key === null){
-            jQuery("#department").focus();
-            alert("Please select department");
-            return false;
-        }
-        if($scope.designationgrp.key === "" || $scope.designationgrp.key === null){
-            jQuery("#designationgrp").focus();
-            alert("Please select cadre group");
-            return false;
-        }
+alert($scope.user.designation.designationid)
+alert($scope.user.username)
+alert($scope.user.password)
+alert($scope.user.repassword)
+     
         if($scope.user.designation.designationid <= 0 || $scope.user.designation.designationid === null){
             jQuery("#designationid").focus();
             alert("Please select designation");
@@ -164,14 +302,15 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
             alert("password cannot be empty");
             return false;
         }
-        if($scope.repassword === "" || $scope.repassword === null){
+        if($scope.user.password === "" || $scope.user.repassword === null){
             jQuery("#repassword").focus();
             alert("password cannot be empty");
             return false;
         }
-        if($scope.repassword !== $scope.user.password){
+        if($scope.user.repassword !== $scope.user.password){
             jQuery("#repassword").focus();
             alert("passwords do not matches");
+           
                 return false;
             }
             return true;

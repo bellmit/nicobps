@@ -26,7 +26,7 @@ public interface DaoUserManagementInterface {
 
 	public List<Pageurls> getPageUrls(final Integer usercode);
 
-	public boolean updateUser(Userlogin user);
+	public boolean updateUser(Map<String, Object> user);
 
 	public List<Userlogin> listOfficeUsers();
 
@@ -37,5 +37,7 @@ public interface DaoUserManagementInterface {
 	public List<Pageurls> getMappedPageurls(Integer usercode);
 
 	public boolean mapUserpages(List<Map<String, Object>> upage);
+
+	public String validateCreateUser(Map<String, Object> param);
 
 }
