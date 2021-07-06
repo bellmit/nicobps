@@ -135,7 +135,7 @@ $scope.save = function () {
 				}
 				
 				else if(response.data=="Error"){
-				alert("Office Already exists");
+				MsgBox("Office Already exists");
 				}
 				$scope.offices.emailidpassword="";
 				$scope.offices.smspassword="";
@@ -240,7 +240,7 @@ if($scope.offices.emailidpassword)  {
 				}
 				
 				else if(response.data=="Error"){
-				alert("Office Already exists");
+				MsgBox("Office Already exists");
 				}
 				$scope.offices.emailidpassword="";
 				$scope.offices.smspassword="";

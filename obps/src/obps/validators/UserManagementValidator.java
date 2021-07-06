@@ -1,17 +1,63 @@
 package obps.validators;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
-import obps.daos.DaoUserManagementInterface;
+
 @Service
 public class UserManagementValidator implements UserManagementValidatorInterface{
-	@Autowired DaoUserManagementInterface DUMI;
+	
 	@Override
 	public String validateCreateUser(Map<String, Object> param) {
-		return DUMI.validateCreateUser(param);
+		String response = "";
+		Pattern p = Pattern.compile("[^A-Za-z_ ]");
+		String regex = "^(.+)@(.+)$";
+	    final Pattern p2 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+		String username="",userpassword="",fullname="",designation="",repassword="",mobileno="";
+		
+		boolean b1;
+		username=((String) param.get("username")).trim();
+		Matcher m1 = p2.matcher(username);
+		b1=m1.find();
+		if(!b1)
+			response="username";
+		if(username.length()>99)
+			response="userlength";
+		userpassword=((String) param.get("userpassword")).trim();
+		repassword=((String) param.get("repassword")).trim();
+		if(!userpassword.equals(repassword))
+			response="passworddeoesnotmatch";
+		fullname=((String) param.get("fullname")).trim();
+		m1=p.matcher(fullname);
+		b1=m1.find();
+		if(b1)
+			response="fullname";
+		if(fullname.length()>99)
+			response="fullnamelength";
+		System.out.println(param.get("mobileno"));
+		Pattern p3 = Pattern.compile("[^0-9]");
+		mobileno = ((Long) param.get("mobileno")).toString();
+		m1=p3.matcher(mobileno);
+		b1=m1.find();
+		if(b1)
+			response="mobile";
+		if(mobileno.length()>10)
+			response="mobilelength";
+		designation=((String) param.get("designation")).trim();
+		m1=p.matcher(designation);
+		b1=m1.find();
+		if(b1)
+			response="designation";
+		if(designation.length()>99)
+			response="designationlength";
+		
+		
+		System.out.println(response);
+		return response;
 	}
 
 }

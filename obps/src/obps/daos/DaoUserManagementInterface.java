@@ -38,6 +38,5 @@ public interface DaoUserManagementInterface {
 
 	public boolean mapUserpages(List<Map<String, Object>> upage);
 
-	public String validateCreateUser(Map<String, Object> param);
-
+	
 }
