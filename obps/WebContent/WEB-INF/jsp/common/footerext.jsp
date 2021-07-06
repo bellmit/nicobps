@@ -19,19 +19,23 @@
 <!--                     </ul> -->
 <!--                 </div> -->
 <!--             </div> -->
-        	<div class="col-md-3 col-sm-8 footer-social d-flex">
+        	<div class="col-md-4 col-sm-4 footer-social d-flex">
        			<div class="d-inline-block align-self-center">
-<!--         			<p class="bg-light"><img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"></p> -->
-<!--         			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/digital-india.png" alt="digital india logo"></p> -->
-         			<p class="bg-light">
-         			<img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"  width="100px" height="50px">
-         			<img src="resources/js/vendor/bootstrap/images/egovlogo.jpg" alt="EGov logo" width="70px" height="60px">
-         			<img src="resources/js/vendor/bootstrap/images/niualogo.png" alt="NIUA logo" width="100px" height="70px">
-         			
-         			</p>
-
+         			<p class="bg-light"><img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"  height="70"></p> 
         		</div>
             </div>
+        	<div class="col-md-4 col-sm-4 footer-social d-flex">
+       			<div class="d-inline-block align-self-center">
+         			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/egovlogo.jpg" height="100"></p>         		
+        		</div>
+            </div>            
+        	
+        	<div class="col-md-4 col-sm-4 footer-social d-flex">
+       			<div class="d-inline-block align-self-center">
+         			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/niualogo.png" height="100"></p>         		
+        		</div>
+            </div>            
+        	
         	<div class="col-md-2 col-sm-4 footer-ns d-flex">
        			<a class="backtotop align-self-center d-flex text-center text-decoration-none text-white" title="Back to top" href="#b-accessibility">
        				<span style="display:none;">Back to top</span>

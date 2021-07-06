@@ -170,7 +170,7 @@ public class ControllerUserManagement {
 					// return ResponseEntity.ok(new String("Details submitted successfully!"));
 					return ResponseEntity.ok(new String("1"));
 				} else {
-					return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+					return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
 				}
 			}
 		} else {
@@ -181,7 +181,7 @@ public class ControllerUserManagement {
 				// return ResponseEntity.ok(new String("Details submitted successfully!"));
 				return ResponseEntity.ok(new String("1"));
 			} else {
-				return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+				return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
 			}
 		}
 
@@ -239,9 +239,9 @@ public class ControllerUserManagement {
 				licenseesenclosures.setAfrcode(afrcode);
 
 				if (serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures)) {
-					model.addAttribute("successMsg", "Documents uploaded successfull...!");
+					model.addAttribute("successMsg", "The documents have been uploaded successfully.");
 				} else {
-					model.addAttribute("successMsg", "Unable to upload documents...!");
+					model.addAttribute("successMsg", "Sorry, but we are unable to process the request at the moment. Please try again later.!");
 				}
 			}
 			if (licenseetypecode != null && usercode != null) {
@@ -283,7 +283,7 @@ public class ControllerUserManagement {
 	 * param.put("afrcode", afrcode);
 	 * 
 	 * if (usercode != null) { param.put("usercode", usercode); } else { return
-	 * ResponseEntity.badRequest().body(new String("Unable to process request!")); }
+	 * ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later.")); }
 	 * System.out.println("validate file param controller"+param);
 	 * Log.info("validate file param controller"+param); //validate file
 	 * if(uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
@@ -291,7 +291,7 @@ public class ControllerUserManagement {
 	 * (serviceUserManagementInterface.submitEnclosureDetails(param)) { return
 	 * ResponseEntity.ok(new
 	 * String("The documents have been uploaded successfully.")); } else { return
-	 * ResponseEntity.badRequest().body(new String("Unable to process request!")); }
+	 * ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later.")); }
 	 * }else { return ResponseEntity.badRequest().body(new
 	 * String("Invalid File!Documents could not be uploaded!")); }
 	 * 
@@ -380,13 +380,13 @@ public class ControllerUserManagement {
 		if (usercode != null) {
 			param.put("usercode", usercode);
 		} else {
-			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 
 		if (serviceUserManagementInterface.updatePassword(param)) {
 			return ResponseEntity.ok(new String("Password updated successfully!"));
 		} else {
-			return ResponseEntity.badRequest().body(new String("Unable to process request!"));
+			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 	}
 
@@ -400,6 +400,7 @@ public class ControllerUserManagement {
 	public ResponseEntity<HashMap<String, Object>> createUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		List<CommonMap> officelist = serviceUtilInterface.listUserOffices();
+//		System.out.println((Integer) user.get("officecode"));
 		if (!session().getAttribute("usercode").equals("1")) {
 			boolean exist = false;
 			for (CommonMap c : officelist) {
@@ -443,7 +444,6 @@ public class ControllerUserManagement {
 			}else {
 			response.put("code", 200);
 			response.put("data", "Error");
-			
 			return ResponseEntity.ok().body(response);
 			}
 		}
