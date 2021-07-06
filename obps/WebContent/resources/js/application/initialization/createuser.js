@@ -78,6 +78,11 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
+       	}else if(response.data=="username"){
+       		MsgBox("Please Enter Correct Username");
+       		$scope.user.userpassword="";
+    		$scope.user.repassword="";
+       		$scope.listUsers();
        	}else if(response.data=="userlength"){
        		MsgBox("Enclosure Name Cannot be more than 99 characters");
        		$scope.user.userpassword="";
@@ -169,6 +174,11 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
        		MsgBox("Users already exist");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
+       		$scope.listUsers();
+       	}else if(response.data=="username"){
+       		MsgBox("Please Enter Correct Username");
+       		$scope.user.userpassword="";
+    		$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="userlength"){
        		MsgBox("Enclosure Name Cannot be more than 99 characters");

@@ -492,15 +492,13 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		username=((String) param.get("username")).trim();
 		Matcher m1 = p2.matcher(username);
 		b1=m1.find();
-//		if(!b1)
-//			response="username";
+		if(!b1)
+			response="username";
 		if(username.length()>99)
 			response="userlength";
 		userpassword=((String) param.get("userpassword")).trim();
 		repassword=((String) param.get("repassword")).trim();
-		if(userpassword.equals(repassword))
-			response="";
-		else
+		if(!userpassword.equals(repassword))
 			response="passworddeoesnotmatch";
 		fullname=((String) param.get("fullname")).trim();
 		m1=p.matcher(fullname);

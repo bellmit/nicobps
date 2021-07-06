@@ -400,7 +400,7 @@ public class ControllerUserManagement {
 	public ResponseEntity<HashMap<String, Object>> createUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		List<CommonMap> officelist = serviceUtilInterface.listUserOffices();
-		System.out.println((Integer) user.get("officecode"));
+//		System.out.println((Integer) user.get("officecode"));
 		if (!session().getAttribute("usercode").equals("1")) {
 			boolean exist = false;
 			for (CommonMap c : officelist) {
