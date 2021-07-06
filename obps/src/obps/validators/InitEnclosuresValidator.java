@@ -1,5 +1,6 @@
 package obps.validators;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,29 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 		
 		return response;
 		
+	}
+
+	@Override
+	public String validateModulesEnclosure(List<Map<String, Object>> param) {
+		String response="";
+//		System.out.println(param);
+		Integer modulecode=0;
+		for (Map<String, Object> up : param) {
+			modulecode = (Integer) up.get("modulecode");
+			if(up.get("modulecode")==null || modulecode==0) {
+				response = "modulecodenull";
+				return response;
+			}
+			
+			if(((Map<String, Object>) up.get("enclosurecode")).get("enclosurecode")==null) {
+				response = "enclosurecodenull";
+				return response;
+			}
+			System.out.println(up.get("modulecode"));
+			System.out.println("response="+response);
+//			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
+		}
+		return response;
 	}
 
 }
