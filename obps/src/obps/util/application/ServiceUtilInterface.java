@@ -41,6 +41,8 @@ public interface ServiceUtilInterface {
 
 	public <T> boolean update(String tablename, String sql, Object[] params);
 
+	public <T> boolean update(List<BatchUpdateModel> list);
+
 	// ===========================================//
 	public List<CommonMap> listStates();
 
@@ -64,10 +66,10 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode);
 
-	public List<CommonMap> listEnclosures(final Short modulecode,Short licenseetypecode);
-	
-	public List<CommonMap> listEnclosures(final Short modulecode,Integer usercode,Short licenseetypecode);
-	
+	public List<CommonMap> listEnclosures(final Short modulecode, Short licenseetypecode);
+
+	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode);
+
 	public List<CommonMap> listOccupancies();
 
 	public List<CommonMap> listSubOccupancies();

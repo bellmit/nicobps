@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.junit.runners.Suite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import obps.util.application.BatchUpdateModel;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 
@@ -21,12 +22,6 @@ import obps.util.application.ServiceUtilInterface;
 public class ServiceStakeholder implements ServiceStakeholderInterface {
 	@Autowired
 	private ServiceUtilInterface SUI;
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public void createTemplate(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	@Override
 	public List<Map<String, Object>> listLicensees() {
@@ -78,33 +73,41 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	@Override
 	public boolean updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer nextprocessode, String remarks) {
-		if (SUI.updateApplicationflowremarks(applicationcode, 1, nextprocessode, usercode, null, remarks)) {
-			List<Map<String, Object>> list = SUI.getAllNextProcessflows(1, nextprocessode);
-			if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
-//				String sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-				String sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto) VALUES (?, ?, ?, ?, ?) ";
-				Calendar c = Calendar.getInstance();
-				c.setTime(new Date());
-				c.add(Calendar.YEAR, 1);
-				c.set(Calendar.MONTH, 3);
-				c.set(Calendar.DAY_OF_MONTH, 31);
-				for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
 
-//					SUI.update("", sql, new Object[] { usercode, i.get("officecode") });
-					SUI.update("nicobps.licenseeofficesvalidities", sql,
-							new Object[] { applicationcode, usercode, i.get("officecode"), new Date(), c.getTime() });
-				}
+		List<BatchUpdateModel> dmlList = new LinkedList<BatchUpdateModel>();
+
+		Integer afrcode = SUI.getMax("nicobps", "applicationflowremarks", "afrcode") + 1;
+		String sql = "select toprocesscode from nicobps.applicationflowremarks where afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=? )";
+		Integer fromprocesscode = (Integer) (SUI.listGeneric(sql, new Object[] { applicationcode })).get(0)
+				.get("toprocesscode");
+		sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks) "
+				+ "VALUES (?,?,?,?,?,?,?,?) ";
+		Object[] values2 = { afrcode, applicationcode, 1, fromprocesscode, nextprocessode, usercode, null, remarks };
+
+		dmlList.add(new BatchUpdateModel(sql, values2));
+
+		List<Map<String, Object>> list = SUI.getAllNextProcessflows(1, nextprocessode);
+		if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
+			sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto, extendedto, extendedby) VALUES (?, ?, ?, ?, ?, ?, ?) ";
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			c.add(Calendar.YEAR, 1);
+			c.set(Calendar.MONTH, 3);
+			c.set(Calendar.DAY_OF_MONTH, 31);
+			for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
+				dmlList.add(new BatchUpdateModel(sql, new Object[] { applicationcode, usercode, i.get("officecode"),
+						new Date(), c.getTime(), c.getTime(), 0 }));
+			}
+			sql = "SELECT count(*) FROM nicobps.userpages where usercode=? ";
+			if (SUI.getCount(sql,new Object[] {usercode}) == 0) {
 				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
 				for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
-					try {
-						jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
-					} catch (Exception e) {
-					}
+					dmlList.add(
+							new BatchUpdateModel(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode }));
 				}
 			}
-			return true;
 		}
-		return false;
+		return SUI.update(dmlList);
 	}
 
 	@Override

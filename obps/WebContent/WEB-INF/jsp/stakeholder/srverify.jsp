@@ -71,7 +71,7 @@
 				<h3 class="mt-4" style="font-size: 32px;">Verification</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5">
-						<table class="table">
+						<table class="table" style='border-bottom: '>
 							<thead>
 								<tr>
 									<th>Application No.</th>
@@ -97,6 +97,7 @@
 									ng-click="viewDetails(item)" /></td>-->
 								</tr>
 							</tbody>
+							<tfoot><tr><td colspan='7'></td></tr></tfoot>
 						</table>
 
 					</div>

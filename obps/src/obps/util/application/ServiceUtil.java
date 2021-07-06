@@ -112,6 +112,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public <T> boolean update(String tablename, String sql, Object[] params) {
 		return daoUtilInterface.update(tablename, sql, params);
 	}
+
+	@Override
+	public <T> boolean update(List<BatchUpdateModel> list) {
+		return daoUtilInterface.update(list);
+	}
 	// ===========================================//
 
 	@Override
