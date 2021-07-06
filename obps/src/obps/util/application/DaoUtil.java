@@ -14,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -238,6 +239,7 @@ public class DaoUtil implements DaoUtilInterface {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public <T> boolean update(String tablename, String sql, Object[] params) {
 		boolean response = false;
 		try {
@@ -248,9 +250,27 @@ public class DaoUtil implements DaoUtilInterface {
 		}
 		return response;
 	}
-
 	
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+	public <T> boolean update(List<BatchUpdateModel> list) {
+		boolean response = false;
+		try {
+			for(BatchUpdateModel m:list) {
+				response = jdbcTemplate.update(m.getSql(), m.getParams()) >= 0;
+				if(!response) {
+					throw new Exception();
+				}
+			}
+		} catch (Exception e) {
+			response = false;
+			System.out.println("Error in DaoUtil.update(List<UpdateModel> list) : " + e);
+		}
+		return response;
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public boolean updateApplicationflowremarks(Integer afrcode,String applicationcode,Integer modulecode,Integer fromprocesscode,Integer toprocesscode,Integer fromusercode,Integer tousercode,String remarks) 
 	{
 		boolean response = false;

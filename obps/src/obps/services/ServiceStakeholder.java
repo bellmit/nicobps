@@ -95,7 +95,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 							new Object[] { applicationcode, usercode, i.get("officecode"), new Date(), c.getTime() });
 				}
 				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
-				for (Integer urlcode : new Integer[] { 11, 12, 13 }) {
+				for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
 					try {
 						jdbcTemplate.update(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode });
 					} catch (Exception e) {
@@ -132,15 +132,15 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			return "false";
 		}
 	}
-  
+
 	@Override
 	public boolean validateStackHolder(String remarks) {
 		Boolean res = false;
 		int size = remarks.length();
-		System.out.println("Size"+size);
-		System.out.println("Remarks"+remarks);
-		if(size>500)
-			res=true;
+		System.out.println("Size" + size);
+		System.out.println("Remarks" + remarks);
+		if (size > 500)
+			res = true;
 		return res;
 	}
 
