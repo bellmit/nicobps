@@ -34,15 +34,30 @@ app.controller("accesscontrolCtrl", [
         // dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-          alert(response);
-          $scope.reset();
-          $scope.listUsers();
+          if(response=='usercodenull'){
+          	alert("Please Select atleast 1 User from the correct office");
+          	$scope.reset();
+          	
+          	}
+          else if(response=='urlcodenull'){
+          	alert("Please Select atleast 1 URL");
+          	$scope.reset();
+           
+          	}
+          else if(response=='Mapped'){
+          	alert("Mapped");
+          	$scope.reset();
+         
+          }
+          else if(response=='Failed'){
+          	alert("Failed");
+          	$scope.reset();
+        
+       }
+          
         },
         error: function (xhr) {
-          alert(xhr.status + " = " + xhr);
-          alert(
-            "Sorry, there was an error while trying to process the request."
-          );
+         
         },
       });
     };

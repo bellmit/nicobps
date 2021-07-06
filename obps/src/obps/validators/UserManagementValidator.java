@@ -1,5 +1,6 @@
 package obps.validators;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +58,28 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		
 		
 		System.out.println(response);
+		return response;
+	}
+
+	@Override
+	public String validateAccessControl(List<Map<String, Object>> param) {
+		String response="";
+		System.out.println(param);
+		Integer usercode=0;
+		for (Map<String, Object> up : param) {
+			usercode = (Integer) up.get("usercode");
+			if(up.get("usercode")==null || usercode==0) {
+				response = "usercodenull";
+				return response;
+			}
+			if(((Map<String, Object>) up.get("url")).get("urlcode")==null) {
+				response = "urlcodenull";
+				return response;
+			}
+			System.out.println(up.get("usercode"));
+			System.out.println("response="+response);
+//			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
+		}
 		return response;
 	}
 

@@ -514,8 +514,15 @@ public class ControllerUserManagement {
 
 	@PostMapping(value = "/saveUserpages.htm")
 	public @ResponseBody String saveUserpages(@RequestBody List<Map<String, Object>> userpages) {
-
-		return serviceUserManagementInterface.saveUserpages(userpages);
+		String response="";
+		
+		String validate= userManagementValidatorInterface.validateAccessControl(userpages);
+		if(validate!="") {
+			response=validate;
+		}else {
+		response = serviceUserManagementInterface.saveUserpages(userpages);
+		}
+		return response;
 	}
 
 }
