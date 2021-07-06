@@ -8,10 +8,17 @@
                  <core:forEach items="${enclosuresList}" var="enclosur" varStatus="loop">
                  <tr>                       
                      <td>
-                         <form:checkbox path="appenclosures[${loop.index}].enclosurecode" value="${enclosur.key}" id="chk_${enclosur.key}" cssClass="chkbox chk_${enclosur.value1}"/>
+	                     <core:if  test="${empty enclosur.value2}">	
+	                         <form:checkbox path="appenclosures[${loop.index}].enclosurecode" value="${enclosur.key}" id="chk_${enclosur.key}" cssClass="chkbox chk_${enclosur.value1}"/>
+	                     </core:if> 
+	                     <core:if  test="${not empty enclosur.value2}">	
+	                         <form:checkbox path="appenclosures[${loop.index}].enclosurecode" value="${enclosur.key}" id="chk_${enclosur.key}" cssClass="chkbox"/>
+	                     </core:if>                          
                          <label>
                          	<core:out value="${enclosur.value}" escapeXml="enccode"/>
-                         	<core:if  test="${fn:contains(enclosur.value1, 'Y')}"><span style="color:red">*</span></core:if>                    
+                         	<core:if test="${fn:contains(enclosur.value1, 'Y') && empty enclosur.value2}">                         		
+                       			<span style="color:red">*</span>                         		 
+                         	</core:if>                    
                        	 </label>                        	 
                      </td>                        
                      <td>
