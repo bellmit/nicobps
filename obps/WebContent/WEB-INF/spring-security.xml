@@ -38,16 +38,16 @@
 <!--       <csrf disabled="true"/> -->
 		<csrf request-matcher-ref="csrfMatcher"/>
 		
-	<headers>
-         <cache-control />
-         <content-type-options />
-         <hsts />
-         <frame-options />
-         <xss-protection />
-         <header name="X-Content-Security-Policy" value="default-src 'self'"/>
-         <!--<header ref="headerWriter"/>-->
-		 <!--<xss-protection block="false"/>-->
-	</headers>        
+		<headers>
+	         <cache-control />
+	         <content-type-options />
+	         <hsts />
+	         <frame-options />
+	         <xss-protection />
+	         <header name="X-Content-Security-Policy" value="default-src 'self'"/>
+	         <!--<header ref="headerWriter"/>-->
+			 <!--<xss-protection block="false"/>-->
+		</headers>        
                 		
 		
     </http> 
