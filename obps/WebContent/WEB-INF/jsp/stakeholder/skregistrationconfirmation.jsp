@@ -16,7 +16,11 @@
 					<div class="col-md-12 py-4 px-5">
 						<div class="card text-white bg-warning mb-3" style="width: 100%;">
 							<div class="card-body">
-								<h5 class="card-title">Registered successful with Application Code - <b>${applicationcode}</b></h5>
+								<h5 class="card-title">Your application has been submitted successfully and forwarded to the concerned office. 
+								<br>
+								You will be intimated for payment of Registration Fees once your application and documents have been verified. 
+								<br>
+								The Application Code is <b>${applicationcode}</b></h5>
 							</div>
 						</div>
 					</div>

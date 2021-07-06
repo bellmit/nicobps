@@ -37,7 +37,15 @@ app.controller("initmodulesenclosuresCtrl", [
         // dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-          alert(response);
+          if(response=="enclosurecodenull")
+          	alert("Please Select atleast 1 enclosure");
+          else if(response=="modulecodenull")
+          	alert("Please Select atleast 1 module");
+          else if(response=='Mapped')
+          	alert("Mapped");
+          else if(response=='Failed')
+          	alert("Failed");
+          	
           $scope.reset();
           $scope.listModules();
         },

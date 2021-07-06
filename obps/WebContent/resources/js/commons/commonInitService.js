@@ -54,7 +54,7 @@ app.service("commonInitService", function($http) {
 				errorCallback(xhr);
 			}            
 		});
-	}
+	}  
 	this.save1 = (method, endpoint, data, successCallback, errorCallback)=>{
 
 	

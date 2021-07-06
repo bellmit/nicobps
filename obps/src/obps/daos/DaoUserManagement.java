@@ -1,6 +1,8 @@
 package obps.daos;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.List;
 import java.util.Base64;
 import java.util.LinkedList;
@@ -133,7 +135,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 			}
 			if (param.get("usertype") != null && param.get("usertype").equals("BACKEND_USER")) {
 				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
-				response = jdbcTemplate.update(sql, new Object[] {usercode,param.get("officecode")}) > 0;
+				response = jdbcTemplate.update(sql, new Object[] {usercode,Integer.valueOf(param.get("officecode").toString())}) > 0;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,13 +146,13 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	}
 
 	@Override
-	public boolean updateUser(Userlogin user) {
+	public boolean updateUser(Map<String,Object> user) {
 		String sql = "";
 		boolean response = false;
 		try {
 			sql = "UPDATE nicobps.userlogins SET username = ?, userpassword = ?,fullname = ?, mobileno = ?, designation = ? WHERE usercode = ?";
-			Object[] param = new Object[] { user.getUsername(), user.getUserpassword(), user.getFullname(),
-					user.getMobileno(), user.getDesignation(), user.getUsercode() };
+			Object[] param = new Object[] { user.get("username"), user.get("userpassword"), user.get("fullname"),
+					user.get("mobileno"), user.get("designation"), user.get("usercode") };
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -477,5 +479,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		}
 		return response;
 	}
+
+	
 
 }

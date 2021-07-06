@@ -30,6 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
+import obps.validators.InitEnclosuresValidatorInterface;
 import obps.models.Enclosures;
 import obps.models.Modules;
 import obps.models.Offices;
@@ -45,6 +46,9 @@ import obps.services.ServiceUserManagementInterface;
 public class ControllerInitModulesEnclosures {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
+	
+	@Autowired
+	private  InitEnclosuresValidatorInterface  initEnclosuresValidatorInterface; 
 	@Autowired
 
 	private ServiceEnclosureManagementInterface serviceUserManagementInterface;
@@ -65,8 +69,13 @@ public class ControllerInitModulesEnclosures {
 	}
 	@PostMapping(value = "/saveModuleEnclosures.htm")
 	public @ResponseBody String saveModuleEnclosures(@RequestBody List<Map<String, Object>> modulesenclosures) {
-
-		return serviceUserManagementInterface.saveUserpages(modulesenclosures);
+		String response="";
+		String validate= initEnclosuresValidatorInterface.validateModulesEnclosure(modulesenclosures);
+		if(validate!="")
+			response=validate;
+		else
+			response = serviceUserManagementInterface.saveUserpages(modulesenclosures);
+		return response;
 	}
 
 //	@PostMapping(value = "/initoffices.htm", consumes = "application/json")

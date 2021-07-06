@@ -14,7 +14,6 @@
         <intercept-url pattern="/login.htm" access="permitAll" /> 
         <intercept-url pattern="/contactus.htm" access="permitAll" />       
         <intercept-url pattern="/home.htm" access="isAuthenticated()" />
-        <intercept-url pattern="/home.htm" access="isAuthenticated()" />
         <intercept-url pattern="/initSignupForm.htm" access="permitAll" />   
         <intercept-url pattern="/submitSignupDetails.htm" access="permitAll" />
         <intercept-url pattern="/payment/BilldeskResponse.htm" access="permitAll" />   	 
@@ -38,6 +37,19 @@
         <custom-filter ref="captchaVerifierFilter" before="FORM_LOGIN_FILTER"/>
 <!--       <csrf disabled="true"/> -->
 		<csrf request-matcher-ref="csrfMatcher"/>
+		
+		<headers>
+	         <cache-control />
+	         <content-type-options />
+	         <hsts />
+	         <frame-options />
+	         <xss-protection />
+	         <header name="X-Content-Security-Policy" value="default-src 'self'"/>
+	         <!--<header ref="headerWriter"/>-->
+			 <!--<xss-protection block="false"/>-->
+		</headers>        
+                		
+		
     </http> 
     
     <beans:bean id="csrfMatcher" class="obps.security.CsrfSecurityRequestMatcher"/>  
