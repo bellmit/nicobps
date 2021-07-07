@@ -1,6 +1,7 @@
 package obps.controllers;
 
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import obps.services.ServiceStakeholderInterface;
@@ -140,4 +142,49 @@ public class ControllerStakeholder {
 				Integer.valueOf(params.get("currentprocesscode").toString()));
 	}
 
+	
+	@GetMapping("/extendstakeholdervalidity.htm")
+	public String extendstakeholdervalidity(Model model, HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+
+		model.addAttribute("offices", serviceUtilInterface.listUserOffices());
+
+		return "stakeholder/extendstakeholdervalidity";
+	}
+
+	@PostMapping(value = "/listStakeholders.htm")
+	public @ResponseBody Map<String, Object> listStakeholders(HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+		Integer usercode=Integer.valueOf(req.getSession().getAttribute("usercode").toString());
+		
+		Map<String, Object> data = new LinkedHashMap<>();
+if(usercode==1) {
+	data.put("listStakeholders", serviceUtilInterface.listStakeholdersMain(Integer.parseInt(params.get("officecode"))));
+}else {
+	data.put("listStakeholders", serviceUtilInterface.listStakeholders(Integer.parseInt(params.get("officecode"))));
+}
+	
+
+		return data;
+	}
+
+	//
+
+	@PostMapping("/getValidity.htm")
+	public @ResponseBody List<Map<String, Object>> getValidity(HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+
+		return SSI.getValidity(Integer.parseInt(params.get("usercode")));
+	}
+
+	@PostMapping("/extendValidity.htm")
+	public @ResponseBody String extendValidity(HttpServletRequest req,@RequestParam Map<String, String> params) {
+		String res="false";
+		Integer extendedby=Integer.valueOf(req.getSession().getAttribute("usercode").toString());
+			if(SSI.extendValidity(Short.parseShort(params.get("officecode")), Integer.parseInt(params.get("usercode")), params.get("extendedto"),extendedby) )
+			{	res= "true";
+		}
+
+	return res;
+}
 }

@@ -289,5 +289,21 @@ public class DaoUtil implements DaoUtilInterface {
 		return response;
 	}	
 	
-	
+	@Override
+	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) 
+	{
+		boolean response = false;
+		String sql = null;
+		try 
+		{	
+			sql = "UPDATE nicobps.licenseeofficesvalidities set extendedto=TO_DATE(?, 'dd-mm-yyyy') , extendedby=? where officecode=? and usercode=?";
+			Object[] values = {extendedto,extendedby,officecode,usercode};
+			response = jdbcTemplate.update(sql, values) > 0;																
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUtil.updateApplicationflowremarks(Map<String,String> param) : " + e);
+		}
+		return response;
+	}		
 }

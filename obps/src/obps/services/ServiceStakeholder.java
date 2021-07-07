@@ -147,4 +147,21 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		return res;
 	}
 
+	@Override
+	public boolean extendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
+		if (SUI.updateextendValidity(officecode,usercode, extendedto,extendedby)) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getValidity(Integer usercode) {
+		String sql = "SELECT l.applicantsname,l.usercode,to_char(li.validfrom, 'DD-MM-YYYY') as validfrom,coalesce(to_char(li.extendedto, 'DD-MM-YYYY'), to_char(li.validto, 'DD-MM-YYYY')) as validto, li.officecode,o.officename1,to_char(li.entrydate, 'DD-MM-YYYY') as entrydate\n"
+				+ "				FROM nicobps.licensees l \n"
+				+ "				INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \n"
+				+ "				INNER JOIN masters.offices o on o.officecode=li.officecode\n"
+				+ "				where li.usercode=?  ORDER BY o.officename1 DESC  ";
+		return SUI.listGeneric(sql, new Object[] { usercode });
+	}
 }

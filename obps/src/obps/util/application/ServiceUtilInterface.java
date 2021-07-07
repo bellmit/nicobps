@@ -118,4 +118,9 @@ public interface ServiceUtilInterface {
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode);
 
 	public List<Map<String, Object>> getLicensee(Integer usercode);
+	
+
+	public	List<Map<String, Object>> listStakeholders(Integer officecode);
+	public	List<Map<String, Object>> listStakeholdersMain(Integer officecode);
+	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto,Integer extendedby);
 }

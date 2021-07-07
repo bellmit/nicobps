@@ -400,5 +400,26 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "WHERE app.modulecode=? and app.usercode=? ";
 		return this.listGeneric(sql, new Object[] { modulecode, usercode });
 	}
-
+	@Override
+	public 	List<Map<String, Object>> listStakeholders(Integer officecode) {
+		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l \r\n"
+				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \r\n"
+				+ "								where li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC \r\n";
+			
+		return this.listGeneric(sql,new Object[] {  officecode });
+	}
+	@Override
+	public 	List<Map<String, Object>> listStakeholdersMain(Integer officecode) {
+		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l \r\n"
+				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \r\n"
+				+ "								where li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y'  and registeringofficecode=? ORDER BY officename1) OR officecode=? ORDER BY l.applicantsname DESC \r\n";
+		
+		return this.listGeneric(sql,new Object[] {  officecode,officecode });
+	}
+	
+	@Override 
+	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
+		
+		return daoUtilInterface.updateextendValidity(officecode, usercode, extendedto, extendedby);
+	}
 }
