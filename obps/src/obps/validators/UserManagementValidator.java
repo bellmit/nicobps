@@ -41,7 +41,7 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 			response="fullnamelength";
 		System.out.println(param.get("mobileno"));
 		Pattern p3 = Pattern.compile("[^0-9]");
-		mobileno = ((Long) param.get("mobileno")).toString();
+		mobileno = param.get("mobileno").toString();
 		m1=p3.matcher(mobileno);
 		b1=m1.find();
 		if(b1)
