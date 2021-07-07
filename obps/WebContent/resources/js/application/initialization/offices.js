@@ -91,35 +91,35 @@ $scope.save = function () {
 					$scope.listOffices();
 				}
 				else if (response.data=="1") {
-					MsgBox("Office Name 1 Cannot be more than 255 characters");
+					MsgBox("Office Name 1 Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="2") {
-					MsgBox("Office Name 2 Cannot be more than 255 characters");
+					MsgBox("Office Name 2 Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="3") {
-					MsgBox("Office Name 3 Cannot be more than 255 characters");
+					MsgBox("Office Name 3 Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="4") {
-					MsgBox("Office Short Hand Name Cannot be more than 50 characters");
+					MsgBox("Office Short Hand Name Cannot exceed more than 50 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="5") {
-					MsgBox("Signatory Name Cannot be more than 255 characters");
+					MsgBox("Signatory Name Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="6") {
-					MsgBox("Signatory Designation Cannot be more than 255 characters");
+					MsgBox("Signatory Designation Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="7") {
-					MsgBox("sms username Cannot be more than 25 characters");
+					MsgBox("sms username Cannot exceed more than 25 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="8") {
-					MsgBox("sms password Cannot be more than 100 characters");
+					MsgBox("sms password Cannot exceed more than 100 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="9") {
@@ -127,10 +127,26 @@ $scope.save = function () {
 					$scope.listOffices();
 				
 				}else if (response.data=="10") {
-					MsgBox("emailidpassword Cannot be more than 255 characters");
+					MsgBox("emailidpassword Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				}else if (response.data=="emailidnotcorrect") {
 					MsgBox("Please Enter correct emailid");
+					$scope.listOffices();
+				}
+				else if (response.data=="tenantid") {
+					MsgBox("No Special Characters or Numbers allowed in Tenant ID");
+					$scope.listOffices();
+				}
+				else if (response.data=="tenantidlength") {
+					MsgBox("Tenant ID Cannot exceed more than 255 characters ");
+					$scope.listOffices();
+				}
+				else if (response.data=="stateid") {
+					MsgBox("No Special Characters or Numbers allowed in State ID");
+					$scope.listOffices();
+				}
+				else if (response.data=="stateidlength") {
+					MsgBox("State ID Cannot exceed more than 255 characters  ");
 					$scope.listOffices();
 				}
 				
@@ -196,35 +212,35 @@ if($scope.offices.emailidpassword)  {
 					$scope.listOffices();
 				}
 				else if (response.data=="1") {
-					MsgBox("Office Name 1 Cannot be more than 255 characters");
+					MsgBox("Office Name 1 Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="2") {
-					MsgBox("Office Name 2 Cannot be more than 255 characters");
+					MsgBox("Office Name 2 Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="3") {
-					MsgBox("Office Name 3 Cannot be more than 255 characters");
+					MsgBox("Office Name 3 Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="4") {
-					MsgBox("Office Short Hand Name Cannot be more than 50 characters");
+					MsgBox("Office Short Hand Name Cannot exceed more than 50 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="5") {
-					MsgBox("Signatory Name Cannot be more than 255 characters");
+					MsgBox("Signatory Name Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="6") {
-					MsgBox("Signatory Designation Cannot be more than 255 characters");
+					MsgBox("Signatory Designation Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="7") {
-					MsgBox("sms username Cannot be more than 25 characters");
+					MsgBox("sms username Cannot exceed more than 25 characters");
 					$scope.listOffices();
 				
 				}else if (response.data=="8") {
-					MsgBox("sms password Cannot be more than 100 characters");
+					MsgBox("sms password Cannot exceed more than 100 characters");
 					$scope.listOffices();
 				}
 				else if (response.data=="9") {
@@ -232,10 +248,26 @@ if($scope.offices.emailidpassword)  {
 					$scope.listOffices();
 				
 				}else if (response.data=="10") {
-					MsgBox("emailidpassword Cannot be more than 255 characters");
+					MsgBox("emailidpassword Cannot exceed more than 255 characters");
 					$scope.listOffices();
 				}else if (response.data=="emailidnotcorrect") {
 					MsgBox("Please Enter correct emailid");
+					$scope.listOffices();
+				}
+				else if (response.data=="tenantid") {
+					MsgBox("No Special Characters or Numbers allowed in Tenant ID");
+					$scope.listOffices();
+				}
+				else if (response.data=="tenantidlength") {
+					MsgBox("Tenant ID Cannot exceed more than 255 characters ");
+					$scope.listOffices();
+				}
+				else if (response.data=="stateid") {
+					MsgBox("No Special Characters or Numbers allowed in State ID");
+					$scope.listOffices();
+				}
+				else if (response.data=="stateidlength") {
+					MsgBox("State ID Cannot exceed more than 255 characters  ");
 					$scope.listOffices();
 				}
 				

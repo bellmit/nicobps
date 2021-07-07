@@ -72,7 +72,16 @@ public class ControllerInitEcnclosure {
 	@PostMapping(value = "/initenclosures.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initenclosures(@RequestBody Map<String, Object> enclosures) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		Long enclosurecode = getMaxEnclosureCode() +1;
+		String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
+		if(validate!="") {
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+		Long enclosurecode=(long) 0;
+		if(getMaxEnclosureCode()>0)
+			enclosurecode = getMaxEnclosureCode() +1;
+		else
+			enclosurecode = enclosurecode+1;
 		System.out.println("Enclosure Code"+enclosurecode);
 		enclosures.put("enclosurecode", enclosurecode);
 		String encl_name=((String) enclosures.get("enclosurename")).trim();
@@ -83,11 +92,7 @@ public class ControllerInitEcnclosure {
 		if(exist)
 			response.put("data", "exist");
 		else {
-			String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
-			if(validate!="") {
-				response.put("data", validate);
-				return ResponseEntity.ok().body(response);
-			}
+			
 				
 			if (serviceUserManagementInterface.initenclosures(enclosures)) {
 	

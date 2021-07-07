@@ -83,7 +83,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		Long officecode = (Long) param.get("officecode");
 		
 		
-		String officename3="",officeshortname="",emailid="",emailidpassword="",smsusername="",smspassword="";
+		String officename3="",officeshortname="",emailid="",emailidpassword="",smsusername="",smspassword="",stateid="",tenantid="";
+		
+		
+		
 		
 		if(param.get("officename3")!=null){
 			officename3=((String) param.get("officename3")).trim();
@@ -103,6 +106,13 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		if(param.get("smspassword")!=null){
 			smspassword=((String) param.get("smspassword")).trim();
 		}
+		if(param.get("stateid")!=null){
+			stateid=((String) param.get("stateid")).trim();
+		}
+		if(param.get("tenantid")!=null){
+			tenantid = ((String) param.get("tenantid")).trim();
+		}
+		
 		
 		
 		
@@ -112,8 +122,8 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		{
 			sql = "INSERT INTO masters.offices(officecode,officename1,officename2,"
 					+ "officename3,officeshortname,signatoryname,"
-					+ "signatorydesignation,emailid,emailidpassword,smsusername,smspassword) "
-					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
+					+ "signatorydesignation,emailid,emailidpassword,smsusername,smspassword,stateid,tenantid) "
+					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 			Object[] values = { officecode, 
 					((String) param.get("officename1")).trim(),
 					((String) param.get("officename2")).trim(),
@@ -125,7 +135,9 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 					emailid,
 					emailidpassword,
 					smsusername,
-					smspassword
+					smspassword,
+					stateid,
+					tenantid
 					};
 			response = jdbcTemplate.update(sql, values) > 0;
 			
@@ -173,7 +185,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			sql = "UPDATE masters.offices SET officename1 = ?, officename2 = ?,officename3=?,"
 					+ "officeshortname = ?, signatoryname = ?,signatorydesignation=?,"
 					+ "emailid = ?, emailidpassword = ?,smsusername=?,"
-					+ "smspassword = ?"
+					+ "smspassword = ?,stateid=?,tenantid=?"
 					+ " WHERE officecode = ?"					;
 			Object[] param = new Object[] { 
 					offices.get("officename1"), 
@@ -186,7 +198,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 					offices.get("emailid"),
 					offices.get("smsusername"), 
 					offices.get("smspassword"),
-					offices.get("officecode")
+					offices.get("officecode"),
+					offices.get("stateid"),
+					offices.get("tenantid")
+					
 					};
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {

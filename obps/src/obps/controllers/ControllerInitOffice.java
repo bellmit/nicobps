@@ -72,9 +72,21 @@ public class ControllerInitOffice {
 	@PostMapping(value = "/initoffices.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		Long officecode = getMaxOfficeCode() +1;
+		
+		String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+		System.out.println("validate"+validate);
+		if(validate!="") {
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+		Long officecode=(long) 0;
+		if(getMaxOfficeCode()>0)
+			officecode = getMaxOfficeCode() +1;
+		else
+			officecode = officecode+1;
 		System.out.println("Enclosure Code"+officecode);
 		offices.put("officecode", officecode);
+		
 		String officename1=((String) offices.get("officename1")).trim();
 		String officename2=((String) offices.get("officename2")).trim();
 		String officename3="";
@@ -88,12 +100,7 @@ public class ControllerInitOffice {
 			response.put("data", "exist");
 		else
 		{
-			String validate= initOfficesValidatorInterface.validateInitOffices(offices);
-			System.out.println("validate"+validate);
-			if(validate!="") {
-				response.put("data", validate);
-				return ResponseEntity.ok().body(response);
-			}
+			
 			
 			
 	if (serviceUserManagementInterface.initoffices(offices)) {
@@ -131,8 +138,6 @@ public class ControllerInitOffice {
 
 	@GetMapping("/listOffices.htm")
 	public @ResponseBody List<Offices> listOffices() {
-		
-		System.out.println("dasdasdasd11111");
 		return serviceUserManagementInterface.listOffices();
 	}
 

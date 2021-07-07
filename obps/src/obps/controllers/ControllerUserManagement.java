@@ -415,11 +415,19 @@ public class ControllerUserManagement {
 				return ResponseEntity.ok().body(response);
 			}
 		}
-		String usercode = serviceUserManagementInterface.getMaxUsercode() + "";
+		String usercode ="";
+		if(serviceUserManagementInterface.getMaxUsercode()!=null)
+			usercode = serviceUserManagementInterface.getMaxUsercode() + "";
 		user.put("usercode", usercode);
 		user.put("usertype", "BACKEND_USER");
 		
-		
+		String validate=userManagementValidatorInterface.validateCreateUser(user);
+		System.out.println("Validate"+validate);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
 		String username=((String) user.get("username")).trim();
 		String sql = "Select count(*) from  nicobps.userlogins where LOWER(username)=LOWER(?)";
 		Object[] values = {username};
@@ -428,13 +436,7 @@ public class ControllerUserManagement {
 		if(exist)
 			response.put("data", "exist");
 		else {
-			String validate=userManagementValidatorInterface.validateCreateUser(user);
-			System.out.println("Validate"+validate);
-			if(validate!="") {
-				response.put("code", 200);
-				response.put("data", validate);
-				return ResponseEntity.ok().body(response);
-			}
+			
 				
 			if (serviceUserManagementInterface.createUser(user)) {
 				response.put("code", 200);

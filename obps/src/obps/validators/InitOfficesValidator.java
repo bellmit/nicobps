@@ -16,7 +16,7 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	public String validateInitOffices(Map<String, Object> param) {
 		String response = "";
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
-		String officename1="",officename2="",officename3="",officeshortname="",signatoryname="",signatorydesignation="",smsusername="",emailidpassword="",smspassword="";
+		String officename1="",officename2="",officename3="",officeshortname="",signatoryname="",signatorydesignation="",smsusername="",emailidpassword="",smspassword="",stateid="",tenantid="";
 		if(param.get("officename1")!=null)
 			officename1=((String) param.get("officename1")).trim();
 		Matcher of1 = p.matcher(officename1);
@@ -85,6 +85,24 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 		}
 		if(param.get("smspassword")!=null){
 			smspassword=((String) param.get("smspassword")).trim();
+		}
+		if(param.get("stateid")!=null){
+			stateid=((String) param.get("stateid")).trim();
+			Matcher m = p.matcher(stateid);
+			b1 = m.find();
+			if(b1)
+				response = "stateid";
+			if(stateid.length()>25)
+				response = "stateidlength";
+		}
+		if(param.get("tenantid")!=null){
+			tenantid=((String) param.get("tenantid")).trim();
+			Matcher m = p.matcher(tenantid);
+			b1 = m.find();
+			if(b1)
+				response = "tenantid";
+			if(tenantid.length()>25)
+				response = "tenantidlength";
 		}
 		
 		
