@@ -3,6 +3,17 @@
 <title>OBPS | Create User</title>
 <%@include file="../common/headerfiles.jsp"%>
 <script src="resources/js/util/sha256.min.js"></script>
+<style>
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+	-moz-appearance: textfield;
+}
+</style>
 </head>
 <body>
 	<div class="d-flex" id="wrapper">
@@ -23,11 +34,11 @@
 
 										<tr class="form-group has-feedback">
 											<td class="title">Office:*</td>
-											<td class="col-xs-5 selectContainer">
-											<select
+											<td class="col-xs-5 selectContainer"><select
 												class="form-control" id="officecode"
 												ng-model="user.officecode"
-												ng-init='user.officecode=${officeList[0].key }' required ng-change='listUsers()'>
+												ng-init='user.officecode=${officeList[0].key }' required
+												ng-change='listUsers()'>
 													<core:forEach items="${officeList}" var='i'>
 														<option value='${i.key}' selected='selected'>${i.value}</option>
 													</core:forEach>
@@ -84,8 +95,8 @@
 											<td class="title">Mobile no :*</td>
 											<td class="col-xs-5 selectContainer"><input
 												type="number" class="form-control" id="mobileno"
-												name="mobileno" maxlength="10"
-												pattern="^([1-9]){1}([0-9]){9}$" ng-model="user.mobileno" 
+												name="mobileno" min="1000000000" max="9999999999"
+												pattern="^([1-9]){1}([0-9]){9}$" ng-model="user.mobileno"
 												required autocomplete="off" /> <span id="mobilenoMsg"></span>
 												<!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
 											</td>
@@ -117,4 +128,9 @@
 </body>
 <script src="resources/js/application/models/initializations.js"></script>
 <script src="resources/js/application/initialization/createuser.js"></script>
+<script>
+	$(document).ready(function() {
+		$("#mobileno").numeric();
+	});
+</script>
 </html>
