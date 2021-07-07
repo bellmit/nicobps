@@ -198,7 +198,10 @@ var Offices={
 "smssenderid":"",
 "isregisteringoffice":"",
 "registeringofficecode":0,
-"enabled":""
+"enabled":"",
+"stateid":"",
+"tenantid":"",
+"logo":"",
 }
 };
 

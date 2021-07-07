@@ -1,5 +1,6 @@
 package obps.models;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Offices {
@@ -19,16 +20,21 @@ public class Offices {
 	private String isregisteringoffice;
 	private Integer registeringofficecode;
 	private String enabled;
+	private String stateid;
+	private String tenantid;
+	private byte[] logo;
 	private List<PaymentModes> mappedpaymentmodes;
 	
 	public Offices() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 	public Offices(Integer officecode, String officename1, String officename2, String officename3,
 			String officeshortname, String officelgdcode, String signatoryname, String signatorydesignation,
 			String emailid, String emailidpassword, String smsusername, String smspassword, String smssenderid,
-			String isregisteringoffice, Integer registeringofficecode, String enabled) {
+			String isregisteringoffice, Integer registeringofficecode, String enabled, String stateid, String tenantid,
+			byte[] logo, List<PaymentModes> mappedpaymentmodes) {
 		super();
 		this.officecode = officecode;
 		this.officename1 = officename1;
@@ -46,7 +52,12 @@ public class Offices {
 		this.isregisteringoffice = isregisteringoffice;
 		this.registeringofficecode = registeringofficecode;
 		this.enabled = enabled;
+		this.stateid = stateid;
+		this.tenantid = tenantid;
+		this.logo = logo;
+		this.mappedpaymentmodes = mappedpaymentmodes;
 	}
+
 	/**
 	 * @return the officecode
 	 */
@@ -240,6 +251,32 @@ public class Offices {
 		this.enabled = enabled;
 	}
 	
+	
+	
+	public String getStateid() {
+		return stateid;
+	}
+
+	public void setStateid(String stateid) {
+		this.stateid = stateid;
+	}
+
+	public String getTenantid() {
+		return tenantid;
+	}
+
+	public void setTenantid(String tenantid) {
+		this.tenantid = tenantid;
+	}
+
+	public byte[] getLogo() {
+		return logo;
+	}
+
+	public void setLogo(byte[] logo) {
+		this.logo = logo;
+	}
+
 	/**
 	 * @return the mappedpaymentmodes
 	 */
@@ -252,6 +289,7 @@ public class Offices {
 	public void setMappedpaymentmodes(List<PaymentModes> mappedpaymentmodes) {
 		this.mappedpaymentmodes = mappedpaymentmodes;
 	}
+
 	@Override
 	public String toString() {
 		return "Offices [officecode=" + officecode + ", officename1=" + officename1 + ", officename2=" + officename2
@@ -260,8 +298,10 @@ public class Offices {
 				+ ", emailid=" + emailid + ", emailidpassword=" + emailidpassword + ", smsusername=" + smsusername
 				+ ", smspassword=" + smspassword + ", smssenderid=" + smssenderid + ", isregisteringoffice="
 				+ isregisteringoffice + ", registeringofficecode=" + registeringofficecode + ", enabled=" + enabled
-				+ "]";
+				+ ", stateid=" + stateid + ", tenantid=" + tenantid + ", logo=" + Arrays.toString(logo)
+				+ ", mappedpaymentmodes=" + mappedpaymentmodes + "]";
 	}
+	
 	
 	
 }
