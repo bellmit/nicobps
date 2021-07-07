@@ -52,7 +52,7 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 		for (Map<String, Object> up : param) {
 			if(up.get("modulecode")!=null)
 				modulecode = (Integer) up.get("modulecode");
-			if(up.get("modulecode")==null || modulecode==0) {
+			if(up.get("modulecode")==null || modulecode==0) { 
 				response = "modulecodenull";
 				return response;
 			}
