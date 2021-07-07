@@ -11,7 +11,18 @@ public class StakeHolderValidator implements StakeHolderValidatorInterface{
 	private ServiceStakeholderInterface SSI;
 	@Override
 	public boolean validateStackHolder(String remarks) {
-		return SSI.validateStackHolder(remarks);
+		Boolean res = false;
+		int size = 0;
+		if(remarks!=null ||remarks!="") {
+			size = remarks.length();
+			
+		}
+		if (size > 500)
+			res = true;
+		
+		System.out.println("Remarks" + remarks);
+		
+		return res;
 	}
 
 }

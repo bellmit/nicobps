@@ -33,7 +33,7 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 	     if (b1)
 	         response="m1";
 
-	     if(enclname.length()>50)
+	     if(enclname.length()>255)
 	    	 response="50";
 	     if(encldesc.length()>255)
 	    	 response="255";

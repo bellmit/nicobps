@@ -21,18 +21,22 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		String username="",userpassword="",fullname="",designation="",repassword="",mobileno="";
 		
 		boolean b1;
-		username=((String) param.get("username")).trim();
+		if(param.get("username")!=null)
+			username=((String) param.get("username")).trim();
 		Matcher m1 = p2.matcher(username);
 		b1=m1.find();
 		if(!b1)
 			response="username";
 		if(username.length()>99)
 			response="userlength";
-		userpassword=((String) param.get("userpassword")).trim();
-		repassword=((String) param.get("repassword")).trim();
+		if(param.get("userpassword")!=null)
+			userpassword=((String) param.get("userpassword")).trim();
+		if(param.get("repassword")!=null)
+			repassword=((String) param.get("repassword")).trim();
 		if(!userpassword.equals(repassword))
 			response="passworddeoesnotmatch";
-		fullname=((String) param.get("fullname")).trim();
+		if(param.get("fullname")!=null)
+			fullname=((String) param.get("fullname")).trim();
 		m1=p.matcher(fullname);
 		b1=m1.find();
 		if(b1)
@@ -40,15 +44,20 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		if(fullname.length()>99)
 			response="fullnamelength";
 		System.out.println(param.get("mobileno"));
-		Pattern p3 = Pattern.compile("[^0-9]");
-		mobileno = param.get("mobileno").toString();
+//		Pattern p3 = Pattern.compile("^([1-9]){1}([0-9]){9}$");
+		Pattern p3 = Pattern.compile("^[1-9][0-9]*$");
+		if(param.get("mobileno")!=null)
+			mobileno = param.get("mobileno").toString();
+		
 		m1=p3.matcher(mobileno);
 		b1=m1.find();
-		if(b1)
+		
+		if(!b1)
 			response="mobile";
 		if(mobileno.length()>10)
 			response="mobilelength";
-		designation=((String) param.get("designation")).trim();
+		if(param.get("designation")!=null)
+			designation=((String) param.get("designation")).trim();
 		m1=p.matcher(designation);
 		b1=m1.find();
 		if(b1)
@@ -67,7 +76,8 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		System.out.println(param);
 		Integer usercode=0;
 		for (Map<String, Object> up : param) {
-			usercode = (Integer) up.get("usercode");
+			if(up.get("usercode")!=null)
+				usercode = (Integer) up.get("usercode");
 			if(up.get("usercode")==null || usercode==0) {
 				response = "usercodenull";
 				return response;

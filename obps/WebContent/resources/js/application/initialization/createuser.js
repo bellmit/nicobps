@@ -105,7 +105,7 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     	$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="mobile"){
-       		MsgBox("No Special Characters or Numbers allowed in Mobile No ");
+       		MsgBox("No Special Characters or Characters allowed in Mobile No. Mobile No. Should not start with zero ");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
@@ -202,7 +202,7 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     	$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="mobile"){
-       		MsgBox("No Special Characters or Numbers allowed in Mobile No ");
+       		MsgBox("No Special Characters or Characters allowed in Mobile No. Mobile No. Should not start with zero ");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
