@@ -11,7 +11,7 @@
 }
 </style>
 </head>
-<body ng-app="PermitApp" ng-controller="permitCtrl">
+<body ng-app="PermitApp" ng-controller="permitCtrl"  ng-init="init(${applicationcode})">
 	<div class="d-flex" id="wrapper">
 		<%@include file="../common/menuside.jsp"%>
 		<div id="page-content-wrapper">

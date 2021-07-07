@@ -2,6 +2,25 @@ var app = angular.module("PermitApp", []);
 
 app.controller('permitCtrl', function($scope, $compile, $timeout) {
 
+	$scope.init = function(applicationcode) {
+
+
+		if (applicationcode != "" && applicationcode != undefined) {
+			$scope.applicationcode = applicationcode;
+			$scope.paramexist = true;
+
+			jQuery("#byappcode").collapse("show");
+
+			$timeout(function() {
+
+				$scope.getpermitlist('byappcode');
+
+			}, 0);
+
+		}
+
+
+	}
 
 	$scope.getpermitlist = function(criteria) {
 
@@ -115,11 +134,17 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 	};
 
 	jQuery(".collapse").on('shown.bs.collapse hidden.bs.collapse', function() {
-		jQuery('#form1')[0].reset();
-		jQuery("#displayRecords").html("");
-		jQuery("#searchresults").addClass("d-none");
-		$scope.from.datepicker("option", "maxDate", "0");
-		$scope.to.datepicker("option", "maxDate", "0");
+		console.log("collapse");
+		if ($scope.paramexist == true) {
+			$scope.paramexist = false;
+		} else {
+			jQuery('#form1')[0].reset();
+			jQuery("#displayRecords").html("");
+			jQuery("#searchresults").addClass("d-none");
+			$scope.from.datepicker("option", "maxDate", "0");
+			$scope.to.datepicker("option", "maxDate", "0");
+		}
+
 
 
 	});
@@ -159,9 +184,8 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 	}
 
 
+
 });
-
-
 
 
 
