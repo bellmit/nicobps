@@ -79,7 +79,7 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     	$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="username"){
-       		MsgBox("Please Enter Correct Username");
+       		MsgBox("Please Enter a valid Username or email");
        		$scope.user.userpassword="";
     		$scope.user.repassword="";
        		$scope.listUsers();
@@ -176,7 +176,7 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
     	$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="username"){
-       		MsgBox("Please Enter Correct Username");
+       		MsgBox("Please Enter a valid Username or email ");
        		$scope.user.userpassword="";
     		$scope.user.repassword="";
        		$scope.listUsers();
