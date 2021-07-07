@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,9 +19,12 @@ public class ControllerPrintPermit {
 	@Autowired
 	private ServicePrintPermitInterface serviceprintpermit;
 
-	@GetMapping(value = "/printPermit.htm")
-	public String printpermit() {
-
+	@GetMapping(value = { "/printpermit.htm", "/printPermit.htm" })
+	public String printpermit(@RequestParam(value = "applicationcode", required = false) String applicationcode,
+			Model model) {
+		if (applicationcode != null) {
+			model.addAttribute("applicationcode", applicationcode);
+		}
 		return "bpa/printpermit";
 
 	}

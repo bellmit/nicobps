@@ -53,12 +53,14 @@ public class Report extends HttpServlet {
 
 			if (status != null && status.equals("1")) {
 				Long transactioncode = Long.parseLong(request.getParameter("transactioncode"));
-
+				System.out.println("transactioncode :" + transactioncode);
 				params.put("transactioncode", transactioncode);
 				reportName = "reports/PaymentReceipt.jrxml";
 			} else if (status != null && status.equals("2")) {
-
-				String permitnumber = request.getParameter("permitnumber");
+				
+				String permitnumber = request.getParameter("permitnumber").trim();			
+				System.out.println("permitnumber :" +permitnumber);
+				
 				params.put("permitnumber", permitnumber);
 				reportName = "reports/BuildingPermit.jrxml";
 			}

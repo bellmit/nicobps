@@ -58,7 +58,7 @@
 									<td colspan="2" style="border-bottom: 2px solid #005776"></td>
 								</tr>
 								<tr>
-									<td colspan="2"><input type="button" value="Print"
+									<td colspan="2" ng-show="${amount}!=0 && ${amount} != null && ${amount} !='' "><input type="button" value="Print"
 										class="btn btn-primary  col-md-2 " style="float: right;"
 										ng-click="print()" /></td>
 								</tr>
