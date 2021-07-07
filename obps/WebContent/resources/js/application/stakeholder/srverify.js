@@ -51,14 +51,29 @@ app.controller("CommonCtrl", [
 		$scope.updateStakeholder = (applicant, process) => {
 			let data = "officecode="+applicant.officecode+"&applicationcode=" + applicant.applicationcode + "&usercode=" + applicant.usercode + "&toprocesscode=" + process.toprocesscode + "&remarks=" + process.remarks;
 			commonInitService.http("POST", "updateStakeholder.htm", data, function (response) {
-				if (response=="true") {
+				if (response=="success") {
 					MsgBox("Stakeholder application updated.");
 					$scope.listLicensees();
 				} else if(response == "false"){
 					MsgBox("Error! Please try again.");
 				}
-				else if(response == "remarkserror"){
+				else if(response == "500"){
 					MsgBox("No. of characters must not exceed 500 in remarks");
+				}
+				else if(response == "officecodenull"){
+					MsgBox("Office code is null");
+				}
+				else if(response == "applicationcodenull"){
+					MsgBox("Application code is null");
+				}
+				else if(response == "applicationcodelength"){
+					MsgBox("Application code should not exceed 20 characters");
+				}
+				else if(response == "usercodenull"){
+					MsgBox("User code is null");
+				}
+				else if(response == "toprocesscodenull"){
+					MsgBox("toprocesscode is null");
 				}
 			}, function () {
 				alert("Sorry, there was an error while trying to process the request.");

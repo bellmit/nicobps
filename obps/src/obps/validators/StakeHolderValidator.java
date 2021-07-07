@@ -10,17 +10,28 @@ public class StakeHolderValidator implements StakeHolderValidatorInterface{
 	@Autowired
 	private ServiceStakeholderInterface SSI;
 	@Override
-	public boolean validateStackHolder(String remarks) {
-		Boolean res = false;
+	public String validateStackHolder(Integer officecode, String applicationcode, Integer usercode,
+			Integer toprocesscode, String remarks) {
+		String res = "";
 		int size = 0;
+		if(officecode==null || officecode==0)
+			res="officecodenull";
+		if(applicationcode==null || applicationcode=="")
+			res="applicationcodenull";
+		else {
+			if(applicationcode.length()>20)
+				res="applicationcodelength";
+		}
+		if(usercode==null)
+			res="usercodenull";
+		if(toprocesscode==null || toprocesscode==0)
+			res="toprocesscodenull";
 		if(remarks!=null ||remarks!="") {
-			size = remarks.length();
-			
+			size = remarks.length();			
 		}
 		if (size > 500)
-			res = true;
+			res = "500";
 		
-		System.out.println("Remarks" + remarks);
 		
 		return res;
 	}

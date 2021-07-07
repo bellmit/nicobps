@@ -1,5 +1,6 @@
 package obps.validators;
  
 public interface StakeHolderValidatorInterface {
-	public boolean validateStackHolder(String remarks);
+	public String validateStackHolder(Integer officecode, String applicationcode, Integer usercode,
+			Integer toprocesscode, String remarks);
 }

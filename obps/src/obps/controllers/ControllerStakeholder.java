@@ -125,12 +125,15 @@ public class ControllerStakeholder {
 	@PostMapping("/updateStakeholder.htm")
 	public @ResponseBody String updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer toprocesscode, String remarks, ModelMap model) {
-		String res = "false";
-		if (stakeHolderValidatorInterface.validateStackHolder(remarks))
-			res = "remarkserror";
+		String res = "";
+		res = stakeHolderValidatorInterface.validateStackHolder(officecode, applicationcode, usercode, toprocesscode, remarks);
+		if (res!="")
+			return res;
 		else {
 			if (SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks))
-				res = "true";
+				res = "success";
+			else
+				res="false";
 		}
 
 		return res;
