@@ -16,13 +16,15 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	public String validateInitOffices(Map<String, Object> param) {
 		String response = "";
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
-		String officename1,officename2,officename3="",officeshortname="",signatoryname="",signatorydesignation="",smsusername="",emailidpassword="",smspassword="";
-		officename1=((String) param.get("officename1")).trim();
+		String officename1="",officename2="",officename3="",officeshortname="",signatoryname="",signatorydesignation="",smsusername="",emailidpassword="",smspassword="";
+		if(param.get("officename1")!=null)
+			officename1=((String) param.get("officename1")).trim();
 		Matcher of1 = p.matcher(officename1);
 		boolean b1 = of1.find();
 		if(b1)
 			response= "officename1";
-		officename2=((String) param.get("officename2")).trim();
+		if(param.get("officename2")!=null)
+			officename2=((String) param.get("officename2")).trim();
 		Matcher of2 = p.matcher(officename2);
 		b1 = of2.find();
 		if(b1)
@@ -66,16 +68,16 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 		}
 		
 		if(param.get("emailid")=="")
-			System.out.println("asd");
+			System.out.println("");
 		else if(param.get("emailid")!=null){
 			String emailid=((String) param.get("emailid")).trim();
-			String regex = "^(.+)@(.+)$";
-		      final Pattern p2 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-	         Matcher matcher = p2.matcher(emailid);
-		    Boolean b= matcher.find();
-		    if(!b)
+		String regex = "^(.+)@(.+)$";
+		final Pattern p2 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+	    Matcher matcher = p2.matcher(emailid);
+		Boolean b= matcher.find();
+		if(!b)
 		    response="emailidnotcorrect";
-		    if(emailid.length()>255)
+		if(emailid.length()>255)
 		    	 response="9";
 		}
 		if(param.get("emailidpassword")!=null){
