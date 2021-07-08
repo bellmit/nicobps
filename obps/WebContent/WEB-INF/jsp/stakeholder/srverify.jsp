@@ -71,7 +71,7 @@
 				<h3 class="mt-4" style="font-size: 32px;">Verification</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5">
-						<table class="table" style='border-bottom: '>
+						<table class="table" style='border-bottom:'>
 							<thead>
 								<tr>
 									<th>Application No.</th>
@@ -97,7 +97,11 @@
 									ng-click="viewDetails(item)" /></td>-->
 								</tr>
 							</tbody>
-							<tfoot><tr><td colspan='7'></td></tr></tfoot>
+							<tfoot>
+								<tr>
+									<td colspan='7'></td>
+								</tr>
+							</tfoot>
 						</table>
 
 					</div>
@@ -262,8 +266,22 @@
 						</tr>
 					</table>
 					<div style="position: absolute; bottom: 0"
-						class="text-center w-100">
-						<div class="dropup"
+						class="text-center w-100 row">
+						<div class="dropup col-md-6"
+							ng-show="(applicant.transactions!=null && applicant.transactions.length !=0)">
+							<button class="dropbtn">
+								Print<span class="fa fa-caret-up"
+									style="padding-top: 5px; padding-bottom: 5px; float: right;"></span>
+							</button>
+							<div class="dropup-content">
+							
+								<a href="./Report?status=1&transactioncode={{fee.transactioncode}}" target="_blank"
+									ng-repeat="fee in applicant.transactions">{{fee.feetypedescription}}</a>
+								
+							</div>
+						</div>
+
+						<div class="dropup col-md-6"
 							ng-show="applicant.processcode==4||applicant.processcode==6">
 							<button class="dropbtn">
 								Action<span class="fa fa-caret-up"
@@ -274,8 +292,14 @@
 									ng-click="showRemarks(p)">{{p.flowname}}</a>
 							</div>
 						</div>
+
 					</div>
+
+
 				</div>
+
+
+
 				<div class="col-md-8 py-2 px-2" id="enclosureWindow"></div>
 			</div>
 		</div>

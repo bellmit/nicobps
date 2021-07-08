@@ -125,5 +125,9 @@ app.controller("CommonCtrl", [
 					$scope.Enclosures = response
 				});
 		$scope.listLicensees();
+		$scope.print = function(transactioncode) {
+			console.log(" transactioncode " + transactioncode);
+			window.open("./Report?status=1&transactioncode=" + transactioncode);
+		};
 	},
 ]);

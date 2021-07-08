@@ -221,4 +221,29 @@ public class DaoPayment implements DaoPaymentInterface {
 		return resp;
 
 	}
+	
+	public List<Map<String, Object>> getTransaction(String applicationcode) {
+		List<Map<String, Object>> resp = null;
+		String sql = null;
+		try {
+
+			sql = " select  max(t.transactioncode) as transactioncode,t.feecode,ft.feetypedescription,t.paymentstatus "
+					+ " from nicobps.transactions t "
+					+ " inner join nicobps.applicationstransactionmap at on t.transactioncode=at.transactioncode "
+					+ " inner join masters.feemaster fm on t.feecode=fm.feecode"
+					+ " inner join masters.feetypes ft on fm.feetypecode=ft.feetypecode"
+					+ " where   t.amount<>0 and applicationcode=? "
+					+ " group by t.feecode,ft.feetypedescription,t.paymentstatus";
+
+			Object[] values = { applicationcode };
+			resp = jdbcTemplate.queryForList(sql, values);
+		} catch (Exception e) {
+
+			e.getStackTrace();
+
+			System.out.println("Error in DaoPayment.getTransaction with Aplicationcode  : " + e);
+		}
+		return resp;
+
+	}
 }

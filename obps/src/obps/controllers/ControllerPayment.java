@@ -102,6 +102,7 @@ public class ControllerPayment {
 	public String CommonPayment(@RequestParam Map<String, String> params, Model model) {
 		Integer transactioncode = serviceCommon.saveTransaction(params);
 		System.out.println("test for resubmission");
+		System.out.println("params :: "+ params);
 		if (transactioncode != 0) {
 			serviceUtilInterface.updateApplicationflowremarks(params.get("applicationcode"), Integer.parseInt(params.get("modulecode").trim()), Integer.parseInt(params.get("toprocesscode").trim()),
 					Integer.parseInt(params.get("usercode").trim()), null, "Payment Complete");

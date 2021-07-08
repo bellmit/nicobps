@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import obps.daos.DaoPaymentInterface;
 import obps.util.application.BatchUpdateModel;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
@@ -22,6 +23,9 @@ import obps.util.application.ServiceUtilInterface;
 public class ServiceStakeholder implements ServiceStakeholderInterface {
 	@Autowired
 	private ServiceUtilInterface SUI;
+
+	@Autowired
+	private DaoPaymentInterface daoPaymentInterface;
 
 	@Override
 	public List<Map<String, Object>> listLicensees() {
@@ -39,7 +43,11 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
 				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
 				+ "INNER JOIN masters.states s on s.statecode=d.statecode ORDER BY l.entrydate DESC ";
-		return SUI.listGeneric(sql);
+		List<Map<String, Object>> list = SUI.listGeneric(sql);
+		for (Map<String, Object> m : list) {
+			m.put("transactions", daoPaymentInterface.getTransaction(m.get("applicationcode").toString()));
+		}
+		return list;
 	}
 
 	@Override
@@ -99,7 +107,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 						new Date(), c.getTime(), c.getTime(), 0 }));
 			}
 			sql = "SELECT count(*) FROM nicobps.userpages where usercode=? ";
-			if (SUI.getCount(sql,new Object[] {usercode}) == 0) {
+			if (SUI.getCount(sql, new Object[] { usercode }) == 0) {
 				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
 				for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
 					dmlList.add(
@@ -140,12 +148,12 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public boolean extendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
-		if (SUI.updateextendValidity(officecode,usercode, extendedto,extendedby)) {
+		if (SUI.updateextendValidity(officecode, usercode, extendedto, extendedby)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> getValidity(Integer usercode) {
 		String sql = "SELECT l.applicantsname,l.usercode,to_char(li.validfrom, 'DD-MM-YYYY') as validfrom,coalesce(to_char(li.extendedto, 'DD-MM-YYYY'), to_char(li.validto, 'DD-MM-YYYY')) as validto, li.officecode,o.officename1,to_char(li.entrydate, 'DD-MM-YYYY') as entrydate\n"
