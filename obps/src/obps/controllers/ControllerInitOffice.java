@@ -3,6 +3,7 @@ package obps.controllers;
 
 
 import java.util.Map;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -72,7 +75,8 @@ public class ControllerInitOffice {
 	@PostMapping(value = "/initoffices.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		
+
+		System.out.println(offices);
 		String validate= initOfficesValidatorInterface.validateInitOffices(offices);
 		System.out.println("validate"+validate);
 		if(validate!="") {
@@ -145,6 +149,24 @@ public class ControllerInitOffice {
 		String sql = "SELECT MAX(officecode) FROM masters.offices";		
 		return serviceUtilInterface.getMaxValue(sql);	
 		
+	}
+	@RequestMapping(value = "/showFile.htm", method = RequestMethod.POST)
+	public @ResponseBody String showFile(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "officecode", required = true) String officecode
+			) {
+		System.out.println(officecode );
+		byte[] binaryFile=null;
+		try {
+			String sql = "select logo from masters.offices where officecode=?";
+			Object[] criteria = { Integer.valueOf(officecode)};
+			binaryFile = serviceUtilInterface.getBytes(sql, criteria);
+			System.out.println(binaryFile);
+
+		} catch (Exception e) {
+			System.out.println("Exception :: " + e);
+			
+		}
+		return (binaryFile != null) ? Base64.getEncoder().encodeToString(binaryFile) : null;
 	}
 
 

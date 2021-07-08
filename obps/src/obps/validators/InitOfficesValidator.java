@@ -1,5 +1,6 @@
 package obps.validators;
 
+import java.util.Base64;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -125,9 +126,33 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	     
 	     if(emailidpassword.length()>255)
 	    	 response="10";
-	     
-	     
-		
+	     System.out.println(param.get("extension"));
+	     String ext="";
+	     Integer size=0;
+	     if(param.get("logo")!=null) {
+	    	  if(param.get("extension")!=null||param.get("extension")!="")
+	    	  {	
+	    		  ext=((String) param.get("extension")).trim().toLowerCase();
+	    		  System.out.println(ext);
+	    		  
+	    		 if(ext.equalsIgnoreCase("jpg"))
+	    			 System.out.println(ext);
+	    		 else if(ext.equalsIgnoreCase("jpeg"))
+	    			 System.out.println(ext);
+	    		 else if(ext.equalsIgnoreCase("png"))
+	    			 System.out.println(ext);
+	    		 else
+	    			 response = "filetypeerror";
+	       	  }
+	    	  if(param.get("filesize")!=null||param.get("filesize")!="") {
+	    		  size=(Integer) param.get("filesize");
+	    		  float res = size/1024;
+	    		  res=res/1024;
+	    		  System.out.println(res);
+	    		  if(res>5)
+	    			  response = "filesizeerror";
+	    	  }
+	     }
 		return response;
 	}
 

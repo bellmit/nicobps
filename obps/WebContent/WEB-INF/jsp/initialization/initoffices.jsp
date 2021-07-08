@@ -111,6 +111,43 @@
 <!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
 			                            </td>
 			                        </tr>
+			                        <tr class="form-group has-feedback">
+			                            <td class="title">Tenant ID:*</td>
+			                            <td class="col-xs-5 selectContainer">
+											<input type="text" class="form-control" id="tenantid" name="tenantid" 
+												ng-model="offices.tenantid" required  autocomplete="off"/>        
+											<span id="tenantidMsg"></span>
+<!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
+			                            </td>
+			                        </tr>
+			                        <tr class="form-group has-feedback">
+			                            <td class="title">State ID:*</td>
+			                            <td class="col-xs-5 selectContainer">
+											<input type="text" class="form-control" id="stateid" name="stateid" 
+												ng-model="offices.stateid" required  autocomplete="off"/>        
+											<span id="stateidMsg"></span>
+<!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
+			                            </td>
+			                        </tr>
+			                        <tr class="form-group has-feedback">
+			                           <td class="title">Logo:</td>
+			                            <td class="col-xs-5 selectContainer">
+											<input type="file" class="form-control" id="logo" name="logo" 
+												ng-model="logo"  autocomplete="off" onchange='addFile()'/>        
+											<span id="logoMsg"></span>
+<!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
+			                            </td>
+			                            <td>					   
+							<td>			
+							<button id="viewlogo" ng-click="showFile(offices.username)" >View Logo</button>
+							</td>
+							<td>
+							 <div class="col-md-12" id="enclosureWindow"></div>
+<!-- 			                   <a href="#" target="_blank" ng-click="showFile()">View Logo</a> -->
+						 										
+				     </td> 
+			                        </tr>
+			                        
 			                       
 			                         <tr class="form-group has-feedback">
 			                            <td colspan="2" align="center">

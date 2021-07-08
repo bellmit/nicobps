@@ -81,12 +81,8 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		boolean response = false;
 		String sql = null;
 		Long officecode = (Long) param.get("officecode");
-		
-		
+		byte [] logo = null;
 		String officename3="",officeshortname="",emailid="",emailidpassword="",smsusername="",smspassword="",stateid="",tenantid="";
-		
-		
-		
 		
 		if(param.get("officename3")!=null){
 			officename3=((String) param.get("officename3")).trim();
@@ -120,10 +116,14 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		
 		try 
 		{
+			if(param.get("logo")!=null) {
+				 logo = Base64.getDecoder().decode((String)param.get("logo") );
+				
+			}
 			sql = "INSERT INTO masters.offices(officecode,officename1,officename2,"
 					+ "officename3,officeshortname,signatoryname,"
-					+ "signatorydesignation,emailid,emailidpassword,smsusername,smspassword,stateid,tenantid) "
-					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+					+ "signatorydesignation,emailid,emailidpassword,smsusername,smspassword,stateid,tenantid,logo) "
+					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 			Object[] values = { officecode, 
 					((String) param.get("officename1")).trim(),
 					((String) param.get("officename2")).trim(),
@@ -137,7 +137,8 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 					smsusername,
 					smspassword,
 					stateid,
-					tenantid
+					tenantid,
+					logo
 					};
 			response = jdbcTemplate.update(sql, values) > 0;
 			
@@ -159,6 +160,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	{
 		String sql = "";
 		boolean response = false;
+		
 		String enclosuredescription = "";
 		if(param.get("enclosuredescription")!=null)
 			enclosuredescription=((String) param.get("enclosuredescription")).trim();
@@ -178,14 +180,19 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	
 	@Override
 	public boolean updateInitOffices(Map<String, Object> offices) {
+		System.out.println(offices);
 		String sql = "";
 		boolean response = false;
+		byte [] logo = null;
 		try 
 		{
+			if(offices.get("logo")!=null) {
+				 logo = Base64.getDecoder().decode((String)offices.get("logo") );
+			}
 			sql = "UPDATE masters.offices SET officename1 = ?, officename2 = ?,officename3=?,"
 					+ "officeshortname = ?, signatoryname = ?,signatorydesignation=?,"
 					+ "emailid = ?, emailidpassword = ?,smsusername=?,"
-					+ "smspassword = ?,stateid=?,tenantid=?"
+					+ "smspassword = ?,stateid=?,tenantid=?,logo=?"
 					+ " WHERE officecode = ?"					;
 			Object[] param = new Object[] { 
 					offices.get("officename1"), 
@@ -198,10 +205,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 					offices.get("emailid"),
 					offices.get("smsusername"), 
 					offices.get("smspassword"),
-					offices.get("officecode"),
 					offices.get("stateid"),
-					offices.get("tenantid")
-					
+					offices.get("tenantid"),
+					logo,
+					offices.get("officecode")
 					};
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {

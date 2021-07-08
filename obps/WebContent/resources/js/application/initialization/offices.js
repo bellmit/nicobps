@@ -1,3 +1,44 @@
+ var signatures = {
+	"JVBER": "application/pdf",
+	"/9J/4": "image/jpeg",
+	"IVBOR": "image/png"
+};
+ function detectMimeType(b64) {
+	return signatures[b64.toUpperCase().substr(0, 5)];
+};
+
+var logocode;
+var extension;
+var filesize;
+const addFile=()=>{	
+	
+	  var file = document.querySelector("#logo").files[0];
+	  filesize = file.size;
+       
+            		  
+	  if (file) 
+	  {
+	  	var filename = $("#logo").val();
+	  	extension = filename.replace(/^.*\./, '');
+	  	if (extension == filename) {
+            extension = '';
+        } else {
+            extension = extension.toLowerCase();
+        }
+       
+	    var reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.addEventListener("load",function() 
+		{				
+			var scope = angular.element(jQuery("#officesCtrl")).scope();
+			scope.$apply(function() {               	            	
+//				scope.offices.logo	= (reader.result).replace('data:image/jpeg;base64,','');
+				scope.offices.logo	= (reader.result);
+				
+			});	
+		}, false);		
+	  }	   
+}
 app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonInitFactory', 'commonInitService', 
 	function ($scope, $sce, $compile,$timeout,commonInitFactory, commonInitService) {
 	var scope = angular.element($("#officesCtrl")).scope();
@@ -10,7 +51,7 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
 	$scope.successCallback = "";
 	$scope.urlEndpoint = "";
 	$scope.actionButton = 1;
-	
+	jQuery('#viewlogo').hide();
 	
 	/*------------------------*/
 	$scope.offices = new Offices();
@@ -23,7 +64,9 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
        return $sce.trustAsHtml(post);
  };
  $scope.edit = function (officecode) {
- 		
+ 		jQuery('#viewlogo').show()
+ 		logocode=officecode;
+		
     	$scope.actionButton = 2;
     	$scope.offices = new Offices();
     	
@@ -42,18 +85,53 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
         }, 2000);
 	};
   $scope.reset = function () {
+    jQuery('#viewlogo').hide();
+  	jQuery('#enclosureWindow').html("");
   	$scope.offices = new Offices();
 	$scope.actionButton =1;
+	jQuery('#logo').val("");
 };
+$scope.showFile = (data, successCallback, errorCallback)=>{
+
+		$.ajax({
+            type: "POST",
+            url: "./showFile.htm",
+//            dataType: "json",
+            async: false,
+//            contentType: "application/json; charset=utf-8",
+            data:{"officecode":logocode},
+            success: function (response) {
+            alert(response);
+			if(response!=""){
+				jQuery('#enclosureWindow').html('<iframe src="data:' + detectMimeType(response) + ';base64,' + response + '"' +
+							'style="width:100%;height:100%;" frameborder="0"></iframe>');
+			}
+			else
+				jQuery('#enclosureWindow').html('<label>Logo Not Uploaded</label>');
+          	
+            	
+            },
+            error: function (xhr) {
+            	alert(data);
+                console.log("Error: ", xhr);
+                alert("Sorry, there was an error while trying to process the request.");
+                errorCallback(xhr.responseJSON);
+            }            
+        });
+	}
 $scope.save = function () {
-		
+			$scope.offices.extension=extension;
+			$scope.offices.filesize=filesize;
+			$scope.offices.logo	= $scope.offices.logo.replace('data:image/jpeg;base64,','');
+			$scope.offices.logo	= $scope.offices.logo.replace('data:image/png;base64,','');
+				alert($scope.offices.extension)
    		if($scope.offices.emailidpassword)
    	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);
         if($scope.offices.smspassword)  
     	$scope.offices.smspassword=SHA256($scope.offices.smspassword);
     	$scope.method = "POST";
         $scope.urlEndpoint = "./initoffices.htm";
-    	
+    	$timeout(()=>{console.log($scope.offices.logo)},0);
         commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.offices, function (response) {
 		
 				if (response.data=="Success") {
@@ -149,10 +227,20 @@ $scope.save = function () {
 					MsgBox("State ID Cannot exceed more than 255 characters  ");
 					$scope.listOffices();
 				}
-				
+				else if(response.data=="filetypeerror"){
+				MsgBox("Invalid File Type. Only jpeg,jpg and png files are allowed");
+				}
+				else if(response.data=="filesizeerror"){
+				MsgBox("File Size must not exceed 5MB");
+				}
 				else if(response.data=="Error"){
 				MsgBox("Office Already exists");
 				}
+				else{
+				MsgBox("Error");
+				}
+				jQuery('#enclosureWindow').html("");
+				
 				$scope.offices.emailidpassword="";
 				$scope.offices.smspassword="";
 				
@@ -165,9 +253,14 @@ $scope.save = function () {
   };
 
   $scope.update = () => {
+  	    $scope.offices.filesize=filesize;
+  	    $scope.offices.logo	= $scope.offices.logo.replace('data:image/jpeg;base64,','');
+		$scope.offices.logo	= $scope.offices.logo.replace('data:image/png;base64,','');
+		$scope.offices.extension=extension;
+		alert($scope.offices.extension)
 	  if($scope.officeForm.$invalid)
           return false;
-                   
+                
 if($scope.offices.emailidpassword)  { 	
     	
    	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}
@@ -270,10 +363,17 @@ if($scope.offices.emailidpassword)  {
 					MsgBox("State ID Cannot exceed more than 255 characters  ");
 					$scope.listOffices();
 				}
-				
+				else if(response.data=="filetypeerror"){
+				MsgBox("Invalid File Type. Only jpeg,jpg and png files are allowed");
+				}
+				else if(response.data=="filesizeerror"){
+				MsgBox("File Size must not exceed 5MB");
+				}
 				else if(response.data=="Error"){
 				MsgBox("Office Already exists");
 				}
+				else
+					MsgBox("Error");
 				$scope.offices.emailidpassword="";
 				$scope.offices.smspassword="";
 				
@@ -345,7 +445,7 @@ if($scope.offices.emailidpassword)  {
                     "data": "officecode",
                     "render": function (data, type, row, meta) {
                     	let status = row.enabled == 'Y'?'Disable':'Enable';
-                    	let div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="button-primary">Edit</button>';
+                    	let div = '<div style="text-align:center"><button  style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="button-primary">Edit</button>';
 //                    		div += '<button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="toggleUserStatus(' + data + ')" class="button-primary">'+status+'</button></div>';
                         return div;
                     }
