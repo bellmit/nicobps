@@ -20,7 +20,7 @@
 		<div class="container">
 			<ul class="breadcrumb bg-light pl-0">
 				<li><a href="login.htm">Home</a></li>
-				<li>Registrations of Architects/License Technical Persons</li>
+				<li>Pre-Registrations of Architects/License Technical Persons</li>
 			</ul>
 		</div>
 	</div>
