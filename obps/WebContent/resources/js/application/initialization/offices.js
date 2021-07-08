@@ -33,7 +33,10 @@ const addFile=()=>{
 			var scope = angular.element(jQuery("#officesCtrl")).scope();
 			scope.$apply(function() {               	            	
 //				scope.offices.logo	= (reader.result).replace('data:image/jpeg;base64,','');
-				scope.offices.logo	= (reader.result);
+				$scope.offices.logo	= $scope.offices.logo.replace('data:image/png;base64,','');
+				$scope.offices.extension=extension;
+				$scope.offices.filesize=filesize;
+				
 				
 			});	
 		}, false);		
@@ -47,6 +50,7 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
 	var successMsg = "Success: Offices created or updated successfully";
 	var errorMsg = "Error: Unable to perform action";
 	$scope.errorCallback = "";
+	
 	$scope.method = "POST";
 	$scope.successCallback = "";
 	$scope.urlEndpoint = "";
@@ -101,7 +105,7 @@ $scope.showFile = (data, successCallback, errorCallback)=>{
 //            contentType: "application/json; charset=utf-8",
             data:{"officecode":logocode},
             success: function (response) {
-            alert(response);
+           
 			if(response!=""){
 				jQuery('#enclosureWindow').html('<iframe src="data:' + detectMimeType(response) + ';base64,' + response + '"' +
 							'style="width:100%;height:100%;" frameborder="0"></iframe>');
@@ -120,11 +124,9 @@ $scope.showFile = (data, successCallback, errorCallback)=>{
         });
 	}
 $scope.save = function () {
-			$scope.offices.extension=extension;
-			$scope.offices.filesize=filesize;
-			$scope.offices.logo	= $scope.offices.logo.replace('data:image/jpeg;base64,','');
-			$scope.offices.logo	= $scope.offices.logo.replace('data:image/png;base64,','');
-				alert($scope.offices.extension)
+
+			
+				
    		if($scope.offices.emailidpassword)
    	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);
         if($scope.offices.smspassword)  
@@ -253,11 +255,7 @@ $scope.save = function () {
   };
 
   $scope.update = () => {
-  	    $scope.offices.filesize=filesize;
-  	    $scope.offices.logo	= $scope.offices.logo.replace('data:image/jpeg;base64,','');
-		$scope.offices.logo	= $scope.offices.logo.replace('data:image/png;base64,','');
-		$scope.offices.extension=extension;
-		alert($scope.offices.extension)
+  	   
 	  if($scope.officeForm.$invalid)
           return false;
                 
