@@ -122,7 +122,7 @@ $scope.showFile = (data, successCallback, errorCallback)=>{
                 errorCallback(xhr.responseJSON);
             }            
         });
-	}
+	} 
 $scope.save = function () {
 
 			
