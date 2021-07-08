@@ -42,8 +42,7 @@ input {
 
 									<option value="${item.key}">${item.value}</option>
 								</core:forEach>
-							</select>
-
+							</select> <span id="officecodeMsg" class="formErrorContent"></span>
 						</div>
 
 					</div>
@@ -58,11 +57,11 @@ input {
 								ng-options="T.key as T.value for T in stakeholdersList"
 								ng-change="getValidity(usercode)">
 								<option value="">--Select--</option>
-								
+
 							</select>
 
 						</div>
-
+						<span id="usercodeMsg" class="formErrorContent"></span>
 					</div>
 
 				</div>
@@ -74,16 +73,17 @@ input {
 
 							<tr>
 								<td><label> Extend To : </label></td>
-								<td>
+								<td><span id="extendedtoMsg" class="formErrorContent"></span>
 									<div class="col-sm-12 icons">
 										<i class="fas fa-calendar calendar"></i><input type="text"
 											id="extendedto" name="extendedto" ng-model="extendedto"
 											class="form-control" autocomplete="off" />
 									</div>
+									
 								</td>
 								<td colspan="2" align="center"><button
 										class="btn btn-primary"
-										ng-click="updateStakeholderValidity(extendedto,usercode)">Submit</button></td>
+										ng-click="updateStakeholderValidity()">Submit</button></td>
 							</tr>
 						</table>
 					</div>

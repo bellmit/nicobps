@@ -3,7 +3,7 @@ var app = angular.module("CommonApp", []);
 app.controller('extendvalidityCtrl', function($scope, $compile, $timeout) {
 
 
- $scope.stakeholdersList = [];
+	$scope.stakeholdersList = [];
 
 	$scope.getValidity = function(criteria) {
 		$("#extendedto").datepicker("destroy");
@@ -36,24 +36,24 @@ app.controller('extendvalidityCtrl', function($scope, $compile, $timeout) {
 
 
 		$("#extendedto").datepicker("destroy");
-		 
+
 		var param = {
 			"officecode": $scope.officecode,
 
 		};
-		
+
 		jQuery.ajax({
 			url: "./listStakeholders.htm",
 			dataType: 'json',
 			data: param,
 			type: "POST",
 			success: function(data) {
-	
-				$timeout(() =>{
-						$scope.stakeholdersList = data.listStakeholders;
-				
-				},0);
-					 
+
+				$timeout(() => {
+					$scope.stakeholdersList = data.listStakeholders;
+
+				}, 0);
+
 
 			},
 			error: function(request, status, error) {
@@ -115,38 +115,71 @@ app.controller('extendvalidityCtrl', function($scope, $compile, $timeout) {
 		});
 	};
 
-	$scope.updateStakeholderValidity = (extendedto, usercode) => {
 
-		$scope.extendedto = extendedto;
-		$scope.usercode = usercode;
-		
+
+	$scope.updateStakeholderValidity = () => {
+
+
+
+
 		var param = {
 			"usercode": $scope.usercode,
 			"extendedto": $scope.extendedto,
 			"officecode": $scope.officecode2,
+			"validto": $scope.validto,
+			"maxdate": $scope.formatDate($scope.maxvaliddate),
 		};
 
+
+
+		if (param.extendedto == " " || param.extendedto == null) {
+			showMsg("extendedto", "Please Select Date");
+			return false;
+		} else {
+			showMsg("extendedto", "");
+		}
+
+
+
+		if (param.usercode == " " || param.usercode == null) {
+			showMsg("usercode", "Please Select user");
+			return false;
+		} else {
+			showMsg("usercode", "");
+		}
+		if (param.officecode == " " || param.officecode == null) {
+			showMsg("officecode", "Please Select Office");
+			return false;
+		} else {
+			showMsg("officecode", "");
+		}
+		if (param.extendedto == " " || param.extendedto == null) {
+			showMsg("extendedto", "Please Select Date");
+			return false;
+		} else {
+			showMsg("extendedto", "");
+		}
 		jQuery.ajax({
 			type: 'POST',
 			url: "./extendValidity.htm",
 			dataType: "json",
 			data: param,
 			success: function(data) {
-
-				if (data == true) {
+				
+				if (data == "1") {
 					alert("Validity has been extended!");
 					jQuery.fancybox.close();
 					$("#extendedto").datepicker("destroy");
 					$scope.getValidity();
 				} else {
-					alert("Something is wrong!!Validity could not be extended!");
+					alert("Could not process data!Something is wrong!!");
 
 				}
 
 
 			},
-			error: function(e) {
-
+			error: function(request, status, error) {
+				alert("* Error : " + request.responseText);
 			}
 		});
 	};
@@ -164,23 +197,25 @@ app.controller('extendvalidityCtrl', function($scope, $compile, $timeout) {
 		$scope.b = validto.split(/\D/);
 
 		$scope.reverserdate = $scope.b.reverse().join('-');
-		$scope.newvaliddate = new Date($scope.reverserdate); // Now
-		$scope.newvaliddate.setDate($scope.newvaliddate.getDate() + 30); // Set now + 30 days as the new date
+		$scope.setdatepickerdate = new Date($scope.reverserdate); // Now
+		$scope.setdatepickerdate.setDate($scope.setdatepickerdate.getDate() + 1);
+		$scope.maxvaliddate = new Date($scope.reverserdate);
+		$scope.maxvaliddate.setDate($scope.maxvaliddate.getDate() + 30); // Set now + 30 days as the new date
 		$scope.dateFormat = "dd-mm-yy";
 
-		$scope.extendedto = jQuery("#extendedto").datepicker(
+		$scope.extendedtodate = jQuery("#extendedto").datepicker(
 			{
 
-				defaultDate: $scope.validto,
+				defaultDate: $scope.setdatepickerdate,
 				changeMonth: true,
 				changeYear: true,
 				dateFormat: $scope.dateFormat,
-				minDate: $scope.validto,
-				maxDate: $scope.newvaliddate
+				minDate: $scope.setdatepickerdate,
+				maxDate: $scope.maxvaliddate
 
 			});
 
-		$scope.extendedto = "";
+
 		jQuery.fancybox.close();
 		jQuery.fancybox({
 			href: '#dateTable',
@@ -199,7 +234,15 @@ app.controller('extendvalidityCtrl', function($scope, $compile, $timeout) {
 
 
 
-
+	$scope.formatDate = function(d) {
+		$scope.date = new Date(d)
+		$scope.dd = $scope.date.getDate();
+		$scope.mm = $scope.date.getMonth() + 1;
+		$scope.yyyy = $scope.date.getFullYear();
+		if ($scope.dd < 10) { $scope.dd = '0' + $scope.dd }
+		if ($scope.mm < 10) { $scope.mm = '0' + $scope.mm };
+		return $scope.d = $scope.dd + '-' + $scope.mm + '-' + $scope.yyyy
+	}
 
 
 

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.services.ServiceStakeholderInterface;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
+import obps.validators.ExtendValidityValidatorInterface;
 import obps.validators.StakeHolderValidatorInterface;
 
 @Controller
@@ -29,6 +31,10 @@ public class ControllerStakeholder {
 	private ServiceStakeholderInterface SSI;
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
+	
+	@Autowired
+	private ExtendValidityValidatorInterface extendValidatorInterface;
+	
 	private List<String> applicationCalled = new LinkedList<String>();
 
 	@Autowired
@@ -126,14 +132,15 @@ public class ControllerStakeholder {
 	public @ResponseBody String updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer toprocesscode, String remarks, ModelMap model) {
 		String res = "";
-		res = stakeHolderValidatorInterface.validateStackHolder(officecode, applicationcode, usercode, toprocesscode, remarks);
-		if (res!="")
+		res = stakeHolderValidatorInterface.validateStackHolder(officecode, applicationcode, usercode, toprocesscode,
+				remarks);
+		if (res != "")
 			return res;
 		else {
 			if (SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks))
 				res = "success";
 			else
-				res="false";
+				res = "false";
 		}
 
 		return res;
@@ -145,7 +152,6 @@ public class ControllerStakeholder {
 				Integer.valueOf(params.get("currentprocesscode").toString()));
 	}
 
-	
 	@GetMapping("/extendstakeholdervalidity.htm")
 	public String extendstakeholdervalidity(Model model, HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
@@ -158,15 +164,16 @@ public class ControllerStakeholder {
 	@PostMapping(value = "/listStakeholders.htm")
 	public @ResponseBody Map<String, Object> listStakeholders(HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
-		Integer usercode=Integer.valueOf(req.getSession().getAttribute("usercode").toString());
-		
+		Integer usercode = Integer.valueOf(req.getSession().getAttribute("usercode").toString());
+
 		Map<String, Object> data = new LinkedHashMap<>();
-if(usercode==1) {
-	data.put("listStakeholders", serviceUtilInterface.listStakeholdersMain(Integer.parseInt(params.get("officecode"))));
-}else {
-	data.put("listStakeholders", serviceUtilInterface.listStakeholders(Integer.parseInt(params.get("officecode"))));
-}
-	
+		if (usercode == 1) {
+			data.put("listStakeholders",
+					serviceUtilInterface.listStakeholdersMain(Integer.parseInt(params.get("officecode"))));
+		} else {
+			data.put("listStakeholders",
+					serviceUtilInterface.listStakeholders(Integer.parseInt(params.get("officecode"))));
+		}
 
 		return data;
 	}
@@ -181,13 +188,37 @@ if(usercode==1) {
 	}
 
 	@PostMapping("/extendValidity.htm")
-	public @ResponseBody String extendValidity(HttpServletRequest req,@RequestParam Map<String, String> params) {
-		String res="false";
-		Integer extendedby=Integer.valueOf(req.getSession().getAttribute("usercode").toString());
-			if(SSI.extendValidity(Short.parseShort(params.get("officecode")), Integer.parseInt(params.get("usercode")), params.get("extendedto"),extendedby) )
-			{	res= "true";
+	public ResponseEntity<?> extendValidity(HttpServletRequest req, @RequestParam Map<String, String> params) {
+		String res = "false";
+		Integer extendedby = Integer.valueOf(req.getSession().getAttribute("usercode").toString());
+		if(!extendValidatorInterface.validateUsercode((String)params.get("usercode"))) {
+			return ResponseEntity.badRequest().body(new String("Invalid User!!"));
 		}
+		if(!extendValidatorInterface.validateOfficecode((String)params.get("officecode"))) {
+			return ResponseEntity.badRequest().body(new String("Invalid Office!!"));
+		}
+		if(!extendValidatorInterface.validatedate((String)params.get("extendedto"))) {
+			return ResponseEntity.badRequest().body(new String("Invalid Extended to Date!!"));
+		}
+		if(!extendValidatorInterface.validatedate((String)params.get("validto"))) {
+			return ResponseEntity.badRequest().body(new String("Invalid Valid to Date!!"));
+		}
+		if(!extendValidatorInterface.validateUsercode(extendedby.toString())) {
+			return ResponseEntity.badRequest().body(new String("Invalid User!!"));
+		}
+		if(!extendValidatorInterface.validateExtendedtoDate(params.get("validto"), params.get("extendedto"),params.get("maxdate"))) {
+			return ResponseEntity.badRequest().body(new String("Check Validity Days!!"));
+		}
+		
+		if (SSI.extendValidity(Short.parseShort(params.get("officecode")), Integer.parseInt(params.get("usercode")),
+				params.get("extendedto"), extendedby)) {
+			return ResponseEntity.ok(new String("1"));
+		}else {
+			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+		}
+		
+			
+		
 
-	return res;
-}
+	}
 }

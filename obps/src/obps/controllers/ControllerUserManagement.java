@@ -526,5 +526,13 @@ public class ControllerUserManagement {
 		}
 		return response;
 	}
+	
+	@GetMapping("/userwards.htm")
+	public String extendstakeholdervalidity(Model model, HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
 
+		model.addAttribute("offices", serviceUtilInterface.listUserOffices());
+
+		return "initialization/userwards";
+	}
 }
