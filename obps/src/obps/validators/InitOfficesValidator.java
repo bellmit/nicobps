@@ -1,6 +1,7 @@
 package obps.validators;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -156,5 +157,30 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	     }
 		return response;
 	}
+	@Override
+	public String validateOfficesPaymentModes(List<Map<String, Object>> param) {
+		String response="";
+
+		Integer officecode=0;
+		for (Map<String, Object> up : param) {
+			if(up.get("officecode")!=null)
+				officecode = (Integer) up.get("officecode");
+			if(up.get("officecode")==null || officecode==0) { 
+				response = "officecodenull";
+				return response;
+			}
+			
+			if(((Map<String, Object>) up.get("paymentmodecode")).get("paymentmodecode")==null) {
+				response = "paymentmodecodenull";
+				return response;
+			}
+			System.out.println(up.get("officecode"));
+			System.out.println("response="+response);
+//			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
+		}
+		return response;
+	}
 
 }
+
+

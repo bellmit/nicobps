@@ -306,10 +306,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 				slno=getSlno()+1;
 			else
 				slno=slno+1;
-			sql = "INSERT INTO masters.modulesenclosures(slno,modulecode, enclosurecode) VALUES (?, ?,?)";
+			sql = "INSERT INTO masters.modulesenclosures(slno,modulecode, enclosurecode,processcode) VALUES (?, ?,?,?)";
 			for (Map<String,Object> up : modulesenclosures) {
 
-				jdbcTemplate.update(sql,slno, up.get("modulecode"), ((Map<String,Object>)up.get("enclosurecode")).get("enclosurecode"));
+				jdbcTemplate.update(sql,slno, up.get("modulecode"), ((Map<String,Object>)up.get("enclosurecode")).get("enclosurecode"),1);
 				slno=slno+1;
 			}
 			response = true;

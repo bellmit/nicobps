@@ -38,7 +38,14 @@ app.controller("initofficespaymentmodesCtrl", [
         // dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-          alert(response);
+          if(response=="paymentmodecodenull")
+          	alert("Please Select atleast 1 Payment Method");
+          else if(response=="officecodenull")
+          	alert("Please Select atleast 1 Office");
+          else if(response=='Mapped')
+          	alert("Mapped");
+          else if(response=='Failed')
+          	alert("Failed");
           $scope.reset();
           $scope.listOffices();
           
