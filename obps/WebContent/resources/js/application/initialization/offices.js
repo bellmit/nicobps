@@ -32,7 +32,8 @@ const addFile=()=>{
 			var scope = angular.element(jQuery("#officesCtrl")).scope();
 			scope.$apply(function() {               	            	
 				scope.offices.logo	= (reader.result).replace('data:image/jpeg;base64,','');
-				scope.offices.logo	=(reader.result).replace('data:image/png;base64,','');
+				scope.offices.logo	= scope.offices.logo.replace('data:image/jpg;base64,','');
+				scope.offices.logo	= scope.offices.logo.replace('data:image/png;base64,','');
 				scope.offices.extension=extension;
 				scope.offices.filesize=filesize;
 				
@@ -40,6 +41,7 @@ const addFile=()=>{
 			});	
 		}, false);		
 	  }	   
+
 }
 app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonInitFactory', 'commonInitService', 
 	function ($scope, $sce, $compile,$timeout,commonInitFactory, commonInitService) {
@@ -256,7 +258,7 @@ $scope.save = function () {
   $scope.update = () => {
 	  if($scope.officeForm.$invalid)
           return false;
-                
+             
 if($scope.offices.emailidpassword)  { 	
     	
    	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);}

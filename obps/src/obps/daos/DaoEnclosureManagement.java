@@ -186,6 +186,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		byte [] logo = null;
 		try 
 		{
+			System.out.println(offices);
 			if(offices.get("logo")!=null) {
 				 logo = Base64.getDecoder().decode((String)offices.get("logo") );
 			}
