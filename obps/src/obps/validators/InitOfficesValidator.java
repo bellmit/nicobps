@@ -126,13 +126,12 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	     
 	     if(emailidpassword.length()>255)
 	    	 response="10";
-	     System.out.println(param.get("extension"));
+	    
 	     String ext="";
 	     Integer size=0;
-	     System.out.println(param.get("extension"));
-	     System.out.println(param);
+	     
 	     if(param.get("logo")!=null) {
-	    	  if(param.get("extension")!=null||param.get("extension")!="")
+	    	  if(param.get("extension")!=null)
 	    	  {	
 	    		  ext=((String) param.get("extension")).trim().toLowerCase();
 	    		  System.out.println(ext);
@@ -146,7 +145,7 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	    		 else
 	    			 response = "filetypeerror";
 	       	  }
-	    	  if(param.get("filesize")!=null||param.get("filesize")!="") {
+	    	  if(param.get("filesize")!=null) {
 	    		  size=(Integer) param.get("filesize");
 	    		  float res = size/1024;
 	    		  res=res/1024;
