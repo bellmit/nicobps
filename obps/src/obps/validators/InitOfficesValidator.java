@@ -129,6 +129,8 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	     System.out.println(param.get("extension"));
 	     String ext="";
 	     Integer size=0;
+	     System.out.println(param.get("extension"));
+	     System.out.println(param);
 	     if(param.get("logo")!=null) {
 	    	  if(param.get("extension")!=null||param.get("extension")!="")
 	    	  {	

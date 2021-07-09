@@ -14,8 +14,7 @@ const addFile=()=>{
 	
 	  var file = document.querySelector("#logo").files[0];
 	  filesize = file.size;
-       
-            		  
+      
 	  if (file) 
 	  {
 	  	var filename = $("#logo").val();
@@ -32,10 +31,10 @@ const addFile=()=>{
 		{				
 			var scope = angular.element(jQuery("#officesCtrl")).scope();
 			scope.$apply(function() {               	            	
-//				scope.offices.logo	= (reader.result).replace('data:image/jpeg;base64,','');
-				$scope.offices.logo	= $scope.offices.logo.replace('data:image/png;base64,','');
-				$scope.offices.extension=extension;
-				$scope.offices.filesize=filesize;
+				scope.offices.logo	= (reader.result).replace('data:image/jpeg;base64,','');
+				scope.offices.logo	=(reader.result).replace('data:image/png;base64,','');
+				scope.offices.extension=extension;
+				scope.offices.filesize=filesize;
 				
 				
 			});	
@@ -68,6 +67,7 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
        return $sce.trustAsHtml(post);
  };
  $scope.edit = function (officecode) {
+		 jQuery('#enclosureWindow').html("");
  		jQuery('#viewlogo').show()
  		logocode=officecode;
 		
@@ -107,11 +107,11 @@ $scope.showFile = (data, successCallback, errorCallback)=>{
             success: function (response) {
            
 			if(response!=""){
-				jQuery('#enclosureWindow').html('<iframe src="data:' + detectMimeType(response) + ';base64,' + response + '"' +
-							'style="width:100%;height:100%;" frameborder="0"></iframe>');
+				jQuery('#enclosureWindow').html('<img src="data:' + detectMimeType(response) + ';base64,' + response + '"' +
+							'style="width:150px;height:150px;" frameborder="0"/>');
 			}
 			else
-				jQuery('#enclosureWindow').html('<label>Logo Not Uploaded</label>');
+				jQuery('#enclosureWindow').html('<label style="color:red">Logo Not Uploaded</label>');
           	
             	
             },
@@ -124,8 +124,7 @@ $scope.showFile = (data, successCallback, errorCallback)=>{
         });
 	} 
 $scope.save = function () {
-
-			
+		
 				
    		if($scope.offices.emailidpassword)
    	    $scope.offices.emailidpassword=SHA256($scope.offices.emailidpassword);
@@ -255,7 +254,6 @@ $scope.save = function () {
   };
 
   $scope.update = () => {
-  	   
 	  if($scope.officeForm.$invalid)
           return false;
                 

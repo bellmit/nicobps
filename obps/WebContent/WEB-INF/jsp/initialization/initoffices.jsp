@@ -141,7 +141,7 @@
 							<td>			
 							<button id="viewlogo" ng-click="showFile(offices.username)" >View Logo</button>
 							</td>
-							<td>
+							<td rowspan="2">
 							 <div class="col-md-12" id="enclosureWindow"></div>
 <!-- 			                   <a href="#" target="_blank" ng-click="showFile()">View Logo</a> -->
 						 										
