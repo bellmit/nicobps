@@ -30,6 +30,7 @@ import obps.models.Userlogin;
 import obps.util.application.CommonMap;
 import obps.util.application.DaoUtil;
 import obps.util.application.DaoUtilInterface;
+import obps.util.application.ServiceUtilInterface;
 
 @Transactional
 @Repository("daoEnclosureManagement")
@@ -37,7 +38,8 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
+	@Autowired
+	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 	private DaoUtilInterface daoUtilInterface;
 
@@ -289,20 +291,26 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	@Override
 	public boolean mapModuleEnclosures(List<Map<String, Object>> modulesenclosures) {
 		
-		
+		Long slno=(long) 0;
 		
 		boolean response = false;
 		try 
-		{
+		{	
+
 			String sql = "DELETE From masters.modulesenclosures WHERE modulecode=? ";
 			if (jdbcTemplate.update(sql, modulesenclosures.get(0).get("modulecode")) < 0) {
 				return false;
 			}
 			/////////////////////////////////////
-			sql = "INSERT INTO masters.modulesenclosures(modulecode, enclosurecode) VALUES (?, ?)";
+			if(getSlno()>0)
+				slno=getSlno()+1;
+			else
+				slno=slno+1;
+			sql = "INSERT INTO masters.modulesenclosures(slno,modulecode, enclosurecode) VALUES (?, ?,?)";
 			for (Map<String,Object> up : modulesenclosures) {
 
-				jdbcTemplate.update(sql, up.get("modulecode"), ((Map<String,Object>)up.get("enclosurecode")).get("enclosurecode"));
+				jdbcTemplate.update(sql,slno, up.get("modulecode"), ((Map<String,Object>)up.get("enclosurecode")).get("enclosurecode"));
+				slno=slno+1;
 			}
 			response = true;
 		} catch (Exception ex) {
@@ -398,8 +406,12 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	}
 	
 	
-	
 
+	private Long getSlno() {
+		String sql = "SELECT MAX(slno) FROM masters.modulesenclosures";		
+		return serviceUtilInterface.getMaxValue(sql);	
+		
+	}
 	
 	
 	
