@@ -142,7 +142,7 @@ public class DaoUploadBpaEnclosuers implements DaoUploadBpaEnclosuersInterface {
 //						toprocesscode = (Integer) tmap.get("toprocesscode");
 //					}
 //					
-//					response = SUI.updateApplicationflowremarks(applicationcode, BPAMODULECODE, fromprocesscode,toprocesscode, usercode, null, "Enclosueres Uploaded");
+//					response = SUI.updateApplicationflowremarks(applicationcode, BPAMODULECODE, fromprocesscode,toprocesscode, usercode, null, "Application Submitted");
 //					if (!response)
 //						throw new Exception("Error: Failed to update application	 flow");
 //				}
@@ -198,7 +198,7 @@ public class DaoUploadBpaEnclosuers implements DaoUploadBpaEnclosuersInterface {
 						toprocesscode = (Integer) tmap.get("toprocesscode");
 					}
 					
-					response = SUI.updateApplicationflowremarks(applicationcode, BPAMODULECODE, fromprocesscode,toprocesscode, usercode, null, "Enclosueres Uploaded");
+					response = SUI.updateApplicationflowremarks(applicationcode, BPAMODULECODE, fromprocesscode,toprocesscode, usercode, null, "Application Submitted");
 					if (!response)
 						throw new Exception("Error: Failed to update application	 flow");
 				}
