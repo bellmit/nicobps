@@ -1,11 +1,10 @@
 package obps.services;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import obps.daos.DaoUploadBpaEnclosuersInterface;
+import obps.models.BpaEnclosures;
 import obps.util.application.ServiceUtilInterface;
 
 @Service("ServiceUploadBpaEnclosuers")
@@ -30,7 +29,7 @@ public class ServiceUploadBpaEnclosuers implements ServiceUploadBpaEnclosuersInt
 	}
 
 	@Override
-	public boolean submitBpaEnclosureDetails(Map<String, Object> param) {
-		return DaoUploadBpaEnclosuersInterface.submitBpaEnclosureDetails(param);
+	public boolean submitBpaEnclosureDetails(BpaEnclosures bpaenclosures) {
+		return DaoUploadBpaEnclosuersInterface.submitBpaEnclosureDetails(bpaenclosures);
 	}	
 }

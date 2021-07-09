@@ -70,6 +70,8 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode);
 
+	public List<CommonMap> listBpaEnclosures(final Short modulecode, String applicationcode);
+
 	public List<CommonMap> listOccupancies();
 
 	public List<CommonMap> listSubOccupancies();
@@ -118,9 +120,10 @@ public interface ServiceUtilInterface {
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode);
 
 	public List<Map<String, Object>> getLicensee(Integer usercode);
-	
 
-	public	List<Map<String, Object>> listStakeholders(Integer officecode);
-	public	List<Map<String, Object>> listStakeholdersMain(Integer officecode);
-	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto,Integer extendedby);
+	public List<Map<String, Object>> listStakeholders(Integer officecode);
+
+	public List<Map<String, Object>> listStakeholdersMain(Integer officecode);
+
+	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
 }
