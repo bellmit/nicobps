@@ -13,7 +13,17 @@
 				<%@include file="../common/menutop.jsp"%>
 				<div class="container-fluid">
 					<form name="bpaform">
-						<ng-include src="'commonprocessingdetails.htm'"></ng-include>
+						<div class="card-body">
+							<label class="h4">Application details</label>
+							<label class="h6 alert alert-dark">Application No. <core:out value="${applicationcode}"></core:out></label>
+						</div>
+						<task-status></task-status>
+						<basic-details></basic-details>
+						<scrutiny-details></scrutiny-details>
+						<owner-details></owner-details>
+						<document-details></document-details>
+						<site-report-details></site-report-details>
+						<file-view-modal></file-view-modal>
 						<common-processing-action></common-processing-action>
 					</form>
 				</div>

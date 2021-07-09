@@ -401,5 +401,24 @@ public class DaoBPA implements DaoBPAInterface{
 		permitno = "BPA"+applicationcode;
 		return permitno;	
 	}
+	
+	void setNextProcessingUrl(String applicationcode, Integer usercode, Integer fromprocesscode,
+			String processFlowFlag, HashMap<String, Object> response) {
+		CommonMap nextProcess = new CommonMap();
+		String sql = "SELECT pageurl as key, processname as value      " 
+				+ "FROM masters.processflow PF        "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
+				+ "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
+				+ "INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode       "
+				+ "WHERE UP.usercode = ? AND PF.modulecode = ? AND PF.fromprocesscode = ?   " 
+				+ "AND PF.processflowstatus = ?";
+		List<CommonMap> results = SUI.listCommonMap(sql,
+				new Object[] { usercode, BPAConstants.MODULE_CODE, fromprocesscode, processFlowFlag});
+		if(results != null && !results .isEmpty()) {
+			nextProcess = results.get(0);
+			nextProcess.setValue1(applicationcode);
+		}
+		response.put("nextProcess", nextProcess);
+	}
 }
 

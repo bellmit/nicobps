@@ -34,7 +34,7 @@ app.controller("CommonCtrl", [
     $scope.Relationshiptypes = [];
     $scope.Salutations = [];
 
-    /*GET*/
+    /* GET */
     BS.getEdcrDetails((response) => {
       let edcr = new EdcrDetail();
       $scope.EDCR = edcr.init(response);
@@ -72,7 +72,7 @@ app.controller("CommonCtrl", [
     };
     $scope.listSalutations();
 
-    /*ACTION*/
+    /* ACTION */
     $scope.addOwner = () => {
       if($scope.BPA.ownershipsubtype == "Multiple Owner")
         $scope.BPA.ownerdetails.push(new OwnerDetail());
@@ -120,13 +120,11 @@ app.controller("CommonCtrl", [
       }
 
       bpa.plotgiscoordinates.$touched = true;
-      /*if (
-        bpa.plotgiscoordinates.$modelValue == null ||
-        bpa.plotgiscoordinates.$modelValue == ""
-      ) {
-        bpa.plotgiscoordinates.$error.invalid = true;
-        flag = false;
-      }*/
+      /*
+		 * if ( bpa.plotgiscoordinates.$modelValue == null ||
+		 * bpa.plotgiscoordinates.$modelValue == "" ) {
+		 * bpa.plotgiscoordinates.$error.invalid = true; flag = false; }
+		 */
 
       bpa.officelocationcode.$touched = true;
       if (
@@ -139,44 +137,34 @@ app.controller("CommonCtrl", [
       }
 
       bpa.plotno.$touched = true;
-      /*if (
-        bpa.plotno.$modelValue == null ||
-        bpa.plotno.$modelValue == "" ||
-        bpa.plotno.$modelValue == "-1"
-      ) {
-        bpa.plotno.$error.invalid = true;
-        flag = false;
-      }*/
+      /*
+		 * if ( bpa.plotno.$modelValue == null || bpa.plotno.$modelValue == "" ||
+		 * bpa.plotno.$modelValue == "-1" ) { bpa.plotno.$error.invalid = true;
+		 * flag = false; }
+		 */
 
       bpa.holdingno.$touched = true;
-      /*if (
-        bpa.holdingno.$modelValue == null ||
-        bpa.holdingno.$modelValue == "" ||
-        bpa.holdingno.$modelValue == "-1"
-      ) {
-        bpa.holdingno.$error.invalid = true;
-        flag = false;
-      }*/
+      /*
+		 * if ( bpa.holdingno.$modelValue == null || bpa.holdingno.$modelValue == "" ||
+		 * bpa.holdingno.$modelValue == "-1" ) { bpa.holdingno.$error.invalid =
+		 * true; flag = false; }
+		 */
 
       bpa.landregistrationno.$touched = true;
-      /*if (
-        bpa.landregistrationno.$modelValue == null ||
-        bpa.landregistrationno.$modelValue == "" ||
-        bpa.landregistrationno.$modelValue == "-1"
-      ) {
-        bpa.landregistrationno.$error.invalid = true;
-        flag = false;
-      }*/
+      /*
+		 * if ( bpa.landregistrationno.$modelValue == null ||
+		 * bpa.landregistrationno.$modelValue == "" ||
+		 * bpa.landregistrationno.$modelValue == "-1" ) {
+		 * bpa.landregistrationno.$error.invalid = true; flag = false; }
+		 */
 
       bpa.landregdetails.$touched = true;
-      /*if (
-        bpa.landregdetails.$modelValue == null ||
-        bpa.landregdetails.$modelValue == "" ||
-        bpa.landregdetails.$modelValue == "-1"
-      ) {
-        bpa.landregdetails.$error.invalid = true;
-        flag = false;
-      }*/
+      /*
+		 * if ( bpa.landregdetails.$modelValue == null ||
+		 * bpa.landregdetails.$modelValue == "" ||
+		 * bpa.landregdetails.$modelValue == "-1" ) {
+		 * bpa.landregdetails.$error.invalid = true; flag = false; }
+		 */
 
       bpa.ownershiptypecode.$touched = true;
       if (
@@ -283,7 +271,7 @@ app.controller("CommonCtrl", [
       return flag;
     };
 
-    /*CREATE*/
+    /* CREATE */
     $scope.save = () => {
       let BPA = {}, valid = false;
       BPA = $scope.BPA.init($scope.BPA);
@@ -299,10 +287,14 @@ app.controller("CommonCtrl", [
           $scope.serverResponseSuccess = true;
           try{
             $scope.serverMsg += "\nNext Process: "+success.nextProcess.value;
-            $timeout(() => {
-              let url = success.nextProcess.key+"?applicationcode="+success.nextProcess.value1;
-              $window.location.href = url;
-            },Timeout.Reload);
+            if (success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != '') {
+            	$timeout(() => {
+                    let url = success.nextProcess.key+"?applicationcode="+success.nextProcess.value1;
+                    $window.location.href = url;
+                  },Timeout.Reload);
+            } else
+                $timeout(() => { $window.location.reload(); }, Timeout.Reload);
+            
           }catch(e){}
           
         }else{
