@@ -68,6 +68,9 @@ app.service("bpaService", [
       listBPApplications: async function (callback, data = "") {
         CUS.getData("./listbpapplications.htm", data, callback);
       },
+      listBPAConditions: async function (callback, data = "") {
+    	  CUS.getData("./listbpaconditions.htm", data, callback);
+      },
       listNextProcessingUsers: async function (callback, data = "") {
         CUS.getData("./listNextProcessingUsers.htm", data, callback);
       },

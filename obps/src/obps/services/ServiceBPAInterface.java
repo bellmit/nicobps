@@ -6,6 +6,7 @@ import java.util.Map;
 
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaApproval;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.util.application.CommonMap;
@@ -31,6 +32,8 @@ public interface ServiceBPAInterface {
 	List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE);
 
 	List<Map<String, Object>> listBPApplications(Integer USERCODE);
+	
+	List<Map<String, Object>> listBPAConditions(String applicationcode);
 
 	List<Map<String, Object>> listRejectedApplications(Integer USERCODE);
 
@@ -48,8 +51,6 @@ public interface ServiceBPAInterface {
 
 	Map<String, Object> getBPAFee(Integer uSERCODE, String applicationcode, Integer feetypecode);
 
-//	Map<String, Object> getApplicationFee(Integer USERCODE, String applicationcode, Integer bpaApplicationfeeCode);
-
 	Map<String, Object> getCurrentProcessTaskStatus(Integer USERCODE, String applicationcode);
 
 	Map<String, Object> getEdcrDetails(Integer USERCODE, String edcrnumber);
@@ -58,11 +59,6 @@ public interface ServiceBPAInterface {
 
 	Map<String, Object> getEdcrDetailsV2(Integer USERCODE, String appcode);
 
-	/*
-	 * Map<String, Object> getPermitFee(Integer USERCODE, String applicationcode,
-	 * Integer bpaPermitfeeCode);
-	 */
-
 	boolean checkActionAccessGrantStatus(Integer USERCODE, String appcode);
 
 	boolean checkIfBuildingPermitAlreadyApplied(Integer USERCODE, String edcrnumber);
@@ -70,7 +66,7 @@ public interface ServiceBPAInterface {
 	boolean checkPageAccessGrantStatus(Integer USERCODE, String appcode, String pathurl);
 
 	/* CREATE */
-	boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
+	boolean approveBPApplication(BpaApproval data, HashMap<String, Object> response);
 
 	boolean processAppPayment(Integer USERCODE, BpaApplicationFee bpa, HashMap<String, Object> response);
 

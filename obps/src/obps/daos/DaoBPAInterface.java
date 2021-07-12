@@ -4,12 +4,13 @@ import java.util.HashMap;
 
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaApproval;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 
 public interface DaoBPAInterface {
 
-	boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
+	boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response);
 
 	boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 

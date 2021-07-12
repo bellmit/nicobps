@@ -138,7 +138,6 @@ app.directive("commonProcessingAction",["$compile", "bpaService", function($comp
 		link: action
 	}
 	function action(scope, elem, attr) {
-		console.log("APPCODE : "+APPCODE);
 		scope.qp = 'commonprocessingaction.htm?applicationcode='+APPCODE;
 		const templ = '<ng-include src="\'commonprocessingaction.htm?applicationcode='+APPCODE+'\'"></ng-include>'; 
 		const compiledTempl = $compile(templ)(scope);

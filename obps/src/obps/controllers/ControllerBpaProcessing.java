@@ -1,6 +1,7 @@
 /*@author Decent Khongstia*/
 package obps.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import obps.models.BpaApproval;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.services.ServiceBPAInterface;
@@ -350,6 +352,12 @@ public class ControllerBpaProcessing {
 		return SBI.listBPApplications(usercode);
 	};
 
+	@GetMapping(value = "/listbpaconditions.htm")
+	public @ResponseBody List<Map<String, Object>> listBPAConditions(
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.listBPAConditions(applicationcode);
+	};
+
 	@GetMapping(value = "/listRejectedApplications.htm")
 	public @ResponseBody List<Map<String, Object>> listRejectedApplications(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
@@ -373,14 +381,14 @@ public class ControllerBpaProcessing {
 	/* CREATE */
 	@PostMapping(value = "/approvebpapplication.htm")
 	public ResponseEntity<HashMap<String, Object>> approveApplication(
-			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaApproval bpa, 
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
-		data.setFromusercode(usercode);
-		if (SBI.approveBPApplication(data, response))
+		bpa.getProcessflow().setFromusercode(usercode);
+		if (SBI.approveBPApplication(bpa, response))
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

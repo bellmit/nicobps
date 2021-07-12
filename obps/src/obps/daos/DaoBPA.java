@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaApproval;
 import obps.models.BpaOwnerDetail;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
@@ -42,19 +43,40 @@ public class DaoBPA implements DaoBPAInterface{
 	}
 	
 	@Override
-	public boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+	public boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response) {
 		boolean status = false;
 		try {
-			String sql = "INSERT INTO nicobps.bpaapproveapplications(" + 
+			String applicationcode = bpa.getProcessflow().getApplicationcode();
+			List<Object[]> params = new ArrayList<>();
+			List<CommonMap> conditions = bpa.getConditions();
+			Object [] param;
+			
+			String sql = "INSERT INTO nicobps.bpaconditions( " + 
+					"            bpaenclosurecode, applicationcode, conditiondescription, " + 
+					"            entrydate) " + 
+					"    VALUES ("
+					+ "				(SELECT COALESCE(MAX(bpaenclosurecode), 0)+1 FROM nicobps.bpaconditions), "
+					+ "				?, ?, now()"
+					+ "		)"; 
+			conditions.forEach(c -> {
+				params.add(new Object[] {
+					applicationcode, c.getValue()
+				});
+			});
+			status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
+			if(!status) throw new Exception("Failed to insert application conditions");
+			
+			sql = "INSERT INTO nicobps.bpaapproveapplications(" + 
 					"    applicationcode, permitnumber, remarks, usercode, entrydate)" + 
 					"VALUES (?, ?, ?, ?, now())";
-			String permitno = generateBuildingPermitNumber(data.getApplicationcode());
+			String permitno = generateBuildingPermitNumber(bpa.getProcessflow().getApplicationcode());
 			status = jdbcTemplate.update(sql,
-					new Object[] { data.getApplicationcode(), permitno, data.getRemarks(), data.getFromusercode() }) > 0;
+					new Object[] { applicationcode, permitno, bpa.getProcessflow().getRemarks(), 
+							bpa.getProcessflow().getFromusercode() }) > 0;
 			if(!status) throw new Exception("Failed to update application status");
 			
-			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null,
-					data.getRemarks(), data.getTousercode(), response);
+			status = commonProcessingFunction(applicationcode, bpa.getProcessflow().getFromusercode(), null,
+					bpa.getProcessflow().getRemarks(), bpa.getProcessflow().getTousercode(), response);
 			if(!status) throw new Exception("Failed to update application flow");
 
 			response.put("code", HttpStatus.CREATED.value());

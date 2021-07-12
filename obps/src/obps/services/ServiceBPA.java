@@ -21,6 +21,7 @@ import com.jayway.jsonpath.JsonPath;
 import obps.daos.DaoBPAInterface;
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaApproval;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
 import obps.util.application.BPAConstants;
@@ -202,6 +203,21 @@ class ServiceBPA implements ServiceBPAInterface {
 		return SUI.listGeneric(sql, new Object[] {USERCODE});
 	}
 	
+	@Override
+	public List<Map<String, Object>> listBPAConditions(String applicationcode) {
+		String sql = "SELECT C.conditioncode, C.conditiondescription, OC.checked   " 
+				+ "FROM masters.conditions C  "
+				+ "INNER JOIN masters.officebpaconditions OC ON OC.conditioncode = C.conditioncode  "
+				+ "WHERE OC.enabled = 'Y'  " 
+				+ "AND OC.officecode = ?";
+		Integer officecode = getApplicationOfficecode(applicationcode);
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] {officecode}); 
+		if(list != null && !list.isEmpty())
+			return list;
+		else
+			return new ArrayList<>();
+	}
+
 	@Override
 	public List<Map<String, Object>> listNextProcess(String applicationcode) {
 		List<Map<String, Object>> list = SUI.getCurrentProcessStatus(BPAConstants.MODULE_CODE, applicationcode);
@@ -532,7 +548,6 @@ class ServiceBPA implements ServiceBPAInterface {
 		return null;
 	}
 
-	
 	@Override
 	public boolean checkActionAccessGrantStatus(Integer USERCODE, String appcode) {
 		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag        " 
@@ -593,8 +608,8 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	/* CREATE */
 	@Override
-	public boolean approveBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
-		return DBI.approveBPApplication(data, response);
+	public boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response) {
+		return DBI.approveBPApplication(bpa, response);
 	}
 
 	@Override
