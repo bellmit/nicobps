@@ -165,7 +165,7 @@ public class ControllerInitialization {
 		response.put("data", -1);
 		return ResponseEntity.ok().body(response);
 	}
-
+ 
 	@PostMapping(value = "/updatefeemaster.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updatefeemaster(@RequestBody FeeMaster feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();

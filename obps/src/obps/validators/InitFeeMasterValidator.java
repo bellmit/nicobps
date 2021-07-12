@@ -163,7 +163,7 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 		if(param.getFeeamount()!=null) {
 			feeamount= param.getFeeamount().toString();
 			m = p3.matcher(feeamount);
-			boolean b1 = m.find();
+			boolean b1 = m.find(); 
 			if(!b1)
 				response= "feeamountnumbererror";
 			

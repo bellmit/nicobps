@@ -163,7 +163,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 			$scope.urlEndpoint = "./updatefeemaster.htm";
 			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, (response) => { 
 			
-			if(response.data=="licensetypecodecharactererror")
+			if(response.data=="licensetypecodecharactererror") 
 				MsgBox("Only Numeric Characters Allowed in License Type Code");
 			else if(response.data=="licensetypecodesizeerror")
 				MsgBox("License Type Code Size Exceeds limit in License Type Code. Enter less than 5 digits");
