@@ -29,6 +29,7 @@ import obps.models.Usages;
 import obps.services.ServiceEnclosureManagementInterface;
 import obps.services.ServiceInitializationInterface;
 import obps.util.application.ServiceUtilInterface;
+import obps.validators.InitFeeMasterValidatorInterface;
 
 @Controller
 @Configuration
@@ -37,6 +38,9 @@ public class ControllerInitialization {
 
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
+	
+	@Autowired
+	private InitFeeMasterValidatorInterface initFeeMasterValidatorInterface;
 	@Autowired
 
 	private ServiceInitializationInterface serviceInitalizationInterface;
@@ -166,6 +170,12 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> updatefeemaster(@RequestBody FeeMaster feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		System.out.println("feemaster:" + feemaster);
+		String validate = initFeeMasterValidatorInterface.validateInitFeeMaster(feemaster);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
 		// check existance
 		String sql = "";
 		Object[] values = { feemaster.getLicenseetypecode(), feemaster.getOfficecode(),
@@ -176,13 +186,13 @@ public class ControllerInitialization {
 		if(!exist) {
 			if (serviceInitalizationInterface.updatefeemaster(feemaster)) {
 				response.put("code", 200);
-				response.put("data", 1);
+				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
 		}
 		
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data","Error");
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -265,8 +275,19 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> initfeemaster(@RequestBody Map<String, Object> feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
-		String feecode = serviceInitalizationInterface.getMaxFeeCode() + "";
-		feemaster.put("feecode", feecode);
+		String feecode="";
+		if(serviceInitalizationInterface.getMaxFeeCode()!=null) {
+			feecode = serviceInitalizationInterface.getMaxFeeCode() + "";
+			feemaster.put("feecode", feecode);
+		}
+			
+		String validate= initFeeMasterValidatorInterface.validateInitFeeMaster(feemaster);
+		System.out.println("validate"+validate);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
 		// check existance
 				String sql = "";
 				Object[] values = { Integer.parseInt(feemaster.get("licenseetypecode").toString()) , Integer.parseInt(feemaster.get("officecode").toString()),
@@ -277,13 +298,13 @@ public class ControllerInitialization {
 				if(!exist) {
 					if (serviceInitalizationInterface.initfeemaster(feemaster)) {
 						response.put("code", 200);
-						response.put("data", 1);
+						response.put("data", "Success");
 						return ResponseEntity.ok().body(response);
 					}
 				}
 		
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 

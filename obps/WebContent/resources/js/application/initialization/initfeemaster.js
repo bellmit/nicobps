@@ -90,7 +90,50 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./initfeemaster.htm";
 
-			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, () => { $scope.reset(); $scope.listFeeMaster(); alert(successMsg) }, () => { alert(errorMsg) });
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, (response) => { 
+			
+			if(response.data=="licensetypecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in License Type Code");
+			else if(response.data=="licensetypecodesizeerror")
+				MsgBox("License Type Code Size Exceeds limit in License Type Code. Enter less than 5 digits");
+			else if(response.data=="officecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in Office Code");
+			else if(response.data=="officecodesizeerror")
+				MsgBox("Office Code Size Exceeds limit. Enter less than 5 digits ");
+			else if(response.data=="feecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in Fee Code");
+			else if(response.data=="feecodesizeerror")
+				MsgBox("Fee Code Size Exceeds limit. Enter less than 5 digits");
+			else if(response.data=="feecodenullerror")
+				MsgBox("Fee Code Cannot be Null");
+			else if(response.data=="feetypecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in Fee Type Code");
+			else if(response.data=="feetypecodesizeerror")
+				MsgBox("Fee Type Code Size Exceeds limit. Enter less than 5 digits");
+			else if(response.data=="feetypecodenullerror")
+				MsgBox("Fee Type Code Cannot be Null");
+			else if(response.data=="feeamountnumbererror")
+				MsgBox("Only Numeric Characters Allowed in Fee Amount");
+			else if(response.data=="feeamountsizeerror")
+				MsgBox("Fee Amount Size Exceeds limit. Enter less than 5 digits");
+			else if(response.data=="feeamountnullerror")
+				MsgBox("Fee Amount Cannot be Null");
+			else if(response.data=="Error")
+				MsgBox("Error Inserting Data");
+			else if(response.data=="Success"){
+				MsgBox(successMsg);
+				$scope.reset(); 
+			}
+				
+			else{
+				MsgBox("Error");			
+				
+			}
+			$scope.listFeeMaster();  
+			
+			}, () => {
+			 alert(errorMsg) 
+			 });
 		};
 
 		//    $scope.toggleUserStatus= function (usercode) {
@@ -118,7 +161,51 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 				return false;
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./updatefeemaster.htm";
-			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, () => { $scope.reset(); $scope.listFeeMaster(), alert(successMsg) }, () => { alert(errorMsg) });
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feemaster, (response) => { 
+			
+			if(response.data=="licensetypecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in License Type Code");
+			else if(response.data=="licensetypecodesizeerror")
+				MsgBox("License Type Code Size Exceeds limit in License Type Code. Enter less than 5 digits");
+			else if(response.data=="officecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in Office Code");
+			else if(response.data=="officecodesizeerror")
+				MsgBox("Office Code Size Exceeds limit. Enter less than 5 digits ");
+			else if(response.data=="feecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in Fee Code");
+			else if(response.data=="feecodesizeerror")
+				MsgBox("Fee Code Size Exceeds limit. Enter less than 5 digits");
+			else if(response.data=="feecodenullerror")
+				MsgBox("Fee Code Cannot be Null");
+			else if(response.data=="feetypecodecharactererror")
+				MsgBox("Only Numeric Characters Allowed in Fee Type Code");
+			else if(response.data=="feetypecodesizeerror")
+				MsgBox("Fee Type Code Size Exceeds limit. Enter less than 5 digits");
+			else if(response.data=="feetypecodenullerror")
+				MsgBox("Fee Type Code Cannot be Null");
+			else if(response.data=="feeamountnumbererror")
+				MsgBox("Only Numeric Characters Allowed in Fee Amount");
+			else if(response.data=="feeamountsizeerror")
+				MsgBox("Fee Amount Size Exceeds limit. Enter less than 5 digits");
+			else if(response.data=="feeamountnullerror")
+				MsgBox("Fee Amount Cannot be Null");
+			else if(response.data=="Error")
+				MsgBox("Error Inserting Data");
+			else if(response.data=="Success"){
+				MsgBox(successMsg);
+				$scope.reset(); 
+			}
+				
+			else{
+				MsgBox("Error");			
+				
+			}
+			$scope.listFeeMaster();  
+			
+			}, () => {
+			 alert(errorMsg) 
+			 });
+			
 		}
 
 
