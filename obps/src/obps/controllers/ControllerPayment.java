@@ -79,9 +79,9 @@ public class ControllerPayment {
 		String feecode = params.get("feecode");
 		String toprocesscode = params.get("toprocesscode");
 		String modulecode = params.get("modulecode");
-		Integer amount = Integer.parseInt(params.get("feeamount"));
+		Float amount = Float.parseFloat(params.get("feeamount"));
 		String applicationcode = params.get("applicationcode");
-		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount, feecode, applicationcode, modulecode, toprocesscode).toString()))
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount.intValue(), feecode, applicationcode, modulecode, toprocesscode).toString()))
 				.build();
 	}
 
