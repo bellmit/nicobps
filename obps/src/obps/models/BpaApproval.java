@@ -35,5 +35,4 @@ public class BpaApproval implements Serializable {
 	public String toString() {
 		return "BpaApproval [processflow=" + processflow + ", conditions=" + conditions + "]";
 	}
-
 }
