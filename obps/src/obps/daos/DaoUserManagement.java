@@ -382,7 +382,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 	public List<Pageurls> getPageUrls(final Integer usercode) {
 		List<Pageurls> urls = null;
 		try {
-			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url WHERE 1 = 1 /*and url.showinmenu != 'N'*/ AND up.urlcode=url.urlcode AND up.usercode=? /*and showinmenu='Y' */ "
+			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url WHERE 1 = 1 and url.showinmenu != 'N' AND up.urlcode=url.urlcode AND up.usercode=? /*and showinmenu='Y' */ "
 					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
 			System.out.println(" SQL  2 : "  + sql);
 			Object[] criteria = { usercode };
