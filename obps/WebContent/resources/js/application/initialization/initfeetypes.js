@@ -77,7 +77,7 @@ $scope.feetypes=[];
 			}
 			else if(response.data=="exist"){
 				MsgBox("Fee Type Already Exists");
-				$scope.reset(); 
+				
 			}
 				
 			else{
@@ -122,7 +122,7 @@ $scope.feetypes=[];
 			}
 			else if(response.data=="exist"){
 				MsgBox("Fee Type Already Exists");
-				$scope.reset(); 
+				 
 			}
 				
 			else{
