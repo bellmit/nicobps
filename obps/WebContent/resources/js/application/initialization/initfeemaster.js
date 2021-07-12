@@ -124,7 +124,10 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 				MsgBox(successMsg);
 				$scope.reset(); 
 			}
-				
+			else if(response.data=="exist"){
+				MsgBox("Fee Type Already Exists");
+				$scope.reset(); 
+			}	
 			else{
 				MsgBox("Error");			
 				
@@ -195,7 +198,10 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 				MsgBox(successMsg);
 				$scope.reset(); 
 			}
-				
+			else if(response.data=="exist"){
+				MsgBox("Fee Type Already Exists");
+				$scope.reset(); 
+			}
 			else{
 				MsgBox("Error");			
 				

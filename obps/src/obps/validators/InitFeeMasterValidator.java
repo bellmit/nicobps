@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 import obps.models.FeeMaster;
+import obps.models.FeeTypes;
 @Service
 public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 
@@ -175,6 +176,43 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 		else
 			response= "feeamountnullerror";
 			
+		return response;
+	}
+
+	@Override
+	public String validateInitFeeTypes(Map<String, Object> param) {
+		String response = "";
+		System.out.println(param);
+
+		String feetypedescription="";
+		if(param.get("feetypedescription")!=null) {
+			feetypedescription=param.get("feetypedescription").toString();
+			if(feetypedescription.length()>255) {
+				System.out.println(feetypedescription.length()>255);
+				response= "feetypedescriptionsizeerror";
+			}
+		}
+		else
+			response= "feetypedescriptionnull";
+		return response;
+	}
+
+	@Override
+	public String validateInitFeeTypes(FeeTypes param) {
+		String response = "";
+		System.out.println(param);
+
+		
+		String feetypedescription="";
+		if(param.getFeetypedescription()!=null) {
+			feetypedescription=param.getFeetypedescription().toString();
+			if(feetypedescription.length()>255) {
+				System.out.println(feetypedescription.length()>255);
+				response= "feetypedescriptionsizeerror";
+			}
+		}
+		else
+			response= "feetypedescriptionnull";
 		return response;
 	}
 

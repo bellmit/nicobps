@@ -122,8 +122,20 @@ public class ControllerInitialization {
 	@PostMapping(value = "/initfeetypes.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initfeetypes(@RequestBody Map<String, Object> feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String feetypecode = serviceInitalizationInterface.getMaxFeeTypecode() + "";
-		feetype.put("feetypecode", feetypecode);
+		String feetypecode ="";
+		if(serviceInitalizationInterface.getMaxFeeTypecode()!=null) {
+			feetypecode = serviceInitalizationInterface.getMaxFeeTypecode() + "";
+			feetype.put("feetypecode", feetypecode);
+		}
+		String validate="";
+		validate=initFeeMasterValidatorInterface.validateInitFeeTypes(feetype);
+		System.out.println(validate);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+			
 //		user.put("usertype", "F");
 		// check existance
 		String sql = "";
@@ -134,20 +146,32 @@ public class ControllerInitialization {
 		if(!exist) {
 			if (serviceInitalizationInterface.initfeetypes(feetype)) {
 				response.put("code", 200);
-				response.put("data", 1);
+				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
 		}
+		else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
 		
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping(value = "/updateinitfeetypes.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateinitfeetypes(@RequestBody FeeTypes feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		// check existance
+		String validate="";
+		validate=initFeeMasterValidatorInterface.validateInitFeeTypes(feetype);
+		System.out.println(validate);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
 				String sql = "";
 				Object[] values = { feetype.getFeetypedescription() };
 				sql = "SELECT * FROM masters.feetypes WHERE  LOWER(feetypedescription)=LOWER(?) ";
@@ -156,13 +180,19 @@ public class ControllerInitialization {
 				if(!exist) {
 					if (serviceInitalizationInterface.updatefeetypes(feetype)) {
 						response.put("code", 200);
-						response.put("data", 1);
+						response.put("data", "Success");
 						return ResponseEntity.ok().body(response);
 					}
 				}
+				else {
+					response.put("code", 200);
+					response.put("data", "exist");
+					return ResponseEntity.ok().body(response);
+				}
+					
 		
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
  
@@ -189,6 +219,10 @@ public class ControllerInitialization {
 				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
+		}else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
 		}
 		
 		response.put("code", HttpStatus.OK);
@@ -301,6 +335,11 @@ public class ControllerInitialization {
 						response.put("data", "Success");
 						return ResponseEntity.ok().body(response);
 					}
+				}
+				else {
+					response.put("code", 200);
+					response.put("data", "exist");
+					return ResponseEntity.ok().body(response);
 				}
 		
 		response.put("code", HttpStatus.OK);

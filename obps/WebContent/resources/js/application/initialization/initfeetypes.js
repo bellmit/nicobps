@@ -63,7 +63,32 @@ $scope.feetypes=[];
         $scope.method = "POST";
         $scope.urlEndpoint = "./initfeetypes.htm";
     	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, () => {$scope.reset();$scope.listFeeTypes(); alert(successMsg)}, () =>{alert(errorMsg)});
+        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, (response) => { 
+			
+			if(response.data=="feetypedescriptionsizeerror") 
+				MsgBox("Fee Type Description Cannot Exceed More Than 255 Characters");
+			else if(response.data=="feetypedescriptionnull")
+				MsgBox("Fee Type Description Cannot be Null");
+			else if(response.data=="Error")
+				MsgBox("Error Inserting Data");
+			else if(response.data=="Success"){
+				MsgBox("Successfully Inserted Data");
+				$scope.reset(); 
+			}
+			else if(response.data=="exist"){
+				MsgBox("Fee Type Already Exists");
+				$scope.reset(); 
+			}
+				
+			else{
+				MsgBox("Error");			
+				
+			}
+			$scope.listFeeTypes();  
+			
+			}, () => {
+			 alert("Error") 
+			 });
     };
     
 //    $scope.toggleUserStatus= function (usercode) {
@@ -83,7 +108,32 @@ $scope.feetypes=[];
              return false;
 	    $scope.method = "POST";
     	$scope.urlEndpoint = "./updateinitfeetypes.htm";
-    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, () => {$scope.reset();$scope.listFeeTypes(), alert(successMsg)}, () => {alert(errorMsg)});
+    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, (response) => { 
+			
+			if(response.data=="feetypedescriptionsizeerror") 
+				MsgBox("Fee Type Description Cannot Exceed More Than 255 Characters");
+			else if(response.data=="feetypedescriptionnull")
+				MsgBox("Fee Type Description Cannot be Null");
+			else if(response.data=="Error")
+				MsgBox("Error Inserting Data");
+			else if(response.data=="Success"){
+				MsgBox("Successfully Inserted Data");
+				$scope.reset(); 
+			}
+			else if(response.data=="exist"){
+				MsgBox("Fee Type Already Exists");
+				$scope.reset(); 
+			}
+				
+			else{
+				MsgBox("Error");			
+				
+			}
+			$scope.listFeeTypes();  
+			
+			}, () => {
+			 alert("Error") 
+			 });
     }
      
 /*-----------------------------------------------------------------------------------------------------------------------------------*/
