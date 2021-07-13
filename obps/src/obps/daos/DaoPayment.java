@@ -227,13 +227,13 @@ public class DaoPayment implements DaoPaymentInterface {
 		String sql = null;
 		try {
 
-			sql = " select  max(t.transactioncode) as transactioncode,t.feecode,ft.feetypedescription,t.paymentstatus "
+			sql = " select  max(t.transactioncode) as transactioncode,t.feecode,ft.feetypedescription "
 					+ " from nicobps.transactions t "
 					+ " inner join nicobps.applicationstransactionmap at on t.transactioncode=at.transactioncode "
 					+ " inner join masters.feemaster fm on t.feecode=fm.feecode"
 					+ " inner join masters.feetypes ft on fm.feetypecode=ft.feetypecode"
-					+ " where   t.amount<>0 and applicationcode=? "
-					+ " group by t.feecode,ft.feetypedescription,t.paymentstatus";
+					+ " where t.amount<>0 and applicationcode=? "
+					+ " group by t.feecode,ft.feetypedescription";
 
 			Object[] values = { applicationcode };
 			resp = jdbcTemplate.queryForList(sql, values);

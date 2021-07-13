@@ -62,7 +62,7 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 	$scope.printpermit = function(permitno) {
 
 		console.log("permitno " + permitno);
-		window.open("./Report?status=2&permitnumber='" + permitno + "'");
+		window.open("./Report?status=2&permitnumber=" + permitno );
 
 	};
 

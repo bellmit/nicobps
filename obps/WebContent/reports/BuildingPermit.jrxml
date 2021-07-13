@@ -1,38 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BPA_Permit" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BuildingPermit" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<subDataset name="planinfo" >
+		<field name="occupancy" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="occupancy"/>
+		</field>
+	</subDataset>
+	<parameter name="permitnumber" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+		</parameter>
 	<queryString>
-		<![CDATA[select 1 ]]>
+		<![CDATA[select ba.applicationcode,ba.edcrnumber,bo.ownername,
+ba.landregistrationdetails,ba.ownershipsubtype,bap.permitnumber,bap.remarks,
+to_char(bap.entrydate, 'DD-MM-YYYY') as permitentrydate , es.planinfoobject ,
+to_char(ba.entrydate, 'DD-MM-YYYY') as appentrydate
+from nicobps.bpaapplications ba
+inner join nicobps.bpaownerdetails bo on ba.applicationcode=bo.applicationcode
+inner join nicobps.bpaapproveapplications bap on ba.applicationcode=bap.applicationcode
+inner join nicobps.edcrscrutiny es on es.edcrnumber=ba.edcrnumber
+where status='Accepted' and bap.permitnumber=$P{permitnumber}]]>
 	</queryString>
-	<field name="?column?" class="java.lang.Integer"/>
+	<field name="applicationcode" class="java.lang.String"/>
+	<field name="edcrnumber" class="java.lang.String"/>
+	<field name="ownername" class="java.lang.String"/>
+	<field name="landregistrationdetails" class="java.lang.String"/>
+	<field name="ownershipsubtype" class="java.lang.String"/>
+	<field name="permitnumber" class="java.lang.String"/>
+	<field name="remarks" class="java.lang.String"/>
+	<field name="permitentrydate" class="java.lang.String"/>
+	<field name="planinfoobject" class="java.lang.String"/>
+	<field name="appentrydate" class="java.lang.String"/>
+	<variable name="varplaninfo" class="java.lang.String">
+		<variableExpression><![CDATA[$F{planinfoobject}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
 	<title>
-		<band height="55" splitType="Stretch">
+		<band height="45" splitType="Stretch">
 			<staticText>
-				<reportElement x="50" y="22" width="483" height="19" />
+				<reportElement x="52" y="15" width="492" height="19" />
 				<textElement textAlignment="Center">
-					<font size="14" isBold="true"/>
+					<font size="14" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[ONLINE BUILDING PERMIT APPROVAL SYSTEM]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="25" splitType="Stretch">
+		<band height="29" splitType="Stretch">
 			<staticText>
-				<reportElement x="178" y="0" width="203" height="18" />
+				<reportElement x="126" y="0" width="309" height="18" />
 				<textElement textAlignment="Center">
-					<font size="12" isBold="true"/>
+					<font size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Building Plan Approval Permit]]></text>
+				<text><![CDATA[FORM OF APPROVAL OF BUILDING PERMIT]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="168" splitType="Stretch"/>
+		<band height="175" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="11" width="121" height="20" />
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plan Permission No]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="141" y="11" width="403" height="20" />
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{permitnumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="44" width="524" height="58" />
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["With respect to your Application No" + $F{applicationcode} +" dated " + $F{appentrydate} +" , permission is hereby granted in favour of : "
++" Smt/Sri " + $F{ownername}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="20" y="116" width="524" height="50" />
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream( $V{varplaninfo}.getBytes("UTF-8") ))]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"BuildingPermit_PlanInfo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="50" splitType="Stretch"/>
 	</pageFooter>
 </jasperReport>
