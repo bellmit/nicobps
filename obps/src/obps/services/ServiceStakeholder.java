@@ -106,8 +106,10 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				dmlList.add(new BatchUpdateModel(sql, new Object[] { applicationcode, usercode, i.get("officecode"),
 						new Date(), c.getTime(), c.getTime(), 0 }));
 			}
+			
 			sql = "SELECT count(*) FROM nicobps.userpages where usercode=? ";
-			if (SUI.getCount(sql, new Object[] { usercode }) == 0) {
+			
+			if (SUI.getCount(sql, new Object[] { usercode }) <= 2) {
 				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
 				for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
 					dmlList.add(

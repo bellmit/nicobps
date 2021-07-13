@@ -68,7 +68,7 @@
 		<div id="page-content-wrapper">
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
-				<h3 class="mt-4" style="font-size: 32px;">Verification</h3>
+				<h3 class="mt-4" style="font-size: 32px;">Verifications/Approvals of Stakeholder Registrations</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5">
 						<table class="table" style='border-bottom:'>
