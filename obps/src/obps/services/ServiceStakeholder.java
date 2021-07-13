@@ -104,14 +104,15 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			c.set(Calendar.DAY_OF_MONTH, 31);
 			for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
 				dmlList.add(new BatchUpdateModel(sql, new Object[] { applicationcode, usercode, i.get("officecode"),
-						new Date(), c.getTime(), c.getTime(), 0 }));
+						new Date(), c.getTime(), null, null }));
 			}
-			
-			sql = "SELECT count(*) FROM nicobps.userpages where usercode=? ";
-			
-			if (SUI.getCount(sql, new Object[] { usercode }) <= 2) {
-				sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
-				for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
+
+			String sqlCount = "SELECT count(*) FROM nicobps.userpages where usercode=? and urlcode=? ";
+			Integer count=null;
+			sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+			for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
+				count=Integer.valueOf(SUI.listGeneric(sqlCount, new Object[] { usercode, urlcode }).get(0).get("count").toString());
+				if ( count == null || count==0) {
 					dmlList.add(
 							new BatchUpdateModel(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode }));
 				}
@@ -145,8 +146,6 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			return "false";
 		}
 	}
-
-	
 
 	@Override
 	public boolean extendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {

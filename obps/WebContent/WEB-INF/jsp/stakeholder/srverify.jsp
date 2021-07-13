@@ -56,10 +56,11 @@
 	background-color: #2980B9;
 }
 
-#content tr:hover {
+#displayRecords tbody tr:hover {
 	background-color: #dee2e6;
 	cursor: pointer;
 }
+
 </style>
 </head>
 <body ng-app="CommonApp" ng-controller="CommonCtrl">
@@ -70,8 +71,8 @@
 			<div class="container-fluid">
 				<h3 class="mt-4" style="font-size: 32px;">Verifications/Approvals of Stakeholder Registrations</h3>
 				<div class="row">
-					<div class="col-md-12 py-4 px-5">
-						<table class="table" style='border-bottom:'>
+					<div class="col-md-12 py-4 px-5" id='displayRecords'>
+						<!-- <table class="table" style='border-bottom:'>
 							<thead>
 								<tr>
 									<th>Application No.</th>
@@ -81,7 +82,7 @@
 									<th>Firm/Applicant Name</th>
 									<th>District</th>
 									<th>Status</th>
-									<!-- <th></th> -->
+									<th></th>
 								</tr>
 							</thead>
 							<tbody id='content'>
@@ -93,8 +94,8 @@
 									<td>{{item.firmindividual=='I'?item.applicantsname:item.firmname}}</td>
 									<td>{{item.districtname}}</td>
 									<td>{{item.nextprocessname}}</td>
-									<!--<td><input type="button" value="View Details"
-									ng-click="viewDetails(item)" /></td>-->
+									<td><input type="button" value="View Details"
+									ng-click="viewDetails(item)" /></td>
 								</tr>
 							</tbody>
 							<tfoot>
@@ -102,7 +103,7 @@
 									<td colspan='7'></td>
 								</tr>
 							</tfoot>
-						</table>
+						</table> -->
 
 					</div>
 
@@ -289,7 +290,7 @@
 							</button>
 							<div class="dropup-content">
 								<a href="#" ng-repeat="p in nextProcesses"
-									ng-click="showRemarks(p)">{{p.flowname}}</a>
+									ng-click="showRemarks(p)">{{p.action||p.flowname}}</a>
 							</div>
 						</div>
 

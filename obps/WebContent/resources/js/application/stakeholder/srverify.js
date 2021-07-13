@@ -118,7 +118,47 @@ app.controller("CommonCtrl", [
 				$http.post("./listLicensees.htm").success(
 					function (response, status, headers, config) {
 						$scope.Licensees = response
-					});
+
+						jQuery("#displayRecords").html("<table id='displayRecordsTable' style='width:100%' border='1'>\n\
+                                                </table>");
+						var table= jQuery('#displayRecordsTable').DataTable({
+							data: $scope.Licensees,
+							columns: [
+								{
+									"title": "Application No.",
+									"data": "applicationcode"
+								},
+								{
+									"title": "Licence",
+									"data": "licenseetypename"
+								}, 
+								{
+									"title": "Office",
+									"data": "officename1"
+								},
+								{
+									"title": "Firm/Individual",
+									"data": "firmindividual",
+									"render":(data,type,row,meta)=>{
+										return data=='I'?'Individual':'Firm'
+								}
+								},
+								{
+									"title": "District",
+									"data": "districtname"
+								},
+								{
+									"title": "Action",
+									"data": "nextprocessname"
+								}
+							]
+						});
+						table.on('click', 'tr', function () {
+							var data = table.row(this).data();
+							$scope.viewDetails(data)
+						});
+					}
+					);
 			},
 			$http.post("./listEnclosures.htm").success(
 				function (response, status, headers, config) {
