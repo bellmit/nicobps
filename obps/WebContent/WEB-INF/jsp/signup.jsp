@@ -274,10 +274,16 @@
 										<span id="mobileotpMsg" class="formErrorContent"></span>			     				
 				     				</td>	
 				     			</tr>					     								     				     	
-				     			     						     			
+				     			<tr>
+				     				<td colspan="2">
+				     					<center  ng-if="otpcount<3">				     						
+				     						<input type="button" value="Re-Send OTP" ng-click="resendOTP()" class="btn btn-primary b-btn">
+				     					</center>
+				     				</td>
+				     			</tr>     						     			
 				     		</table>
 			     		</div>					     	
-				     	
+
 				     	
 				     	<div class="col-md-12 py-12 px-12">				     						     		
 				     		<table id="entrytable" style="border-top:3px solid #005776;border-bottom:3px solid #005776">		     				     					     		

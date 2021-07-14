@@ -152,6 +152,25 @@ app.controller('applicationController', function($scope)
 		 }
     };	
 
+	$scope.otpcount=0;	
+    $scope.resendOTP = function() {           
+	    jQuery.ajax({
+	        url: "resendOTP.htm",              
+	        type: "POST",
+	        success: function(data)
+	        {   
+	        	$scope.otpcount++;   
+	        	//alert(data) 
+	        	jQuery("#ajaxLoading").fadeOut();                                
+	        },
+	        error: function(request, status, error) { 
+	        	alert(status+" : "+JSON.stringify(request));  
+	        	jQuery("#ajaxLoading").fadeOut();            
+	        }
+	    });          
+    }; 	
+
+
 });
 
 

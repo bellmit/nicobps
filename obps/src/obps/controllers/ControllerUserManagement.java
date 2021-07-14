@@ -88,8 +88,8 @@ public class ControllerUserManagement {
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
 
-		System.out.println("issms : " + issms);
-		System.out.println("isemail : " + isemail);
+		//System.out.println("issms : " + issms);
+		//System.out.println("isemail : " + isemail);
 
 		Map<String, Object> data = new LinkedHashMap<>();
 		data.put("listLicenseetypes", serviceUtilInterface.listLicenseetypes());
@@ -100,6 +100,33 @@ public class ControllerUserManagement {
 		data.put("isemail", isemail);
 		return data;
 	}
+	
+	@PostMapping(value = "/resendOTP.htm")
+	public @ResponseBody String resendOTP(HttpServletRequest request) 
+	{	
+		System.out.println("-------------------------");
+		String issms = environment.getProperty("app.prop.issms");
+		String isemail = environment.getProperty("app.prop.isemail");
+
+		System.out.println("issms : " + issms);
+		System.out.println("isemail : " + isemail);		
+		System.out.println("-------------------------");		
+		
+		if (issms.equals("Y")) {
+			Integer mobileotp = 123;// Utilty.getRandomNumber();
+			request.getSession().setAttribute("mobileotp", mobileotp.toString());
+			// Send SMS
+			System.out.println("mobileotp : "+mobileotp);
+		}
+		if (isemail.equals("Y")) {
+			Integer emailotp = 123;// Utilty.getRandomNumber();
+			request.getSession().setAttribute("emailotp", emailotp.toString());
+			// Send Email
+			System.out.println("emailotp : "+emailotp);
+		}		
+		return "OTP Sent";
+	}
+	
 
 	@PostMapping("/submitSignupDetails.htm")
 	// public ResponseEntity<?> submitProfilePersonalDetails(@RequestBody
@@ -116,10 +143,10 @@ public class ControllerUserManagement {
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
 
-		System.out.println("issms : " + issms);
-		System.out.println("isemail : " + isemail);
-		System.out.println("isotp : " + isotp);
-		System.out.println("-------------------------");
+//		System.out.println("issms : " + issms);
+//		System.out.println("isemail : " + isemail);
+//		System.out.println("isotp : " + isotp);
+//		System.out.println("-------------------------");
 
 		if (usersessioncaptcha == null || userresponsecaptcha == null
 				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
