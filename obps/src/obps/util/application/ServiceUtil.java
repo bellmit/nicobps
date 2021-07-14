@@ -221,10 +221,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 		return this.listCommonMap(sql, criteria);
 	}
 	@Override
-	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {
-		System.out.println("modulecode : "+modulecode);
-		System.out.println("usercode : "+usercode);
-		System.out.println("licenseetypecode : "+licenseetypecode);
+	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {		
 		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
 				+ "WHERE E.enabled='Y' AND mandatory='Y' AND M.modulecode=? AND licenseetypecode=? "

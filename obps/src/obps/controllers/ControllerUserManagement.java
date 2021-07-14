@@ -219,7 +219,7 @@ public class ControllerUserManagement {
 					Integer.valueOf(usercode), Short.valueOf(licenseetypecode)));
 			List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));			
 			model.addAttribute("listEnclosuresNotUploades",listEnclosuresNotUploades );
-			System.out.println("listEnclosuresNotUploades.size() : "+listEnclosuresNotUploades.size());
+			//System.out.println("listEnclosuresNotUploades.size() : "+listEnclosuresNotUploades.size());
 			if(listEnclosuresNotUploades.size()>0) {
 				model.addAttribute("successNotUploadedMsg", "Please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs");
 			}
