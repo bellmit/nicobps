@@ -1,7 +1,7 @@
 package obps.util.notifications;
 
 public class Notification {
-	
+
 	private Integer officecode;
 	private String officeshortname;
 
@@ -9,8 +9,7 @@ public class Notification {
 	private String smspassword;
 	private String smssenderid;
 	private String securekey;
-
-	private String emailid;
+	private String senderemailid;
 	private String emailidpassword;
 
 	private String messageid;
@@ -18,8 +17,47 @@ public class Notification {
 	private String sms;
 	private String email;
 
+	private String recipientMobileno;
+	private String recipientEmailid;
+
 	public Notification() {
 		super();
+	}
+
+	public Notification(Boolean flag) {
+		super();
+		this.smsusername = "";
+		this.smspassword = "";
+		this.smssenderid = "";
+		this.securekey = "";
+		this.messageid = "";
+		this.templateid = "";
+		this.sms = "";
+		this.recipientMobileno = "";
+	}
+
+	public String getSenderemailid() {
+		return senderemailid;
+	}
+
+	public void setSenderemailid(String senderemailid) {
+		this.senderemailid = senderemailid;
+	}
+
+	public String getRecipientMobileno() {
+		return recipientMobileno;
+	}
+
+	public void setRecipientMobileno(String recipientMobileno) {
+		this.recipientMobileno = recipientMobileno;
+	}
+
+	public String getRecipientEmailid() {
+		return recipientEmailid;
+	}
+
+	public void setRecipientEmailid(String recipientEmailid) {
+		this.recipientEmailid = recipientEmailid;
 	}
 
 	public Integer getOfficecode() {
@@ -70,13 +108,7 @@ public class Notification {
 		this.securekey = securekey;
 	}
 
-	public String getEmailid() {
-		return emailid;
-	}
-
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
-	}
+ 
 
 	public String getEmailidpassword() {
 		return emailidpassword;
@@ -118,4 +150,13 @@ public class Notification {
 		this.email = email;
 	}
 
+	@Override
+	public String toString() {
+		return "Notification [officecode=" + officecode + ", officeshortname=" + officeshortname + ", smsusername="
+				+ smsusername + ", smspassword=" + smspassword + ", smssenderid=" + smssenderid + ", securekey="
+				+ securekey + ", senderemailid=" + senderemailid + ", emailidpassword=" + emailidpassword
+				+ ", messageid=" + messageid + ", templateid=" + templateid + ", sms=" + sms + ", email=" + email
+				+ ", recipientMobileno=" + recipientMobileno + ", recipientEmailid=" + recipientEmailid + "]";
+	}
+	
 }

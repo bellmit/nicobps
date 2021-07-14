@@ -1,6 +1,6 @@
 /*@author Avijit Debnath*/
 
-package obps.util.common;
+package obps.util.notifications;
 import java.io.IOException;
 import java.io.DataInputStream;
 
