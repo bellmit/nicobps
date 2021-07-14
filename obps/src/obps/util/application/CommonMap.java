@@ -1,3 +1,5 @@
+/*@author Avijit Debnath*/
+
 package obps.util.application;
 
 public class CommonMap {
