@@ -87,7 +87,57 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./initsuboccupancies.htm";
 
-			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.suboccupancy, () => { $scope.reset(); $scope.listSubOccupancy(); alert(successMsg) }, () => { alert(errorMsg) });
+			
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.suboccupancy, function (response) {
+				if (response.data=="Success") {
+					MsgBox("Sub Occupancies Inserted successfully.");
+					$scope.reset();
+					$scope.listSubOccupancy()
+				} else if (response.data=="Exist") {
+					MsgBox("Occupancies already exist");
+					$scope.listSubOccupancy()
+				}
+				else if (response.data=="suboccupancycodecharactererror") {
+					MsgBox("No Special Characters allowed in Sub Occupancy Code");
+					$scope.listSubOccupancy()
+				
+				}
+				else if (response.data=="suboccupancycodesizeerror") {
+					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
+					$scope.listSubOccupancy()
+				
+				}else if (response.data=="suboccupancycodenull") {
+					MsgBox("Sub Occupancy Code Cannot Be Null");
+					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancynamecharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Sub Occupancy Name");
+					$scope.listSubOccupancy()
+				
+				}else if (response.data=="suboccupancynamesizeerror") {
+					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
+					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancynamenull") {
+					MsgBox("Sub Occupancy Name Cannot be Null");
+					$scope.listSubOccupancy()
+				}else if (response.data=="descriptionsizeerror") {
+					MsgBox("Description Cannot be more than 250 characters");
+					$scope.listSubOccupancy()
+				}else if (response.data=="descriptionnull") {
+					MsgBox("Description Cannot be Null");
+					$scope.listSubOccupancy()
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				
+				}
+				
+				
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+				$scope.listSubOccupancy()
+			});
 		};
 
 		//    $scope.toggleUserStatus= function (usercode) {
@@ -114,7 +164,56 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				return false;
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./updatesuboccupancy.htm";
-			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.suboccupancy, () => { $scope.reset(); $scope.listSubOccupancy(), alert(successMsg) }, () => { alert(errorMsg) });
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.suboccupancy, function (response) {
+				if (response.data=="Success") {
+					MsgBox("Sub Occupancies Updated successfully.");
+					$scope.reset();
+					$scope.listSubOccupancy()
+				} else if (response.data=="Exist") {
+					MsgBox("Occupancies already exist");
+					$scope.listSubOccupancy()
+				}
+				else if (response.data=="suboccupancycodecharactererror") {
+					MsgBox("No Special Characters allowed in Sub Occupancy Code");
+					$scope.listSubOccupancy()
+				
+				}
+				else if (response.data=="suboccupancycodesizeerror") {
+					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
+					$scope.listSubOccupancy()
+				
+				}else if (response.data=="suboccupancycodenull") {
+					MsgBox("Sub Occupancy Code Cannot Be Null");
+					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancynamecharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Sub Occupancy Name");
+					$scope.listSubOccupancy()
+				
+				}else if (response.data=="suboccupancynamesizeerror") {
+					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
+					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancynamenull") {
+					MsgBox("Sub Occupancy Name Cannot be Null");
+					$scope.listSubOccupancy()
+				}else if (response.data=="descriptionsizeerror") {
+					MsgBox("Description Cannot be more than 250 characters");
+					$scope.listSubOccupancy()
+				}else if (response.data=="descriptionnull") {
+					MsgBox("Description Cannot be Null");
+					$scope.listSubOccupancy()
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				
+				}
+				
+				
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+				$scope.listSubOccupancy()
+			});
 		}
 
 

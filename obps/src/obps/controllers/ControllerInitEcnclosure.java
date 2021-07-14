@@ -72,35 +72,38 @@ public class ControllerInitEcnclosure {
 	@PostMapping(value = "/initenclosures.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initenclosures(@RequestBody Map<String, Object> enclosures) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
-		if(validate!="") {
-			response.put("data", validate);
-			return ResponseEntity.ok().body(response);
-		}
-		Long enclosurecode=(long) 0;
-		if(getMaxEnclosureCode()>0)
-			enclosurecode = getMaxEnclosureCode() +1;
-		else
-			enclosurecode = enclosurecode+1;
-		System.out.println("Enclosure Code"+enclosurecode);
-		enclosures.put("enclosurecode", enclosurecode);
-		String encl_name=((String) enclosures.get("enclosurename")).trim();
-		String sql = "Select count(*) from  masters.enclosures where LOWER(enclosurename)=LOWER(?)";
-		Object[] values = {encl_name};
-		boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
-		System.out.println("easdasd"+exist);
-		if(exist)
-			response.put("data", "exist");
-		else {
-			
-				
-			if (serviceUserManagementInterface.initenclosures(enclosures)) {
-	
-				response.put("data", "Success");
+		if(enclosures!=null) {
+			String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
+			if(validate!="") {
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
 			}
+			Long enclosurecode=(long) 0;
+			if(getMaxEnclosureCode()>0)
+				enclosurecode = getMaxEnclosureCode() +1;
 			else
-				response.put("data", "Error");
+				enclosurecode = enclosurecode+1;
+			System.out.println("Enclosure Code"+enclosurecode);
+			enclosures.put("enclosurecode", enclosurecode);
+			String encl_name=((String) enclosures.get("enclosurename")).trim();
+			String sql = "Select count(*) from  masters.enclosures where LOWER(enclosurename)=LOWER(?)";
+			Object[] values = {encl_name};
+			boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
+			System.out.println("easdasd"+exist);
+			if(exist)
+				response.put("data", "exist");
+			else {
+				
+					
+				if (serviceUserManagementInterface.initenclosures(enclosures)) {
+		
+					response.put("data", "Success");
+				}
+				else
+					response.put("data", "Error");
+			}
 		}
+		
 			
 	System.out.println(response.get("data"));
 		return ResponseEntity.ok().body(response);
@@ -111,27 +114,30 @@ public class ControllerInitEcnclosure {
 	@PostMapping(value = "/updateinitenclosures.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateInitEnclosure(@RequestBody Map<String, Object> enclosures) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String encl_name=((String) enclosures.get("enclosuredescription")).trim();
+		if(enclosures!=null) {
+			String encl_name=((String) enclosures.get("enclosuredescription")).trim();
+			
+			String sql = "Select * from  masters.enclosures where LOWER(enclosurename)=LOWER(?)";
+			Object[] values = {encl_name};
+//			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+//			if(exist)
+//				response.put("data", "exist");
+//			else {
+				String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
+				if(validate!="") {
+					response.put("data", validate);
+					return ResponseEntity.ok().body(response);
+				}
+					
+				if (serviceUserManagementInterface.updateInitEnclosure(enclosures)) {
+//					response = "Success";	
+					response.put("data", "Success");
+				}
+				else
+					response.put("data", "Error");
+//			}
+		}
 		
-		String sql = "Select * from  masters.enclosures where LOWER(enclosurename)=LOWER(?)";
-		Object[] values = {encl_name};
-//		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-//		if(exist)
-//			response.put("data", "exist");
-//		else {
-			String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
-			if(validate!="") {
-				response.put("data", validate);
-				return ResponseEntity.ok().body(response);
-			}
-				
-			if (serviceUserManagementInterface.updateInitEnclosure(enclosures)) {
-//				response = "Success";	
-				response.put("data", "Success");
-			}
-			else
-				response.put("data", "Error");
-//		}
 			
 	System.out.println(response.get("data"));
 		return ResponseEntity.ok().body(response);

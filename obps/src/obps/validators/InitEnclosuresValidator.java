@@ -32,14 +32,21 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 	     
 	     boolean b1 = m1.find();
 	     
-	     if (b1)
-	         response="m1";
+	     if (b1) {
+	    	 response="m1";
+	    	 return response;
+	     }
+	         
 
-	     if(enclname.length()>255)
+	     if(enclname.length()>255) {
 	    	 response="50";
-	     if(encldesc.length()>255)
+	    	 return response;
+	     }
+	    	 
+	     if(encldesc.length()>255) {
 	    	 response="255";
-	     
+	    	 return response;
+	     }
 	    	 
 		
 		return response;

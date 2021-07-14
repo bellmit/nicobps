@@ -74,19 +74,18 @@ public class ControllerInitOfficesPaymentModes {
 
 		return serviceUserManagementInterface.listOfficesAndPaymentModes();
 	}
-//	@GetMapping(value = "/listModulesAndEnclosures.htm")
-//	public @ResponseBody List<Modules> listModulesAndEnclosures() {
-//
-//		return serviceUserManagementInterface.listModulesAndEnclosures();
-//	}
+
 	@PostMapping(value = "/saveOfficePayment.htm")
 	public @ResponseBody String saveOfficePayment(@RequestBody List<Map<String, Object>> officespayments) {
 		String response="";
-		String validate= initOfficesValidatorInterface.validateOfficesPaymentModes(officespayments);
-		if(validate!="")
-			response=validate;
-		else
-			response = serviceUserManagementInterface.saveOfficePayment(officespayments);
+		if(officespayments!=null) {
+			String validate= initOfficesValidatorInterface.validateOfficesPaymentModes(officespayments);
+			if(validate!="")
+				response=validate;
+			else
+				response = serviceUserManagementInterface.saveOfficePayment(officespayments);
+		}
+		
 		return response;
 		 
 	}

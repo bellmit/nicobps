@@ -124,7 +124,7 @@ $scope.licenseesreg=[];
     	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.licensees, function (response) {
 			
 				if (response.data=="Success") {
-					MsgBox("Licensee inserted successfully.");
+					MsgBox("Licensee Updated successfully.");
 					$scope.reset();
 					$scope.listLicensees()
 				} else if (response.data=="Exist") {

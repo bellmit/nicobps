@@ -26,23 +26,23 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		Matcher m1 = p2.matcher(username);
 		b1=m1.find();
 		if(!b1)
-			response="username";
+			return "username";
 		if(username.length()>99)
-			response="userlength";
+			return "userlength";
 		if(param.get("userpassword")!=null)
 			userpassword=((String) param.get("userpassword")).trim();
 		if(param.get("repassword")!=null)
 			repassword=((String) param.get("repassword")).trim();
 		if(!userpassword.equals(repassword))
-			response="passworddeoesnotmatch";
+			return "passworddeoesnotmatch";
 		if(param.get("fullname")!=null)
 			fullname=((String) param.get("fullname")).trim();
 		m1=p.matcher(fullname);
 		b1=m1.find();
 		if(b1)
-			response="fullname";
+			return "fullname";
 		if(fullname.length()>99)
-			response="fullnamelength";
+			return "fullnamelength";
 		System.out.println(param.get("mobileno"));
 //		Pattern p3 = Pattern.compile("^([1-9]){1}([0-9]){9}$");
 		Pattern p3 = Pattern.compile("^[1-9][0-9]*$");
@@ -53,17 +53,17 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		b1=m1.find();
 		
 		if(!b1)
-			response="mobile";
+			return "mobile";
 		if(mobileno.length()>10)
-			response="mobilelength";
+			return "mobilelength";
 		if(param.get("designation")!=null)
 			designation=((String) param.get("designation")).trim();
 		m1=p.matcher(designation);
 		b1=m1.find();
 		if(b1)
-			response="designation";
+			return "designation";
 		if(designation.length()>99)
-			response="designationlength";
+			return "designationlength";
 		
 		
 		System.out.println(response);
