@@ -12,7 +12,7 @@ public class InitSubOccupanciesValidator {
 		String response = "";
 		Matcher m;
 		boolean b=false;
-		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]"; 
 		Pattern p = Pattern.compile(pattern);
 		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9\\-]");
 		String suboccupancycode="",suboccupancyname="",description="";

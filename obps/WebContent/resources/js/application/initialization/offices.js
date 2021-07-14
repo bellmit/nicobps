@@ -4,7 +4,7 @@
 	"IVBOR": "image/png"
 };
  function detectMimeType(b64) {
-	return signatures[b64.toUpperCase().substr(0, 5)];
+	return signatures[b64.toUpperCase().substr(0, 5)]; 
 };
 
 var logocode;

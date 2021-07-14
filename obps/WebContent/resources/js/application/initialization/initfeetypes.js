@@ -7,7 +7,7 @@ app.controller('createfeetypeCtrl', ['$scope', '$sce', '$compile','$timeout','co
 	var errorMsg = "Error: Unable to perform action or Already Existing Data";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
-	$scope.successCallback = "";
+	$scope.successCallback = ""; 
 	$scope.urlEndpoint = "";
 	
 	/*------------------------*/

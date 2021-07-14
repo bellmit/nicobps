@@ -15,7 +15,7 @@ public class InitUsagesValidator {
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
 		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9\\-]");
 		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
-		Pattern p2 = Pattern.compile(pattern);
+		Pattern p2 = Pattern.compile(pattern); 
 		String suboccupancycode="",usagecode="",usagename="",description="";
 		if(param.get("suboccupancycode")!=null) {
 			suboccupancycode=((String) param.get("suboccupancycode")).trim();

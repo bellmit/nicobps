@@ -8,7 +8,7 @@ app.controller('initusagesCtrl', ['$scope', '$sce', '$compile', '$timeout', 'com
 		$scope.errorCallback = "";
 		$scope.method = "POST";
 		$scope.successCallback = "";
-		$scope.urlEndpoint = "";
+		$scope.urlEndpoint = ""; 
 
 		/*------------------------*/
 

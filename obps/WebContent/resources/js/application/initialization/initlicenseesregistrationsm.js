@@ -7,7 +7,7 @@ app.controller('createlicenseesregCtrl', ['$scope', '$sce', '$compile','$timeout
 	var errorMsg = "Error: Unable to perform action or Already Existing Data";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
-	$scope.successCallback = "";
+	$scope.successCallback = ""; 
 	$scope.urlEndpoint = ""; 
 	
 	/*------------------------*/

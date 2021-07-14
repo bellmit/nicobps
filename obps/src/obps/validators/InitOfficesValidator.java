@@ -17,7 +17,7 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	@Override
 	public String validateInitOffices(Map<String, Object> param) {
 		String response = "";
-		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]"; 
 		String pattern1="[^A-Za-z_ 0-9\\-]";
 		Pattern p = Pattern.compile(pattern);
 		Pattern p1= Pattern.compile(pattern1);

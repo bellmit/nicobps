@@ -8,7 +8,7 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 	$scope.errorCallback = "";
 	$scope.method = "POST";
 	$scope.successCallback = "";
-	$scope.urlEndpoint = "";
+	$scope.urlEndpoint = ""; 
 	$scope.actionButton = 1;
 	
 	/*------------------------*/

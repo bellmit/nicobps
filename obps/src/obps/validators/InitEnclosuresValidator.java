@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import obps.daos.DaoEnclosureManagementInterface;
 @Service
-public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface{
+public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface{ 
 	@Autowired
 	private DaoEnclosureManagementInterface DEMI;
 

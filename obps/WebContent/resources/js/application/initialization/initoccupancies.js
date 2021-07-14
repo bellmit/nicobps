@@ -10,7 +10,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 		$scope.successCallback = "";
 		$scope.urlEndpoint = "";
  
-		/*------------------------*/
+		/*------------------------*/ 
 
 		$scope.actionButton = 1;
 		//	$scope.cellcode = null;

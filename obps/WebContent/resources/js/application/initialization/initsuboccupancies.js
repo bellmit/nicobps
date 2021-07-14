@@ -11,7 +11,7 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 		$scope.urlEndpoint = "";
 
 		/*------------------------*/
-
+ 
 		$scope.suboccupancy = new SubOccupancy();
 		$scope.suboccupancies = [];
 		$scope.actionButton = 1;
