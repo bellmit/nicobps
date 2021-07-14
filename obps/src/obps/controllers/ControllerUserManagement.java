@@ -89,9 +89,6 @@ public class ControllerUserManagement {
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
 
-		//System.out.println("issms : " + issms);
-		//System.out.println("isemail : " + isemail);
-
 		Map<String, Object> data = new LinkedHashMap<>();
 		data.put("listLicenseetypes", serviceUtilInterface.listLicenseetypes());
 		data.put("listStates", serviceUtilInterface.listStates());
@@ -104,15 +101,9 @@ public class ControllerUserManagement {
 	
 	@PostMapping(value = "/resendOTP.htm")
 	public @ResponseBody String resendOTP(HttpServletRequest request) 
-	{	
-		
+	{			
 		String issms = environment.getProperty("app.prop.issms");
-		String isemail = environment.getProperty("app.prop.isemail");
-
-		//System.out.println("-------------------------");
-		//System.out.println("issms : " + issms);
-		//System.out.println("isemail : " + isemail);		
-		//System.out.println("-------------------------");		
+		String isemail = environment.getProperty("app.prop.isemail");	
 		
 		if (issms.equals("Y")) {
 			Integer mobileotp = Utilty.getRandomNumber();
