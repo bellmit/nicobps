@@ -41,7 +41,6 @@ import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.util.common.Utilty;
-import obps.validators.UploadEnclosuresValidatorInterface;
 import obps.validators.UserManagementValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
 import obps.daos.DaoEnclosureManagementInterface;
@@ -63,8 +62,6 @@ public class ControllerUserManagement {
 	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
-	@Autowired
-	private UploadEnclosuresValidatorInterface uploadBpaEnclosuersValidatorInterface;
 	@Autowired
 	private UserManagementValidatorInterface userManagementValidatorInterface;
 	@Resource

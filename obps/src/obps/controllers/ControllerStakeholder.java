@@ -1,4 +1,4 @@
- package obps.controllers;
+package obps.controllers;
 
 import java.util.Base64;
 import java.util.LinkedHashMap;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.services.ServiceStakeholderInterface;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
-import obps.validators.ExtendValidityValidatorInterface;
+import obps.validators.ExtendValidityValidator;
 import obps.validators.StakeHolderValidatorInterface;
 
 @Controller
@@ -31,10 +31,10 @@ public class ControllerStakeholder {
 	private ServiceStakeholderInterface SSI;
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
-	
+
 	@Autowired
-	private ExtendValidityValidatorInterface extendValidatorInterface;
-	
+	private ExtendValidityValidator extendValidator;
+
 	private List<String> applicationCalled = new LinkedList<String>();
 
 	@Autowired
@@ -55,15 +55,15 @@ public class ControllerStakeholder {
 
 	@PostMapping("/ulbregistration.htm")
 	public String ulbRegistration(Model model, Integer officecode, HttpServletRequest req) {
-		
+
 		String usercode = (String) req.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) req.getSession().getAttribute("licenseetypecode");
-		if(serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode)).size()!=0) {
-			model.addAttribute("errorMsg","REQD_DOCUMENTS_INCOMPLETE");
+		if (serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode),
+				Short.valueOf(licenseetypecode)).size() != 0) {
+			model.addAttribute("errorMsg", "REQD_DOCUMENTS_INCOMPLETE");
 			return "redirect:ulbregistration.htm";
 		}
-		String applicationcode = SSI.ulbRegistration(officecode,
-				Integer.valueOf(usercode));
+		String applicationcode = SSI.ulbRegistration(officecode, Integer.valueOf(usercode));
 //		String applicationcode="ALREADY_REPORTED";
 		if (applicationcode.equals("ALREADY_REPORTED") || applicationcode.equals("false")) {
 			model.addAttribute("errorMsg", applicationcode);
@@ -109,8 +109,9 @@ public class ControllerStakeholder {
 
 	@PostMapping("/listLicensees.htm")
 	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req) {
-		Integer officecode=Integer.valueOf(serviceUtilInterface.listUserOffices().get(0).getKey());
-		return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),officecode!=null?officecode:0);
+		Integer officecode = Integer.valueOf(serviceUtilInterface.listUserOffices().get(0).getKey());
+		return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),
+				officecode != null ? officecode : 0);
 	}
 
 	@PostMapping("/getLicensee.htm")
@@ -198,34 +199,52 @@ public class ControllerStakeholder {
 	public ResponseEntity<?> extendValidity(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		String res = "false";
 		Integer extendedby = Integer.valueOf(req.getSession().getAttribute("usercode").toString());
-		if(!extendValidatorInterface.validateUsercode((String)params.get("usercode"))) {
-			return ResponseEntity.badRequest().body(new String("Invalid User!!"));
+		if ((String) params.get("usercode") != null || (String) params.get("usercode") != "") {
+			if (!extendValidator.validateUsercode((String) params.get("usercode"))) {
+				return ResponseEntity.badRequest().body(new String("Invalid User!!"));
+			}
 		}
-		if(!extendValidatorInterface.validateOfficecode((String)params.get("officecode"))) {
-			return ResponseEntity.badRequest().body(new String("Invalid Office!!"));
+
+		if ((String) params.get("officecode") != null || (String) params.get("officecode") != "") {
+			if (!extendValidator.validateOfficecode((String) params.get("officecode"))) {
+				return ResponseEntity.badRequest().body(new String("Invalid Office!!"));
+			}
 		}
-		if(!extendValidatorInterface.validatedate((String)params.get("extendedto"))) {
-			return ResponseEntity.badRequest().body(new String("Invalid Extended to Date!!"));
+
+		if ((String) params.get("extendedto") != null || (String) params.get("extendedto") != "") {
+			if (!extendValidator.validatedate((String) params.get("extendedto"))) {
+				return ResponseEntity.badRequest().body(new String("Invalid Extended to Date!!"));
+			}
 		}
-		if(!extendValidatorInterface.validatedate((String)params.get("validto"))) {
-			return ResponseEntity.badRequest().body(new String("Invalid Valid to Date!!"));
+
+		if ((String) params.get("validto") != null || (String) params.get("validto") != "") {
+			if (!extendValidator.validatedate((String) params.get("validto"))) {
+				return ResponseEntity.badRequest().body(new String("Invalid Valid to Date!!"));
+			}
 		}
-		if(!extendValidatorInterface.validateUsercode(extendedby.toString())) {
-			return ResponseEntity.badRequest().body(new String("Invalid User!!"));
+
+		if ((String) params.get("extendedby") != null || (String) params.get("extendedby") != "") {
+			if (!extendValidator.validateUsercode(extendedby.toString())) {
+				return ResponseEntity.badRequest().body(new String("Invalid User!!"));
+			}
 		}
-		if(!extendValidatorInterface.validateExtendedtoDate(params.get("validto"), params.get("extendedto"),params.get("maxdate"))) {
-			return ResponseEntity.badRequest().body(new String("Check Validity Days!!"));
+
+		if ((String) params.get("validto") != null || (String) params.get("validto") != ""
+				|| (String) params.get("extendedto") != null || (String) params.get("extendedto") != ""
+				|| (String) params.get("maxdate") != null || (String) params.get("maxdate") != "") {
+			if (!extendValidator.validateExtendedtoDate(params.get("validto"), params.get("extendedto"),
+					params.get("maxdate"))) {
+				return ResponseEntity.badRequest().body(new String("Check Validity Days!!"));
+			}
 		}
-		
+
 		if (SSI.extendValidity(Short.parseShort(params.get("officecode")), Integer.parseInt(params.get("usercode")),
 				params.get("extendedto"), extendedby)) {
 			return ResponseEntity.ok(new String("1"));
-		}else {
-			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+		} else {
+			return ResponseEntity.badRequest().body(new String(
+					"Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
-		
-			
-		
 
 	}
 }
