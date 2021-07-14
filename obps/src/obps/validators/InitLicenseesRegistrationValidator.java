@@ -12,8 +12,15 @@ public class InitLicenseesRegistrationValidator {
 		Matcher m;
 		boolean b=false;
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
+		Pattern p3 = Pattern.compile("^[1-9][0-9]*$");
 		String licenseedescription="",licenseeregistrationcode="";
 		if(param.get("licenseeregistrationcode")!=null) {
+			m=p3.matcher(licenseeregistrationcode);
+			b=m.find();
+			if(!b) {
+				response= "licenseeregistrationcodenumbererror";
+				return response;
+			}
 			licenseeregistrationcode=param.get("licenseeregistrationcode").toString(); 
 			if(licenseeregistrationcode.length()>5) {
 				response= "licenseeregistrationcodesizeerror";

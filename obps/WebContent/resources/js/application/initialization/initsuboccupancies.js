@@ -96,6 +96,10 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				} else if (response.data=="Exist") {
 					MsgBox("Occupancies already exist");
 					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancycodecharactererror") {
+					MsgBox("Special Characters allowed in Sub Occupancy Code are - _");
+					$scope.listSubOccupancy()
+				
 				}
 				
 				else if (response.data=="suboccupancycodesizeerror") {
@@ -104,6 +108,9 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				
 				}else if (response.data=="suboccupancycodenull") {
 					MsgBox("Sub Occupancy Code Cannot Be Null");
+					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancynamecharactererror") {
+					MsgBox("Special Characters allowed in Sub Occupancy Name  are , . / ( ) - _");
 					$scope.listSubOccupancy()
 				}else if (response.data=="suboccupancynamesizeerror") {
 					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
@@ -164,14 +171,21 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				} else if (response.data=="Exist") {
 					MsgBox("Occupancies already exist");
 					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancycodecharactererror") {
+					MsgBox("Special Characters allowed in Sub Occupancy Code are - _");
+					$scope.listSubOccupancy()
+				
 				}
 				
 				else if (response.data=="suboccupancycodesizeerror") {
 					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
 					$scope.listSubOccupancy()
 				
-				}else if (response.data=="suboccupancycodenull") { 
+				}else if (response.data=="suboccupancycodenull") {
 					MsgBox("Sub Occupancy Code Cannot Be Null");
+					$scope.listSubOccupancy()
+				}else if (response.data=="suboccupancynamecharactererror") {
+					MsgBox("Special Characters allowed in Sub Occupancy Name  are , . / ( ) - _");
 					$scope.listSubOccupancy()
 				}else if (response.data=="suboccupancynamesizeerror") {
 					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");

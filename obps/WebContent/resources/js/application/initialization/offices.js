@@ -145,14 +145,14 @@ $scope.save = function () {
 					MsgBox("Offices name already exist");
 					$scope.listOffices();
 				}else if (response.data=="officename1") {
-					MsgBox("No Special Characters or Numbers allowed in Office Name1");
+					MsgBox("Special Characters allowed in Office Name1 are , . / ( ) - _ ");
 					$scope.listOffices();
 				
 				}else if (response.data=="officename2") {
-					MsgBox("No Special Characters or Numbers allowed in Office Name2");
+					MsgBox("Special Characters allowed in Office Name2 are , . / ( ) - _ ");
 					$scope.listOffices();
 				}else if (response.data=="officename3") {
-					MsgBox("No Special Characters or Numbers allowed in Office Name3");
+					MsgBox("Special Characters allowed in Office Name3 are , . / ( ) - _ ");
 					$scope.listOffices();
 				}
 				else if (response.data=="offshort") {
@@ -160,15 +160,15 @@ $scope.save = function () {
 					$scope.listOffices();
 				
 				}else if (response.data=="offsignatory") {
-					MsgBox("No Special Characters or Numbers allowed in Signatory Name");
+					MsgBox("Special Characters allowed in Signatory Name are , . / ( ) - _ ");
 					$scope.listOffices();
 				}
 				else if (response.data=="officeshortdes") {
-					MsgBox("No Special Characters or Numbers allowed in Signatory Designation");
+					MsgBox("Special Characters allowed in Signatory Designation are , . / ( ) - _ ");
 					$scope.listOffices();
 				}
 				else if (response.data=="sms") {
-					MsgBox("No Special Characters or Numbers allowed in SMS Username");
+					MsgBox("Special Characters allowed in SMS Username are , . / ( ) - _");
 					$scope.listOffices();
 				}
 				else if (response.data=="1") {
@@ -215,7 +215,7 @@ $scope.save = function () {
 					$scope.listOffices();
 				}
 				else if (response.data=="tenantid") {
-					MsgBox("No Special Characters or Numbers allowed in Tenant ID");
+					MsgBox("Special Characters allowed in Tenant id are - _");
 					$scope.listOffices();
 				}
 				else if (response.data=="tenantidlength") {
@@ -223,7 +223,7 @@ $scope.save = function () {
 					$scope.listOffices();
 				}
 				else if (response.data=="stateid") {
-					MsgBox("No Special Characters or Numbers allowed in State ID");
+					MsgBox("Special Characters allowed in State id are - _");
 					$scope.listOffices();
 				}
 				else if (response.data=="stateidlength") {
@@ -269,21 +269,21 @@ if($scope.offices.emailidpassword)  {
          commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.offices, function (response) {
 		
 				if (response.data=="Success") {
-					MsgBox("Offices Updated successfully.");
+					MsgBox("Offices Inserted successfully.");
 					$scope.reset();
 					$scope.listOffices();
 				} else if (response.data=="exist") {
 					MsgBox("Offices name already exist");
 					$scope.listOffices();
 				}else if (response.data=="officename1") {
-					MsgBox("No Special Characters or Numbers allowed in Office Name1");
+					MsgBox("Special Characters allowed in Office Name1 are , . / ( ) - _ ");
 					$scope.listOffices();
 				
 				}else if (response.data=="officename2") {
-					MsgBox("No Special Characters or Numbers allowed in Office Name2");
+					MsgBox("Special Characters allowed in Office Name2 are , . / ( ) - _ ");
 					$scope.listOffices();
 				}else if (response.data=="officename3") {
-					MsgBox("No Special Characters or Numbers allowed in Office Name3");
+					MsgBox("Special Characters allowed in Office Name3 are , . / ( ) - _ ");
 					$scope.listOffices();
 				}
 				else if (response.data=="offshort") {
@@ -291,15 +291,15 @@ if($scope.offices.emailidpassword)  {
 					$scope.listOffices();
 				
 				}else if (response.data=="offsignatory") {
-					MsgBox("No Special Characters or Numbers allowed in Signatory Name");
+					MsgBox("Special Characters allowed in Signatory Name are , . / ( ) - _ ");
 					$scope.listOffices();
 				}
 				else if (response.data=="officeshortdes") {
-					MsgBox("No Special Characters or Numbers allowed in Signatory Designation");
+					MsgBox("Special Characters allowed in Signatory Designation are , . / ( ) - _ ");
 					$scope.listOffices();
 				}
 				else if (response.data=="sms") {
-					MsgBox("No Special Characters or Numbers allowed in SMS Username");
+					MsgBox("Special Characters allowed in SMS Username are , . / ( ) - _");
 					$scope.listOffices();
 				}
 				else if (response.data=="1") {
@@ -346,7 +346,7 @@ if($scope.offices.emailidpassword)  {
 					$scope.listOffices();
 				}
 				else if (response.data=="tenantid") {
-					MsgBox("No Special Characters or Numbers allowed in Tenant ID");
+					MsgBox("Special Characters allowed in Tenant id are - _");
 					$scope.listOffices();
 				}
 				else if (response.data=="tenantidlength") {
@@ -354,7 +354,7 @@ if($scope.offices.emailidpassword)  {
 					$scope.listOffices();
 				}
 				else if (response.data=="stateid") {
-					MsgBox("No Special Characters or Numbers allowed in State ID");
+					MsgBox("Special Characters allowed in State id are - _");
 					$scope.listOffices();
 				}
 				else if (response.data=="stateidlength") {
@@ -370,8 +370,11 @@ if($scope.offices.emailidpassword)  {
 				else if(response.data=="Error"){
 				MsgBox("Office Already exists");
 				}
-				else
-					MsgBox("Error");
+				else{
+				MsgBox("Error");
+				}
+				jQuery('#enclosureWindow').html("");
+				
 				$scope.offices.emailidpassword="";
 				$scope.offices.smspassword="";
 				

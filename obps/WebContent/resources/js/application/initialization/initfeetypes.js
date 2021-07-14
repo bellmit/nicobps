@@ -117,7 +117,7 @@ $scope.feetypes=[];
 			else if(response.data=="Error")
 				MsgBox("Error Inserting Data");
 			else if(response.data=="Success"){
-				MsgBox("Successfully Inserted Data");
+				MsgBox("Successfully Updated Data");
 				$scope.reset(); 
 			}
 			else if(response.data=="exist"){

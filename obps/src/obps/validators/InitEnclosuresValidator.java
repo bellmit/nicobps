@@ -25,8 +25,8 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 		
 		if(param.get("enclosuredescription")!=null)
 			encldesc=((String) param.get("enclosuredescription")).trim();
-		
-		 Pattern p = Pattern.compile("[^A-Za-z_ ]");
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		 Pattern p = Pattern.compile(pattern);
 		
 	     Matcher m1 = p.matcher(enclname);
 	     

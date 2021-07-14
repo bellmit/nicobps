@@ -12,13 +12,19 @@ public class InitSubOccupanciesValidator {
 		String response = "";
 		Matcher m;
 		boolean b=false;
-		Pattern p = Pattern.compile("[^A-Za-z_ ]");
-		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9]");
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		Pattern p = Pattern.compile(pattern);
+		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9\\-]");
 		String suboccupancycode="",suboccupancyname="",description="";
 		
 		if(param.get("suboccupancycode")!=null) {
 			suboccupancycode=((String) param.get("suboccupancycode")).trim();
-			
+			m= p1.matcher(suboccupancycode);
+			b = m.find();
+			if(b) {
+				response= "suboccupancycodecharactererror";
+				return response;
+			}
 				
 			if(suboccupancycode.length()>10) {
 				response= "suboccupancycodesizeerror";
@@ -33,7 +39,12 @@ public class InitSubOccupanciesValidator {
 		
 		if(param.get("suboccupancyname")!=null) {
 			suboccupancyname=((String) param.get("suboccupancyname")).trim();
-			
+			m= p.matcher(suboccupancyname);
+			b = m.find();
+			if(b) {
+				response= "suboccupancynamecharactererror";
+				return response;
+			}
 			if(suboccupancyname.length()>255) {
 				response= "suboccupancynamesizeerror";
 				return response;

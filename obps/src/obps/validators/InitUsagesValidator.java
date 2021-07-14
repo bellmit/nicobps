@@ -13,11 +13,18 @@ public class InitUsagesValidator {
 		Matcher m;
 		boolean b=false;
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
-		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9]");
+		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9\\-]");
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		Pattern p2 = Pattern.compile(pattern);
 		String suboccupancycode="",usagecode="",usagename="",description="";
 		if(param.get("suboccupancycode")!=null) {
 			suboccupancycode=((String) param.get("suboccupancycode")).trim();
-			
+			m= p1.matcher(suboccupancycode);
+			b = m.find();
+			if(b) {
+				response= "suboccupancycodecharactererror";
+				return response;
+			}
 				
 			if(suboccupancycode.length()>10) {
 				response= "suboccupancycodesizeerror";
@@ -29,7 +36,12 @@ public class InitUsagesValidator {
 		}
 		if(param.get("usagecode")!=null) {
 			usagecode=((String) param.get("usagecode")).trim();
-			
+			m= p1.matcher(usagecode);
+			b = m.find();
+			if(b) {
+				response= "usagecodecharactererror";
+				return response;
+			}
 				
 			if(usagecode.length()>20) {
 				response= "usagecodesizeerror";
@@ -41,7 +53,12 @@ public class InitUsagesValidator {
 		}
 		if(param.get("usagename")!=null) {
 			usagename=((String) param.get("usagename")).trim();
-			
+			m= p2.matcher(usagename);
+			b = m.find();
+			if(b) {
+				response= "usagenamecharactererror";
+				return response;
+			}
 				
 			if(usagename.length()>255) {
 				response= "usagenamesizeerror";
