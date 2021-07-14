@@ -31,6 +31,8 @@ import obps.services.ServiceInitializationInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.InitFeeMasterValidatorInterface;
 import obps.validators.InitLicenseesRegistrationValidator;
+import obps.validators.InitOccupanciesValidator;
+import obps.validators.InitSubOccupanciesValidator;
 
 @Controller
 @Configuration
@@ -41,6 +43,10 @@ public class ControllerInitialization {
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 	private InitLicenseesRegistrationValidator initLicenseesRegistrationValidator;
+	@Autowired
+	private InitOccupanciesValidator initOccupanciesValidator;
+	@Autowired
+	private InitSubOccupanciesValidator initSubOccupanciesValidator;
 	@Autowired
 	private InitFeeMasterValidatorInterface initFeeMasterValidatorInterface;
 	@Autowired
@@ -273,30 +279,7 @@ public class ControllerInitialization {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@PostMapping(value = "/updatesuboccupancy.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> updatesuboccupancy(@RequestBody SubOccupancies suboccupancies) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-		System.out.println("feemaster:" + suboccupancies);
-
-		// check existance
-		String sql = "";
-		Object[] values = { suboccupancies.getSuboccupancycode(), suboccupancies.getDescription(),
-				suboccupancies.getSuboccupancyname() };
-		sql = "SELECT * FROM masters.suboccupancies WHERE  LOWER(suboccupancycode)=LOWER(?) AND LOWER(description)=LOWER(?) AND LOWER(suboccupancyname)=LOWER(?) ";
-
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		if (!exist) {
-			if (serviceInitalizationInterface.updatesuboccupancy(suboccupancies)) {
-				response.put("code", 200);
-				response.put("data", 1);
-				return ResponseEntity.ok().body(response);
-			}
-		}
-
-		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
-		return ResponseEntity.ok().body(response);
-	}
+	
 
 	@PostMapping(value = "/updateusages.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateusages(@RequestBody Usages usages) {
@@ -393,25 +376,83 @@ public class ControllerInitialization {
 	@PostMapping(value = "/initsuboccupancies.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initsuboccupancies(@RequestBody Map<String, Object> suboccupancies) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		// check existance
-		String sql = "";
-		Object[] values = { suboccupancies.get("suboccupancycode"), suboccupancies.get("description"),
-				suboccupancies.get("suboccupancyname") };
-		sql = "SELECT * FROM masters.suboccupancies WHERE  LOWER(suboccupancycode)=LOWER(?) OR LOWER(description)=LOWER(?) OR LOWER(suboccupancyname)=LOWER(?) ";
-
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-
-		if (!exist) {
-			if (serviceInitalizationInterface.initsuboccupancies(suboccupancies)) {
+		
+		if(suboccupancies!=null) {
+			String validate="";
+			validate = initSubOccupanciesValidator.validateInitSubOccupancies(suboccupancies);
+			if(validate!="") {
 				response.put("code", 200);
-				response.put("data", 1);
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			} 
+			String sql = "";
+			Object[] values = { suboccupancies.get("suboccupancycode"), suboccupancies.get("description"),
+					suboccupancies.get("suboccupancyname") };
+			sql = "SELECT * FROM masters.suboccupancies WHERE  LOWER(suboccupancycode)=LOWER(?) OR LOWER(description)=LOWER(?) OR LOWER(suboccupancyname)=LOWER(?) ";
+
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+
+			if (!exist) {
+				if (serviceInitalizationInterface.initsuboccupancies(suboccupancies)) {
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
+				}
+			} 
+			else {
+				response.put("code", 200);
+				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
-		} 
+		}
+		
 
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping(value = "/updatesuboccupancy.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updatesuboccupancy(@RequestBody SubOccupancies suboccupancies) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		if(suboccupancies!=null) {
+			if(suboccupancies.getSuboccupancycode()!=null)
+				param.put("suboccupancycode", suboccupancies.getSuboccupancycode());
+			if(suboccupancies.getDescription()!=null)
+				param.put("description", suboccupancies.getDescription());
+			if(suboccupancies.getSuboccupancyname()!=null)
+				param.put("suboccupancyname", suboccupancies.getSuboccupancyname());
+			String validate="";
+			validate = initSubOccupanciesValidator.validateInitSubOccupancies(param);
+			if(validate!="") {
+				response.put("code", 200);
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+			String sql = "";
+			Object[] values = { suboccupancies.getSuboccupancycode(), suboccupancies.getDescription(),
+					suboccupancies.getSuboccupancyname() };
+			sql = "SELECT * FROM masters.suboccupancies WHERE  LOWER(suboccupancycode)=LOWER(?) AND LOWER(description)=LOWER(?) AND LOWER(suboccupancyname)=LOWER(?) ";
+
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+			if (!exist) {
+				if (serviceInitalizationInterface.updatesuboccupancy(suboccupancies)) {
+					response.put("code", 200);
+					response.put("data","Success");
+					return ResponseEntity.ok().body(response);
+				}
+			}else {
+				response.put("code", 200);
+				response.put("data","Exist");
+				return ResponseEntity.ok().body(response);
+			}
+		}
+		// check existance
+		
+
+		response.put("code", HttpStatus.OK);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -442,29 +483,60 @@ public class ControllerInitialization {
 	@PostMapping(value = "/initoccupancies.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoccupancies(@RequestBody Map<String, Object> occupancy) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		// check existance
-		String sql = "";
-		Object[] values = { occupancy.get("occupancycode"), occupancy.get("occupancyname"),
-				occupancy.get("occupancyalias") };
-		sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) OR LOWER(occupancyname)=LOWER(?) OR LOWER(occupancyalias)=LOWER(?) ";
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		System.out.println("exist::"+exist);
-		if (!exist) {
-			if (serviceInitalizationInterface.initoccupancy(occupancy)) {
+		String validate="";
+		if(occupancy!=null) {
+			validate=initOccupanciesValidator.validateInitOccupancies(occupancy);
+			if(validate!="") {
 				response.put("code", 200);
-				response.put("data", 1);
+				response.put("data",validate);
 				return ResponseEntity.ok().body(response);
 			}
+				
+			String sql = "";
+			Object[] values = { occupancy.get("occupancycode"), occupancy.get("occupancyname"),
+					occupancy.get("occupancyalias") };
+			sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) OR LOWER(occupancyname)=LOWER(?) OR LOWER(occupancyalias)=LOWER(?) ";
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+			System.out.println("exist::"+exist);
+			if (!exist) {
+				if (serviceInitalizationInterface.initoccupancy(occupancy)) {
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
+				}
+			}
+			else {
+				response.put("code", 200);
+				response.put("data", "Exist");
+				return ResponseEntity.ok().body(response);
+			}
+				
 		}
+	
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
 	@PostMapping(value = "/updateoccupancy.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateoccupancy(@RequestBody Occupancies occupancy) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		// check existance
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String validate="";
+		if(occupancy!=null) {
+			if(occupancy.getOccupancycode()!=null)
+				param.put("occupancycode", occupancy.getOccupancycode());
+			if(occupancy.getOccupancyname()!=null)
+				param.put("occupancyname", occupancy.getOccupancyname());
+			if(occupancy.getOccupancyalias()!=null)
+				param.put("occupancyalias", occupancy.getOccupancyalias());
+			validate=initOccupanciesValidator.validateInitOccupancies(param);
+			if(validate!="") {
+				response.put("code", 200);
+				response.put("data",validate);
+				return ResponseEntity.ok().body(response);
+			}
+			
 		String sql = "";
 		Object[] values = { occupancy.getOccupancycode(), occupancy.getOccupancyname(),
 				occupancy.getOccupancyalias()};
@@ -473,13 +545,18 @@ public class ControllerInitialization {
 				if (!exist) {
 			if (serviceInitalizationInterface.updateoccupancy(occupancy)) {
 				response.put("code", 200);
-				response.put("data", 1);
+				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
+		}else {
+			response.put("code", 200);
+			response.put("data", "Exist");
+			return ResponseEntity.ok().body(response);
 		}
-	
+				
+		}
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 

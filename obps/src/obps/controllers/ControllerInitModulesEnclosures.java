@@ -42,7 +42,7 @@ import obps.services.ServiceUserManagementInterface;
 //@RestController
 @Controller
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.properties") 
 public class ControllerInitModulesEnclosures {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
@@ -70,57 +70,18 @@ public class ControllerInitModulesEnclosures {
 	@PostMapping(value = "/saveModuleEnclosures.htm")
 	public @ResponseBody String saveModuleEnclosures(@RequestBody List<Map<String, Object>> modulesenclosures) {
 		String response="";
-		String validate= initEnclosuresValidatorInterface.validateModulesEnclosure(modulesenclosures);
-		if(validate!="")
-			response=validate;
-		else
-			response = serviceUserManagementInterface.saveUserpages(modulesenclosures);
+		if(modulesenclosures!=null) {
+			String validate= initEnclosuresValidatorInterface.validateModulesEnclosure(modulesenclosures);
+			if(validate!="")
+				response=validate;
+			else
+				response = serviceUserManagementInterface.saveUserpages(modulesenclosures);
+		}
+		
 		return response;
 	}
 
-//	@PostMapping(value = "/initoffices.htm", consumes = "application/json")
-//	public ResponseEntity<HashMap<String, Object>> initoffices(@RequestBody Map<String, Object> offices) {
-//		HashMap<String, Object> response = new HashMap<String, Object>();
-//		Long officecode = getMaxOfficeCode() +1;
-//		System.out.println("Enclosure Code"+officecode);
-//		offices.put("officecode", officecode);
-//		
-//		if (serviceUserManagementInterface.initoffices(offices)) {
-//			response.put("response", HttpStatus.CREATED);
-//			response.put("data", 1);
-//		return ResponseEntity.ok().body(response);
-//	}
-//	response.put("response", HttpStatus.OK);
-//	response.put("data", -1);
-//		return ResponseEntity.ok().body(response);
-//	}
-//	
-//	@PostMapping(value = "/updateinitoffices.htm", consumes = "application/json")
-//	public ResponseEntity<HashMap<String, Object>> updateinitoffices(@RequestBody Offices offices) {
-//		HashMap<String, Object> response = new HashMap<String, Object>();
-//
-//		if (serviceUserManagementInterface.updateinitoffices(offices)) {
-//			response.put("response", HttpStatus.CREATED);
-//			response.put("data", 1);
-//			return ResponseEntity.ok().body(response);
-//		}
-//		response.put("response", HttpStatus.OK);
-//		response.put("data", -1);
-//		return ResponseEntity.ok().body(response);
-//	}
-//
-//	@GetMapping("/listOffices.htm")
-//	public @ResponseBody List<Offices> listOffices() {
-//		
-//		System.out.println("dasdasdasd11111");
-//		return serviceUserManagementInterface.listOffices();
-//	}
-//
-//	private Long getMaxOfficeCode() {
-//		String sql = "SELECT MAX(officecode) FROM masters.offices";		
-//		return serviceUtilInterface.getMaxValue(sql);	
-//		
-//	}
+
 
 	
 }

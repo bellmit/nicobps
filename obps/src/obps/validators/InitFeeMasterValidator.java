@@ -25,12 +25,14 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 			licencetypecode=param.get("licenseetypecode").toString();
 			m = p3.matcher(licencetypecode);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "licensetypecodecharactererror";
-			
+				return response;
+			}
 			if(licencetypecode.length()>5) {
 				System.out.println(licencetypecode.length()>5);
 				response= "licensetypecodesizeerror";
+				return response;
 			}
 		}
 	
@@ -39,59 +41,71 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 			officecode=param.get("officecode").toString();
 			m = p3.matcher(officecode);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "officecodecharactererror";
-			
+				return response;
+			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
 				response= "officecodesizeerror";
+				return response;
 			}
 		}
 		if(param.get("feecode")!=null) {
 			feecode=param.get("feecode").toString();
 			m = p3.matcher(feecode);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "feecodecharactererror";
-			
+				return response;
+			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
 				response= "feecodesizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feecodenullerror";
-		
+			return response;
+		}
 		if(param.get("feetypecode")!=null) {
 			feetypecode=param.get("feetypecode").toString();
 			m = p3.matcher(feetypecode);
 			boolean b1 = m.find();
-			if(!b1)
-				response= "feetypecodecharactererror";		
+			if(!b1) {
+				response= "feetypecodecharactererror";
+				return response;
+			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
 				response= "feetypecodesizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feetypecodenullerror";
-		
+			return response;
+		}
 		
 		if(param.get("feeamount")!=null) {
 			feeamount= param.get("feeamount").toString();
 			m = p3.matcher(feeamount);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "feeamountnumbererror";
-			
+				return response;
+			}
 			if(feeamount.length()>5) {
 				System.out.println(feeamount.length()>5);
 				response= "feeamountsizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feeamountnullerror";
-			
+			return response;
+		}
 		return response;
 	}
 
@@ -109,12 +123,14 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 			licencetypecode=param.getLicenseetypecode().toString();
 			m = p3.matcher(licencetypecode);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "licensetypecodecharactererror";
-			
+				return response;
+			}
 			if(licencetypecode.length()>5) {
 				System.out.println(licencetypecode.length()>5);
 				response= "licensetypecodesizeerror";
+				return response;
 			}
 		}
 	
@@ -123,59 +139,71 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 			officecode=param.getOfficecode().toString();
 			m = p3.matcher(officecode);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "officecodecharactererror";
-			
+				return response;
+			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
 				response= "officecodesizeerror";
+				return response;
 			}
 		}
 		if(param.getFeecode()!=null) {
 			feecode=param.getFeecode().toString();
 			m = p3.matcher(feecode);
 			boolean b1 = m.find();
-			if(!b1)
+			if(!b1) {
 				response= "feecodecharactererror";
-			
+				return response;
+			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
 				response= "feecodesizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feecodenullerror";
-		
+			return response;
+		}
 		if(param.getFeetypecode()!=null) {
 			feetypecode=param.getFeetypecode().toString();
 			m = p3.matcher(feetypecode);
 			boolean b1 = m.find();
-			if(!b1)
-				response= "feetypecodecharactererror";		
+			if(!b1) {
+				response= "feetypecodecharactererror";
+				return response;
+			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
 				response= "feetypecodesizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feetypecodenullerror";
-		
+			return response;
+		}
 		
 		if(param.getFeeamount()!=null) {
 			feeamount= param.getFeeamount().toString();
 			m = p3.matcher(feeamount);
 			boolean b1 = m.find(); 
-			if(!b1)
+			if(!b1) {
 				response= "feeamountnumbererror";
-			
+				return response;
+			}
 			if(feeamount.length()>5) {
 				System.out.println(feeamount.length()>5);
 				response= "feeamountsizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feeamountnullerror";
-			
+			return response;
+		}
 		return response;
 	}
 
@@ -190,15 +218,18 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 			if(feetypedescription.length()>255) {
 				System.out.println(feetypedescription.length()>255);
 				response= "feetypedescriptionsizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feetypedescriptionnull";
+			return response;
+		}
 		return response;
 	}
 
 	@Override
-	public String validateInitFeeTypes(FeeTypes param) {
+	public String validateInitFeeTypes(FeeTypes param) { 
 		String response = "";
 		System.out.println(param);
 
@@ -209,10 +240,13 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 			if(feetypedescription.length()>255) {
 				System.out.println(feetypedescription.length()>255);
 				response= "feetypedescriptionsizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "feetypedescriptionnull";
+			return response;
+		}
 		return response;
 	}
 

@@ -3,7 +3,7 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 	var scope = angular.element($("#enclosuresCtrl")).scope();
 	commonInitService.success();
 	/* Common Ajax Params */
-	var successMsg = "Success: Enclosures created or updated successfully";
+	var successMsg = "Success: Enclosures created or updated successfully"; 
 	var errorMsg = "Error: Unable to perform action";
 	$scope.errorCallback = "";
 	$scope.method = "POST";

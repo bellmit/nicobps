@@ -4,7 +4,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 		commonInitService.success();
 		/* Common Ajax Params */
 		var successMsg = "Success: Fee Master created or updated successfully";
-		var errorMsg = "Error: Unable to perform action or Already Existing Data";
+		var errorMsg = "Error: Unable to perform action or Already Existing Data"; 
 		$scope.errorCallback = "";
 		$scope.method = "POST";
 		$scope.successCallback = "";

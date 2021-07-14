@@ -14,27 +14,33 @@ public class InitLicenseesRegistrationValidator {
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
 		String licenseedescription="",licenseeregistrationcode="";
 		if(param.get("licenseeregistrationcode")!=null) {
-			licenseeregistrationcode=param.get("licenseeregistrationcode").toString();
+			licenseeregistrationcode=param.get("licenseeregistrationcode").toString(); 
 			if(licenseeregistrationcode.length()>5) {
 				response= "licenseeregistrationcodesizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "licenseeregistrationcodenull";
-		
+			return response;
+		}
 		if(param.get("licenseedescription")!=null) {
 			licenseedescription=((String) param.get("licenseedescription")).trim();
 			m= p.matcher(licenseedescription);
 			b = m.find();
-			if(b)
+			if(b) {
 				response= "licenseedescriptioncharactererror";
+				return response;
+			}
 			if(licenseedescription.length()>255) {
 				response= "licenseedescriptionsizeerror";
+				return response;
 			}
 		}
-		else
+		else {
 			response= "licenseedescriptionnull";
-			
+			return response;
+		}
 		
 		return response;
 		

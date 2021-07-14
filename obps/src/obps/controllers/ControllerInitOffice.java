@@ -48,7 +48,7 @@ import obps.services.ServiceUserManagementInterface;
 @Configuration
 @PropertySource("classpath:application.properties")
 public class ControllerInitOffice {
-	@Autowired
+	@Autowired 
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 
@@ -75,45 +75,47 @@ public class ControllerInitOffice {
 	@PostMapping(value = "/initoffices.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		System.out.println(offices);
-		String validate= initOfficesValidatorInterface.validateInitOffices(offices);
-		System.out.println("validate"+validate);
-		if(validate!="") {
-			response.put("data", validate);
-			return ResponseEntity.ok().body(response);
-		}
-		Long officecode=(long) 0;
-		if(getMaxOfficeCode()>0)
-			officecode = getMaxOfficeCode() +1;
-		else
-			officecode = officecode+1;
-		System.out.println("Enclosure Code"+officecode);
-		offices.put("officecode", officecode);
-		
-		String officename1=((String) offices.get("officename1")).trim();
-		String officename2=((String) offices.get("officename2")).trim();
-		String officename3="";
-		if(offices.get("officename3")!=null)
-		officename3=((String) offices.get("officename3")).trim();
-		String sql = "Select count(*) from  masters.offices where LOWER(officename1)=LOWER(?) AND LOWER(officename2)=LOWER(?) AND LOWER(officename3)=LOWER(?)";
-		Object[] values = {officename1,officename2,officename3 };
-		boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
-		System.out.println(exist);
-		if(exist)
-			response.put("data", "exist");
-		else
-		{
-			
-			
-			
-	if (serviceUserManagementInterface.initoffices(offices)) {
-				
-				response.put("data", "Success");
+		if(offices!=null) {
+			System.out.println(offices);
+			String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+			System.out.println("validate"+validate);
+			if(validate!="") {
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
 			}
+			Long officecode=(long) 0;
+			if(getMaxOfficeCode()>0)
+				officecode = getMaxOfficeCode() +1;
 			else
-				response.put("data", "Error");
+				officecode = officecode+1;
+			System.out.println("Enclosure Code"+officecode);
+			offices.put("officecode", officecode);
+			
+			String officename1=((String) offices.get("officename1")).trim();
+			String officename2=((String) offices.get("officename2")).trim();
+			String officename3="";
+			if(offices.get("officename3")!=null)
+			officename3=((String) offices.get("officename3")).trim();
+			String sql = "Select count(*) from  masters.offices where LOWER(officename1)=LOWER(?) AND LOWER(officename2)=LOWER(?) AND LOWER(officename3)=LOWER(?)";
+			Object[] values = {officename1,officename2,officename3 };
+			boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
+			System.out.println(exist);
+			if(exist)
+				response.put("data", "exist");
+			else
+			{
+				
+				
+				
+		if (serviceUserManagementInterface.initoffices(offices)) {
+					
+					response.put("data", "Success");
+				}
+				else
+					response.put("data", "Error");
+			}
 		}
+		
 		
 	
 		System.out.println(response);
@@ -123,19 +125,22 @@ public class ControllerInitOffice {
 	@PostMapping(value = "/updateinitoffices.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateinitoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate= initOfficesValidatorInterface.validateInitOffices(offices);
-		System.out.println("validate"+validate);
-		if(validate!="") {
-			response.put("data", validate);
-			return ResponseEntity.ok().body(response);
+		if(offices!=null) {
+			String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+			System.out.println("validate"+validate);
+			if(validate!="") {
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+			
+			if (serviceUserManagementInterface.updateinitoffices(offices)) {
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+			else
+				response.put("data", "Error");
 		}
 		
-		if (serviceUserManagementInterface.updateinitoffices(offices)) {
-			response.put("data", "Success");
-			return ResponseEntity.ok().body(response);
-		}
-		else
-			response.put("data", "Error");
 		
 		return ResponseEntity.ok().body(response);
 	}
@@ -154,7 +159,7 @@ public class ControllerInitOffice {
 	public @ResponseBody String showFile(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "officecode", required = true) String officecode
 			) {
-		System.out.println(officecode );
+		
 		byte[] binaryFile=null;
 		try {
 			String sql = "select logo from masters.offices where officecode=?";

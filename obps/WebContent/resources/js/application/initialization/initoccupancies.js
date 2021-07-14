@@ -9,7 +9,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 		$scope.method = "POST";
 		$scope.successCallback = "";
 		$scope.urlEndpoint = "";
-
+ 
 		/*------------------------*/
 
 		$scope.actionButton = 1;
@@ -68,7 +68,61 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./initoccupancies.htm";
 
-			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.occupancy, () => { $scope.reset(); $scope.listOccupancies(); alert(successMsg) }, () => { alert(errorMsg) });
+			
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.occupancy, function (response) {
+				if (response.data=="Success") {
+					MsgBox("Occupancies Inserted successfully.");
+					$scope.reset();
+					$scope.listOccupancies()
+				} else if (response.data=="Exist") {
+					MsgBox("Occupancies already exist");
+					$scope.listOccupancies()
+				}
+				else if (response.data=="occupancycodecharactererror") {
+					MsgBox("No Special Characters allowed in Occupancy Code");
+					$scope.listOccupancies()
+				
+				}
+				else if (response.data=="occupancycodesizeerror") {
+					MsgBox("Occupancy Code Cannot be more than 10 characters");
+					$scope.listOccupancies()
+				
+				}else if (response.data=="occupancycodenull") {
+					MsgBox("Occupancy Code Cannot Be Null");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancynamecharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Occupancy Name");
+					$scope.listOccupancies()
+				
+				}else if (response.data=="occupancynamesizeerror") {
+					MsgBox("Occupancy Name Cannot be more than 50 characters");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancynamenull") {
+					MsgBox("Occupancy Name Cannot be Null");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancyaliascharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Occupancy Alias");
+					$scope.listOccupancies()
+				
+				}else if (response.data=="occupancyaliassizeerror") {
+					MsgBox("Occupancy Alias Cannot be more than 50 characters");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancyaliasnull") {
+					MsgBox("Occupancy Alias Cannot be Null");
+					$scope.listOccupancies()
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				
+				}
+				
+				
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+				$scope.listLicensees()
+			});
 		};
 
 		//    $scope.toggleUserStatus= function (usercode) {
@@ -88,7 +142,60 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 				return false;
 			$scope.method = "POST";
 			$scope.urlEndpoint = "./updateoccupancy.htm";
-			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.occupancy, () => { $scope.reset(); $scope.listOccupancies(), alert(successMsg) }, () => { alert(errorMsg) });
+			commonInitService.save($scope.method, $scope.urlEndpoint, $scope.occupancy, function (response) {
+				if (response.data=="Success") {
+					MsgBox("Occupancies Updated successfully.");
+					$scope.reset();
+					$scope.listOccupancies()
+				} else if (response.data=="Exist") {
+					MsgBox("Occupancies already exist");
+					$scope.listOccupancies()
+				}
+				else if (response.data=="occupancycodecharactererror") {
+					MsgBox("No Special Characters allowed in Occupancy Code");
+					$scope.listLicensees()
+				
+				}
+				else if (response.data=="occupancycodesizeerror") {
+					MsgBox("Occupancy Code Cannot be more than 10 characters");
+					$scope.listOccupancies()
+				
+				}else if (response.data=="occupancycodenull") {
+					MsgBox("Occupancy Code Cannot Be Null");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancynamecharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Occupancy Name");
+					$scope.listOccupancies()
+				
+				}else if (response.data=="occupancynamesizeerror") {
+					MsgBox("Occupancy Name Cannot be more than 50 characters");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancynamenull") {
+					MsgBox("Occupancy Name Cannot be Null");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancyaliascharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Occupancy Alias");
+					$scope.listOccupancies()
+				
+				}else if (response.data=="occupancyaliassizeerror") {
+					MsgBox("Occupancy Alias Cannot be more than 50 characters");
+					$scope.listOccupancies()
+				}else if (response.data=="occupancyaliasnull") {
+					MsgBox("Occupancy Alias Cannot be Null");
+					$scope.listOccupancies()
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				
+				}
+				
+				
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+				$scope.listOccupancies()
+			});
 		}
 
 		/*-----------------------------------------------------------------------------------------------------------------------------------*/

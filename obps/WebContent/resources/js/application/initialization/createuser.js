@@ -3,7 +3,7 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 	var scope = angular.element($("#createuserCtrl")).scope();
 	commonInitService.success();
 	/* Common Ajax Params */
-	var successMsg = "Success: User created or updated successfully";
+	var successMsg = "Success: User created or updated successfully"; 
 	var errorMsg = "Error: Unable to perform action";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
