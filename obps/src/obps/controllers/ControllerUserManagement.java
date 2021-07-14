@@ -40,6 +40,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
+import obps.util.common.Utilty;
 import obps.validators.UploadEnclosuresValidatorInterface;
 import obps.validators.UserManagementValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
@@ -104,25 +105,26 @@ public class ControllerUserManagement {
 	@PostMapping(value = "/resendOTP.htm")
 	public @ResponseBody String resendOTP(HttpServletRequest request) 
 	{	
-		System.out.println("-------------------------");
+		
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
 
-		System.out.println("issms : " + issms);
-		System.out.println("isemail : " + isemail);		
-		System.out.println("-------------------------");		
+		//System.out.println("-------------------------");
+		//System.out.println("issms : " + issms);
+		//System.out.println("isemail : " + isemail);		
+		//System.out.println("-------------------------");		
 		
 		if (issms.equals("Y")) {
-			Integer mobileotp = 123;// Utilty.getRandomNumber();
+			Integer mobileotp = Utilty.getRandomNumber();
 			request.getSession().setAttribute("mobileotp", mobileotp.toString());
 			// Send SMS
-			System.out.println("mobileotp : "+mobileotp);
+			//System.out.println("mobileotp : "+mobileotp);
 		}
 		if (isemail.equals("Y")) {
-			Integer emailotp = 123;// Utilty.getRandomNumber();
+			Integer emailotp = Utilty.getRandomNumber();
 			request.getSession().setAttribute("emailotp", emailotp.toString());
 			// Send Email
-			System.out.println("emailotp : "+emailotp);
+			//System.out.println("emailotp : "+emailotp);
 		}		
 		return "OTP Sent";
 	}
@@ -163,12 +165,12 @@ public class ControllerUserManagement {
 		if (issms.equals("Y") || isemail.equals("Y")) {
 			if (isotp.equals("N")) {
 				if (issms.equals("Y")) {
-					Integer mobileotp = 123;// Utilty.getRandomNumber();
+					Integer mobileotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("mobileotp", mobileotp.toString());
 					// Send SMS
 				}
 				if (isemail.equals("Y")) {
-					Integer emailotp = 123;// Utilty.getRandomNumber();
+					Integer emailotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("emailotp", emailotp.toString());
 					// Send Email
 				}
