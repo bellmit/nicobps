@@ -70,6 +70,8 @@ public interface ServiceUtilInterface {
 
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode);
 
+	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode);
+	
 	public List<CommonMap> listBpaEnclosures(final Short modulecode, String applicationcode);
 
 	public List<CommonMap> listOccupancies();

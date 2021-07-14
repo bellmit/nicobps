@@ -218,6 +218,21 @@ public class ServiceUtil implements ServiceUtilInterface {
 		Object[] criteria = { usercode, modulecode, licenseetypecode };
 		return this.listCommonMap(sql, criteria);
 	}
+	@Override
+	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {
+		System.out.println("modulecode : "+modulecode);
+		System.out.println("usercode : "+usercode);
+		System.out.println("licenseetypecode : "+licenseetypecode);
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "
+				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
+				+ "WHERE E.enabled='Y' AND mandatory='Y' AND M.modulecode=? AND licenseetypecode=? "
+				+ "AND E.enclosurecode NOT IN (SELECT enclosurecode FROM  nicobps.licenseesenclosures WHERE usercode=?) "
+				+ "ORDER BY mandatory DESC,E.enclosurecode";
+		Object[] criteria = { modulecode, licenseetypecode,usercode };
+		return this.listCommonMap(sql, criteria);
+	}	
+	
+	
 	/////////////////////
 	@Override
 	public List<CommonMap> listBpaEnclosures(final Short modulecode,String aplicationcode) {

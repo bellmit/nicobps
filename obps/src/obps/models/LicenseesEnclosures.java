@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class LicenseesEnclosures {
 	private String usercode; 
+	private String licenseetypecode;
     private String sessioncaptcha;    
     private String userresponsecaptcha; 	
 	private String afrcode;
@@ -16,6 +17,13 @@ public class LicenseesEnclosures {
 	}
 	public void setUsercode(String usercode) {
 		this.usercode = usercode;
+	}
+	
+	public String getLicenseetypecode() {
+		return licenseetypecode;
+	}
+	public void setLicenseetypecode(String licenseetypecode) {
+		this.licenseetypecode = licenseetypecode;
 	}
 	
 	public String getAfrcode() {

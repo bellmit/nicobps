@@ -111,6 +111,16 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 					}
 				}
 				if (response) {
+					Short urlcode = Short.valueOf("0");
+					String userpagecode = usercode + "U" + urlcode;
+					sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+					Object[] values3 = { userpagecode, usercode, urlcode };
+					response = jdbcTemplate.update(sql, values3) > 0;
+				}	
+				
+				List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf((String) param.get("licenseetypecode")));
+				
+				if (response && listEnclosuresNotUploades.size()==0) {
 					Long afrcode = Long.valueOf((String) param.get("afrcode"));
 					String applicationcode = usercode + "";
 					Short modulecode = Short.valueOf("1");
@@ -125,13 +135,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 							fromusercode, remarks };
 					response = jdbcTemplate.update(sql, values2) > 0;
 				}
-				if (response) {
-					Short urlcode = Short.valueOf("0");
-					String userpagecode = usercode + "U" + urlcode;
-					sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
-					Object[] values3 = { userpagecode, usercode, urlcode };
-					response = jdbcTemplate.update(sql, values3) > 0;
-				}
+
 			}
 			if (param.get("usertype") != null && param.get("usertype").equals("BACKEND_USER")) {
 				sql = "INSERT INTO nicobps.useroffices(usercode, officecode)VALUES (?, ?)";
@@ -206,7 +210,8 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		try 
 		{
 			Integer usercode = Integer.valueOf(licenseesenclosures.getUsercode());
-
+			Short licenseetypecode = Short.valueOf(licenseesenclosures.getLicenseetypecode());
+			
 			if (licenseesenclosures.getAppenclosures().size() > 0) 
 			{			
 				String sql_insert = "INSERT INTO nicobps.licenseesenclosures(usercode,enclosurecode,enclosureimage) VALUES(?,?,?)";
@@ -230,32 +235,37 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 				}
 				response = (jdbcTemplate.batchUpdate(sql_insert, list_insert).length > 0 || jdbcTemplate.batchUpdate(sql_update, list_update).length > 0);
 				
-				if (response) {					
-					Long afrcode = Long.valueOf(licenseesenclosures.getAfrcode());
-					String applicationcode = usercode + "";
-					Short modulecode = Short.valueOf("1");
-					Short fromprocesscode = Short.valueOf("2");
-					Short toprocesscode = Short.valueOf("3");
-					Integer fromusercode = usercode;
-					String remarks = "Upload Enclosures";
-
-					sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
-							+ "VALUES (?,?,?,?,?,?,?) ";
-					Object[] values2 = { afrcode, applicationcode, modulecode, fromprocesscode, toprocesscode,fromusercode, remarks };
-					response = jdbcTemplate.update(sql, values2) > 0;
-				}
-				if (response) {
-					Short urlcode = Short.valueOf("16");
-					String userpagecode = usercode + "U" + urlcode;
-
-					sql = "DELETE FROM nicobps.userpages WHERE usercode=? AND urlcode=?";
-					Object[] values1 = { usercode, urlcode };
-					jdbcTemplate.update(sql, values1);
-
-					sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
-					Object[] values3 = { userpagecode, usercode, urlcode };
-					response = jdbcTemplate.update(sql, values3) > 0;
-				}
+				//List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), usercode, licenseetypecode);
+				//System.out.println("listEnclosuresNotUploades.size() : "+listEnclosuresNotUploades.size());
+				//if (listEnclosuresNotUploades.size()==0) 
+				//{				
+					if (response) {					
+						Long afrcode = Long.valueOf(licenseesenclosures.getAfrcode());
+						String applicationcode = usercode + "";
+						Short modulecode = Short.valueOf("1");
+						Short fromprocesscode = Short.valueOf("2");
+						Short toprocesscode = Short.valueOf("3");
+						Integer fromusercode = usercode;
+						String remarks = "Upload Enclosures";
+	
+						sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,remarks) "
+								+ "VALUES (?,?,?,?,?,?,?) ";
+						Object[] values2 = { afrcode, applicationcode, modulecode, fromprocesscode, toprocesscode,fromusercode, remarks };
+						response = jdbcTemplate.update(sql, values2) > 0;
+					}
+					if (response) {
+						Short urlcode = Short.valueOf("16");
+						String userpagecode = usercode + "U" + urlcode;
+	
+						sql = "DELETE FROM nicobps.userpages WHERE usercode=? AND urlcode=?";
+						Object[] values1 = { usercode, urlcode };
+						jdbcTemplate.update(sql, values1);
+	
+						sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
+						Object[] values3 = { userpagecode, usercode, urlcode };
+						response = jdbcTemplate.update(sql, values3) > 0;
+					}
+				//}
 			}
 		} catch (Exception e) {
 			e.getStackTrace();

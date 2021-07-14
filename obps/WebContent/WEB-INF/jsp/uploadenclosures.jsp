@@ -55,7 +55,11 @@
                         </div>
                      
                         <div id="UploadEncMsg" class="formErrorContent" ></div>
-                        <span style="color:red"> <core:out value="${successMsg}" escapeXml="true" /></span>    
+                        <span style="color:red"> <core:out value="${successMsg}" escapeXml="true" /></span>  
+                        
+                        <core:if  test="${empty successMsg}">			
+                        	<div style="color:red"> <core:out value="${successNotUploadedMsg}" escapeXml="true" /></div>   
+                        </core:if>                        
 					</div>					     				
     				</td>
     				<td></td>	

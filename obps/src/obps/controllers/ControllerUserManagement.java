@@ -194,6 +194,7 @@ public class ControllerUserManagement {
 			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
 			HttpServletRequest request) {
 		model.addAttribute("successMsg", "");
+		model.addAttribute("successNotUploadedMsg", "");
 		String usercode = (String) request.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
 		if (licenseetypecode != null && usercode != null) {
@@ -209,12 +210,19 @@ public class ControllerUserManagement {
 			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
 			HttpServletRequest request) {
 		model.addAttribute("successMsg", "");
+		model.addAttribute("successNotUploadedMsg", "");
 		String usercode = (String) request.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
 		if (licenseetypecode != null && usercode != null) {
 			// model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
 			model.addAttribute("enclosuresList", serviceUtilInterface.listEnclosures(Short.valueOf("1"),
 					Integer.valueOf(usercode), Short.valueOf(licenseetypecode)));
+			List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));			
+			model.addAttribute("listEnclosuresNotUploades",listEnclosuresNotUploades );
+			System.out.println("listEnclosuresNotUploades.size() : "+listEnclosuresNotUploades.size());
+			if(listEnclosuresNotUploades.size()>0) {
+				model.addAttribute("successNotUploadedMsg", "Please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs");
+			}
 		}
 		return "uploadenclosuresint";
 	}
@@ -229,17 +237,37 @@ public class ControllerUserManagement {
 		String usercode = (String) request.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
 		model.addAttribute("successMsg", "");
-		if (usercode != null && licenseetypecode != null) {
-
+		model.addAttribute("successNotUploadedMsg", "");
+		if (usercode != null && licenseetypecode != null) 
+		{
 			licenseesenclosures.setUsercode(usercode);
+			licenseesenclosures.setLicenseetypecode(usercode);
 			licenseesenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
 			vle.validate(licenseesenclosures, result);
 			if (!result.hasErrors()) {
 				String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 				licenseesenclosures.setAfrcode(afrcode);
 
-				if (serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures)) {
-					model.addAttribute("successMsg", "The documents have been uploaded successfully.");
+				if (serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures)) 
+				{
+					
+					List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));			
+					String successMsg="";
+					if(user != null) {
+						if(listEnclosuresNotUploades.size()==0) {
+							successMsg="Documents uploaded successfully, please register with UBLs";							
+						}else {
+							successMsg="Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
+						}
+					}else {
+						if(listEnclosuresNotUploades.size()==0) {
+							successMsg="Documents uploaded successfully, please login and register with UBLs";							
+						}else {
+							successMsg="Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
+						}						
+					}										
+					model.addAttribute("successMsg",successMsg);
+					//model.addAttribute("successMsg", "The documents have been uploaded successfully.");
 				} else {
 					model.addAttribute("successMsg", "Sorry, but we are unable to process the request at the moment. Please try again later.!");
 				}

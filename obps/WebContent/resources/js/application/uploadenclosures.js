@@ -45,8 +45,10 @@ function onbeforeSubmit()
     var count=0;
     var status=0; 
 
-    if(jQuery('.chk_Y').length>0)
+	//if(jQuery('.chk_Y').length>0)
+    if(jQuery('.chkbox').length>0)
     {
+        //jQuery('.chkbox').each(function(){
         jQuery('.chk_Y').each(function(){
             var id="file_"+jQuery(this).attr("id").split("_")[1];
             if(jQuery(this).prop("checked")==true)
@@ -72,13 +74,23 @@ function onbeforeSubmit()
             }else{
                 showMsg(id, "");
             }
-        });      
+        });   
+        /*   
         if(count!=jQuery('.chk_Y').length){
             showMsg("UploadEnc", "Please select all mandatory enclosures"); 
             status=1;
         }else{
             showMsg("UploadEnc", "");      
-        }    
+        }  
+        */
+        
+        if(count==0){
+            showMsg("UploadEnc", "Please select enclosures"); 
+            status=1;
+        }else{
+            showMsg("UploadEnc", "");      
+        }        
+          
         if(status>0){
             return false;        
         }        
