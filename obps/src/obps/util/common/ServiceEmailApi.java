@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class ServiceEmailApi 
 {
     @SuppressWarnings("deprecation")
-	public static String sendEmails(String toemail, String subject, String message) {
+	public static String sendEmails(String fromemail,String password,String toemail,String subject,String message) {
         String resp = "4";
         URLConnection urlConn;
         DataInputStream input;
@@ -28,7 +28,7 @@ public class ServiceEmailApi
 
             String urlString = "http://164.100.149.217/nicavi/ApiEmail?";
             urlString += "toemail=" + toemail + "&subject=" + subject + "&message=" + message;
-            urlString += "&fromemail=avijit.debnath@nic.in&password=*";
+            urlString += "&fromemail="+fromemail+"&password="+fromemail+"";
 
 //            HostnameVerifier hv = new HostnameVerifier() {
 //                public boolean verify(String urlHostName, SSLSession session) {
@@ -66,7 +66,12 @@ public class ServiceEmailApi
     }
     
 //    public static void main(String arg[]) {
-//        sendEmails("avijitdebnath@gmail.com", "NIC Email Test", "Testing.....!");
+//    	String fromemail="avijit.debnath@nic.in";
+//    	String password="*****";
+//    	String toemail="avijitdebnath@gmail.com";
+//    	String subject="Test......!";
+//    	String message="Test......!";
+//    	sendEmails(fromemail,password,toemail,subject,message);
 //    }    
     
 }
