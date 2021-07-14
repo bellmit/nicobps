@@ -30,6 +30,7 @@ import obps.services.ServiceEnclosureManagementInterface;
 import obps.services.ServiceInitializationInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.InitFeeMasterValidatorInterface;
+import obps.validators.InitLicenseesRegistrationValidator;
 
 @Controller
 @Configuration
@@ -38,7 +39,8 @@ public class ControllerInitialization {
 
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
-	
+	@Autowired
+	private InitLicenseesRegistrationValidator initLicenseesRegistrationValidator;
 	@Autowired
 	private InitFeeMasterValidatorInterface initFeeMasterValidatorInterface;
 	@Autowired
@@ -57,9 +59,21 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> createlicenseesregistrationsm(
 			@RequestBody Map<String, Object> licensee) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String licenseeregistrationcode = serviceInitalizationInterface.getMaxLicenseecode() + "";
-		licensee.put("licenseeregistrationcode", licenseeregistrationcode);
-//		check existance
+		String validate = "";
+		if(licensee!=null) {
+			String licenseeregistrationcode ="";
+			if(serviceInitalizationInterface.getMaxLicenseecode()!=null) {
+				licenseeregistrationcode = serviceInitalizationInterface.getMaxLicenseecode() + "";
+				licensee.put("licenseeregistrationcode", licenseeregistrationcode);
+			}
+			validate = initLicenseesRegistrationValidator.validateInitLicenseesRegistration(licensee);
+			if(validate!="")
+			{
+				response.put("code", 200);
+				response.put("data",validate);
+				return ResponseEntity.ok().body(response);
+			}
+
 		String sql = "";
 		Object[] values = { licensee.get("licenseedescription") };
 		sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
@@ -70,12 +84,18 @@ public class ControllerInitialization {
 		if (serviceInitalizationInterface.createLicenseeRegistration(licensee)) {
 			System.out.println("insert init!!");
 			response.put("code", 200);
-			response.put("data", 1);
+			response.put("data", "Success");
+			return ResponseEntity.ok().body(response);
+		}
+		}
+		else {
+			response.put("code", 200);
+			response.put("data", "Exist");
 			return ResponseEntity.ok().body(response);
 		}
 		}
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -95,22 +115,45 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> updatelicenseesregistrationsm(
 			@RequestBody LicenseesRegistrationsm licensee) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		// check existance
-				String sql = "";
-				Object[] values = { licensee.getLicenseedescription() };
-				sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String validate = "";
+		if(licensee!=null) {
+			if(licensee.getLicenseeregistrationcode()>0)
+				param.put("licenseeregistrationcode", licensee.getLicenseeregistrationcode());
+			if(licensee.getLicenseedescription()!=null)
+				param.put("licenseedescription", licensee.getLicenseedescription());
+			validate = initLicenseesRegistrationValidator.validateInitLicenseesRegistration(param);
+			if(validate!="")
+			{
+				response.put("code", 200);
+				response.put("data",validate);
+				return ResponseEntity.ok().body(response);
+			}
+			String sql = "";
+			Object[] values = { licensee.getLicenseedescription() };
+			sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
 
-				boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-				if(!exist) {
-					if (serviceInitalizationInterface.updateLicenseesRegistrationsm(licensee)) {
-						response.put("code", 200);
-						response.put("data", 1);
-						return ResponseEntity.ok().body(response);
-					}
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+			if(!exist) {
+				if (serviceInitalizationInterface.updateLicenseesRegistrationsm(licensee)) {
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
 				}
+				}
+				else {
+					response.put("code", 200);
+					response.put("data", "Exist");
+					return ResponseEntity.ok().body(response);
+				}
+			
+			
+		}
+	
+				
 	
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
