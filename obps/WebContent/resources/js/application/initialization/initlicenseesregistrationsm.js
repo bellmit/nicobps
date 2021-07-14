@@ -62,8 +62,46 @@ $scope.licenseesreg=[];
    
         $scope.method = "POST";
         $scope.urlEndpoint = "./initlicenseesregistrationsm.htm";
-    	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.licensees, () => {$scope.reset();$scope.listLicensees(); alert(successMsg)}, () =>{alert(errorMsg)});
+    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.licensees, function (response) {
+				if (response.data=="Success") {
+					MsgBox("Licensee inserted successfully.");
+					$scope.reset();
+					$scope.listLicensees()
+				} else if (response.data=="Exist") {
+					MsgBox("Licensee already exist");
+					$scope.listLicensees()
+				}
+				else if (response.data=="licenseeregistrationcodesizeerror") {
+					MsgBox("Licensee Code Size exceeding limit");
+					$scope.listLicensees()
+				
+				}else if (response.data=="licenseeregistrationcodenull") {
+					MsgBox("Licensee Code Cannot Be Null");
+					$scope.listLicensees()
+				}else if (response.data=="licenseedescriptioncharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Licensee Description");
+					$scope.listLicensees()
+				
+				}else if (response.data=="licenseedescriptionsizeerror") {
+					MsgBox("Licensee Description Cannot be more than 255 characters");
+					$scope.listLicensees()
+				}else if (response.data=="licenseedescriptionnull") {
+					MsgBox("Licensee Description Cannot be Null");
+					$scope.listLicensees()
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				
+				}
+				
+				$scope.listLicensees()
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+				$scope.listLicensees()
+			});
+        
     };
     
 //    $scope.toggleUserStatus= function (usercode) {
@@ -83,7 +121,46 @@ $scope.licenseesreg=[];
              return false;
 	    $scope.method = "POST";
     	$scope.urlEndpoint = "./updatelicenseesregistrationsm.htm";
-    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.licensees, () => {$scope.reset();$scope.listLicensees(), alert(successMsg)}, () => {alert(errorMsg)});
+    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.licensees, function (response) {
+			
+				if (response.data=="Success") {
+					MsgBox("Licensee inserted successfully.");
+					$scope.reset();
+					$scope.listLicensees()
+				} else if (response.data=="Exist") {
+					MsgBox("Licensee already exist");
+					$scope.listLicensees()
+				}
+				else if (response.data=="licenseeregistrationcodesizeerror") {
+					MsgBox("Licensee Code Size exceeding limit");
+					$scope.listLicensees()
+				
+				}else if (response.data=="licenseeregistrationcodenull") {
+					MsgBox("Licensee Code Cannot Be Null");
+					$scope.listLicensees()
+				}else if (response.data=="licenseedescriptioncharactererror") {
+					MsgBox("No Special Characters or Numbers allowed in Licensee Description");
+					$scope.listLicensees()
+				
+				}else if (response.data=="licenseedescriptionsizeerror") {
+					MsgBox("Licensee Description Cannot be more than 255 characters");
+					$scope.listLicensees()
+				}else if (response.data=="licenseedescriptionnull") {
+					MsgBox("Licensee Description Cannot be Null");
+					$scope.listLicensees()
+				}
+				else if(response.data=="Error"){
+				alert("Error");
+				
+				}
+				
+				$scope.listLicensees()
+			}, function () {
+				
+				alert("Error");
+				$scope.reset();
+				$scope.listLicensees()
+			});
     }
      
 /*-----------------------------------------------------------------------------------------------------------------------------------*/
