@@ -41,6 +41,8 @@ import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.util.common.Utilty;
+import obps.util.notifications.Notification;
+import obps.util.notifications.ServiceNotification;
 import obps.validators.UserManagementValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
 import obps.daos.DaoEnclosureManagementInterface;
@@ -64,9 +66,12 @@ public class ControllerUserManagement {
 	private ServiceUserManagementInterface serviceUserManagementInterface;
 	@Autowired
 	private UserManagementValidatorInterface userManagementValidatorInterface;
+	@Autowired
+	private ServiceNotification serviceNotification;
+	
 	@Resource
-	private Environment environment;
-
+	private Environment environment;	
+	
 	@Autowired
 	private ValidateLicenseEnclosures vle;
 
@@ -133,11 +138,6 @@ public class ControllerUserManagement {
 		String issms = environment.getProperty("app.prop.issms");
 		String isemail = environment.getProperty("app.prop.isemail");
 
-//		System.out.println("issms : " + issms);
-//		System.out.println("isemail : " + isemail);
-//		System.out.println("isotp : " + isotp);
-//		System.out.println("-------------------------");
-
 		if (usersessioncaptcha == null || userresponsecaptcha == null
 				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
 			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
@@ -150,6 +150,9 @@ public class ControllerUserManagement {
 		}
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
+		
+		 List<Notification> notification = serviceNotification.listNotificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		
 		if (issms.equals("Y") || isemail.equals("Y")) {
 			if (isotp.equals("N")) {
 				if (issms.equals("Y")) {
