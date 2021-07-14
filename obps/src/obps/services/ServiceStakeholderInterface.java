@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface ServiceStakeholderInterface {
 
-	public List<Map<String, Object>> listLicensees();
+	public List<Map<String, Object>> listLicensees(Integer usercode,Integer officecode);
 
 	public byte[] getEnclosure(Integer usercode, Integer enclosurecode);
 

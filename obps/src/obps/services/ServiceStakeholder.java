@@ -1,6 +1,5 @@
 package obps.services;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,10 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import obps.daos.DaoPaymentInterface;
@@ -28,7 +24,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	private DaoPaymentInterface daoPaymentInterface;
 
 	@Override
-	public List<Map<String, Object>> listLicensees() {
+	public List<Map<String, Object>> listLicensees(Integer usercode,Integer officecode) {
 		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,off.officecode,off.officename1,"
 				+ "u.mobileno,u.username as email,"
 				+ "(SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures"
@@ -42,8 +38,10 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode "
 				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
 				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
-				+ "INNER JOIN masters.states s on s.statecode=d.statecode ORDER BY l.entrydate DESC ";
-		List<Map<String, Object>> list = SUI.listGeneric(sql);
+				+ "INNER JOIN masters.states s on s.statecode=d.statecode "
+				+ "WHERE case when ?=1 then 1=1 else off.officecode=? end "
+				+ "ORDER BY l.entrydate DESC ";
+		List<Map<String, Object>> list = SUI.listGeneric(sql,new Object[] {usercode,usercode});
 		for (Map<String, Object> m : list) {
 			m.put("transactions", daoPaymentInterface.getTransaction(m.get("applicationcode").toString()));
 		}
@@ -108,11 +106,12 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			}
 
 			String sqlCount = "SELECT count(*) FROM nicobps.userpages where usercode=? and urlcode=? ";
-			Integer count=null;
+			Integer count = null;
 			sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
 			for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
-				count=Integer.valueOf(SUI.listGeneric(sqlCount, new Object[] { usercode, urlcode }).get(0).get("count").toString());
-				if ( count == null || count==0) {
+				count = Integer.valueOf(
+						SUI.listGeneric(sqlCount, new Object[] { usercode, urlcode }).get(0).get("count").toString());
+				if (count == null || count == 0) {
 					dmlList.add(
 							new BatchUpdateModel(sql, new Object[] { usercode + "U" + urlcode, usercode, urlcode }));
 				}

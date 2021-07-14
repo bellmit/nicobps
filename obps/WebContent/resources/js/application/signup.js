@@ -164,7 +164,7 @@ app.controller('applicationController', function($scope)
 	        	jQuery("#ajaxLoading").fadeOut();                                
 	        },
 	        error: function(request, status, error) { 
-	        	alert(status+" : "+JSON.stringify(request));  
+	        	//alert(status+" : "+JSON.stringify(request));  
 	        	jQuery("#ajaxLoading").fadeOut();            
 	        }
 	    });          
@@ -425,47 +425,50 @@ function loadForm() {
 
 function submitSignupDetails(signupDetails)
 {       	
-    var flag=confirm(" Click OK to register. Click Cancel if you want to review your entries");
-    if(!flag) {return false;}      
-    jQuery.ajax({
-        url: "submitSignupDetails.htm",        
-        data: signupDetails,
-        type: "POST",
-        success: function(data)
-        {       
-			jQuery("#ajaxLoading").fadeOut();
-			var scope = angular.element(jQuery("#applicationForm")).scope();
-			var msg="";				
-			if(data==="0"){
-				msg="Please enter the otp sent to your email/mobile!";	
-				jQuery('#successMsg').html(msg).show();    
-				scope.$apply(function() {   
-					signupDetails.isotp="Y";        
-					signupDetails.userresponsecaptcha="";
-				});			
-				changeCaptcha()			
-			}else if(data==="1"){
-				msg="The application has been submitted succesfully, please upload the required documents. Alternatively, you may login and upload at a later stage.";	
-				alert(msg);							 				
-			}				
-			
-			if(data==="1"){			
-				window.location="uploadenclosuresext.htm"; 				
-			}			
-        	/*                                 
-	            jQuery('#successMsg').html("* "+data).show();  
-	            loadForm();    
-	            jQuery("#percent").text("0%");
-	            jQuery("#results").text("");
-	            jQuery("#colorbar").css('width',0);
-            */                                   
-        },
-        error: function(request, status, error) { 
-			jQuery("#ajaxLoading").fadeOut();
-        	//alert(status+" : "+JSON.stringify(request));         
-            jQuery('#successMsg').html("* Error : "+request.responseText).show();           
-        }
-    }); 
+    var flag=false;
+    ConfirmBox(" Click OK to register. Click Cancel if you want to review your entries",(response)=>{
+    	if(!response) {return false;}     
+		    jQuery.ajax({
+		        url: "submitSignupDetails.htm",        
+		        data: signupDetails,
+		        type: "POST",
+		        success: function(data)
+		        {       
+					jQuery("#ajaxLoading").fadeOut();
+					var scope = angular.element(jQuery("#applicationForm")).scope();
+					var msg="";				
+					if(data==="0"){
+						msg="Please enter the otp sent to your email/mobile!";	
+						jQuery('#successMsg').html(msg).show();    
+						scope.$apply(function() {   
+							signupDetails.isotp="Y";        
+							signupDetails.userresponsecaptcha="";
+						});			
+						changeCaptcha()			
+					}else if(data==="1"){
+						msg="The application has been submitted succesfully, please upload the required documents. Alternatively, you may login and upload at a later stage.";	
+						MsgBox(msg,true,()=>{
+							window.location="uploadenclosuresext.htm";
+						});							 				
+					}				
+					
+					//if(data==="1"){			
+					//}			
+		        	/*                                 
+			            jQuery('#successMsg').html("* "+data).show();  
+			            loadForm();    
+			            jQuery("#percent").text("0%");
+			            jQuery("#results").text("");
+			            jQuery("#colorbar").css('width',0);
+		            */                                   
+		        },
+		        error: function(request, status, error) { 
+					jQuery("#ajaxLoading").fadeOut();
+		        	//alert(status+" : "+JSON.stringify(request));         
+		            jQuery('#successMsg').html("* Error : "+request.responseText).show();           
+		        }
+		    }); 
+    });
 }	
 
 //=================================================================

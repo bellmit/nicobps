@@ -1,4 +1,4 @@
-package obps.controllers;
+ package obps.controllers;
 
 import java.util.Base64;
 import java.util.LinkedHashMap;
@@ -55,9 +55,15 @@ public class ControllerStakeholder {
 
 	@PostMapping("/ulbregistration.htm")
 	public String ulbRegistration(Model model, Integer officecode, HttpServletRequest req) {
-
+		
+		String usercode = (String) req.getSession().getAttribute("usercode");
+		String licenseetypecode = (String) req.getSession().getAttribute("licenseetypecode");
+		if(serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode)).size()!=0) {
+			model.addAttribute("errorMsg","REQD_DOCUMENTS_INCOMPLETE");
+			return "redirect:ulbregistration.htm";
+		}
 		String applicationcode = SSI.ulbRegistration(officecode,
-				Integer.valueOf(req.getSession().getAttribute("usercode").toString()));
+				Integer.valueOf(usercode));
 //		String applicationcode="ALREADY_REPORTED";
 		if (applicationcode.equals("ALREADY_REPORTED") || applicationcode.equals("false")) {
 			model.addAttribute("errorMsg", applicationcode);
@@ -102,8 +108,9 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/listLicensees.htm")
-	public @ResponseBody List<Map<String, Object>> listLicensees() {
-		return SSI.listLicensees();
+	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req) {
+		Integer officecode=Integer.valueOf(serviceUtilInterface.listUserOffices().get(0).getKey());
+		return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),officecode!=null?officecode:0);
 	}
 
 	@PostMapping("/getLicensee.htm")
