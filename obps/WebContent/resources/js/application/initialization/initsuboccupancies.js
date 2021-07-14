@@ -97,11 +97,7 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 					MsgBox("Occupancies already exist");
 					$scope.listSubOccupancy()
 				}
-				else if (response.data=="suboccupancycodecharactererror") {
-					MsgBox("No Special Characters allowed in Sub Occupancy Code");
-					$scope.listSubOccupancy()
 				
-				}
 				else if (response.data=="suboccupancycodesizeerror") {
 					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
 					$scope.listSubOccupancy()
@@ -109,10 +105,6 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				}else if (response.data=="suboccupancycodenull") {
 					MsgBox("Sub Occupancy Code Cannot Be Null");
 					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamecharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Sub Occupancy Name");
-					$scope.listSubOccupancy()
-				
 				}else if (response.data=="suboccupancynamesizeerror") {
 					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
 					$scope.listSubOccupancy()
@@ -173,11 +165,7 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 					MsgBox("Occupancies already exist");
 					$scope.listSubOccupancy()
 				}
-				else if (response.data=="suboccupancycodecharactererror") {
-					MsgBox("No Special Characters allowed in Sub Occupancy Code");
-					$scope.listSubOccupancy()
 				
-				}
 				else if (response.data=="suboccupancycodesizeerror") {
 					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
 					$scope.listSubOccupancy()
@@ -185,10 +173,6 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				}else if (response.data=="suboccupancycodenull") { 
 					MsgBox("Sub Occupancy Code Cannot Be Null");
 					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamecharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Sub Occupancy Name");
-					$scope.listSubOccupancy()
-				
 				}else if (response.data=="suboccupancynamesizeerror") {
 					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
 					$scope.listSubOccupancy()

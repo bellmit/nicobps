@@ -33,6 +33,7 @@ import obps.validators.InitFeeMasterValidatorInterface;
 import obps.validators.InitLicenseesRegistrationValidator;
 import obps.validators.InitOccupanciesValidator;
 import obps.validators.InitSubOccupanciesValidator;
+import obps.validators.InitUsagesValidator;
 
 @Controller
 @Configuration
@@ -45,6 +46,8 @@ public class ControllerInitialization {
 	private InitLicenseesRegistrationValidator initLicenseesRegistrationValidator;
 	@Autowired
 	private InitOccupanciesValidator initOccupanciesValidator;
+	@Autowired
+	private InitUsagesValidator initUsagesValidator;
 	@Autowired
 	private InitSubOccupanciesValidator initSubOccupanciesValidator;
 	@Autowired
@@ -280,28 +283,83 @@ public class ControllerInitialization {
 	}
 
 	
+	@PostMapping(value = "/initusages.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initusages(@RequestBody Map<String, Object> usages) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		if(usages!=null) {
+			String validate="";
+			validate=initUsagesValidator.validateInitUsages(usages);
+			if(validate!="") {
+				response.put("code", 200);
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+			String sql = "";
+			Object[] values = { usages.get("usagecode"), usages.get("description"), usages.get("usagename") };
+			sql = "SELECT * FROM masters.usages WHERE  LOWER(usagecode)=LOWER(?) OR LOWER(description)=LOWER(?) OR LOWER(usagename)=LOWER(?) ";
 
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+
+			if (!exist) {
+				if (serviceInitalizationInterface.initusages(usages)) {
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
+				}
+			}else {
+				response.put("code", 200);
+				response.put("data", "Exist");
+				return ResponseEntity.ok().body(response);
+			}
+		}
+		
+
+		response.put("code", HttpStatus.OK);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+	}
 	@PostMapping(value = "/updateusages.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateusages(@RequestBody Usages usages) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		System.out.println("update usages:::::" + usages);
-
-		// check existance
-		String sql = "";
-		Object[] values = { usages.getUsagecode(), usages.getDescription(), usages.getUsagename() };
-		sql = "SELECT * FROM masters.usages WHERE  LOWER(usagecode)=LOWER(?) AND LOWER(description)=LOWER(?) OR LOWER(usagename)=LOWER(?) ";
-
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		if (!exist) {
-			if (serviceInitalizationInterface.updateusages(usages)) {
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		if(usages!=null) {
+			if(usages.getSuboccupancycode()!=null)
+				param.put("suboccupancycode", usages.getSuboccupancycode());
+			if(usages.getUsagecode()!=null)
+				param.put("usagecode", usages.getUsagecode());
+			if(usages.getUsagename()!=null)
+				param.put("usagename", usages.getUsagename());
+			if(usages.getDescription()!=null)
+				param.put("description", usages.getDescription());
+			String validate="";
+			validate=initUsagesValidator.validateInitUsages(param);
+			if(validate!="") {
 				response.put("code", 200);
-				response.put("data", 1);
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+			String sql = "";
+			Object[] values = { usages.getUsagecode(), usages.getDescription(), usages.getUsagename() };
+			sql = "SELECT * FROM masters.usages WHERE  LOWER(usagecode)=LOWER(?) AND LOWER(description)=LOWER(?) OR LOWER(usagename)=LOWER(?) ";
+
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+			if (!exist) {
+				if (serviceInitalizationInterface.updateusages(usages)) {
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
+				}
+			}else {
+				response.put("code", 200);
+				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
 		}
 
+		
+
 		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -456,29 +514,7 @@ public class ControllerInitialization {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@PostMapping(value = "/initusages.htm", consumes = "application/json")
-	public ResponseEntity<HashMap<String, Object>> initusages(@RequestBody Map<String, Object> usages) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-
-		// check existance
-		String sql = "";
-		Object[] values = { usages.get("usagecode"), usages.get("description"), usages.get("usagename") };
-		sql = "SELECT * FROM masters.usages WHERE  LOWER(usagecode)=LOWER(?) OR LOWER(description)=LOWER(?) OR LOWER(usagename)=LOWER(?) ";
-
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-
-		if (!exist) {
-			if (serviceInitalizationInterface.initusages(usages)) {
-				response.put("code", 200);
-				response.put("data", 1);
-				return ResponseEntity.ok().body(response);
-			}
-		}
-
-		response.put("code", HttpStatus.OK);
-		response.put("data", -1);
-		return ResponseEntity.ok().body(response);
-	}
+	
 
 	@PostMapping(value = "/initoccupancies.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoccupancies(@RequestBody Map<String, Object> occupancy) {

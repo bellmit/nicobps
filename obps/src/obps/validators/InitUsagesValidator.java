@@ -7,15 +7,14 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InitSubOccupanciesValidator {
-	public String validateInitSubOccupancies(Map<String, Object> param) {
-		String response = "";
+public class InitUsagesValidator {
+	public String validateInitUsages(Map<String, Object> param) {
+		String response="";
 		Matcher m;
 		boolean b=false;
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
 		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9]");
-		String suboccupancycode="",suboccupancyname="",description="";
-		
+		String suboccupancycode="",usagecode="",usagename="",description="";
 		if(param.get("suboccupancycode")!=null) {
 			suboccupancycode=((String) param.get("suboccupancycode")).trim();
 			
@@ -24,23 +23,34 @@ public class InitSubOccupanciesValidator {
 				response= "suboccupancycodesizeerror";
 				return response;
 			}
-		}
-		else {
+		}else {
 			response= "suboccupancycodenull";
 			return response;
 		}
+		if(param.get("usagecode")!=null) {
+			usagecode=((String) param.get("usagecode")).trim();
 			
-		
-		if(param.get("suboccupancyname")!=null) {
-			suboccupancyname=((String) param.get("suboccupancyname")).trim();
-			
-			if(suboccupancyname.length()>255) {
-				response= "suboccupancynamesizeerror";
+				
+			if(usagecode.length()>20) {
+				response= "usagecodesizeerror";
 				return response;
 			}
+		}else {
+			response= "usagecodenull";
+			return response;
 		}
-		else
-			response= "suboccupancynamenull";
+		if(param.get("usagename")!=null) {
+			usagename=((String) param.get("usagename")).trim();
+			
+				
+			if(usagename.length()>255) {
+				response= "usagenamesizeerror";
+				return response;
+			}
+		}else {
+			response= "usagenamenull";
+			return response;
+		}
 		if(param.get("description")!=null) {
 			description=((String) param.get("description")).trim();
 			
@@ -53,9 +63,6 @@ public class InitSubOccupanciesValidator {
 			response= "descriptionnull";
 			return response;
 		}
-			
-		
-		
 		return response;
 	}
 }

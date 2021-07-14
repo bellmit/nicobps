@@ -17,12 +17,12 @@ public class InitOccupanciesValidator {
 		String occupancycode="",occupancyname="",occupancyalias="";
 		if(param.get("occupancycode")!=null) {
 			occupancycode=((String) param.get("occupancycode")).trim();
-			m= p1.matcher(occupancycode);
-			b = m.find();
-			if(b) {
-				response= "occupancycodecharactererror";
-				return response;
-			}
+//			m= p1.matcher(occupancycode);
+//			b = m.find();
+//			if(b) {
+//				response= "occupancycodecharactererror";
+//				return response;
+//			}
 			if(occupancycode.length()>10) {
 				response= "occupancycodesizeerror";
 				return response;
@@ -35,13 +35,13 @@ public class InitOccupanciesValidator {
 		
 		if(param.get("occupancyname")!=null) {
 			occupancyname=((String) param.get("occupancyname")).trim();
-			m= p.matcher(occupancyname);
-			b = m.find();
-			if(b) {
-				response= "occupancynamecharactererror";
-				return response;
-			}
-			if(occupancycode.length()>50) {
+//			m= p.matcher(occupancyname);
+//			b = m.find();
+//			if(b) {
+//				response= "occupancynamecharactererror";
+//				return response;
+//			}
+			if(occupancyname.length()>50) {
 				response= "occupancynamesizeerror"; 
 				return response;
 			}
@@ -52,13 +52,13 @@ public class InitOccupanciesValidator {
 		
 		if(param.get("occupancyalias")!=null) {
 			occupancyalias=((String) param.get("occupancyalias")).trim();
-			m= p.matcher(occupancyalias);
-			b = m.find();
-			if(b) {
-				response= "occupancyaliascharactererror";
-				return response;
-			}
-			if(occupancycode.length()>50) {
+//			m= p.matcher(occupancyalias);
+//			b = m.find();
+//			if(b) {
+//				response= "occupancyaliascharactererror";
+//				return response;
+//			}
+			if(occupancyalias.length()>50) {
 				response= "occupancyaliassizeerror";
 				return response;
 			}

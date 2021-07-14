@@ -26,12 +26,7 @@ public class InitLicenseesRegistrationValidator {
 		}
 		if(param.get("licenseedescription")!=null) {
 			licenseedescription=((String) param.get("licenseedescription")).trim();
-			m= p.matcher(licenseedescription);
-			b = m.find();
-			if(b) {
-				response= "licenseedescriptioncharactererror";
-				return response;
-			}
+			
 			if(licenseedescription.length()>255) {
 				response= "licenseedescriptionsizeerror";
 				return response;
