@@ -28,7 +28,7 @@ public class ServiceEmailApi
 
             String urlString = "http://164.100.149.217/nicavi/ApiEmail?";
             urlString += "toemail=" + toemail + "&subject=" + subject + "&message=" + message;
-            urlString += "&fromemail=avijit.debnath@nic.in&password=Avijit@2014";
+            urlString += "&fromemail=avijit.debnath@nic.in&password=*";
 
 //            HostnameVerifier hv = new HostnameVerifier() {
 //                public boolean verify(String urlHostName, SSLSession session) {
