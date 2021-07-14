@@ -48,7 +48,7 @@ import obps.services.ServiceUserManagementInterface;
 @Configuration
 @PropertySource("classpath:application.properties")
 public class ControllerInitOffice {
-	@Autowired
+	@Autowired 
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 

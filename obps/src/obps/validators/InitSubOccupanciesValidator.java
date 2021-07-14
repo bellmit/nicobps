@@ -41,7 +41,7 @@ public class InitSubOccupanciesValidator {
 			m= p.matcher(suboccupancyname);
 			b = m.find();
 			if(b) {
-				response= "suboccupancynamecharactererror";
+				response= "suboccupancynamecharactererror"; 
 				return response;
 			}
 			if(suboccupancycode.length()>255) {

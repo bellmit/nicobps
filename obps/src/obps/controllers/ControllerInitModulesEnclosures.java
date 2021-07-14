@@ -42,7 +42,7 @@ import obps.services.ServiceUserManagementInterface;
 //@RestController
 @Controller
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.properties") 
 public class ControllerInitModulesEnclosures {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;

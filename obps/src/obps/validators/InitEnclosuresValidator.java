@@ -21,7 +21,7 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 		String enclname="";
 		
 		if(param.get("enclosurename")!=null)
-			enclname=((String) param.get("enclosurename")).trim();
+			enclname=((String) param.get("enclosurename")).trim(); 
 		
 		if(param.get("enclosuredescription")!=null)
 			encldesc=((String) param.get("enclosuredescription")).trim();

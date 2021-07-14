@@ -71,7 +71,7 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 	}
 
 	@Override
-	public String validateAccessControl(List<Map<String, Object>> param) {
+	public String validateAccessControl(List<Map<String, Object>> param) { 
 		String response="";
 		System.out.println(param);
 		Integer usercode=0;

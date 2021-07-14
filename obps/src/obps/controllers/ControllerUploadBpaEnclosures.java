@@ -30,7 +30,6 @@ import obps.services.ServiceUploadBpaEnclosuersInterface;
 import obps.services.ServiceUserManagementInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
-import obps.validators.UploadEnclosuresValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
 
 //@RestController
@@ -44,8 +43,6 @@ public class ControllerUploadBpaEnclosures {
 	@Autowired
 	private ServiceUploadBpaEnclosuersInterface ServiceUploadBpaEnclosuersInterface;
 
-	@Autowired
-	private UploadEnclosuresValidatorInterface uploadBpaEnclosuersValidatorInterface;
 
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;

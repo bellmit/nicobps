@@ -42,7 +42,7 @@ public class InitOccupanciesValidator {
 				return response;
 			}
 			if(occupancycode.length()>50) {
-				response= "occupancynamesizeerror";
+				response= "occupancynamesizeerror"; 
 				return response;
 			}
 			

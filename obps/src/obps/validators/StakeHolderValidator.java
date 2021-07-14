@@ -16,7 +16,7 @@ public class StakeHolderValidator implements StakeHolderValidatorInterface{
 		int size = 0;
 		if(officecode==null || officecode==0)
 			res="officecodenull";
-		if(applicationcode==null || applicationcode=="")
+		if(applicationcode==null || applicationcode=="") 
 			res="applicationcodenull";
 		else {
 			if(applicationcode.length()>20)

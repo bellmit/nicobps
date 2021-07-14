@@ -182,7 +182,7 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
 					$scope.listSubOccupancy()
 				
-				}else if (response.data=="suboccupancycodenull") {
+				}else if (response.data=="suboccupancycodenull") { 
 					MsgBox("Sub Occupancy Code Cannot Be Null");
 					$scope.listSubOccupancy()
 				}else if (response.data=="suboccupancynamecharactererror") {

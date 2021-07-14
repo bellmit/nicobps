@@ -9,7 +9,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 		$scope.method = "POST";
 		$scope.successCallback = "";
 		$scope.urlEndpoint = "";
-
+ 
 		/*------------------------*/
 
 		$scope.actionButton = 1;

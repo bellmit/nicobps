@@ -7,13 +7,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import obps.util.common.Patterns;
 
-@Service("extendvalidityValidator")
-public class ExtendValidityValidator implements ExtendValidityValidatorInterface {
-	@Override
+@Component
+public class ExtendValidityValidator  {
+	
 	public boolean validateUsercode(String usercode) {
 		usercode = usercode.trim();
 		System.out.println("validate usercode");
@@ -23,7 +24,7 @@ public class ExtendValidityValidator implements ExtendValidityValidatorInterface
 		}
 		return true;
 	}
-	@Override
+	
 	public boolean validateOfficecode(String licenseetypecode) {
 		licenseetypecode = licenseetypecode.trim();
 		System.out.println("validator validateOfficecode");
@@ -34,7 +35,7 @@ public class ExtendValidityValidator implements ExtendValidityValidatorInterface
 		return true;
 	}
 	
-	@Override
+	
 	public boolean validatedate(String date) {
 		date=date.trim();
 		System.out.println("validator date");
@@ -45,7 +46,7 @@ public class ExtendValidityValidator implements ExtendValidityValidatorInterface
 		return true;
 		
 	}
-	@Override
+	
 	public boolean validateExtendedtoDate(String validtodate, String extendedtodate,String maxdate) {
 		System.out.println("dates"+validtodate+"ext date::"+extendedtodate);
 		 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -59,7 +60,7 @@ public class ExtendValidityValidator implements ExtendValidityValidatorInterface
 			
 	        int result = date2.compareTo(date3);
 	        int result2 = date1.compareTo(date2);
-	        System.out.println("result: " + result);
+	       // System.out.println("result: " + result);
 	        if (result > 0 ) {
 	            System.out.println("Date2 is after Date3");
 	            return false;

@@ -44,7 +44,7 @@ import obps.services.ServiceUserManagementInterface;
 @Controller
 @Configuration
 @PropertySource("classpath:application.properties")
-public class ControllerInitOfficesPaymentModes {
+public class ControllerInitOfficesPaymentModes { 
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired

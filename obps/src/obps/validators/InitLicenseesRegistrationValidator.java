@@ -14,7 +14,7 @@ public class InitLicenseesRegistrationValidator {
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
 		String licenseedescription="",licenseeregistrationcode="";
 		if(param.get("licenseeregistrationcode")!=null) {
-			licenseeregistrationcode=param.get("licenseeregistrationcode").toString();
+			licenseeregistrationcode=param.get("licenseeregistrationcode").toString(); 
 			if(licenseeregistrationcode.length()>5) {
 				response= "licenseeregistrationcodesizeerror";
 				return response;

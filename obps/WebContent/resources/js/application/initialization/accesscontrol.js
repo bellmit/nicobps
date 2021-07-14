@@ -1,5 +1,5 @@
 
-app.controller("accesscontrolCtrl", [
+app.controller("accesscontrolCtrl", [ 
   "$scope",
   "$sce","$compile",
   function ($scope, $sce,$compile) {

@@ -384,7 +384,7 @@ public class ControllerInitialization {
 				response.put("code", 200);
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
-			}
+			} 
 			String sql = "";
 			Object[] values = { suboccupancies.get("suboccupancycode"), suboccupancies.get("description"),
 					suboccupancies.get("suboccupancyname") };

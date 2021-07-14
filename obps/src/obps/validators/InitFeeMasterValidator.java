@@ -229,7 +229,7 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 	}
 
 	@Override
-	public String validateInitFeeTypes(FeeTypes param) {
+	public String validateInitFeeTypes(FeeTypes param) { 
 		String response = "";
 		System.out.println(param);
 
