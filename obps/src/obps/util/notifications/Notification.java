@@ -14,29 +14,24 @@ public class Notification {
 
 	private String messageid;
 	private String templateid;
-	private String sms;
-	private String email;
+	private String smsbody;
+	private String emailbody;
+	private String emailsubject;
 
 	private String recipientMobileno;
 	private String recipientEmailid;
-	private String emailsubject;
+	
 
+	private String sms_url;
+	private String email_api_hostnane;
+	private String email_hostname;
+	private String email_port;
+	
+	
 	public Notification() {
 		super();
 	}
 
-	public Notification(Boolean flag) {
-		super();
-		this.smsusername = "";
-		this.smspassword = "";
-		this.smssenderid = "";
-		this.securekey = "";
-		this.messageid = "";
-		this.templateid = "";
-		this.sms = "";
-		this.recipientMobileno = "";
-		this.emailsubject="";
-	}
 
 	public String getSenderemailid() {
 		return senderemailid;
@@ -136,20 +131,20 @@ public class Notification {
 		this.templateid = templateid;
 	}
 
-	public String getSms() {
-		return sms;
+	public String getSmsbody() {
+		return smsbody;
 	}
 
-	public void setSms(String sms) {
-		this.sms = sms;
+	public void setSmsbody(String smsbody) {
+		this.smsbody = smsbody;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getEmailbody() {
+		return emailbody;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmailbody(String emailbody) {
+		this.emailbody = emailbody;
 	}
 
 	public String getEmailsubject() {
@@ -159,15 +154,51 @@ public class Notification {
 	public void setEmailsubject(String emailsubject) {
 		this.emailsubject = emailsubject;
 	}
+	
+
+	public String getSms_url() {
+		return sms_url;
+	}
+
+	public void setSms_url(String sms_url) {
+		this.sms_url = sms_url;
+	}
+
+	public String getEmail_api_hostnane() {
+		return email_api_hostnane;
+	}
+
+	public void setEmail_api_hostnane(String email_api_hostnane) {
+		this.email_api_hostnane = email_api_hostnane;
+	}
+
+	public String getEmail_hostname() {
+		return email_hostname;
+	}
+
+	public void setEmail_hostname(String email_hostname) {
+		this.email_hostname = email_hostname;
+	}
+
+	public String getEmail_port() {
+		return email_port;
+	}
+
+	public void setEmail_port(String email_port) {
+		this.email_port = email_port;
+	}
 
 	@Override
 	public String toString() {
 		return "Notification [officecode=" + officecode + ", officeshortname=" + officeshortname + ", smsusername="
 				+ smsusername + ", smspassword=" + smspassword + ", smssenderid=" + smssenderid + ", securekey="
 				+ securekey + ", senderemailid=" + senderemailid + ", emailidpassword=" + emailidpassword
-				+ ", messageid=" + messageid + ", templateid=" + templateid + ", sms=" + sms + ", email=" + email
-				+ ", recipientMobileno=" + recipientMobileno + ", recipientEmailid=" + recipientEmailid 
-				+ ", emailSubject=" + emailsubject + "]";
+				+ ", messageid=" + messageid + ", templateid=" + templateid + ", smsbody=" + smsbody + ", emailbody="
+				+ emailbody + ", emailsubject=" + emailsubject + ", recipientMobileno=" + recipientMobileno
+				+ ", recipientEmailid=" + recipientEmailid + ", sms_url=" + sms_url + ", email_api_hostnane="
+				+ email_api_hostnane + ", email_hostname=" + email_hostname + ", email_port=" + email_port + "]";
 	}
+
+
 	
 }

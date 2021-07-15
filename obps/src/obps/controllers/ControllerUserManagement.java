@@ -83,6 +83,7 @@ public class ControllerUserManagement {
 	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
+		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");	
 		return "signup";
 	}
 
@@ -151,7 +152,7 @@ public class ControllerUserManagement {
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
 		
-		List<Notification> notification = serviceNotification.listNotificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
 		
 		if (issms.equals("Y") || isemail.equals("Y")) {
 			if (isotp.equals("N")) {
@@ -456,7 +457,7 @@ public class ControllerUserManagement {
 					exist = true;
 					break;
 				}
-			}
+			} 
 			if (!exist) {
 				response.put("code", 400);
 				response.put("msg", "Not Authorized to create user from selected office.");

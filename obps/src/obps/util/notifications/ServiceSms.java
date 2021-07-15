@@ -28,17 +28,21 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.springframework.util.SystemPropertyUtils;
 
-import javax.net.ssl.HttpsURLConnection;
 
 public class ServiceSms {
-	String HOST_NAME = "https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT";
-	String SECURE_KEY = "a616c754-4c79-4369-9367-042d46ef2de7";
-
-//    String HOST_NAME = "https://164.100.14.211/failsafe/HttpLink?";    
-
-	public String sendSingleSMS(Notification noti) 
+	 
+    public void sendSingleSMS(Notification noti) {
+    	
+    	sendSingleSMS(noti.getRecipientMobileno(),noti.getSmssenderid(),noti.getSmsbody(),noti.getSmsusername(),noti.getSmspassword(),noti.getSecurekey(),noti.getTemplateid(),noti.getSms_url());
+    }	
+    
+    public void sendBulkSMS(Notification noti) {
+    	
+    	sendBulkSMS(noti.getRecipientMobileno(),noti.getSmssenderid(),noti.getSmsbody(),noti.getSmsusername(),noti.getSmspassword(),noti.getSecurekey(),noti.getTemplateid(),noti.getSms_url());
+    }	    
+    
+	public String sendSingleSMS(String mobileno,String senderid,String content ,String username,String password,String key,String templateid,String url) 
 	{
 		String responseString = "";
 		SSLSocketFactory sf = null;
@@ -52,18 +56,19 @@ public class ServiceSms {
 			Scheme scheme = new Scheme("https", 443, sf);
 			HttpClient client = new DefaultHttpClient();
 			client.getConnectionManager().getSchemeRegistry().register(scheme);
-			HttpPost post = new HttpPost("https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT");
-			encryptedPassword = MD5(noti.getSmspassword());
-			String genratedhashKey = hashGenerator(noti.getSmsusername(), noti.getSmssenderid(), noti.getSms(), noti.getSecurekey());
+			//HttpPost post = new HttpPost("https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT");
+			HttpPost post = new HttpPost(url);
+			encryptedPassword = MD5(password);
+			String genratedhashKey = hashGenerator(username,senderid, content, key);
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("mobileno", noti.getRecipientMobileno()));
-			nameValuePairs.add(new BasicNameValuePair("senderid", noti.getSmssenderid()));
-			nameValuePairs.add(new BasicNameValuePair("content", noti.getSms()));
+			nameValuePairs.add(new BasicNameValuePair("mobileno", mobileno));
+			nameValuePairs.add(new BasicNameValuePair("senderid", senderid));
+			nameValuePairs.add(new BasicNameValuePair("content", content));
 			nameValuePairs.add(new BasicNameValuePair("smsservicetype", "singlemsg"));
-			nameValuePairs.add(new BasicNameValuePair("username", noti.getSmsusername()));
+			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", encryptedPassword));
 			nameValuePairs.add(new BasicNameValuePair("key", genratedhashKey));
-			nameValuePairs.add(new BasicNameValuePair("templateid", noti.getTemplateid()));
+			nameValuePairs.add(new BasicNameValuePair("templateid", templateid));
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			System.out.println(nameValuePairs);
@@ -94,8 +99,7 @@ public class ServiceSms {
 		return responseString;
 	}
 
-	public String sendBulkSMS(String username, String password, String message, String senderId, String mobileNumber,
-			String secureKey, String templateid) {
+	public String sendBulkSMS(String mobileno,String senderid,String content ,String username,String password,String key,String templateid,String url) {
 
 		String responseString = "";
 		SSLSocketFactory sf = null;
@@ -110,13 +114,15 @@ public class ServiceSms {
 			Scheme scheme = new Scheme("https", 443, sf);
 			HttpClient client = new DefaultHttpClient();
 			client.getConnectionManager().getSchemeRegistry().register(scheme);
-			HttpPost post = new HttpPost("https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT");
+			//HttpPost post = new HttpPost("https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT");
+			HttpPost post = new HttpPost(url);
 			encryptedPassword = MD5(password);
-			String genratedhashKey = hashGenerator(username, senderId, message, secureKey);
+
+			String genratedhashKey = hashGenerator(username,senderid, content, key);
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("bulkmobno", mobileNumber));
-			nameValuePairs.add(new BasicNameValuePair("senderid", senderId));
-			nameValuePairs.add(new BasicNameValuePair("content", message));
+			nameValuePairs.add(new BasicNameValuePair("bulkmobno", mobileno));
+			nameValuePairs.add(new BasicNameValuePair("senderid",senderid));
+			nameValuePairs.add(new BasicNameValuePair("content",content));
 			nameValuePairs.add(new BasicNameValuePair("smsservicetype", "bulkmsg"));
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", encryptedPassword));

@@ -9,8 +9,8 @@ public class ServiceNotification
 {    
     @Autowired private DaoNotification daoNotification;
     
-    public List<Notification> listNotificationDetails(Integer officecode,String messageid) {		
-    	return daoNotification.listNotificationDetails(officecode,messageid);
+    public Notification notificationDetails(Integer officecode,String messageid) {		
+    	return daoNotification.notificationDetails(officecode,messageid);
     }
     
     

@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class ServiceEmailApi 
 {
     public static void sendEmails(Notification noti) {
-    	sendEmails(noti.getSenderemailid(),noti.getEmailidpassword(),noti.getRecipientEmailid(),noti.getEmailsubject(),noti.getEmail());
+    	sendEmails(noti.getSenderemailid(),noti.getEmailidpassword(),noti.getRecipientEmailid(),noti.getEmailsubject(),noti.getEmailbody());
     }	
 	
     @SuppressWarnings("deprecation")
