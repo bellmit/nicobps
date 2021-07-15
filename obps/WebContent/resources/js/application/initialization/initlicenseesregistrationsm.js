@@ -7,7 +7,7 @@ app.controller('createlicenseesregCtrl', ['$scope', '$sce', '$compile','$timeout
 	var errorMsg = "Error: Unable to perform action or Already Existing Data";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
-	$scope.successCallback = "";
+	$scope.successCallback = ""; 
 	$scope.urlEndpoint = ""; 
 	
 	/*------------------------*/
@@ -70,6 +70,10 @@ $scope.licenseesreg=[];
 				} else if (response.data=="Exist") {
 					MsgBox("Licensee already exist");
 					$scope.listLicensees()
+				}else if (response.data=="licenseeregistrationcodenumbererror") {
+					MsgBox("Only Numbers Allowed in Licensee Code");
+					$scope.listLicensees()
+				
 				}
 				else if (response.data=="licenseeregistrationcodesizeerror") {
 					MsgBox("Licensee Code Size exceeding limit");
@@ -78,10 +82,6 @@ $scope.licenseesreg=[];
 				}else if (response.data=="licenseeregistrationcodenull") {
 					MsgBox("Licensee Code Cannot Be Null");
 					$scope.listLicensees()
-				}else if (response.data=="licenseedescriptioncharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Licensee Description");
-					$scope.listLicensees()
-				
 				}else if (response.data=="licenseedescriptionsizeerror") {
 					MsgBox("Licensee Description Cannot be more than 255 characters");
 					$scope.listLicensees()
@@ -130,6 +130,10 @@ $scope.licenseesreg=[];
 				} else if (response.data=="Exist") {
 					MsgBox("Licensee already exist");
 					$scope.listLicensees()
+				}else if (response.data=="licenseeregistrationcodenumbererror") {
+					MsgBox("Only Numbers Allowed in Licensee Code");
+					$scope.listLicensees()
+				
 				}
 				else if (response.data=="licenseeregistrationcodesizeerror") {
 					MsgBox("Licensee Code Size exceeding limit");
@@ -138,10 +142,6 @@ $scope.licenseesreg=[];
 				}else if (response.data=="licenseeregistrationcodenull") {
 					MsgBox("Licensee Code Cannot Be Null");
 					$scope.listLicensees()
-				}else if (response.data=="licenseedescriptioncharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Licensee Description");
-					$scope.listLicensees()
-				
 				}else if (response.data=="licenseedescriptionsizeerror") {
 					MsgBox("Licensee Description Cannot be more than 255 characters");
 					$scope.listLicensees()

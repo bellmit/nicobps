@@ -14,7 +14,7 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 
 	@Override
 	public String validateInitFeeMaster(Map<String, Object> param) {
-		String response = "";
+		String response = ""; 
 		System.out.println(param);
 //		Pattern p = Pattern.compile("[^A-Za-z_ ]");
 		Pattern p3 = Pattern.compile("^[0-9][0-9]*$");

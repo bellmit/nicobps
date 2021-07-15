@@ -8,7 +8,7 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 	$scope.errorCallback = "";
 	$scope.method = "POST";
 	$scope.successCallback = "";
-	$scope.urlEndpoint = "";
+	$scope.urlEndpoint = ""; 
 	$scope.actionButton = 1;
 	
 	/*------------------------*/
@@ -58,12 +58,9 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 					MsgBox("Enclosure name already exist");
 					$scope.listEnclosures();
 				}else if (response.data=="m1") {
-					MsgBox("No Special Characters or Numbers allowed in Enclosure Name");
+					MsgBox("Special Characters allowed in Enclosure Name are , . / ( ) - _");
 					$scope.listEnclosures();
 				
-				}else if (response.data=="m2") {
-					MsgBox("No Special Characters or Numbers allowed in Enclosure Description");
-					$scope.listEnclosures();
 				}else if (response.data=="50") {
 					MsgBox("Enclosure Name Cannot be more than 50 characters");
 					$scope.listEnclosures();
@@ -107,12 +104,9 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
 					MsgBox("Enclosure name already exist");
 					$scope.listEnclosures();
 				}else if (response.data=="m1") {
-					MsgBox("No Special Characters or Numbers allowed in Enclosure Name");
+					MsgBox("Special Characters allowed in Enclosure Name are , . / ( ) - _");
 					$scope.listEnclosures();
 				
-				}else if (response.data=="m2") {
-					MsgBox("No Special Characters or Numbers allowed in Enclosure Description");
-					$scope.listEnclosures();
 				}else if (response.data=="50") {
 					MsgBox("Enclosure Name Cannot be more than 50 characters");
 					$scope.listEnclosures();

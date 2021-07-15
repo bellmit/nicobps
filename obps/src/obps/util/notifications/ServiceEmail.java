@@ -1,6 +1,6 @@
 /*@author Avijit Debnath*/
 
-package obps.util.common;
+package obps.util.notifications;
 
 import javax.mail.Message;
 import javax.mail.Multipart;

@@ -7,16 +7,16 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InitSubOccupanciesValidator {
-	public String validateInitSubOccupancies(Map<String, Object> param) {
-		String response = "";
+public class InitUsagesValidator {
+	public String validateInitUsages(Map<String, Object> param) {
+		String response="";
 		Matcher m;
 		boolean b=false;
-		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]"; 
-		Pattern p = Pattern.compile(pattern);
+		Pattern p = Pattern.compile("[^A-Za-z_ ]");
 		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9\\-]");
-		String suboccupancycode="",suboccupancyname="",description="";
-		
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		Pattern p2 = Pattern.compile(pattern); 
+		String suboccupancycode="",usagecode="",usagename="",description="";
 		if(param.get("suboccupancycode")!=null) {
 			suboccupancycode=((String) param.get("suboccupancycode")).trim();
 			m= p1.matcher(suboccupancycode);
@@ -30,28 +30,44 @@ public class InitSubOccupanciesValidator {
 				response= "suboccupancycodesizeerror";
 				return response;
 			}
-		}
-		else {
+		}else {
 			response= "suboccupancycodenull";
 			return response;
 		}
-			
-		
-		if(param.get("suboccupancyname")!=null) {
-			suboccupancyname=((String) param.get("suboccupancyname")).trim();
-			m= p.matcher(suboccupancyname);
+		if(param.get("usagecode")!=null) {
+			usagecode=((String) param.get("usagecode")).trim();
+			m= p1.matcher(usagecode);
 			b = m.find();
 			if(b) {
-				response= "suboccupancynamecharactererror";
+				response= "usagecodecharactererror";
 				return response;
 			}
-			if(suboccupancyname.length()>255) {
-				response= "suboccupancynamesizeerror";
+				
+			if(usagecode.length()>20) {
+				response= "usagecodesizeerror";
 				return response;
 			}
+		}else {
+			response= "usagecodenull";
+			return response;
 		}
-		else
-			response= "suboccupancynamenull";
+		if(param.get("usagename")!=null) {
+			usagename=((String) param.get("usagename")).trim();
+			m= p2.matcher(usagename);
+			b = m.find();
+			if(b) {
+				response= "usagenamecharactererror";
+				return response;
+			}
+				
+			if(usagename.length()>255) {
+				response= "usagenamesizeerror";
+				return response;
+			}
+		}else {
+			response= "usagenamenull";
+			return response;
+		}
 		if(param.get("description")!=null) {
 			description=((String) param.get("description")).trim();
 			
@@ -64,9 +80,6 @@ public class InitSubOccupanciesValidator {
 			response= "descriptionnull";
 			return response;
 		}
-			
-		
-		
 		return response;
 	}
 }
