@@ -27,7 +27,7 @@ public class DaoNotification{
 
 	public Notification notificationDetails(Integer officecode,String messageid) {
 		String sql = "SELECT O.officecode,officeshortname,smsusername,smspassword,smssenderid,securekey,senderemailid,emailidpassword, "
-				   + "OFN.messageid,templateid,smsbody,emailbody " 
+				   + "OFN.messageid,templateid,smsbody,emailbody,emailsubject " 
 				   + "FROM masters.offices O " 
 				   + "INNER JOIN masters.officenotications OFN ON OFN.officecode=O.officecode " 
 				   + "INNER JOIN masters.notifications N ON N.messageid=OFN.messageid " 

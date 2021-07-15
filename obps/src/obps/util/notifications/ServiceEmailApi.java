@@ -15,11 +15,11 @@ import java.nio.charset.StandardCharsets;
 public class ServiceEmailApi 
 {
     public static void sendEmails(Notification noti) {
-    	sendEmails(noti.getSenderemailid(),noti.getEmailidpassword(),noti.getRecipientEmailid(),noti.getEmailsubject(),noti.getEmailbody());
+    	sendEmails(noti.getSenderemailid(),noti.getEmailidpassword(),noti.getRecipientEmailid(),noti.getEmailsubject(),noti.getEmailbody(),noti.getEmail_api_hostnane());
     }	
 	
     @SuppressWarnings("deprecation")
-	public static String sendEmails(String fromemail,String password,String toemail,String subject,String message) {
+	public static String sendEmails(String fromemail,String password,String toemail,String subject,String message,String apiurl) {
         String resp = "4";
         URLConnection urlConn;
         DataInputStream input;
@@ -30,7 +30,8 @@ public class ServiceEmailApi
             message = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
             subject = URLEncoder.encode(subject, StandardCharsets.UTF_8.toString());
 
-            String urlString = "http://164.100.149.217/nicavi/ApiEmail?";
+            //String urlString = "http://164.100.149.217/nicavi/ApiEmail?";
+            String urlString = apiurl+"?";
             urlString += "toemail=" + toemail + "&subject=" + subject + "&message=" + message;
             urlString += "&fromemail="+fromemail+"&password="+fromemail+"";
 
