@@ -19,6 +19,7 @@ public class Notification {
 
 	private String recipientMobileno;
 	private String recipientEmailid;
+	private String emailsubject;
 
 	public Notification() {
 		super();
@@ -34,6 +35,7 @@ public class Notification {
 		this.templateid = "";
 		this.sms = "";
 		this.recipientMobileno = "";
+		this.emailsubject="";
 	}
 
 	public String getSenderemailid() {
@@ -150,13 +152,22 @@ public class Notification {
 		this.email = email;
 	}
 
+	public String getEmailsubject() {
+		return emailsubject;
+	}
+
+	public void setEmailsubject(String emailsubject) {
+		this.emailsubject = emailsubject;
+	}
+
 	@Override
 	public String toString() {
 		return "Notification [officecode=" + officecode + ", officeshortname=" + officeshortname + ", smsusername="
 				+ smsusername + ", smspassword=" + smspassword + ", smssenderid=" + smssenderid + ", securekey="
 				+ securekey + ", senderemailid=" + senderemailid + ", emailidpassword=" + emailidpassword
 				+ ", messageid=" + messageid + ", templateid=" + templateid + ", sms=" + sms + ", email=" + email
-				+ ", recipientMobileno=" + recipientMobileno + ", recipientEmailid=" + recipientEmailid + "]";
+				+ ", recipientMobileno=" + recipientMobileno + ", recipientEmailid=" + recipientEmailid 
+				+ ", emailSubject=" + emailsubject + "]";
 	}
 	
 }

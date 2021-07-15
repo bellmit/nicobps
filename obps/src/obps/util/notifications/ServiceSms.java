@@ -38,8 +38,8 @@ public class ServiceSms {
 
 //    String HOST_NAME = "https://164.100.14.211/failsafe/HttpLink?";    
 
-	public String sendSingleSMS(Notification noti) {
-
+	public String sendSingleSMS(Notification noti) 
+	{
 		String responseString = "";
 		SSLSocketFactory sf = null;
 		SSLContext context = null;

@@ -126,8 +126,8 @@ public class ControllerUserManagement {
 	@PostMapping("/submitSignupDetails.htm")
 	// public ResponseEntity<?> submitProfilePersonalDetails(@RequestBody
 	// Map<String,Object> param,HttpServletRequest request)
-	public ResponseEntity<?> submitProfilePersonalDetails(@RequestParam Map<String, Object> param,
-			HttpServletRequest request) {
+	public ResponseEntity<?> submitProfilePersonalDetails(@RequestParam Map<String, Object> param,HttpServletRequest request) 
+	{
 		// for (Map.Entry<String, Object> entry : param.entrySet()){
 		// System.out.println(entry.getKey() +" ::: " + entry.getValue());
 		// }
@@ -151,7 +151,7 @@ public class ControllerUserManagement {
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
 		
-		 List<Notification> notification = serviceNotification.listNotificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		List<Notification> notification = serviceNotification.listNotificationDetails(Integer.valueOf("1"), "REGISTRATION");
 		
 		if (issms.equals("Y") || isemail.equals("Y")) {
 			if (isotp.equals("N")) {
