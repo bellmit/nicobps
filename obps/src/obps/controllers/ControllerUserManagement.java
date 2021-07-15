@@ -42,7 +42,9 @@ import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.util.common.Utilty;
 import obps.util.notifications.Notification;
+import obps.util.notifications.ServiceEmailApi;
 import obps.util.notifications.ServiceNotification;
+import obps.util.notifications.ServiceSms;
 import obps.validators.UserManagementValidatorInterface;
 import obps.validators.ValidateLicenseEnclosures;
 import obps.daos.DaoEnclosureManagementInterface;
@@ -83,7 +85,18 @@ public class ControllerUserManagement {
 	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
-		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");	
+		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		
+		notification.setRecipientMobileno("9366554970");
+		notification.setRecipientEmailid("avijitdebnath@gmail.com");
+		
+		ServiceSms ss = new ServiceSms();
+		ss.sendSingleSMS(notification);
+		//ServiceEmailApi se = new ServiceEmailApi();
+		
+		//se.sendEmails(notification);
+		
+		
 		return "signup";
 	}
 
