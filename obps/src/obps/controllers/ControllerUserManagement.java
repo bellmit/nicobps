@@ -47,8 +47,7 @@ import obps.util.notifications.Notification;
 import obps.util.notifications.ServiceEmailApi;
 import obps.util.notifications.ServiceNotification;
 import obps.util.notifications.ServiceSms;
-
-
+import obps.validators.RegistrationsStakeholderValidator;
 import obps.validators.UserManagementValidator;
 
 
@@ -73,7 +72,9 @@ public class ControllerUserManagement {
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
 
-
+	@Autowired
+	private RegistrationsStakeholderValidator registrationstakeholderValidator;
+	
 	@Autowired
 	private ServiceNotification serviceNotification;
 	
@@ -168,6 +169,10 @@ public class ControllerUserManagement {
 		if (usersessioncaptcha == null || userresponsecaptcha == null
 				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
 			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
+		}
+		
+		if(registrationstakeholderValidator.validateUserDetails(param)) {
+			return ResponseEntity.badRequest().body(new String("Please check your inputs!"));
 		}
 		if (serviceUserManagementInterface.checkEmailExistance((String) param.get("username"))) {
 			return ResponseEntity.badRequest().body(new String("Email already exists!"));

@@ -50,6 +50,7 @@ public class Patterns {
     public static final String PATTERN_DIVISION = "^(1st|2nd|3rd)$";
     public static final String PATTERN_TRUEFALSE = "^(true|false)$";    
     public static final String PATTERN_RELATION = "^(F|M)$";    
+    public static final String PATTERN_FIRMINDIVIDUAL = "^(F|I)$";    
     
     public static final String PATTERN_IMAGE_CONTANT = "^(image/jpeg|image/jpg|image/pjpeg|image/png|image/x-png)$";
     public static final String PATTERN_DOCUMENT_CONTANT = "^(image/jpeg|image/jpg|image/pjpeg|image/png|image/x-png|application/pdf)$";
