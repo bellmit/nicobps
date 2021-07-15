@@ -202,7 +202,7 @@ public class ControllerUserManagement {
 					Integer emailotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("emailotp", emailotp.toString());
 					// Send Email
-					notification.setRecipientMobileno((String) param.get("username"));
+					notification.setRecipientEmailid((String) param.get("username"));
 					//es.sendEmails(notification);
 				}
 				return ResponseEntity.ok(new String("0"));
