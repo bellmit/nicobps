@@ -220,30 +220,31 @@ public class ServiceUtil implements ServiceUtilInterface {
 		Object[] criteria = { usercode, modulecode, licenseetypecode };
 		return this.listCommonMap(sql, criteria);
 	}
+
 	@Override
-	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {		
+	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {
 		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
 				+ "WHERE E.enabled='Y' AND mandatory='Y' AND M.modulecode=? AND licenseetypecode=? "
 				+ "AND E.enclosurecode NOT IN (SELECT enclosurecode FROM  nicobps.licenseesenclosures WHERE usercode=?) "
 				+ "ORDER BY mandatory DESC,E.enclosurecode";
-		Object[] criteria = { modulecode, licenseetypecode,usercode };
+		Object[] criteria = { modulecode, licenseetypecode, usercode };
 		return this.listCommonMap(sql, criteria);
-	}	
-	
-	
+	}
+
 	/////////////////////
 	@Override
-	public List<CommonMap> listBpaEnclosures(final Short modulecode,String aplicationcode) {
+	public List<CommonMap> listBpaEnclosures(final Short modulecode, String aplicationcode) {
 		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,applicationcode AS value2 FROM masters.enclosures E     "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "LEFT OUTER JOIN nicobps.bpaenclosures BE ON BE.enclosurecode=M.enclosurecode AND BE.applicationcode=? "
 				+ "WHERE E.enabled='Y' AND  M.modulecode=? AND M.processcode=3 "
 				+ "ORDER BY mandatory DESC,E.enclosurecode";
 
-		Object[] criteria = {aplicationcode, modulecode };
+		Object[] criteria = { aplicationcode, modulecode };
 		return this.listCommonMap(sql, criteria);
 	}
+
 	@Override
 	public List<CommonMap> listOccupancies() {
 		String sql = "SELECT T.occupancycode AS key, T.occupancyname AS value, T.occupancyalias AS value1 FROM masters.occupancies T ORDER BY T.occupancycode ";
@@ -308,9 +309,18 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
-		String sql = "select * from nicobps.licenseeofficesvalidities b "
-				+ "inner join masters.offices c on b.officecode=c.officecode and c.enabled='Y' "
-				+ "where b.validto>current_date and b.usercode= ? ";
+//		String sql = "select * from nicobps.licenseeofficesvalidities b "
+//				+ "inner join masters.offices c on b.officecode=c.officecode and c.enabled='Y' "
+//				+ "where b.validto>current_date and b.usercode= ? ";
+
+		String sql = "SELECT  U.USERCODE, USERNAME, O2.OFFICECODE, O2.OFFICENAME1, VALIDTO, EXTENDEDTO, "
+				+ " Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS VALIDTO  "
+				+ " FROM MASTERS.OFFICES O1, MASTERS.OFFICES O2 , nicobps.licenseeofficesvalidities  b, USERLOGINS U "
+				+ " WHERE O1.OFFICECODE = O2.REGISTERINGOFFICECODE AND O1.OFFICECODE = B.OFFICECODE "
+				+ " AND U.USERCODE = B.USERCODE "
+				+ " AND case when EXTENDEDTO is null then b.validto>current_date else   EXTENDEDTO > CURRENT_DATE END "
+				+ " AND U.USERCODE = ?  " + "ORDER BY O1.OFFICENAME1";
+
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql, criteria);
 	}
@@ -323,7 +333,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> listRegisteringOffices(Integer registeringofficecode) {
-		String sql = "SELECT * FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N' and registeringofficecode=? ORDER BY officename1 ";
+		String sql = "SELECT * FROM masters.offices WHERE enabled='Y' /*and isregisteringoffice='N'*/ and registeringofficecode=? ORDER BY officename1 ";
 		return this.listGeneric(sql, new Object[] { registeringofficecode });
 	}
 
@@ -424,26 +434,28 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "WHERE app.modulecode=? and app.usercode=? ";
 		return this.listGeneric(sql, new Object[] { modulecode, usercode });
 	}
+
 	@Override
-	public 	List<Map<String, Object>> listStakeholders(Integer officecode) {
+	public List<Map<String, Object>> listStakeholders(Integer officecode) {
 		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l \r\n"
 				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \r\n"
 				+ "								where li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC \r\n";
-			
-		return this.listGeneric(sql,new Object[] {  officecode });
+
+		return this.listGeneric(sql, new Object[] { officecode });
 	}
+
 	@Override
-	public 	List<Map<String, Object>> listStakeholdersMain(Integer officecode) {
+	public List<Map<String, Object>> listStakeholdersMain(Integer officecode) {
 		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l \r\n"
 				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \r\n"
 				+ "								where li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y'  and registeringofficecode=? ORDER BY officename1) OR officecode=? ORDER BY l.applicantsname DESC \r\n";
-		
-		return this.listGeneric(sql,new Object[] {  officecode,officecode });
+
+		return this.listGeneric(sql, new Object[] { officecode, officecode });
 	}
-	
-	@Override 
+
+	@Override
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
-		
+
 		return daoUtilInterface.updateextendValidity(officecode, usercode, extendedto, extendedby);
 	}
 }
