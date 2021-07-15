@@ -15,8 +15,8 @@ public class ServiceNotification
     
     public String createMessage(List<String> params, String message) {
         String str="";
-        for(int i=0;i<params.size();i++) {
-        	str.replace("{"+i+"}", params.get(i));
+        for(int i=0;i<params.size();i++) {        	
+        	str=message.replace("{"+i+"}", params.get(i));
         } 		
         return str;
 	}

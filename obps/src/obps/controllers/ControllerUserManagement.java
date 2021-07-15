@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -93,7 +94,11 @@ public class ControllerUserManagement {
 	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
-		//Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		
+		String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
+		notification.setEmailbody(emailbody); 
+		System.out.println("notification.getEmailbody() : "+notification.getEmailbody());
 		
 		//notification.setRecipientMobileno("9366554970");
 		//notification.setRecipientEmailid("avijitdebnath@gmail.com");
