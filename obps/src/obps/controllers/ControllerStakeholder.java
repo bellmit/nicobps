@@ -203,44 +203,10 @@ public class ControllerStakeholder {
 	public ResponseEntity<?> extendValidity(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		String res = "false";
 		Integer extendedby = Integer.valueOf(req.getSession().getAttribute("usercode").toString());
-		if ((String) params.get("usercode") != null || (String) params.get("usercode") != "") {
-			if (!extendValidator.validateUsercode((String) params.get("usercode"))) {
-				return ResponseEntity.badRequest().body(new String("Invalid User!!"));
-			}
-		}
-
-		if ((String) params.get("officecode") != null || (String) params.get("officecode") != "") {
-			if (!extendValidator.validateOfficecode((String) params.get("officecode"))) {
-				return ResponseEntity.badRequest().body(new String("Invalid Office!!"));
-			}
-		}
-
-		if ((String) params.get("extendedto") != null || (String) params.get("extendedto") != "") {
-			if (!extendValidator.validatedate((String) params.get("extendedto"))) {
-				return ResponseEntity.badRequest().body(new String("Invalid Extended to Date!!"));
-			}
-		}
-
-		if ((String) params.get("validto") != null || (String) params.get("validto") != "") {
-			if (!extendValidator.validatedate((String) params.get("validto"))) {
-				return ResponseEntity.badRequest().body(new String("Invalid Valid to Date!!"));
-			}
-		}
-
-		if ((String) params.get("extendedby") != null || (String) params.get("extendedby") != "") {
-			if (!extendValidator.validateUsercode(extendedby.toString())) {
-				return ResponseEntity.badRequest().body(new String("Invalid User!!"));
-			}
-		}
-
-		if ((String) params.get("validto") != null || (String) params.get("validto") != ""
-				|| (String) params.get("extendedto") != null || (String) params.get("extendedto") != ""
-				|| (String) params.get("maxdate") != null || (String) params.get("maxdate") != "") {
-			if (!extendValidator.validateExtendedtoDate(params.get("validto"), params.get("extendedto"),
-					params.get("maxdate"))) {
-				return ResponseEntity.badRequest().body(new String("Check Validity Days!!"));
-			}
-		}
+	if(extendValidator.validateExtendValidity(params,extendedby)) {
+		return ResponseEntity.badRequest().body(new String(
+				"Check input details"));
+	}
 
 		if (SSI.extendValidity(Short.parseShort(params.get("officecode")), Integer.parseInt(params.get("usercode")),
 				params.get("extendedto"), extendedby)) {
