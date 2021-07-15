@@ -13,5 +13,15 @@ public class ServiceNotification
     	return daoNotification.notificationDetails(officecode,messageid);
     }
     
+    public String createMessage(List<String> params, String message) {
+        String str="";
+        for(int i=0;i<params.size();i++) {
+        	str.replace("{"+i+"}", params.get(i));
+        } 		
+        return str;
+	}
+	
+
+    
     
 }
