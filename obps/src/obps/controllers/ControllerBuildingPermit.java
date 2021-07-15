@@ -28,6 +28,7 @@ import obps.models.BpaApplicationFee;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
+import obps.validators.BpaValidator;
 
 @Controller
 @SessionAttributes({ "SESSION_USERCODE" })
@@ -39,6 +40,9 @@ public class ControllerBuildingPermit {
 
 	@Autowired
 	private ServiceBPAInterface SBI;
+
+	@Autowired
+	private BpaValidator Bvalid;
 
 	@ModelAttribute("SESSION_USERCODE")
 	Integer getSessionUsercode() {
@@ -274,6 +278,16 @@ public class ControllerBuildingPermit {
 			@RequestBody BpaApplicationFee bpa) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
+// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.BpaValidatebpaMakePayment(bpa, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//			response.put("msg", "Error: Failed to save building permit application.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+// -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
+
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 		if (SBI.processAppPayment(usercode, bpa, response))
@@ -287,6 +301,17 @@ public class ControllerBuildingPermit {
 			@RequestBody BpaApplication bpa) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
+
+//-------------------------------------------VALIDATION STARTS---------------------------------------------------------------------		
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.BpaValidateSaveBpa(bpa, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//		    response.put("msg", "Error: Failed to save building permit application.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+//-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
+
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
@@ -302,6 +327,16 @@ public class ControllerBuildingPermit {
 			@RequestParam(name = "processcode", required = false) Integer fromprocesscode) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
+//-------------------------------------------VALIDATION STARTS---------------------------------------------------------------------		
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.BpaValidatesaveBPAStepTwo(bpa, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//			response.put("msg", "Error: Failed to save building permit application Step 2.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+//-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
+
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 

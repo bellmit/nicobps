@@ -31,6 +31,7 @@ import obps.models.BpaSiteInspection;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
+import obps.validators.BpaValidator;
 
 @Controller
 @SessionAttributes({ "SESSION_PATHURL", "SESSION_USERCODE" })
@@ -41,6 +42,8 @@ public class ControllerBpaProcessing {
 
 	@Autowired
 	private ServiceBPAInterface SBI;
+	@Autowired
+	private BpaValidator Bvalid;
 
 	@ModelAttribute("SESSION_USERCODE")
 	Integer getSessionUsercode() {
@@ -381,9 +384,20 @@ public class ControllerBpaProcessing {
 	/* CREATE */
 	@PostMapping(value = "/approvebpapplication.htm")
 	public ResponseEntity<HashMap<String, Object>> approveApplication(
-			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaApproval bpa, 
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaApproval bpa,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
+
+// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.ValidateapproveApplication(bpa, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//			response.put("msg", "Error: Failed to save building permit application.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+// -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
+
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
@@ -399,6 +413,16 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
+
+// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.Validateprocessbpapplication(data, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//			response.put("msg", "Error: Failed to save building permit application.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+// -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
@@ -416,6 +440,15 @@ public class ControllerBpaProcessing {
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
+// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.ValidaterejectBPApplication(data, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//			response.put("msg", "Error: Failed to save building permit application.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+// -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
@@ -439,6 +472,16 @@ public class ControllerBpaProcessing {
 		 * matcher = mime.matcher(base64ImageString); if (!matcher.find()) LOG.info("");
 		 * else LOG.info(matcher.group(1).toLowerCase());
 		 */
+// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
+		Map<String, String> errorMap = new HashMap<>();
+		Bvalid.ValidatesaveBPASiteInspection(bpa, errorMap);
+		if (!errorMap.isEmpty()) {
+			LOG.info("ErrorMap: " + errorMap.toString());
+//					response.put("msg", "Error: Failed to save building permit application.");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+// -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
+
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 

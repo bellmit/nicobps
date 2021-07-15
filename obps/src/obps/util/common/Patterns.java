@@ -54,7 +54,8 @@ public class Patterns {
     public static final String PATTERN_IMAGE_CONTANT = "^(image/jpeg|image/jpg|image/pjpeg|image/png|image/x-png)$";
     public static final String PATTERN_DOCUMENT_CONTANT = "^(image/jpeg|image/jpg|image/pjpeg|image/png|image/x-png|application/pdf)$";
     public static final String PATTERN_PDF_CONTANT = "^(application/pdf)$";
-    
+    public static final String PATTERN_STRING_SPACE ="^(?![ .]+$)[a-zA-Z .]*$";
+    public static final String NO_SPECIAL = "[\\w\\s,'.]+";
     public static boolean PatternMatche(String pattern, String inputStr) {
         return Pattern.matches(pattern, inputStr);
     }

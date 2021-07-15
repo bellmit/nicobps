@@ -30,7 +30,7 @@ import obps.services.ServiceUploadBpaEnclosuersInterface;
 import obps.services.ServiceUserManagementInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
-import obps.validators.ValidateLicenseEnclosures;
+import obps.validators.ValidateBpaEnclosures;
 
 //@RestController
 @Controller
@@ -43,12 +43,11 @@ public class ControllerUploadBpaEnclosures {
 	@Autowired
 	private ServiceUploadBpaEnclosuersInterface ServiceUploadBpaEnclosuersInterface;
 
-
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
 
 	@Autowired
-	private ValidateLicenseEnclosures vle;
+	private ValidateBpaEnclosures vle;
 
 //	@RequestMapping("/bpauploadenc.htm")
 //	public String uploadbpaenclosuresext(Model model, @RequestParam String applicationcode) {
@@ -61,53 +60,58 @@ public class ControllerUploadBpaEnclosures {
 
 	@RequestMapping(value = "/bpauploadenc.htm")
 	public String uploadbpaenclosuresint(ModelMap model, @ModelAttribute("BpaEnclosures") BpaEnclosures bpaEnclosures,
-			BindingResult result, @RequestParam String applicationcode,HttpServletRequest request) {
+			BindingResult result, @RequestParam String applicationcode, HttpServletRequest request) {
 		request.getSession().setAttribute("applicationcode", applicationcode);
 		bpaEnclosures.setApplicationcode(applicationcode);
 		model.addAttribute("successMsg", "");
 		model.addAttribute("enclosuresList",
 				serviceUtilInterface.listBpaEnclosures(Short.valueOf("2"), applicationcode));
-		return PARENT_URL_MAPPING.concat("/uploadbpaenclosuresext");
+		return PARENT_URL_MAPPING.concat("/bpauploadenc");
 	}
 
 	@RequestMapping(value = "submitbpaenclosures.htm", params = "_submit", method = RequestMethod.POST)
 	public String submitbpaenclosures(ModelMap model,
 			@ModelAttribute("licenseesenclosures") BpaEnclosures bpaenclosures, BindingResult result,
-			HttpServletRequest request) {		
-		bpaenclosures.setApplicationcode((String)request.getSession().getAttribute("applicationcode"));
-		
+			HttpServletRequest request) {
+
 		Userlogin user = (Userlogin) request.getSession().getAttribute("user");
-		//String successurl = "redirect:bpasiteinspection.htm?applicationcode=" + bpaenclosures.getApplicationcode();
-		String successurl = "redirect:bpatrackstatus.htm?applicationcode=" + bpaenclosures.getApplicationcode();
+
+		String successurl = "bpauploadenc.htm";
 		String usercode = (String) request.getSession().getAttribute("usercode");
-		model.addAttribute("successMsg", "");	
+		model.addAttribute("successMsg", "");
 		String appenclosurecode = ServiceUploadBpaEnclosuersInterface.getMaxAppEnclosureCode() + "";
-		
+
+		bpaenclosures.setApplicationcode((String) request.getSession().getAttribute("applicationcode"));
 		bpaenclosures.setAppenclosurecode(appenclosurecode);
 		bpaenclosures.setUsercode(usercode);
 		bpaenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
-		
-//			vle.validate(bpaenclosures, result);
-		if (!result.hasErrors()) 
-		{
+
+		vle.validate(bpaenclosures, result);
+
+		if (!result.hasErrors()) {
 			String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 			bpaenclosures.setAfrcode(afrcode);
-			System.out.println("submitbpaenclosures.htm"  +bpaenclosures.toString());
+			System.out.println("submitbpaenclosures.htm" + bpaenclosures.toString());
 			if (ServiceUploadBpaEnclosuersInterface.submitBpaEnclosureDetails(bpaenclosures)) {
 				model.addAttribute("successMsg", "The documents have been uploaded successfully.");
+				successurl = "redirect:bpatrackstatus.htm?applicationcode=" + bpaenclosures.getApplicationcode();
 			} else {
 				model.addAttribute("successMsg",
 						"Sorry, but we are unable to process the request at the moment. Please try again later.!");
 			}
 		}
-		
+		if (usercode != null) {
+			model.addAttribute("enclosuresList", serviceUtilInterface.listBpaEnclosures(Short.valueOf("2"),
+					(String) request.getSession().getAttribute("applicationcode")));
+		}
 
 		return successurl;
 
 	}
+
 	@RequestMapping(value = "/outputbpa.htm", method = RequestMethod.GET)
 	public String showFile(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "usercode", required = true) String applicationcode,
+			@RequestParam(value = "applicationcode", required = true) String applicationcode,
 			@RequestParam(value = "enclosurecode", required = true) String enclosurecode) {
 		String successUrel = "output";
 		try {
