@@ -94,11 +94,11 @@ public class ControllerUserManagement {
 	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
-		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		//Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
 		
-		String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
-		notification.setEmailbody(emailbody); 
-		System.out.println("notification.getEmailbody() : "+notification.getEmailbody());
+		//String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
+		//notification.setEmailbody(emailbody); 
+		//System.out.println("notification.getEmailbody() : "+notification.getEmailbody());
 		
 		//notification.setRecipientMobileno("9366554970");
 		//notification.setRecipientEmailid("avijitdebnath@gmail.com");
@@ -178,19 +178,32 @@ public class ControllerUserManagement {
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
 		
-		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");		
+		String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
+		notification.setEmailbody(emailbody); 
 		
-		if (issms.equals("Y") || isemail.equals("Y")) {
+		String smsbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getSmsbody());		
+		notification.setSmsbody(smsbody); 
+		
+		ServiceSms ss = new ServiceSms();
+		ServiceEmailApi es = new ServiceEmailApi();
+	
+		if (issms.equals("Y") || isemail.equals("Y")) 
+		{
 			if (isotp.equals("N")) {
 				if (issms.equals("Y")) {
 					Integer mobileotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("mobileotp", mobileotp.toString());
 					// Send SMS
+					notification.setRecipientMobileno((String) param.get("mobileno"));
+					//ss.sendSingleSMS(notification);							
 				}
 				if (isemail.equals("Y")) {
 					Integer emailotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("emailotp", emailotp.toString());
 					// Send Email
+					notification.setRecipientMobileno((String) param.get("username"));
+					//es.sendEmails(notification);
 				}
 				return ResponseEntity.ok(new String("0"));
 			} else {
