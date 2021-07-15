@@ -29,7 +29,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
-import obps.validators.InitEnclosuresValidatorInterface;
+import obps.validators.InitEnclosuresValidator;
+
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.models.Enclosures;
 import obps.models.Pageurls;
@@ -48,7 +49,7 @@ public class ControllerInitEcnclosure {
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 
-	private InitEnclosuresValidatorInterface initEnclosuresValidatorInterface;
+	private InitEnclosuresValidator initEnclosuresValidator;
 	
 	@Autowired
 	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
@@ -73,7 +74,7 @@ public class ControllerInitEcnclosure {
 	public ResponseEntity<HashMap<String, Object>> initenclosures(@RequestBody Map<String, Object> enclosures) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if(enclosures!=null) {
-			String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
+			String validate= initEnclosuresValidator.validateInitEnclosure(enclosures);
 			if(validate!="") {
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
@@ -123,7 +124,7 @@ public class ControllerInitEcnclosure {
 //			if(exist)
 //				response.put("data", "exist");
 //			else {
-				String validate= initEnclosuresValidatorInterface.validateInitEnclosure(enclosures);
+				String validate= initEnclosuresValidator.validateInitEnclosure(enclosures);
 				if(validate!="") {
 					response.put("data", validate);
 					return ResponseEntity.ok().body(response);

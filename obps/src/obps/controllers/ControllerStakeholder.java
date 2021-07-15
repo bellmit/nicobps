@@ -23,7 +23,8 @@ import obps.services.ServiceStakeholderInterface;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.ExtendValidityValidator;
-import obps.validators.StakeHolderValidatorInterface;
+import obps.validators.StakeHolderValidator;
+
 
 @Controller
 public class ControllerStakeholder {
@@ -38,7 +39,7 @@ public class ControllerStakeholder {
 	private List<String> applicationCalled = new LinkedList<String>();
 
 	@Autowired
-	private StakeHolderValidatorInterface stakeHolderValidatorInterface;
+	private StakeHolderValidator stakeHolderValidator;
 
 	@GetMapping("/srverify.htm")
 	public String verification(Model model) {
@@ -139,10 +140,11 @@ public class ControllerStakeholder {
 	public @ResponseBody String updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer toprocesscode, String remarks, ModelMap model) {
 		String res = "";
-		if (officecode != null && applicationcode != null && usercode != null && toprocesscode != null
-				&& remarks != null) {
-			res = stakeHolderValidatorInterface.validateStackHolder(officecode, applicationcode, usercode,
-					toprocesscode, remarks);
+
+		if(officecode!=null && applicationcode!=null && usercode!=null && toprocesscode!=null && remarks!=null) {
+			res = stakeHolderValidator.validateStackHolder(officecode, applicationcode, usercode, toprocesscode,
+					remarks);
+
 			if (res != "")
 				return res;
 			else {

@@ -5,14 +5,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
-@Service
-public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
+@Component
+public class InitFeeMasterValidator{
 
-	@Override
+	
 	public String validateInitFeeMaster(Map<String, Object> param) {
 		String response = ""; 
 		System.out.println(param);
@@ -109,7 +110,7 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 		return response;
 	}
 
-	@Override
+	
 	public String validateInitFeeMaster(FeeMaster param) {
 		
 		String response = "";
@@ -207,7 +208,7 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 		return response;
 	}
 
-	@Override
+	
 	public String validateInitFeeTypes(Map<String, Object> param) {
 		String response = "";
 		System.out.println(param);
@@ -228,7 +229,7 @@ public class InitFeeMasterValidator implements InitFeeMasterValidatorInterface{
 		return response;
 	}
 
-	@Override
+	
 	public String validateInitFeeTypes(FeeTypes param) { 
 		String response = "";
 		System.out.println(param);

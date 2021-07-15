@@ -33,7 +33,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
-import obps.validators.InitOfficesValidatorInterface;
+import obps.validators.InitOfficesValidator;
+
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.models.Enclosures;
 import obps.models.Offices;
@@ -60,7 +61,7 @@ public class ControllerInitOffice {
 	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
 	@Autowired
 
-	private InitOfficesValidatorInterface initOfficesValidatorInterface;
+	private InitOfficesValidator initOfficesValidator;
 	@Resource
 	private Environment environment;
 
@@ -77,7 +78,7 @@ public class ControllerInitOffice {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if(offices!=null) {
 			System.out.println(offices);
-			String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+			String validate= initOfficesValidator.validateInitOffices(offices);
 			System.out.println("validate"+validate);
 			if(validate!="") {
 				response.put("data", validate);
@@ -126,7 +127,7 @@ public class ControllerInitOffice {
 	public ResponseEntity<HashMap<String, Object>> updateinitoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if(offices!=null) {
-			String validate= initOfficesValidatorInterface.validateInitOffices(offices);
+			String validate= initOfficesValidator.validateInitOffices(offices);
 			System.out.println("validate"+validate);
 			if(validate!="") {
 				response.put("data", validate);

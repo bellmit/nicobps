@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
-@Service
-public class UserManagementValidator implements UserManagementValidatorInterface{
+@Component
+public class UserManagementValidator{
 	
-	@Override
+	
 	public String validateCreateUser(Map<String, Object> param) {
 		String response = "";
 		Pattern p = Pattern.compile("[^A-Za-z_ ]");
@@ -70,7 +70,7 @@ public class UserManagementValidator implements UserManagementValidatorInterface
 		return response;
 	}
 
-	@Override
+	
 	public String validateAccessControl(List<Map<String, Object>> param) { 
 		String response="";
 		System.out.println(param);

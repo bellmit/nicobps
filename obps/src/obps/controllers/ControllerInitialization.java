@@ -29,7 +29,8 @@ import obps.models.Usages;
 import obps.services.ServiceEnclosureManagementInterface;
 import obps.services.ServiceInitializationInterface;
 import obps.util.application.ServiceUtilInterface;
-import obps.validators.InitFeeMasterValidatorInterface;
+import obps.validators.InitFeeMasterValidator;
+
 import obps.validators.InitLicenseesRegistrationValidator;
 import obps.validators.InitOccupanciesValidator;
 import obps.validators.InitSubOccupanciesValidator;
@@ -51,7 +52,7 @@ public class ControllerInitialization {
 	@Autowired
 	private InitSubOccupanciesValidator initSubOccupanciesValidator;
 	@Autowired
-	private InitFeeMasterValidatorInterface initFeeMasterValidatorInterface;
+	private InitFeeMasterValidator initFeeMasterValidator;
 	@Autowired
 
 	private ServiceInitializationInterface serviceInitalizationInterface;
@@ -180,7 +181,7 @@ public class ControllerInitialization {
 			feetype.put("feetypecode", feetypecode);
 		}
 		String validate="";
-		validate=initFeeMasterValidatorInterface.validateInitFeeTypes(feetype);
+		validate=initFeeMasterValidator.validateInitFeeTypes(feetype);
 		System.out.println(validate);
 		if(validate!="") {
 			response.put("code", 200);
@@ -217,7 +218,7 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> updateinitfeetypes(@RequestBody FeeTypes feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		String validate="";
-		validate=initFeeMasterValidatorInterface.validateInitFeeTypes(feetype);
+		validate=initFeeMasterValidator.validateInitFeeTypes(feetype);
 		System.out.println(validate);
 		if(validate!="") {
 			response.put("code", 200);
@@ -252,7 +253,7 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> updatefeemaster(@RequestBody FeeMaster feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		System.out.println("feemaster:" + feemaster);
-		String validate = initFeeMasterValidatorInterface.validateInitFeeMaster(feemaster);
+		String validate = initFeeMasterValidator.validateInitFeeMaster(feemaster);
 		if(validate!="") {
 			response.put("code", 200);
 			response.put("data", validate);
@@ -399,7 +400,7 @@ public class ControllerInitialization {
 			feemaster.put("feecode", feecode);
 		}
 			
-		String validate= initFeeMasterValidatorInterface.validateInitFeeMaster(feemaster);
+		String validate= initFeeMasterValidator.validateInitFeeMaster(feemaster);
 		System.out.println("validate"+validate);
 		if(validate!="") {
 			response.put("code", 200);
