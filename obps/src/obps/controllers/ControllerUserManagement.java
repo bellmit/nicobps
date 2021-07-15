@@ -85,13 +85,13 @@ public class ControllerUserManagement {
 	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
-		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
+		//Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");
 		
-		notification.setRecipientMobileno("9366554970");
-		notification.setRecipientEmailid("avijitdebnath@gmail.com");
+		//notification.setRecipientMobileno("9366554970");
+		//notification.setRecipientEmailid("avijitdebnath@gmail.com");
 		
-		ServiceSms ss = new ServiceSms();
-		ss.sendSingleSMS(notification);
+		//ServiceSms ss = new ServiceSms();
+		//ss.sendSingleSMS(notification);
 		//ServiceEmailApi se = new ServiceEmailApi();
 		
 		//se.sendEmails(notification);
