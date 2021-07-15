@@ -592,9 +592,44 @@ public class ControllerUserManagement {
 	}
 
 	@PostMapping(value = "/saveurl.htm")
-	public ResponseEntity<String> saveurl(@RequestBody Pageurls url) {
-
-		return ResponseEntity.ok().body(serviceUserManagementInterface.savePageurl(url));
+	public ResponseEntity<HashMap<String, Object>> saveurl(@RequestBody Pageurls url) {
+		String validate="";
+		HashMap<String, Object> response = new HashMap<String, Object>();
+//		System.out.println(url);
+		if(url!=null) {
+			validate=userManagementValidator.validatePageUrls(url);
+			if(validate!="") {
+				response.put("code", 200);
+				response.put("data", validate);
+				return ResponseEntity.ok().body(response);
+			}
+			String pageurl=url.getPageurl();
+			String sql = "Select count(*) from  masters.pageurls where LOWER(pageurl)=LOWER(?)";
+			Object[] values = {pageurl};
+			boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
+			if(exist) {
+				response.put("code", 200);
+				response.put("data", "Exist");
+				return ResponseEntity.ok().body(response);
+			}
+				
+			if(serviceUserManagementInterface.savePageurl(url).equalsIgnoreCase("Saved")) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}else {
+				response.put("code", 200);
+				response.put("data", "Failed");
+				return ResponseEntity.ok().body(response);
+			}
+		
+		}
+		response.put("code", 200);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+		
+			
+//		return ResponseEntity.ok().body(serviceUserManagementInterface.savePageurl(url));
 	}
 
 	@GetMapping(value = "/listUrls")

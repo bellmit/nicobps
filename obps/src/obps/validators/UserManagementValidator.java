@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import obps.models.Pageurls;
+
 
 @Component
 public class UserManagementValidator{
@@ -89,6 +91,123 @@ public class UserManagementValidator{
 			System.out.println(up.get("usercode"));
 			System.out.println("response="+response);
 //			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
+		}
+		return response;
+	}
+	
+	public String validatePageUrls(Pageurls url) {
+		System.out.println(url);
+		String response = "";
+		Pattern p = Pattern.compile("[^A-Za-z_ ]");
+		String regex = "^(.+)@(.+)$";
+		String pattern="[^A-Za-z_ 0-9\\/\\.\\-\\_]";
+		Pattern p2=Pattern.compile(pattern);
+		Pattern p3 = Pattern.compile("^[0-9][0-9]*$");
+	    
+		String pageurl="",subsubmenu="",subsubmenuicon="",submenu="",submenuicon="",parent="";
+		String parenticon="",parentorder="",submenuorder="",subsubmenuorder="",showinmenu="";
+		String urlcode="";
+		boolean b;Matcher m;
+		
+		
+		System.out.println(url.getPageurl());
+		if(url.getPageurl()!="") {
+			System.out.println("Here");
+			pageurl=url.getPageurl();
+			m = p2.matcher(pageurl);
+			b=m.find();
+			if(b)
+				return "Special Characters allowed in Page Url are . / - _";
+			if(pageurl.length()>100)
+				return "Page Url Cannot Exceed more than 100 characters";
+		}else
+			return "Page Url Cannot Be Null";
+		
+		if(url.getSubsubmenu()!=null || url.getSubsubmenu()=="") {
+			subsubmenu=url.getSubsubmenu();
+			m = p2.matcher(subsubmenu);
+			b=m.find();
+			if(b)
+				return "Special Characters allowed in Sub Sub Menu are . / - _";
+			if(subsubmenu.length()>50)
+				return "Sub Sub Menu Cannot Exceed more than 50 characters";
+		}
+		
+		if(url.getSubsubmenuicon()!=null) {
+			subsubmenuicon=url.getSubsubmenuicon();
+			m = p2.matcher(subsubmenuicon);
+			b=m.find();
+//			if(b)
+//				return "subsubmenucharerror";
+			if(subsubmenuicon.length()>25)
+				return "Sub Sub Menu Icon Cannot Exceed more than 25 characters";
+		}
+		
+		if(url.getSubmenu()!=null ||url.getSubmenu()=="") {
+			submenu=url.getSubmenu();
+			m = p2.matcher(submenu);
+			b=m.find();
+			if(b)
+				return "Special Characters allowed in Sub Menu are . / - _";
+			if(submenu.length()>50)
+				return "Sub Menu Icon Cannot Exceed more than 50 characters";
+		}
+		
+		if(url.getSubmenuicon()!=null||url.getSubmenuicon()=="") {
+			submenuicon=url.getSubmenuicon();
+			m = p2.matcher(submenuicon);
+			b=m.find();
+//			if(b)
+//				return "subsubmenucharerror";
+			if(submenuicon.length()>25)
+				return "Sub Menu Icon Cannot Exceed more than 25 characters";
+		}
+		if(url.getParent()!=null || url.getParent()=="" ) {
+			parent=url.getParent();
+			m = p2.matcher(parent);
+			b=m.find();
+			if(b)
+				return "Special Characters allowed in Parent are . / - _";
+			if(parent.length()>50)
+				return "Parent Cannot Exceed more than 50 characters";
+		}
+		
+		if(url.getParenticon()!=null) {
+			parenticon=url.getParenticon();
+			m = p2.matcher(parenticon);
+			b=m.find();
+//			if(b)
+//				return "subsubmenucharerror";
+			if(parenticon.length()>25)
+				return "Parent Icon Cannot Exceed more than 25 characters";
+		}
+		if(url.getParentorder()!=null) {
+			parentorder=url.getParentorder().toString();
+			m = p3.matcher(parentorder);
+			b=m.find();
+			if(!b)
+				return "Only Numbers are allowed in Parent Order";
+			if(parentorder.length()>5)
+				return "Parent Order Cannot Exceed more than 5 characters";
+		}
+		
+		if(url.getSubmenuorder()!=null) {
+			submenuorder=url.getSubmenuorder().toString();
+			m = p3.matcher(submenuorder);
+			b=m.find();
+			if(!b)
+				return "Only Numbers are allowed in Sub Menu Order";
+			if(submenuorder.length()>5)
+				return "Sub Order Cannot Exceed more than 5 characters";
+		}
+		if(url.getSubsubmenuorder()!=null) {
+			subsubmenuorder=url.getSubsubmenuorder().toString();
+			m = p3.matcher(subsubmenuorder);
+			b=m.find();
+			if(!b)
+				return "Only Numbers are allowed in Sub Sub Menu Order";
+			if(subsubmenuorder.length()>5)
+				return "Sub Sub Order Cannot Exceed more than 5 characters";
 		}
 		return response;
 	}

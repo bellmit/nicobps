@@ -72,8 +72,15 @@ app.controller("pageurlCtrl", [
         data: angular.toJson($scope.url),
         contentType: "application/json; charset=utf-8",
         success: function (response) {
-          alert(response);
-          $scope.reset();
+        	if(response.data=="Success"){
+        		alert(response.data);
+        		$scope.reset();
+        	}else if(response.data=="Failed"){
+        		alert(response.data);
+        	}else if(response.data=="Exist"){
+        		alert(response.data);
+        	}else
+        		alert(response.data);
           $scope.listURLs();
         },
         error: function (xhr) {
