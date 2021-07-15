@@ -183,16 +183,19 @@ public class ControllerUserManagement {
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
 		
-		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");		
-		String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
-		notification.setEmailbody(emailbody); 
-		
-		String smsbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getSmsbody());		
-		notification.setSmsbody(smsbody); 
-		
-		ServiceSms ss = new ServiceSms();
-		ServiceEmailApi es = new ServiceEmailApi();
+//		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");		
+//		String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
+//		notification.setEmailbody(emailbody); 
+//		
+//		String smsbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getSmsbody());		
+//		notification.setSmsbody(smsbody); 
+//		
+//		ServiceSms ss = new ServiceSms();
+//		ServiceEmailApi es = new ServiceEmailApi();
 	
+		
+		
+		
 		if (issms.equals("Y") || isemail.equals("Y")) 
 		{
 			if (isotp.equals("N")) {
@@ -200,15 +203,17 @@ public class ControllerUserManagement {
 					Integer mobileotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("mobileotp", mobileotp.toString());
 					// Send SMS
-					notification.setRecipientMobileno((String) param.get("mobileno"));
+//					notification.setRecipientMobileno((String) param.get("mobileno"));
 					//ss.sendSingleSMS(notification);							
+					serviceNotification.sentSMS(Integer.valueOf("1"), "OTP_REGISTER", (String) param.get("mobileno"), new String[] {"123"});
 				}
 				if (isemail.equals("Y")) {
 					Integer emailotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("emailotp", emailotp.toString());
 					// Send Email
-					notification.setRecipientEmailid((String) param.get("username"));
+//					notification.setRecipientEmailid((String) param.get("username"));
 					//es.sendEmails(notification);
+					serviceNotification.sentSMS(Integer.valueOf("1"), "OTP_REGISTER", (String) param.get("username"), new String[] {"123"});
 				}
 				return ResponseEntity.ok(new String("0"));
 			} else {

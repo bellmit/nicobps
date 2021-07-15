@@ -28,8 +28,9 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class ServiceSms {
 	 
     public void sendSingleSMS(Notification noti) {

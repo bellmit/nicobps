@@ -1,5 +1,7 @@
 package obps.util.notifications;
 
+import java.util.List;
+
 public class Notification {
 
 	private Integer officecode;
@@ -20,18 +22,18 @@ public class Notification {
 
 	private String recipientMobileno;
 	private String recipientEmailid;
-	
+
+	private List<String> recipientMobilenoList;
+	private List<String> recipientEmailidList;
 
 	private String sms_url;
 	private String email_api_hostnane;
 	private String email_hostname;
 	private String email_port;
-	
-	
+
 	public Notification() {
 		super();
 	}
-
 
 	public String getSenderemailid() {
 		return senderemailid;
@@ -105,8 +107,6 @@ public class Notification {
 		this.securekey = securekey;
 	}
 
- 
-
 	public String getEmailidpassword() {
 		return emailidpassword;
 	}
@@ -154,7 +154,6 @@ public class Notification {
 	public void setEmailsubject(String emailsubject) {
 		this.emailsubject = emailsubject;
 	}
-	
 
 	public String getSms_url() {
 		return sms_url;
@@ -188,6 +187,22 @@ public class Notification {
 		this.email_port = email_port;
 	}
 
+	public List<String> getRecipientMobilenoList() {
+		return recipientMobilenoList;
+	}
+
+	public void setRecipientMobilenoList(List<String> recipientMobilenoList) {
+		this.recipientMobilenoList = recipientMobilenoList;
+	}
+
+	public List<String> getRecipientEmailidList() {
+		return recipientEmailidList;
+	}
+
+	public void setRecipientEmailidList(List<String> recipientEmailidList) {
+		this.recipientEmailidList = recipientEmailidList;
+	}
+
 	@Override
 	public String toString() {
 		return "Notification [officecode=" + officecode + ", officeshortname=" + officeshortname + ", smsusername="
@@ -199,6 +214,4 @@ public class Notification {
 				+ email_api_hostnane + ", email_hostname=" + email_hostname + ", email_port=" + email_port + "]";
 	}
 
-
-	
 }

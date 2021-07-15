@@ -12,14 +12,17 @@ import java.net.URLConnection;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ServiceEmailApi 
 {
-    public static void sendEmails(Notification noti) {
+    public void sendEmails(Notification noti) {
     	sendEmails(noti.getSenderemailid(),noti.getEmailidpassword(),noti.getRecipientEmailid(),noti.getEmailsubject(),noti.getEmailbody(),noti.getEmail_api_hostnane());
     }	
 	
     @SuppressWarnings("deprecation")
-	public static String sendEmails(String fromemail,String password,String toemail,String subject,String message,String apiurl) {
+	public String sendEmails(String fromemail,String password,String toemail,String subject,String message,String apiurl) {
         String resp = "4";
         URLConnection urlConn;
         DataInputStream input;
