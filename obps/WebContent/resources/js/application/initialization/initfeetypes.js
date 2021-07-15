@@ -65,11 +65,7 @@ $scope.feetypes=[];
     	
         commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, (response) => { 
 			
-			if(response.data=="feetypedescriptionsizeerror") 
-				MsgBox("Fee Type Description Cannot Exceed More Than 255 Characters");
-			else if(response.data=="feetypedescriptionnull")
-				MsgBox("Fee Type Description Cannot be Null");
-			else if(response.data=="Error")
+			if(response.data=="Error")
 				MsgBox("Error Inserting Data");
 			else if(response.data=="Success"){
 				MsgBox("Successfully Inserted Data");
@@ -81,7 +77,7 @@ $scope.feetypes=[];
 			}
 				
 			else{
-				MsgBox("Error");			
+				MsgBox(response.data);			
 				
 			}
 			$scope.listFeeTypes();  
@@ -109,14 +105,9 @@ $scope.feetypes=[];
 	    $scope.method = "POST";
     	$scope.urlEndpoint = "./updateinitfeetypes.htm";
     	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, (response) => { 
-			
-			if(response.data=="feetypedescriptionsizeerror") 
-				MsgBox("Fee Type Description Cannot Exceed More Than 255 Characters");
-			else if(response.data=="feetypedescriptionnull")
-				MsgBox("Fee Type Description Cannot be Null");
-			else if(response.data=="Error")
+			if(response.data=="Error")
 				MsgBox("Error Inserting Data");
-			else if(response.data=="Success"){
+			 else if(response.data=="Success"){
 				MsgBox("Successfully Updated Data");
 				$scope.reset(); 
 			}
@@ -126,7 +117,7 @@ $scope.feetypes=[];
 			}
 				
 			else{
-				MsgBox("Error");			
+				MsgBox(response.data);			
 				
 			}
 			$scope.listFeeTypes();  

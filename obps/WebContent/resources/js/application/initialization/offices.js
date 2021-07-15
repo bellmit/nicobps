@@ -144,103 +144,13 @@ $scope.save = function () {
 				} else if (response.data=="exist") {
 					MsgBox("Offices name already exist");
 					$scope.listOffices();
-				}else if (response.data=="officename1") {
-					MsgBox("Special Characters allowed in Office Name1 are , . / ( ) - _ ");
-					$scope.listOffices();
-				
-				}else if (response.data=="officename2") {
-					MsgBox("Special Characters allowed in Office Name2 are , . / ( ) - _ ");
-					$scope.listOffices();
-				}else if (response.data=="officename3") {
-					MsgBox("Special Characters allowed in Office Name3 are , . / ( ) - _ ");
-					$scope.listOffices();
 				}
-				else if (response.data=="offshort") {
-					MsgBox("No Special Characters or Numbers allowed in Office ShortHand Name");
-					$scope.listOffices();
-				
-				}else if (response.data=="offsignatory") {
-					MsgBox("Special Characters allowed in Signatory Name are , . / ( ) - _ ");
-					$scope.listOffices();
-				}
-				else if (response.data=="officeshortdes") {
-					MsgBox("Special Characters allowed in Signatory Designation are , . / ( ) - _ ");
-					$scope.listOffices();
-				}
-				else if (response.data=="sms") {
-					MsgBox("Special Characters allowed in SMS Username are , . / ( ) - _");
-					$scope.listOffices();
-				}
-				else if (response.data=="1") {
-					MsgBox("Office Name 1 Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="2") {
-					MsgBox("Office Name 2 Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="3") {
-					MsgBox("Office Name 3 Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="4") {
-					MsgBox("Office Short Hand Name Cannot exceed more than 50 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="5") {
-					MsgBox("Signatory Name Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="6") {
-					MsgBox("Signatory Designation Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="7") {
-					MsgBox("sms username Cannot exceed more than 25 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="8") {
-					MsgBox("sms password Cannot exceed more than 100 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="9") {
-					MsgBox("emailid Cannot be more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="10") {
-					MsgBox("emailidpassword Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				}else if (response.data=="emailidnotcorrect") {
-					MsgBox("Please Enter correct emailid");
-					$scope.listOffices();
-				}
-				else if (response.data=="tenantid") {
-					MsgBox("Special Characters allowed in Tenant id are - _");
-					$scope.listOffices();
-				}
-				else if (response.data=="tenantidlength") {
-					MsgBox("Tenant ID Cannot exceed more than 255 characters ");
-					$scope.listOffices();
-				}
-				else if (response.data=="stateid") {
-					MsgBox("Special Characters allowed in State id are - _");
-					$scope.listOffices();
-				}
-				else if (response.data=="stateidlength") {
-					MsgBox("State ID Cannot exceed more than 255 characters  ");
-					$scope.listOffices();
-				}
-				else if(response.data=="filetypeerror"){
-				MsgBox("Invalid File Type. Only jpeg,jpg and png files are allowed");
-				}
-				else if(response.data=="filesizeerror"){
-				MsgBox("File Size must not exceed 5MB");
-				}
-				else if(response.data=="Error"){
-				MsgBox("Office Already exists");
+				else if (response.data=="Error") {
+				MsgBox("Error");
 				}
 				else{
-				MsgBox("Error");
+					MsgBox(response.data)
+					$scope.listOffices();
 				}
 				jQuery('#enclosureWindow').html("");
 				
@@ -269,109 +179,19 @@ if($scope.offices.emailidpassword)  {
          commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.offices, function (response) {
 		
 				if (response.data=="Success") {
-					MsgBox("Offices Inserted successfully.");
+					MsgBox("Offices Updated successfully.");
 					$scope.reset();
 					$scope.listOffices();
 				} else if (response.data=="exist") {
 					MsgBox("Offices name already exist");
 					$scope.listOffices();
-				}else if (response.data=="officename1") {
-					MsgBox("Special Characters allowed in Office Name1 are , . / ( ) - _ ");
-					$scope.listOffices();
-				
-				}else if (response.data=="officename2") {
-					MsgBox("Special Characters allowed in Office Name2 are , . / ( ) - _ ");
-					$scope.listOffices();
-				}else if (response.data=="officename3") {
-					MsgBox("Special Characters allowed in Office Name3 are , . / ( ) - _ ");
-					$scope.listOffices();
 				}
-				else if (response.data=="offshort") {
-					MsgBox("No Special Characters or Numbers allowed in Office ShortHand Name");
-					$scope.listOffices();
-				
-				}else if (response.data=="offsignatory") {
-					MsgBox("Special Characters allowed in Signatory Name are , . / ( ) - _ ");
-					$scope.listOffices();
-				}
-				else if (response.data=="officeshortdes") {
-					MsgBox("Special Characters allowed in Signatory Designation are , . / ( ) - _ ");
-					$scope.listOffices();
-				}
-				else if (response.data=="sms") {
-					MsgBox("Special Characters allowed in SMS Username are , . / ( ) - _");
-					$scope.listOffices();
-				}
-				else if (response.data=="1") {
-					MsgBox("Office Name 1 Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="2") {
-					MsgBox("Office Name 2 Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="3") {
-					MsgBox("Office Name 3 Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="4") {
-					MsgBox("Office Short Hand Name Cannot exceed more than 50 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="5") {
-					MsgBox("Signatory Name Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="6") {
-					MsgBox("Signatory Designation Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="7") {
-					MsgBox("sms username Cannot exceed more than 25 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="8") {
-					MsgBox("sms password Cannot exceed more than 100 characters");
-					$scope.listOffices();
-				}
-				else if (response.data=="9") {
-					MsgBox("emailid Cannot be more than 255 characters");
-					$scope.listOffices();
-				
-				}else if (response.data=="10") {
-					MsgBox("emailidpassword Cannot exceed more than 255 characters");
-					$scope.listOffices();
-				}else if (response.data=="emailidnotcorrect") {
-					MsgBox("Please Enter correct emailid");
-					$scope.listOffices();
-				}
-				else if (response.data=="tenantid") {
-					MsgBox("Special Characters allowed in Tenant id are - _");
-					$scope.listOffices();
-				}
-				else if (response.data=="tenantidlength") {
-					MsgBox("Tenant ID Cannot exceed more than 255 characters ");
-					$scope.listOffices();
-				}
-				else if (response.data=="stateid") {
-					MsgBox("Special Characters allowed in State id are - _");
-					$scope.listOffices();
-				}
-				else if (response.data=="stateidlength") {
-					MsgBox("State ID Cannot exceed more than 255 characters  ");
-					$scope.listOffices();
-				}
-				else if(response.data=="filetypeerror"){
-				MsgBox("Invalid File Type. Only jpeg,jpg and png files are allowed");
-				}
-				else if(response.data=="filesizeerror"){
-				MsgBox("File Size must not exceed 5MB");
-				}
-				else if(response.data=="Error"){
-				MsgBox("Office Already exists");
+				else if (response.data=="Error") {
+				MsgBox("Error");
 				}
 				else{
-				MsgBox("Error");
+					MsgBox(response.data)
+					$scope.listOffices();
 				}
 				jQuery('#enclosureWindow').html("");
 				
@@ -380,7 +200,7 @@ if($scope.offices.emailidpassword)  {
 				
 			}, function () {
 				
-				alert("Error");
+				MsgBox("Error");
 				$scope.reset();
 			});
  	

@@ -17,30 +17,30 @@ public class InitLicenseesRegistrationValidator {
 		if(param.get("licenseeregistrationcode")!=null) {
 			m=p3.matcher(licenseeregistrationcode);
 			b=m.find();
-			if(!b) {
-				response= "licenseeregistrationcodenumbererror";
+			if(b) {
+				response= "Only Numbers Allowed in Licensee Code";
 				return response;
 			}
 			licenseeregistrationcode=param.get("licenseeregistrationcode").toString(); 
 			if(licenseeregistrationcode.length()>5) {
-				response= "licenseeregistrationcodesizeerror";
+				response= "Licensee Code Size exceeding limit";
 				return response;
 			}
 		}
 		else {
-			response= "licenseeregistrationcodenull";
+			response= "Licensee Code Cannot Be Null";
 			return response;
 		}
 		if(param.get("licenseedescription")!=null) {
 			licenseedescription=((String) param.get("licenseedescription")).trim();
 			
 			if(licenseedescription.length()>255) {
-				response= "licenseedescriptionsizeerror";
+				response= "Licensee Description Cannot be more than 255 characters";
 				return response;
 			}
 		}
 		else {
-			response= "licenseedescriptionnull";
+			response= "Licensee Description Cannot be Null";
 			return response;
 		}
 		

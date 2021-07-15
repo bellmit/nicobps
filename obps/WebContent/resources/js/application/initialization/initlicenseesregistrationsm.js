@@ -70,29 +70,12 @@ $scope.licenseesreg=[];
 				} else if (response.data=="Exist") {
 					MsgBox("Licensee already exist");
 					$scope.listLicensees()
-				}else if (response.data=="licenseeregistrationcodenumbererror") {
-					MsgBox("Only Numbers Allowed in Licensee Code");
-					$scope.listLicensees()
-				
-				}
-				else if (response.data=="licenseeregistrationcodesizeerror") {
-					MsgBox("Licensee Code Size exceeding limit");
-					$scope.listLicensees()
-				
-				}else if (response.data=="licenseeregistrationcodenull") {
-					MsgBox("Licensee Code Cannot Be Null");
-					$scope.listLicensees()
-				}else if (response.data=="licenseedescriptionsizeerror") {
-					MsgBox("Licensee Description Cannot be more than 255 characters");
-					$scope.listLicensees()
-				}else if (response.data=="licenseedescriptionnull") {
-					MsgBox("Licensee Description Cannot be Null");
-					$scope.listLicensees()
 				}
 				else if(response.data=="Error"){
 				alert("Error");
-				
 				}
+				else
+					MsgBox(response.data);
 				
 				$scope.listLicensees()
 			}, function () {
@@ -124,35 +107,18 @@ $scope.licenseesreg=[];
     	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.licensees, function (response) {
 			
 				if (response.data=="Success") {
-					MsgBox("Licensee Updated successfully.");
+					MsgBox("Licensee updated successfully.");
 					$scope.reset();
 					$scope.listLicensees()
 				} else if (response.data=="Exist") {
 					MsgBox("Licensee already exist");
 					$scope.listLicensees()
-				}else if (response.data=="licenseeregistrationcodenumbererror") {
-					MsgBox("Only Numbers Allowed in Licensee Code");
-					$scope.listLicensees()
-				
-				}
-				else if (response.data=="licenseeregistrationcodesizeerror") {
-					MsgBox("Licensee Code Size exceeding limit");
-					$scope.listLicensees()
-				
-				}else if (response.data=="licenseeregistrationcodenull") {
-					MsgBox("Licensee Code Cannot Be Null");
-					$scope.listLicensees()
-				}else if (response.data=="licenseedescriptionsizeerror") {
-					MsgBox("Licensee Description Cannot be more than 255 characters");
-					$scope.listLicensees()
-				}else if (response.data=="licenseedescriptionnull") {
-					MsgBox("Licensee Description Cannot be Null");
-					$scope.listLicensees()
 				}
 				else if(response.data=="Error"){
-				alert("Error");
-				
+				MsgBox("Error");
 				}
+				else
+					MsgBox(response.data);
 				
 				$scope.listLicensees()
 			}, function () {

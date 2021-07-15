@@ -78,51 +78,10 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
-       	}else if(response.data=="username"){
-       		MsgBox("Please Enter a valid Username or email");
+       	}else {
+       		MsgBox(response.data);
        		$scope.user.userpassword="";
     		$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="userlength"){
-       		MsgBox("Enclosure Name Cannot be more than 99 characters");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="passworddeoesnotmatch"){
-       		MsgBox("Passwords Do Not Match");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}
-       	else if(response.data=="fullname"){
-       		MsgBox("No Special Characters or Numbers allowed in Full Name");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="fullnamelength"){
-       		MsgBox("Full Name Cannot be more than 99 characters");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="mobile"){
-       		MsgBox("No Special Characters or Characters allowed in Mobile No. Mobile No. Should not start with zero ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="mobilelength"){
-       		MsgBox("Mobile No Cannot be more than 10 characters ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="designation"){
-       		MsgBox("No Special Characters or Numbers allowed in Designation ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="designationlength"){
-       		MsgBox("Designation Cannot be more than 99 characters ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
        		$scope.listUsers();
        	}
        	
@@ -175,51 +134,10 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
-       	}else if(response.data=="username"){
-       		MsgBox("Please Enter a valid Username or email ");
+       	}else {
+       		MsgBox(response.data);
        		$scope.user.userpassword="";
     		$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="userlength"){
-       		MsgBox("Enclosure Name Cannot be more than 99 characters");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="passworddeoesnotmatch"){
-       		MsgBox("Passwords Do Not Match");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}
-       	else if(response.data=="fullname"){
-       		MsgBox("No Special Characters or Numbers allowed in Full Name");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="fullnamelength"){
-       		MsgBox("Full Name Cannot be more than 99 characters");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="mobile"){
-       		MsgBox("No Special Characters or Characters allowed in Mobile No. Mobile No. Should not start with zero ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="mobilelength"){
-       		MsgBox("Mobile No Cannot be more than 10 characters ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="designation"){
-       		MsgBox("No Special Characters or Numbers allowed in Designation ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
-       		$scope.listUsers();
-       	}else if(response.data=="designationlength"){
-       		MsgBox("Designation Cannot be more than 99 characters ");
-       		$scope.user.userpassword="";
-    	$scope.user.repassword="";
        		$scope.listUsers();
        	}
        	

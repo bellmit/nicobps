@@ -38,18 +38,18 @@ public class InitEnclosuresValidator {
 	     boolean b1 = m1.find();
 	     
 	     if (b1) {
-	    	 response="m1";
+	    	 response="Special Characters allowed in Enclosure Name are , . / ( ) - _";
 	    	 return response;
 	     }
 	         
 
 	     if(enclname.length()>255) {
-	    	 response="50";
+	    	 response="Enclosure Name Cannot be more than 50 characters";
 	    	 return response;
 	     }
 	    	 
 	     if(encldesc.length()>255) {
-	    	 response="255";
+	    	 response="Enclosure Description Cannot be more than 255 characters";
 	    	 return response;
 	     }
 	    	 

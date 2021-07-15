@@ -57,21 +57,12 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 				} else if (response.data=="exist") {
 					MsgBox("Enclosure name already exist");
 					$scope.listEnclosures();
-				}else if (response.data=="m1") {
-					MsgBox("Special Characters allowed in Enclosure Name are , . / ( ) - _");
-					$scope.listEnclosures();
-				
-				}else if (response.data=="50") {
-					MsgBox("Enclosure Name Cannot be more than 50 characters");
-					$scope.listEnclosures();
-				
-				}else if (response.data=="255") {
-					MsgBox("Enclosure Description Cannot be more than 50 characters");
-					$scope.listEnclosures();
 				}
 				else if(response.data=="Error"){
 				alert("Error");
 				}
+				else
+					MsgBox(response.data);
 			}, function () {
 				
 				alert("Error");
@@ -103,21 +94,12 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
 				} else if (response.data=="exist") {
 					MsgBox("Enclosure name already exist");
 					$scope.listEnclosures();
-				}else if (response.data=="m1") {
-					MsgBox("Special Characters allowed in Enclosure Name are , . / ( ) - _");
-					$scope.listEnclosures();
-				
-				}else if (response.data=="50") {
-					MsgBox("Enclosure Name Cannot be more than 50 characters");
-					$scope.listEnclosures();
-				
-				}else if (response.data=="255") {
-					MsgBox("Enclosure Description Cannot be more than 255 characters");
-					$scope.listEnclosures();
 				}
 				else if(response.data=="Error"){
-				MsgBox("Enclosure Name Already exists");
+				alert("Error");
 				}
+				else
+					MsgBox(response.data);
 			}, function () {
 				
 				alert("Error");

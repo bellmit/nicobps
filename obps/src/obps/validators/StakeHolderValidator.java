@@ -13,22 +13,22 @@ public class StakeHolderValidator{
 		String res = "";
 		int size = 0;
 		if(officecode==null || officecode==0)
-			res="officecodenull";
+			return "Office code is null";
 		if(applicationcode==null || applicationcode=="") 
-			res="applicationcodenull";
+			return "Application code is null";
 		else {
 			if(applicationcode.length()>20)
-				res="applicationcodelength";
+				return "Application code should not exceed 20 characters";
 		}
 		if(usercode==null)
-			res="usercodenull";
+			return "User code is null";
 		if(toprocesscode==null || toprocesscode==0)
-			res="toprocesscodenull";
+			return "toprocesscode is null";
 		if(remarks!=null ||remarks!="") {
 			size = remarks.length();			
 		}
 		if (size > 500)
-			res = "500";
+			return  "No. of characters must not exceed 500 in remarks";
 		
 		
 		return res;

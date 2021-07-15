@@ -22,17 +22,17 @@ public class InitSubOccupanciesValidator {
 			m= p1.matcher(suboccupancycode);
 			b = m.find();
 			if(b) {
-				response= "suboccupancycodecharactererror";
+				response= "Special Characters allowed in Sub Occupancy Code are - _";
 				return response;
 			}
 				
 			if(suboccupancycode.length()>10) {
-				response= "suboccupancycodesizeerror";
+				response= "Sub Occupancy Code Cannot be more than 10 characters";
 				return response;
 			}
 		}
 		else {
-			response= "suboccupancycodenull";
+			response= "Sub Occupancy Code Cannot Be Null";
 			return response;
 		}
 			
@@ -42,26 +42,26 @@ public class InitSubOccupanciesValidator {
 			m= p.matcher(suboccupancyname);
 			b = m.find();
 			if(b) {
-				response= "suboccupancynamecharactererror";
+				response= "Special Characters allowed in Sub Occupancy Name  are , . / ( ) - _";
 				return response;
 			}
 			if(suboccupancyname.length()>255) {
-				response= "suboccupancynamesizeerror";
+				response= "Sub Occupancy Name Cannot be more than 255 characters";
 				return response;
 			}
 		}
 		else
-			response= "suboccupancynamenull";
+			response= "Sub Occupancy Name Cannot be Null";
 		if(param.get("description")!=null) {
 			description=((String) param.get("description")).trim();
 			
 			if(description.length()>250) {
-				response= "descriptionsizeerror";
+				response= "Description Cannot be more than 250 characters";
 				return response;
 			}
 		}
 		else {
-			response= "descriptionnull";
+			response= "Description Cannot be Null";
 			return response;
 		}
 			

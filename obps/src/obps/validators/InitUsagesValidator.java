@@ -22,16 +22,16 @@ public class InitUsagesValidator {
 			m= p1.matcher(suboccupancycode);
 			b = m.find();
 			if(b) {
-				response= "suboccupancycodecharactererror";
+				response= "Special Characters allowed in Sub Occupancy Code are - _";
 				return response;
 			}
 				
 			if(suboccupancycode.length()>10) {
-				response= "suboccupancycodesizeerror";
+				response= "Sub Occupancy Code Cannot be more than 10 characters";
 				return response;
 			}
 		}else {
-			response= "suboccupancycodenull";
+			response= "Sub Occupancy Code Cannot Be Null";
 			return response;
 		}
 		if(param.get("usagecode")!=null) {
@@ -39,16 +39,16 @@ public class InitUsagesValidator {
 			m= p1.matcher(usagecode);
 			b = m.find();
 			if(b) {
-				response= "usagecodecharactererror";
+				response= "Special Characters allowed in Usage Code are - _";
 				return response;
 			}
 				
 			if(usagecode.length()>20) {
-				response= "usagecodesizeerror";
+				response= "Usage Code Cannot be more than 20 characters";
 				return response;
 			}
 		}else {
-			response= "usagecodenull";
+			response= "Usage Code Cannot be Null";
 			return response;
 		}
 		if(param.get("usagename")!=null) {
@@ -56,28 +56,28 @@ public class InitUsagesValidator {
 			m= p2.matcher(usagename);
 			b = m.find();
 			if(b) {
-				response= "usagenamecharactererror";
+				response= "Special Characters allowed in Usage Name  are , . / ( ) - _";
 				return response;
 			}
 				
 			if(usagename.length()>255) {
-				response= "usagenamesizeerror";
+				response= "Usage Name Cannot be more than 255 characters";
 				return response;
 			}
 		}else {
-			response= "usagenamenull";
+			response= "Usage Name Cannot be Null";
 			return response;
 		}
 		if(param.get("description")!=null) {
 			description=((String) param.get("description")).trim();
 			
 			if(description.length()>250) {
-				response= "descriptionsizeerror";
+				response= "Description Cannot be more than 250 characters";
 				return response;
 			}
 		}
 		else {
-			response= "descriptionnull";
+			response= "Description Cannot be Null";
 			return response;
 		}
 		return response;

@@ -27,12 +27,12 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(licencetypecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "licensetypecodecharactererror";
+				response= "Only Numeric Characters Allowed in License Type Code";
 				return response;
 			}
 			if(licencetypecode.length()>5) {
 				System.out.println(licencetypecode.length()>5);
-				response= "licensetypecodesizeerror";
+				response= "License Type Code Size Exceeds limit in License Type Code. Enter less than 5 digits";
 				return response;
 			}
 		}
@@ -43,12 +43,12 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(officecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "officecodecharactererror";
+				response= "Only Numeric Characters Allowed in Office Code";
 				return response;
 			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
-				response= "officecodesizeerror";
+				response= "Office Code Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
@@ -57,17 +57,17 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(feecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "feecodecharactererror";
+				response= "Only Numeric Characters Allowed in Fee Code";
 				return response;
 			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
-				response= "feecodesizeerror";
+				response= "Fee Code Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
 		else {
-			response= "feecodenullerror";
+			response= "Fee Code Cannot be Null";
 			return response;
 		}
 		if(param.get("feetypecode")!=null) {
@@ -75,17 +75,17 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(feetypecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "feetypecodecharactererror";
+				response= "Only Numeric Characters Allowed in Fee Type Code";
 				return response;
 			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
-				response= "feetypecodesizeerror";
+				response= "Fee Type Code Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
 		else {
-			response= "feetypecodenullerror";
+			response= "Fee Type Code Cannot be Null";
 			return response;
 		}
 		
@@ -94,17 +94,17 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(feeamount);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "feeamountnumbererror";
+				response= "Only Numeric Characters Allowed in Fee Amount";
 				return response;
 			}
 			if(feeamount.length()>5) {
 				System.out.println(feeamount.length()>5);
-				response= "feeamountsizeerror";
+				response= "Fee Amount Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
 		else {
-			response= "feeamountnullerror";
+			response= "Fee Amount Cannot be Null";
 			return response;
 		}
 		return response;
@@ -125,12 +125,12 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(licencetypecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "licensetypecodecharactererror";
+				response= "Only Numeric Characters Allowed in License Type Code";
 				return response;
 			}
 			if(licencetypecode.length()>5) {
 				System.out.println(licencetypecode.length()>5);
-				response= "licensetypecodesizeerror";
+				response= "License Type Code Size Exceeds limit in License Type Code. Enter less than 5 digits";
 				return response;
 			}
 		}
@@ -141,12 +141,12 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(officecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "officecodecharactererror";
+				response= "Only Numeric Characters Allowed in Office Code";
 				return response;
 			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
-				response= "officecodesizeerror";
+				response= "Office Code Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
@@ -155,17 +155,17 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(feecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "feecodecharactererror";
+				response= "Only Numeric Characters Allowed in Fee Code";
 				return response;
 			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
-				response= "feecodesizeerror";
+				response= "Fee Code Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
 		else {
-			response= "feecodenullerror";
+			response= "Fee Code Cannot be Null";
 			return response;
 		}
 		if(param.getFeetypecode()!=null) {
@@ -173,17 +173,17 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(feetypecode);
 			boolean b1 = m.find();
 			if(!b1) {
-				response= "feetypecodecharactererror";
+				response= "Only Numeric Characters Allowed in Fee Type Code";
 				return response;
 			}
 			if(officecode.length()>5) {
 				System.out.println(officecode.length()>5);
-				response= "feetypecodesizeerror";
+				response= "Fee Type Code Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
 		else {
-			response= "feetypecodenullerror";
+			response= "Fee Type Code Cannot be Null";
 			return response;
 		}
 		
@@ -192,17 +192,17 @@ public class InitFeeMasterValidator{
 			m = p3.matcher(feeamount);
 			boolean b1 = m.find(); 
 			if(!b1) {
-				response= "feeamountnumbererror";
+				response= "Only Numeric Characters Allowed in Fee Amount";
 				return response;
 			}
 			if(feeamount.length()>5) {
 				System.out.println(feeamount.length()>5);
-				response= "feeamountsizeerror";
+				response= "Fee Amount Size Exceeds limit. Enter less than 5 digits";
 				return response;
 			}
 		}
 		else {
-			response= "feeamountnullerror";
+			response= "Fee Amount Cannot be Null";
 			return response;
 		}
 		return response;
@@ -218,12 +218,12 @@ public class InitFeeMasterValidator{
 			feetypedescription=param.get("feetypedescription").toString();
 			if(feetypedescription.length()>255) {
 				System.out.println(feetypedescription.length()>255);
-				response= "feetypedescriptionsizeerror";
+				response= "Fee Type Description Cannot Exceed More Than 255 Characters";
 				return response;
 			}
 		}
 		else {
-			response= "feetypedescriptionnull";
+			response= "Fee Type Description Cannot be Null";
 			return response;
 		}
 		return response;
@@ -240,12 +240,12 @@ public class InitFeeMasterValidator{
 			feetypedescription=param.getFeetypedescription().toString();
 			if(feetypedescription.length()>255) {
 				System.out.println(feetypedescription.length()>255);
-				response= "feetypedescriptionsizeerror";
+				response= "Fee Type Description Cannot Exceed More Than 255 Characters";
 				return response;
 			}
 		}
 		else {
-			response= "feetypedescriptionnull";
+			response= "Fee Type Description Cannot be Null";
 			return response;
 		}
 		return response;

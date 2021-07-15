@@ -96,48 +96,14 @@ app.controller('initusagesCtrl', ['$scope', '$sce', '$compile', '$timeout', 'com
 					MsgBox("Usages already exist");
 					$scope.listUsages()
 				}
-				else if (response.data=="suboccupancycodecharactererror") {
-					MsgBox("Special Characters allowed in Sub Occupancy Code are - _");
-					$scope.listSubOccupancy()
 				
-				}
-				else if (response.data=="suboccupancycodesizeerror") {
-					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
-					$scope.listUsages()
-				
-				}else if (response.data=="suboccupancycodenull") {
-					MsgBox("Sub Occupancy Code Cannot Be Null");
-					$scope.listUsages()
-				}else if (response.data=="usagecodecharactererror") {
-					MsgBox("Special Characters allowed in Usage Code are - _");
-					$scope.listUsages()
-				
-				}else if (response.data=="usagecodesizeerror") {
-					MsgBox("Usage Code Cannot be more than 20 characters");
-					$scope.listUsages()
-				}else if (response.data=="usagecodenull") {
-					MsgBox("Usage Code Cannot be Null");
-					$scope.listUsages()
-				}else if (response.data=="usagenamecharactererror") {
-					MsgBox("Special Characters allowed in Usage Name  are , . / ( ) - _");
-					$scope.listUsages()
-				
-				}else if (response.data=="usagenamesizeerror") {
-					MsgBox("Usage Name Cannot be more than 255 characters");
-					$scope.listUsages()
-				}else if (response.data=="usagenamenull") {
-					MsgBox("Usage Name Cannot be Null");
-					$scope.listUsages()
-				}else if (response.data=="descriptionsizeerror") {
-					MsgBox("Description Cannot be more than 250 characters");
-					$scope.listSubOccupancy()
-				}else if (response.data=="descriptionnull") {
-					MsgBox("Description Cannot be Null");
-					$scope.listSubOccupancy()
-				}
 				else if(response.data=="Error"){
-				alert("Error");
+				MsgBox("Error");
 				
+				}
+				else{
+					MsgBox(response.data);
+					$scope.listUsages()
 				}
 				
 				
@@ -182,48 +148,14 @@ app.controller('initusagesCtrl', ['$scope', '$sce', '$compile', '$timeout', 'com
 					MsgBox("Usages already exist");
 					$scope.listUsages()
 				}
-				else if (response.data=="suboccupancycodecharactererror") {
-					MsgBox("Special Characters allowed in Sub Occupancy Code are - _");
-					$scope.listSubOccupancy()
 				
-				}
-				else if (response.data=="suboccupancycodesizeerror") {
-					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
-					$scope.listUsages()
-				
-				}else if (response.data=="suboccupancycodenull") {
-					MsgBox("Sub Occupancy Code Cannot Be Null");
-					$scope.listUsages()
-				}else if (response.data=="usagecodecharactererror") {
-					MsgBox("Special Characters allowed in Usage Code are - _");
-					$scope.listUsages()
-				
-				}else if (response.data=="usagecodesizeerror") {
-					MsgBox("Usage Code Cannot be more than 20 characters");
-					$scope.listUsages()
-				}else if (response.data=="usagecodenull") {
-					MsgBox("Usage Code Cannot be Null");
-					$scope.listUsages()
-				}else if (response.data=="usagenamecharactererror") {
-					MsgBox("Special Characters allowed in Usage Name  are , . / ( ) - _");
-					$scope.listUsages()
-				
-				}else if (response.data=="usagenamesizeerror") {
-					MsgBox("Usage Name Cannot be more than 255 characters");
-					$scope.listUsages()
-				}else if (response.data=="usagenamenull") {
-					MsgBox("Usage Name Cannot be Null");
-					$scope.listUsages()
-				}else if (response.data=="descriptionsizeerror") {
-					MsgBox("Description Cannot be more than 250 characters");
-					$scope.listSubOccupancy()
-				}else if (response.data=="descriptionnull") {
-					MsgBox("Description Cannot be Null");
-					$scope.listSubOccupancy()
-				}
 				else if(response.data=="Error"){
-				alert("Error");
+				MsgBox("Error");
 				
+				}
+				else{
+					MsgBox(response.data);
+					$scope.listUsages()
 				}
 				
 				

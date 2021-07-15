@@ -28,7 +28,7 @@ public class InitOfficesValidator {
 		Matcher of1 = p.matcher(officename1);
 		boolean b1 = of1.find();
 		if(b1) {
-			response= "officename1"; 
+			response= "Special Characters allowed in Office Name1 are , . / ( ) - _ "; 
 			return response;
 		}
 		if(param.get("officename2")!=null)
@@ -36,7 +36,7 @@ public class InitOfficesValidator {
 		Matcher of2 = p.matcher(officename2);
 		b1 = of2.find();
 		if(b1) {
-			response = "officename2";
+			response = "Special Characters allowed in Office Name2 are , . / ( ) - _ ";
 			return response;
 		}
 		if(param.get("officename3")!=null){
@@ -44,7 +44,7 @@ public class InitOfficesValidator {
 			Matcher of3 = p.matcher(officename3);
 			b1 = of3.find();
 			if(b1) {
-				response = "officename3";
+				response = "Special Characters allowed in Office Name3 are , . / ( ) - _";
 				return response;
 			}
 		}
@@ -54,7 +54,7 @@ public class InitOfficesValidator {
 			Matcher offsignatory = p.matcher(signatoryname);
 			b1 = offsignatory.find();
 			if(b1) {
-				response = "offsignatory";
+				response = "Special Characters allowed in Signatory Name are , . / ( ) - _";
 				return response;
 			}
 		}
@@ -63,7 +63,7 @@ public class InitOfficesValidator {
 			Matcher offshortdes = p.matcher(signatorydesignation);
 			b1 = offshortdes.find();
 			if(b1) {
-				response = "officeshortdes";
+				response = "Special Characters allowed in Signatory Designation are , . / ( ) - _";
 				return response;
 			}
 		}
@@ -72,7 +72,7 @@ public class InitOfficesValidator {
 			Matcher offshort = p.matcher(officeshortname);
 			b1 = offshort.find();
 			if(b1) {
-				response = "offshort";
+				response = "No Special Characters or Numbers allowed in Office ShortHand Name";
 				return response;
 			}
 		}
@@ -82,7 +82,7 @@ public class InitOfficesValidator {
 			Matcher sms = p.matcher(smsusername);
 			b1 = sms.find();
 			if(b1) {
-				response = "sms";
+				response = "Special Characters allowed in SMS Username are , . / ( ) - _";
 				return response;
 			}
 		}
@@ -96,11 +96,11 @@ public class InitOfficesValidator {
 	    Matcher matcher = p2.matcher(emailid);
 		Boolean b= matcher.find();
 		if(!b) {
-		    response="emailidnotcorrect";
+		    response="Please Enter correct emailid";
 		    return response;
 		}
 		if(emailid.length()>255) {
-		    	 response="9";
+		    	 response="emailid Cannot be more than 255 characters";
 				return response;
 		}
 		}
@@ -115,11 +115,11 @@ public class InitOfficesValidator {
 			Matcher m = p1.matcher(stateid);
 			b1 = m.find();
 			if(b1) {
-				response = "stateid";
+				response = "Special Characters allowed in State id are - _";
 				return response;
 			}
 			if(stateid.length()>25) {
-				response = "stateidlength";
+				response = "State ID Cannot exceed more than 255 characters ";
 				return response;
 			}
 		}
@@ -128,35 +128,35 @@ public class InitOfficesValidator {
 			Matcher m = p1.matcher(tenantid);
 			b1 = m.find();
 			if(b1) {
-				response = "tenantid";
+				response = "Special Characters allowed in Tenant id are - _";
 				return response;
 			}
 			if(tenantid.length()>25) {
-				response = "tenantidlength";
+				response = "Tenant ID Cannot exceed more than 255 characters";
 				return response;
 			}
 		}
 		
 		
 		 if(officename1.length()>255)
-	    	return "1";
+	    	return "Office Name 1 Cannot exceed more than 255 characters";
 	     if(officename2.length()>255)
-	    	 return "2";
+	    	 return "Office Name 2 Cannot exceed more than 255 characters";
 	     if(officename3.length()>255)
-	    	 return "3";
+	    	 return "Office Name 3 Cannot exceed more than 255 characters";
 	     if(officeshortname.length()>50)
-	    	 return "4";
+	    	 return "Office Short Hand Name Cannot exceed more than 50 characters";
 	     if(signatoryname.length()>255)
-	    	 return "5";
+	    	 return "Signatory Name Cannot exceed more than 255 characters";
 	     if(signatorydesignation.length()>50)
-	    	 return "6";
+	    	 return "Signatory Designation Cannot exceed more than 255 characters";
 	     if(smsusername.length()>25)
-	    	 return "7";
+	    	 return "sms username Cannot exceed more than 25 characters";
 	     if(smspassword.length()>100)
-	    	 return "8";
+	    	 return "sms password Cannot exceed more than 100 characters";
 	     
 	     if(emailidpassword.length()>255)
-	    	 return "10";
+	    	 return "emailidpassword Cannot exceed more than 255 characters";
 	    
 	     String ext="";
 	     Integer size=0;
@@ -174,7 +174,7 @@ public class InitOfficesValidator {
 	    		 else if(ext.equalsIgnoreCase("png"))
 	    			 System.out.println(ext);
 	    		 else
-	    			 return "filetypeerror";
+	    			 return "Invalid File Type. Only jpeg,jpg and png files are allowed";
 	       	  }
 	    	  if(param.get("filesize")!=null) {
 	    		  size=(Integer) param.get("filesize");
@@ -182,7 +182,7 @@ public class InitOfficesValidator {
 	    		  res=res/1024;
 	    		  System.out.println(res);
 	    		  if(res>5)
-	    			  return "filesizeerror";
+	    			  return "File Size must not exceed 5MB";
 	    	  }
 	     }
 		return response;

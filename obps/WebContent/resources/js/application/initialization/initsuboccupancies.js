@@ -96,38 +96,14 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				} else if (response.data=="Exist") {
 					MsgBox("Occupancies already exist");
 					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancycodecharactererror") {
-					MsgBox("Special Characters allowed in Sub Occupancy Code are - _");
-					$scope.listSubOccupancy()
-				
-				}
-				
-				else if (response.data=="suboccupancycodesizeerror") {
-					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
-					$scope.listSubOccupancy()
-				
-				}else if (response.data=="suboccupancycodenull") {
-					MsgBox("Sub Occupancy Code Cannot Be Null");
-					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamecharactererror") {
-					MsgBox("Special Characters allowed in Sub Occupancy Name  are , . / ( ) - _");
-					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamesizeerror") {
-					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
-					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamenull") {
-					MsgBox("Sub Occupancy Name Cannot be Null");
-					$scope.listSubOccupancy()
-				}else if (response.data=="descriptionsizeerror") {
-					MsgBox("Description Cannot be more than 250 characters");
-					$scope.listSubOccupancy()
-				}else if (response.data=="descriptionnull") {
-					MsgBox("Description Cannot be Null");
-					$scope.listSubOccupancy()
 				}
 				else if(response.data=="Error"){
-				alert("Error");
+				MsgBox("Error");
 				
+				}
+				else{
+				MsgBox(response.data)
+				$scope.listSubOccupancy()
 				}
 				
 				
@@ -171,38 +147,14 @@ app.controller('initsuboccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeou
 				} else if (response.data=="Exist") {
 					MsgBox("Occupancies already exist");
 					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancycodecharactererror") {
-					MsgBox("Special Characters allowed in Sub Occupancy Code are - _");
-					$scope.listSubOccupancy()
-				
-				}
-				
-				else if (response.data=="suboccupancycodesizeerror") {
-					MsgBox("Sub Occupancy Code Cannot be more than 10 characters");
-					$scope.listSubOccupancy()
-				
-				}else if (response.data=="suboccupancycodenull") {
-					MsgBox("Sub Occupancy Code Cannot Be Null");
-					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamecharactererror") {
-					MsgBox("Special Characters allowed in Sub Occupancy Name  are , . / ( ) - _");
-					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamesizeerror") {
-					MsgBox("Sub Occupancy Name Cannot be more than 255 characters");
-					$scope.listSubOccupancy()
-				}else if (response.data=="suboccupancynamenull") {
-					MsgBox("Sub Occupancy Name Cannot be Null");
-					$scope.listSubOccupancy()
-				}else if (response.data=="descriptionsizeerror") {
-					MsgBox("Description Cannot be more than 250 characters");
-					$scope.listSubOccupancy()
-				}else if (response.data=="descriptionnull") {
-					MsgBox("Description Cannot be Null");
-					$scope.listSubOccupancy()
 				}
 				else if(response.data=="Error"){
-				alert("Error");
+				MsgBox("Error");
 				
+				}
+				else{
+				MsgBox(response.data)
+				$scope.listSubOccupancy()
 				}
 				
 				

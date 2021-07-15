@@ -21,16 +21,16 @@ public class InitOccupanciesValidator {
 			m= p1.matcher(occupancycode);
 			b = m.find();
 			if(b) {
-				response= "occupancycodecharactererror";
+				response= "Special Characters allowed in Occupancy Code are  - _";
 				return response;
 			}
 			if(occupancycode.length()>10) {
-				response= "occupancycodesizeerror";
+				response= "Occupancy Code Cannot be more than 10 characters";
 				return response;
 			}
 		}
 		else {
-			response= "occupancycodenull";
+			response= "Occupancy Code Cannot Be Null";
 			return response;
 		}
 		
@@ -39,33 +39,33 @@ public class InitOccupanciesValidator {
 			m= p.matcher(occupancyname);
 			b = m.find();
 			if(b) {
-				response= "occupancynamecharactererror";
+				response= "Special Characters allowed in Occupancy Name are  , . / ( ) - _";
 				return response;
 			}
 			if(occupancyname.length()>50) {
-				response= "occupancynamesizeerror"; 
+				response= "Occupancy Name Cannot be more than 50 characters"; 
 				return response;
 			}
 			
 		}
 		else
-			response= "occupancynamenull";
+			response= "Occupancy Name Cannot be Null";
 		
 		if(param.get("occupancyalias")!=null) {
 			occupancyalias=((String) param.get("occupancyalias")).trim();
 			m= p.matcher(occupancyalias);
 			b = m.find();
 			if(b) {
-				response= "occupancyaliascharactererror";
+				response= "Special Characters allowed in Occupancy Alias are  , . / ( ) - _";
 				return response;
 			}
 			if(occupancyalias.length()>50) {
-				response= "occupancyaliassizeerror";
+				response= "Occupancy Alias Cannot be more than 50 characters";
 				return response;
 			}
 		}
 		else {
-			response= "occupancyaliasnull";
+			response= "Occupancy Alias Cannot be Null";
 			return response;
 		}
 			

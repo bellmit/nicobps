@@ -28,23 +28,23 @@ public class UserManagementValidator{
 		Matcher m1 = p2.matcher(username);
 		b1=m1.find();
 		if(!b1)
-			return "username";
+			return "Please Enter a valid Username or email";
 		if(username.length()>99)
-			return "userlength";
+			return "Enclosure Name Cannot be more than 99 characters";
 		if(param.get("userpassword")!=null)
 			userpassword=((String) param.get("userpassword")).trim();
 		if(param.get("repassword")!=null)
 			repassword=((String) param.get("repassword")).trim();
 		if(!userpassword.equals(repassword))
-			return "passworddeoesnotmatch";
+			return "Passwords Do Not Match";
 		if(param.get("fullname")!=null)
 			fullname=((String) param.get("fullname")).trim();
 		m1=p.matcher(fullname);
 		b1=m1.find();
 		if(b1)
-			return "fullname";
+			return "No Special Characters or Numbers allowed in Full Name";
 		if(fullname.length()>99)
-			return "fullnamelength";
+			return "Full Name Cannot be more than 99 characters";
 		System.out.println(param.get("mobileno"));
 //		Pattern p3 = Pattern.compile("^([1-9]){1}([0-9]){9}$");
 		Pattern p3 = Pattern.compile("^[1-9][0-9]*$");
@@ -55,17 +55,17 @@ public class UserManagementValidator{
 		b1=m1.find();
 		
 		if(!b1)
-			return "mobile";
+			return "No Special Characters or Characters allowed in Mobile No. Mobile No. Should not start with zero ";
 		if(mobileno.length()>10)
-			return "mobilelength";
+			return "Mobile No Cannot be more than 10 characters";
 		if(param.get("designation")!=null)
 			designation=((String) param.get("designation")).trim();
 		m1=p.matcher(designation);
 		b1=m1.find();
 		if(b1)
-			return "designation";
+			return "No Special Characters or Numbers allowed in Designation";
 		if(designation.length()>99)
-			return "designationlength";
+			return "Designation Cannot be more than 99 characters";
 		
 		
 		System.out.println(response);

@@ -57,23 +57,9 @@ app.controller("CommonCtrl", [
 				} else if(response == "false"){
 					MsgBox("Error! Please try again.");
 				}
-				else if(response == "500"){
-					MsgBox("No. of characters must not exceed 500 in remarks");
-				}
-				else if(response == "officecodenull"){
-					MsgBox("Office code is null");
-				}
-				else if(response == "applicationcodenull"){
-					MsgBox("Application code is null");
-				}
-				else if(response == "applicationcodelength"){
-					MsgBox("Application code should not exceed 20 characters");
-				}
-				else if(response == "usercodenull"){
-					MsgBox("User code is null");
-				}
-				else if(response == "toprocesscodenull"){
-					MsgBox("toprocesscode is null");
+				else{
+				MsgBox(response.data)
+				$scope.listLicensees();
 				}
 			}, function () {
 				alert("Sorry, there was an error while trying to process the request.");
