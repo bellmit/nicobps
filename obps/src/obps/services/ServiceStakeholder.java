@@ -24,7 +24,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 	private DaoPaymentInterface daoPaymentInterface;
 
 	@Override
-	public List<Map<String, Object>> listLicensees(Integer usercode,Integer officecode) {
+	public List<Map<String, Object>> listLicensees(Integer usercode, Integer officecode) {
 		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,off.officecode,off.officename1,"
 				+ "u.mobileno,u.username as email,"
 				+ "(SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures"
@@ -39,9 +39,8 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
 				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
 				+ "INNER JOIN masters.states s on s.statecode=d.statecode "
-				+ "WHERE case when ?=1 then 1=1 else off.officecode=? end "
-				+ "ORDER BY l.entrydate DESC ";
-		List<Map<String, Object>> list = SUI.listGeneric(sql,new Object[] {usercode,usercode});
+				+ "WHERE case when ?=1 then 1=1 else off.officecode=? end " + "ORDER BY l.entrydate DESC ";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { usercode, usercode });
 		for (Map<String, Object> m : list) {
 			m.put("transactions", daoPaymentInterface.getTransaction(m.get("applicationcode").toString()));
 		}
@@ -100,10 +99,14 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			c.add(Calendar.YEAR, 1);
 			c.set(Calendar.MONTH, 3);
 			c.set(Calendar.DAY_OF_MONTH, 31);
-			for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
-				dmlList.add(new BatchUpdateModel(sql, new Object[] { applicationcode, usercode, i.get("officecode"),
-						new Date(), c.getTime(), null, null }));
-			}
+
+			dmlList.add(new BatchUpdateModel(sql,
+					new Object[] { applicationcode, usercode, officecode, new Date(), c.getTime(), null, null }));
+
+//			for (Map<String, Object> i : SUI.listRegisteringOffices(officecode)) {
+//				dmlList.add(new BatchUpdateModel(sql, new Object[] { applicationcode, usercode, i.get("officecode"),
+//						new Date(), c.getTime(), null, null }));
+//			}
 
 			String sqlCount = "SELECT count(*) FROM nicobps.userpages where usercode=? and urlcode=? ";
 			Integer count = null;
@@ -146,6 +149,50 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		}
 	}
 
+	public Map<String, Object> getLicenceeValidity(Integer usercode, Integer officecode) {
+		String sql = "SELECT  U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
+				+ "		(O.OFFICENAME1::TEXT ||    CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) ||"
+				+ "        CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
+				+ "        to_char(VALIDTO, 'DD-MM-YYYY') VALIDTO, "
+				+ "        CASE WHEN EXTENDEDTO IS NULL THEN 'VALID UPTO : ' || TO_CHAR(VALIDTO, 'dd-mm-yyyy')   ELSE 'VALID UPTO : ' || TO_CHAR(EXTENDEDTO, 'dd-mm-yyyy')  END AS STATUS, "
+				+ "        CASE WHEN VALIDTO > CURRENT_DATE THEN 1 ELSE 2 END AS STATUSCODE "
+				+ "FROM  nicobps.USERLOGINS U,   MASTERS.OFFICES O, nicobps.LICENSEEOFFICESVALIDITIES V, nicobps.APPLICATIONS A"
+				+ "WHERE 1 = 1 AND U.USERCODE = V.USERCODE AND O.OFFICECODE = V.OFFICECODE AND (O.OFFICECODE = A.OFFICECODE AND U.USERCODE = A.USERCODE AND MODULECODE IN (1,3) ) "
+				+ "AND A.APPLICATIONCODE = V.APPLICATIONCODE AND O.OFFICECODE = ? AND U.USERCODE = ? "
+				+ "ORDER BY CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END DESC LIMIT 1; ";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		Map<String, Object> response = new HashMap<String, Object>();
+		if (!list.isEmpty() && list.get(0).get("statuscode").equals("1")) {
+			response.put("VALID_LICENCE", "You are already empanelled " + list.get(0).get("office")
+					+ " and its valid till " + list.get(0).get("validto"));
+			return response;
+		}
+		if (!list.isEmpty() && list.get(0).get("statuscode").equals("2")) {
+			response.put("EXPIRED_LICENCE", "Your emnpanelment with " + list.get(0).get("office") + " has expired on "
+					+ list.get(0).get("validto") + ".Please click on the button above to renew your empanelment.");
+//			return response;
+		}
+		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
+				+ "	    (O.OFFICENAME1::TEXT ||    CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2  ELSE ''::CHARACTER VARYING END::TEXT) ||"
+				+ "	    CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
+				+ "            CASE WHEN PAYMENTSTATUS  = 'S'  AND V.APPLICATIONCODE IS NULL THEN 'AWAITING APPROVAL ' "
+				+ "		 WHEN PAYMENTSTATUS  = 'I'  AND V.APPLICATIONCODE IS NULL THEN 'PAYMENT STATUS CANNOT BE ASCERTAINED ' "
+				+ "             END AS STATUS, "
+				+ "            CASE WHEN PAYMENTSTATUS  = 'S'  AND V.APPLICATIONCODE IS NULL THEN 3 "
+				+ "		 WHEN PAYMENTSTATUS  = 'I'  AND V.APPLICATIONCODE IS NULL THEN 4 "
+				+ "             END AS STATUSCODE "
+				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE "
+				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
+				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
+				+ "INNER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE "
+				+ "INNER JOIN nicobps.TRANSACTIONS T ON T.TRANSACTIONCODE = ATM.TRANSACTIONCODE "
+				+ "LEFT OUTER JOIN nicobps.LICENSEEOFFICESVALIDITIES V ON A.APPLICATIONCODE = V.APPLICATIONCODE "
+				+ "WHERE PAYMENTSTATUS IN ('S') AND A.MODULECODE IN (1, 3) "
+				+ "AND O.OFFICECODE = ? AND U.USERCODE  = ? "
+				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+		return null;
+	}
+
 	@Override
 	public boolean extendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
 		if (SUI.updateextendValidity(officecode, usercode, extendedto, extendedby)) {
@@ -156,10 +203,10 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public List<Map<String, Object>> getValidity(Integer usercode) {
-		String sql = "SELECT l.applicantsname,l.usercode,to_char(li.validfrom, 'DD-MM-YYYY') as validfrom,coalesce(to_char(li.extendedto, 'DD-MM-YYYY'), to_char(li.validto, 'DD-MM-YYYY')) as validto, li.officecode,o.officename1,to_char(li.entrydate, 'DD-MM-YYYY') as entrydate\n"
-				+ "				FROM nicobps.licensees l \n"
-				+ "				INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \n"
-				+ "				INNER JOIN masters.offices o on o.officecode=li.officecode\n"
+		String sql = "SELECT l.applicantsname,l.usercode,to_char(li.validfrom, 'DD-MM-YYYY') as validfrom,coalesce(to_char(li.extendedto, 'DD-MM-YYYY'), to_char(li.validto, 'DD-MM-YYYY')) as validto, li.officecode,o.officename1,to_char(li.entrydate, 'DD-MM-YYYY') as entrydate "
+				+ "				FROM nicobps.licensees l "
+				+ "				INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode "
+				+ "				INNER JOIN masters.offices o on o.officecode=li.officecode "
 				+ "				where li.usercode=?  ORDER BY o.officename1 DESC  ";
 		return SUI.listGeneric(sql, new Object[] { usercode });
 	}

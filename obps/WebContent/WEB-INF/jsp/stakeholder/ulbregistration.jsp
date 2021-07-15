@@ -45,7 +45,11 @@
 					</core:if>
 					<core:if test="${errorMsg ne null}">
 						<span class="mt-4 pl-5" style="color: red">
-							${(errorMsg=='ALREADY_REPORTED')?'Office is already registered and valid.':(errorMsg=='REQD_DOCUMENTS_INCOMPLETE')?'Please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs.':'Please try again.' }
+							${(errorMsg=='ALREADY_REPORTED')
+									?'Office is already registered and valid.'
+								:(errorMsg=='REQD_DOCUMENTS_INCOMPLETE')
+									?'Kindly upload all the mandatory documents first. Click on the Upload Enclosures link and upload the documents marked as Mandatory'
+								:'Please try again.' }
 						</span>
 					</core:if>
 					<div class="col-md-12 pb-4 px-5 mt-1">

@@ -47,24 +47,23 @@ public class ControllerStakeholder {
 	}
 
 	@GetMapping("/ulbregistration.htm")
-	public String ulbregistration(Model model, String errorMsg) {
+	public String ulbregistration(Model model, String errorMsg, HttpServletRequest req) {
 		model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
+		String usercode = (String) req.getSession().getAttribute("usercode");
+		String licenseetypecode = (String) req.getSession().getAttribute("licenseetypecode");
+		if (serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode),
+				Short.valueOf(licenseetypecode)).size() != 0) {
+			model.addAttribute("errorMsg", "REQD_DOCUMENTS_INCOMPLETE");
+			return "stakeholder/ulbregistration";
+		}
 		model.addAttribute("errorMsg", errorMsg);
 		return "stakeholder/ulbregistration";
 	}
 
 	@PostMapping("/ulbregistration.htm")
 	public String ulbRegistration(Model model, Integer officecode, HttpServletRequest req) {
-
 		String usercode = (String) req.getSession().getAttribute("usercode");
-		String licenseetypecode = (String) req.getSession().getAttribute("licenseetypecode");
-		if (serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode),
-				Short.valueOf(licenseetypecode)).size() != 0) {
-			model.addAttribute("errorMsg", "REQD_DOCUMENTS_INCOMPLETE");
-			return "redirect:ulbregistration.htm";
-		}
 		String applicationcode = SSI.ulbRegistration(officecode, Integer.valueOf(usercode));
-//		String applicationcode="ALREADY_REPORTED";
 		if (applicationcode.equals("ALREADY_REPORTED") || applicationcode.equals("false")) {
 			model.addAttribute("errorMsg", applicationcode);
 			return "redirect:ulbregistration.htm";
@@ -140,9 +139,10 @@ public class ControllerStakeholder {
 	public @ResponseBody String updateStakeholder(Integer officecode, String applicationcode, Integer usercode,
 			Integer toprocesscode, String remarks, ModelMap model) {
 		String res = "";
-		if(officecode!=null && applicationcode!=null && usercode!=null && toprocesscode!=null && remarks!=null) {
-			res = stakeHolderValidatorInterface.validateStackHolder(officecode, applicationcode, usercode, toprocesscode,
-					remarks);
+		if (officecode != null && applicationcode != null && usercode != null && toprocesscode != null
+				&& remarks != null) {
+			res = stakeHolderValidatorInterface.validateStackHolder(officecode, applicationcode, usercode,
+					toprocesscode, remarks);
 			if (res != "")
 				return res;
 			else {
@@ -152,7 +152,6 @@ public class ControllerStakeholder {
 					res = "false";
 			}
 		}
-		
 
 		return res;
 	}
