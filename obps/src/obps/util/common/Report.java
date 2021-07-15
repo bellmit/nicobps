@@ -91,7 +91,7 @@ public class Report extends HttpServlet {
 			response.setContentType("application/pdf");
 			response.setContentLength(pdfasbytes.length);
 
-			response.setHeader("Content-disposition", "inline; filename='" + filename + "'");
+			response.setHeader("Content-disposition", "inline; filename=\"" + filename + "\"");
 			outstream.write(pdfasbytes);
 			// response.sendRedirect("error.jsp");
 
