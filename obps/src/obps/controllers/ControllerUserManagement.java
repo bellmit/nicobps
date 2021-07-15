@@ -226,7 +226,10 @@ public class ControllerUserManagement {
 				param.put("usercode", usercode);
 				if (serviceUserManagementInterface.createUser(param)) {
 					request.getSession().setAttribute("usercode", usercode);
+					request.getSession().setAttribute("username", (String) param.get("username"));
+					request.getSession().setAttribute("mobileno", (String) param.get("mobileno"));
 					request.getSession().setAttribute("licenseetypecode", (String) param.get("licenseetypecode"));
+					
 					// return ResponseEntity.ok(new String("Details submitted successfully!"));
 					return ResponseEntity.ok(new String("1"));
 				} else {
