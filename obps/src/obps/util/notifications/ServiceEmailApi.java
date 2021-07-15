@@ -1,6 +1,6 @@
 /*@author Avijit Debnath*/
 
-package obps.util.common;
+package obps.util.notifications;
 import java.io.IOException;
 import java.io.DataInputStream;
 
@@ -14,6 +14,10 @@ import java.nio.charset.StandardCharsets;
 
 public class ServiceEmailApi 
 {
+    public static void sendEmails(Notification noti) {
+    	sendEmails(noti.getSenderemailid(),noti.getEmailidpassword(),noti.getRecipientEmailid(),noti.getEmailsubject(),noti.getEmail());
+    }	
+	
     @SuppressWarnings("deprecation")
 	public static String sendEmails(String fromemail,String password,String toemail,String subject,String message) {
         String resp = "4";
@@ -64,6 +68,8 @@ public class ServiceEmailApi
         }
         return resp;
     }
+    
+
     
 //    public static void main(String arg[]) {
 //    	String fromemail="avijit.debnath@nic.in";

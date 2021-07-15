@@ -8,7 +8,7 @@ app.controller('createfeemasterCtrl', ['$scope', '$sce', '$compile', '$timeout',
 		$scope.errorCallback = "";
 		$scope.method = "POST";
 		$scope.successCallback = "";
-		$scope.urlEndpoint = "";
+		$scope.urlEndpoint = ""; 
 
 		/*------------------------*/
 

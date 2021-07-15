@@ -12,8 +12,9 @@ public class InitOccupanciesValidator {
 		String response = "";
 		Matcher m;
 		boolean b=false;
-		Pattern p = Pattern.compile("[^A-Za-z_ ]");
-		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9]");
+		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]"; 
+		Pattern p = Pattern.compile(pattern);
+		Pattern p1 = Pattern.compile("[^A-Za-z_ 0-9\\-]");
 		String occupancycode="",occupancyname="",occupancyalias="";
 		if(param.get("occupancycode")!=null) {
 			occupancycode=((String) param.get("occupancycode")).trim();
@@ -41,7 +42,7 @@ public class InitOccupanciesValidator {
 				response= "occupancynamecharactererror";
 				return response;
 			}
-			if(occupancycode.length()>50) {
+			if(occupancyname.length()>50) {
 				response= "occupancynamesizeerror"; 
 				return response;
 			}
@@ -58,7 +59,7 @@ public class InitOccupanciesValidator {
 				response= "occupancyaliascharactererror";
 				return response;
 			}
-			if(occupancycode.length()>50) {
+			if(occupancyalias.length()>50) {
 				response= "occupancyaliassizeerror";
 				return response;
 			}

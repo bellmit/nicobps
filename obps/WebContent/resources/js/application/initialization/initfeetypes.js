@@ -7,7 +7,7 @@ app.controller('createfeetypeCtrl', ['$scope', '$sce', '$compile','$timeout','co
 	var errorMsg = "Error: Unable to perform action or Already Existing Data";
 	$scope.errorCallback = "";
 	$scope.method = "POST";
-	$scope.successCallback = "";
+	$scope.successCallback = ""; 
 	$scope.urlEndpoint = "";
 	
 	/*------------------------*/
@@ -117,7 +117,7 @@ $scope.feetypes=[];
 			else if(response.data=="Error")
 				MsgBox("Error Inserting Data");
 			else if(response.data=="Success"){
-				MsgBox("Successfully Inserted Data");
+				MsgBox("Successfully Updated Data");
 				$scope.reset(); 
 			}
 			else if(response.data=="exist"){

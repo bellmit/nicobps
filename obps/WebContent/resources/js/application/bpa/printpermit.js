@@ -42,9 +42,25 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 			dataType: "json",
 			data: param,
 			success: function(data) {
+				console.log("data" + data)
+				if ($scope.paramexist == true) {
+					$("#searchresults").removeClass("d-none");
+					$scope.setDataTable(data);
+				} else {
+					if (data != "" && data != null) {
+						if (data[0].error == undefined || data[0].error == null) {
+							$("#searchresults").removeClass("d-none");
+							$scope.setDataTable(data);
+						} else {
+							alert("Error occured");
+						}
+					} else {
+						$("#searchresults").removeClass("d-none");
+						$scope.setDataTable(data);
+					}
 
-				$("#searchresults").removeClass("d-none");
-				$scope.setDataTable(data);
+				}
+
 
 			},
 			error: function(e) {
@@ -62,7 +78,7 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 	$scope.printpermit = function(permitno) {
 
 		console.log("permitno " + permitno);
-		window.open("./Report?status=2&permitnumber=" + permitno );
+		window.open("./Report?status=2&permitnumber=" + permitno);
 
 	};
 

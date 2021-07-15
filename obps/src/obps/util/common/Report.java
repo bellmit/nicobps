@@ -40,10 +40,13 @@ public class Report extends HttpServlet {
 		ArrayList al = new ArrayList();
 		String reportName = "";
 		// HttpSession sessionHttp = request.getSession();
-		String status = request.getParameter("status");
+
 		Connection con = null;
 
 		try {
+			String status = request.getParameter("status");
+			String filename = "Report.pdf";
+
 			WebApplicationContext springContext = WebApplicationContextUtils
 					.getWebApplicationContext(getServletContext());
 			DataSource ds = (DataSource) springContext.getBean("dataSource");
@@ -58,13 +61,16 @@ public class Report extends HttpServlet {
 				System.out.println("transactioncode :" + transactioncode);
 				params.put("transactioncode", transactioncode);
 				reportName = "reports/PaymentReceipt.jrxml";
+				filename = "PaymentReceipt.pdf";
 			} else if (status != null && status.equals("2")) {
-				
-				String permitnumber = request.getParameter("permitnumber").trim();			
-				System.out.println("permitnumber :" +permitnumber);
-				
+
+				String permitnumber = request.getParameter("permitnumber").trim();
+				System.out.println("permitnumber :" + permitnumber);
+
 				params.put("permitnumber", permitnumber);
 				reportName = "reports/BuildingPermit.jrxml";
+				filename = "BuildingPermit.pdf";
+
 			}
 
 			// System.out.println("status : "+status);
@@ -85,7 +91,7 @@ public class Report extends HttpServlet {
 			response.setContentType("application/pdf");
 			response.setContentLength(pdfasbytes.length);
 
-			response.setHeader("Content-disposition", "inline; filename=\"Report.pdf\"");
+			response.setHeader("Content-disposition", "inline; filename='" + filename + "'");
 			outstream.write(pdfasbytes);
 			// response.sendRedirect("error.jsp");
 

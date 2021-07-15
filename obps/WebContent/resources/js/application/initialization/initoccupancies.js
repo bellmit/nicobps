@@ -10,7 +10,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 		$scope.successCallback = "";
 		$scope.urlEndpoint = "";
  
-		/*------------------------*/
+		/*------------------------*/ 
 
 		$scope.actionButton = 1;
 		//	$scope.cellcode = null;
@@ -77,13 +77,13 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 				} else if (response.data=="Exist") {
 					MsgBox("Occupancies already exist");
 					$scope.listOccupancies()
-				}
-				else if (response.data=="occupancycodecharactererror") {
-					MsgBox("No Special Characters allowed in Occupancy Code");
+				}else if (response.data=="occupancycodecharactererror") {
+					MsgBox("Special Characters allowed in Occupancy Code are  - _");
 					$scope.listOccupancies()
 				
-				}
-				else if (response.data=="occupancycodesizeerror") {
+				
+				
+				}else if (response.data=="occupancycodesizeerror") {
 					MsgBox("Occupancy Code Cannot be more than 10 characters");
 					$scope.listOccupancies()
 				
@@ -91,7 +91,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 					MsgBox("Occupancy Code Cannot Be Null");
 					$scope.listOccupancies()
 				}else if (response.data=="occupancynamecharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Occupancy Name");
+					MsgBox("Special Characters allowed in Occupancy Name are  , . / ( ) - _");
 					$scope.listOccupancies()
 				
 				}else if (response.data=="occupancynamesizeerror") {
@@ -101,7 +101,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 					MsgBox("Occupancy Name Cannot be Null");
 					$scope.listOccupancies()
 				}else if (response.data=="occupancyaliascharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Occupancy Alias");
+					MsgBox("Special Characters allowed in Occupancy Alias are  , . / ( ) - _");
 					$scope.listOccupancies()
 				
 				}else if (response.data=="occupancyaliassizeerror") {
@@ -150,13 +150,13 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 				} else if (response.data=="Exist") {
 					MsgBox("Occupancies already exist");
 					$scope.listOccupancies()
-				}
-				else if (response.data=="occupancycodecharactererror") {
-					MsgBox("No Special Characters allowed in Occupancy Code");
-					$scope.listLicensees()
+				}else if (response.data=="occupancycodecharactererror") {
+					MsgBox("Special Characters allowed in Occupancy Code are  - _");
+					$scope.listOccupancies()
 				
-				}
-				else if (response.data=="occupancycodesizeerror") {
+				
+				
+				}else if (response.data=="occupancycodesizeerror") {
 					MsgBox("Occupancy Code Cannot be more than 10 characters");
 					$scope.listOccupancies()
 				
@@ -164,7 +164,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 					MsgBox("Occupancy Code Cannot Be Null");
 					$scope.listOccupancies()
 				}else if (response.data=="occupancynamecharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Occupancy Name");
+					MsgBox("Special Characters allowed in Occupancy Name are  , . / ( ) - _");
 					$scope.listOccupancies()
 				
 				}else if (response.data=="occupancynamesizeerror") {
@@ -174,7 +174,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 					MsgBox("Occupancy Name Cannot be Null");
 					$scope.listOccupancies()
 				}else if (response.data=="occupancyaliascharactererror") {
-					MsgBox("No Special Characters or Numbers allowed in Occupancy Alias");
+					MsgBox("Special Characters allowed in Occupancy Alias are  , . / ( ) - _");
 					$scope.listOccupancies()
 				
 				}else if (response.data=="occupancyaliassizeerror") {
@@ -194,7 +194,7 @@ app.controller('createoccupanciesCtrl', ['$scope', '$sce', '$compile', '$timeout
 				
 				alert("Error");
 				$scope.reset();
-				$scope.listOccupancies()
+				$scope.listLicensees()
 			});
 		}
 
