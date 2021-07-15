@@ -30,7 +30,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
-import obps.validators.InitEnclosuresValidatorInterface;
+import obps.validators.InitEnclosuresValidator;
+
 import obps.models.Enclosures;
 import obps.models.Modules;
 import obps.models.Offices;
@@ -48,7 +49,7 @@ public class ControllerInitModulesEnclosures {
 	private ServiceUtilInterface serviceUtilInterface;
 	
 	@Autowired
-	private  InitEnclosuresValidatorInterface  initEnclosuresValidatorInterface; 
+	private  InitEnclosuresValidator  initEnclosuresValidator; 
 	@Autowired
 
 	private ServiceEnclosureManagementInterface serviceUserManagementInterface;
@@ -71,7 +72,7 @@ public class ControllerInitModulesEnclosures {
 	public @ResponseBody String saveModuleEnclosures(@RequestBody List<Map<String, Object>> modulesenclosures) {
 		String response="";
 		if(modulesenclosures!=null) {
-			String validate= initEnclosuresValidatorInterface.validateModulesEnclosure(modulesenclosures);
+			String validate= initEnclosuresValidator.validateModulesEnclosure(modulesenclosures);
 			if(validate!="")
 				response=validate;
 			else

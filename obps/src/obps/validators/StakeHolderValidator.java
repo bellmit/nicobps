@@ -1,15 +1,13 @@
 package obps.validators;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import obps.services.ServiceStakeholderInterface;
+import org.springframework.stereotype.Component;
 
-@Service 
-public class StakeHolderValidator implements StakeHolderValidatorInterface{
-	@Autowired
-	private ServiceStakeholderInterface SSI;
-	@Override
+
+@Component
+public class StakeHolderValidator{
+	
+	
 	public String validateStackHolder(Integer officecode, String applicationcode, Integer usercode,
 			Integer toprocesscode, String remarks) {
 		String res = "";

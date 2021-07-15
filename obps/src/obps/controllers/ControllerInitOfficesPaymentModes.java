@@ -30,7 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.Utilty;
-import obps.validators.InitOfficesValidatorInterface;
+import obps.validators.InitOfficesValidator;
 import obps.models.Enclosures;
 import obps.models.Modules;
 import obps.models.Offices;
@@ -49,7 +49,7 @@ public class ControllerInitOfficesPaymentModes {
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 
-	private InitOfficesValidatorInterface initOfficesValidatorInterface;
+	private InitOfficesValidator initOfficesValidator;
 	@Autowired
 
 	private ServiceEnclosureManagementInterface serviceUserManagementInterface;
@@ -79,7 +79,7 @@ public class ControllerInitOfficesPaymentModes {
 	public @ResponseBody String saveOfficePayment(@RequestBody List<Map<String, Object>> officespayments) {
 		String response="";
 		if(officespayments!=null) {
-			String validate= initOfficesValidatorInterface.validateOfficesPaymentModes(officespayments);
+			String validate= initOfficesValidator.validateOfficesPaymentModes(officespayments);
 			if(validate!="")
 				response=validate;
 			else

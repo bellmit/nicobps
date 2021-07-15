@@ -41,11 +41,16 @@ import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
 import obps.util.common.Utilty;
+
 import obps.util.notifications.Notification;
 import obps.util.notifications.ServiceEmailApi;
 import obps.util.notifications.ServiceNotification;
 import obps.util.notifications.ServiceSms;
-import obps.validators.UserManagementValidatorInterface;
+
+
+import obps.validators.UserManagementValidator;
+
+
 import obps.validators.ValidateLicenseEnclosures;
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.daos.DaoUserManagementInterface;
@@ -66,11 +71,14 @@ public class ControllerUserManagement {
 	private DaoEnclosureManagementInterface daoEnclosureManagementInterface;
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
-	@Autowired
-	private UserManagementValidatorInterface userManagementValidatorInterface;
+
+
 	@Autowired
 	private ServiceNotification serviceNotification;
 	
+	@Autowired
+	private UserManagementValidator userManagementValidator;
+
 	@Resource
 	private Environment environment;	
 	
@@ -483,7 +491,7 @@ public class ControllerUserManagement {
 		user.put("usercode", usercode);
 		user.put("usertype", "BACKEND_USER");
 		
-		String validate=userManagementValidatorInterface.validateCreateUser(user);
+		String validate=userManagementValidator.validateCreateUser(user);
 		System.out.println("Validate"+validate);
 		if(validate!="") {
 			response.put("code", 200);
@@ -519,7 +527,7 @@ public class ControllerUserManagement {
 	@PostMapping(value = "/updateuser.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate=userManagementValidatorInterface.validateCreateUser(user);
+		String validate=userManagementValidator.validateCreateUser(user);
 		System.out.println("Validate"+validate);
 		if(validate!="") {
 			response.put("code", 200);
@@ -580,7 +588,7 @@ public class ControllerUserManagement {
 	public @ResponseBody String saveUserpages(@RequestBody List<Map<String, Object>> userpages) {
 		String response="";
 		
-		String validate= userManagementValidatorInterface.validateAccessControl(userpages);
+		String validate= userManagementValidator.validateAccessControl(userpages);
 		if(validate!="") {
 			response=validate;
 		}else {

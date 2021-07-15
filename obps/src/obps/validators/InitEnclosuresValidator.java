@@ -6,15 +6,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import obps.daos.DaoEnclosureManagementInterface;
-@Service
-public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface{ 
+
+
+
+@Component
+public class InitEnclosuresValidator {
+
 	@Autowired
 	private DaoEnclosureManagementInterface DEMI;
 
-	@Override
+	
 	public String validateInitEnclosure(Map<String, Object> param) {
 		String response = "";
 		String encldesc="";
@@ -53,7 +58,7 @@ public class InitEnclosuresValidator implements InitEnclosuresValidatorInterface
 		
 	}
 
-	@Override
+
 	public String validateModulesEnclosure(List<Map<String, Object>> param) {
 		String response="";
 //		System.out.println(param);

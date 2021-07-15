@@ -7,14 +7,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import obps.daos.DaoEnclosureManagementInterface;
-@Service
-public class InitOfficesValidator implements InitOfficesValidatorInterface{
+@Component
+public class InitOfficesValidator {
 	@Autowired
 	private DaoEnclosureManagementInterface DEMI;
-	@Override
+	
 	public String validateInitOffices(Map<String, Object> param) {
 		String response = "";
 		String pattern="[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]"; 
@@ -186,7 +187,7 @@ public class InitOfficesValidator implements InitOfficesValidatorInterface{
 	     }
 		return response;
 	}
-	@Override
+
 	public String validateOfficesPaymentModes(List<Map<String, Object>> param) {
 		String response="";
 
