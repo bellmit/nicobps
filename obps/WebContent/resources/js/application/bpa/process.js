@@ -29,7 +29,7 @@ app.controller("CommonCtrl", [
 
 		$scope.DocumentDetails = [];
 		$scope.OwnerDetails = [];
-		$scope.SiteReportDetails = [];
+		$scope.Questionnaires = [];
 
 		$scope.bpa.applicationcode = APPCODE;
 		

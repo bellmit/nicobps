@@ -215,14 +215,15 @@ app.directive("scrutinyDetails",["$compile", "bpaService", function($compile, BS
 	};
 }]);
 
-app.directive("siteReportDetails",["$compile", "bpaService", function ($compile, BS) {
+app.directive("siteInspectionDetails",["$compile", "bpaService", function ($compile, BS) {
 	return {
-		template: '<ng-include src="\'sitereportdetails.htm\'"></ng-include>',
+		template: '<ng-include src="\'siteinspectiondetails.htm\'"></ng-include>',
 		link: action
 	}
 	function action(scope, elem, attr) {
-		BS.listSiteReportDetails((response) => {
-			scope.SiteReportDetails = response;
+		BS.listSiteInspectionQuestionnaires((response) => {
+			scope.Questionnaires = response;
+			console.log("Questionnaires:: ",scope.Questionnaires);
 		}, APPCODE);
 
 	};
@@ -253,6 +254,7 @@ app.directive("fileViewModal",["$compile", "$sce", "bpaService", function($compi
 	function action(scope, elem, attr) {
 		scope.fileModal = new ModalFile();
 		scope.viewFile = (opt, data) => {
+			console.log(data);
 			let fileContent = "";
 			switch (opt) {
 				case 2:
@@ -266,10 +268,13 @@ app.directive("fileViewModal",["$compile", "$sce", "bpaService", function($compi
 				default:
 					scope.DocumentDetails.forEach((o, x) => {
 						if (o.appenclosurecode == data) {
+							scope.fileModal.title = o.enclosurename;
 							scope.fileModal.mimetype = BS.detectMimeType(o.enclosureimage)
+							console.log("MimeType: ", BS.detectMimeType(o.enclosureimage));
 							fileContent = 'data:' + scope.fileModal.mimetype + ';base64,' + o.enclosureimage;
 						}
 					});
+				break;
 			}
 			scope.fileModal.src = $sce.trustAsResourceUrl(fileContent);
 		}

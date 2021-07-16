@@ -32,8 +32,10 @@ public interface ServiceBPAInterface {
 	List<Map<String, Object>> listAppScrutinyDetailsForBPA(Integer USERCODE);
 
 	List<Map<String, Object>> listBPApplications(Integer USERCODE);
-	
+
 	List<Map<String, Object>> listBPAConditions(String applicationcode);
+
+	List<Map<String, Object>> listBPAEnclosures(String applicationcode);
 
 	List<Map<String, Object>> listRejectedApplications(Integer USERCODE);
 
@@ -42,8 +44,6 @@ public interface ServiceBPAInterface {
 	List<Map<String, Object>> listOfficePaymentMode(String applicationcode);
 
 	List<Map<String, Object>> listSiteInspectionQuestionnaires(String applicationcode);
-	
-	List<Map<String, Object>> listSiteReportDetails(Integer USERCODE, String applicationcode);
 
 	Map<String, Object> getBpaApplicationDetails(String applicationcode);
 

@@ -26,7 +26,7 @@
 						<scrutiny-details></scrutiny-details>
 						<owner-details></owner-details>
 						<document-details></document-details>
-						<site-report-details></site-report-details>
+						<site-inspection-details></site-inspection-details>
 						<file-view-modal></file-view-modal>
 						<common-processing-action></common-processing-action>
 					</form>

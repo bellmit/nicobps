@@ -51,45 +51,72 @@
 								</div>
 								<div class="row">
 									<div class="col">
-<!-- 										<div class="form-group row"> -->
+										<div class="card">
+											<div class="card-header">Questionnaires</div>
+											<div class="card-body">
+												<div class="form-group row mb-5"ng-repeat="Q in Questionnaires | orderBy: 'Q.questiondescription'">
+													<div class="col-sm-7">
+														<input type="checkbox" name="response_{{$index}}" ng-model="Q.response"/>
+														<span>{{$index+1}}: {{Q.questiondescription}}</span>
+													</div>
+													<div class="col-sm-5">
+														<textarea rows="1" cols="10" name="remarks_{{$index}}" class="form-control textarea" 
+		                               				       		ng-model="Q.remarks" maxlength="99" autocomplete="off" ng-disabled="!Q.response">
+		                             				       	 </textarea>
+		                           				       	 <span class="col" style="color:red" ng-if="bpaform.response_($index).modelValue">
+		                           				       	 	Required
+		                           				       	 </span>
+													</div>
+												</div>
+											</div>
+										</div>
+<!-- 										<div class="form-group row mt-5"> -->
 <!-- 											<label class="col">Site Inspection Report<span class="fa fa-asterisk"></span></label> -->
 <!-- 											<div class="col"> -->
-<!-- 												<div class="btn btn-outline-primary btn-sm float-left"> -->
-<!-- 													<input type="file" name="report" file-model="bpa.report" required> -->
-<!-- 													<span class="col" style="color:red"></span> -->
-<!-- 													<span class="col" style="color:red" ng-if="bpa.error.report">{{bpa.error.report}}</span> -->
+<!-- 												<div class="row mb-5" ng-repeat="R in bpa.reports track by $index"> -->
+<!-- 													<div class="btn btn-outline-primary btn-sm float-left"> -->
+<!-- 														<input type="file" name="report_{{$index}}" file-model="bpa.reports[$index]" required> -->
+<!-- 														<span class="col" style="color:red"></span> -->
+<!-- 														<span class="col" style="color:red" ng-if="bpa.error[$index]">Required</span> -->
+<!-- 													</div> -->
+<!-- 													<div class="plus" ng-if="bpa.reports.length >= 1 && bpa.reports.length == $index+1"> -->
+<!-- 														<i class="fa fa-plus" title="Add more file" ng-click="addRemoveMoreFile(1)"></i> -->
+<!-- 													</div> -->
+<!-- 													<div class="minus" ng-if="bpa.reports.length >= 2 && bpa.reports.length == $index+1"> -->
+<!-- 														<i class="fa fa-minus" title="Remove file" ng-click="addRemoveMoreFile(2)"></i> -->
+<!-- 													</div> -->
 <!-- 												</div> -->
 <!-- 											</div> -->
 <!-- 										</div> -->
-										<div class="form-group row"ng-repeat="Q in Questionnaires | orderBy: 'Q.questiondescription'">
-											<div class="col-sm-7">
-												<input type="checkbox" name="response_{{$index}}" ng-model="Q.response"/>
-												<span>{{$index+1}}: {{Q.questiondescription}}</span>
-											</div>
-											<div class="col-sm-5">
-												<textarea rows="1" cols="10" name="remarks_{{$index}}" class="form-control textarea" 
-                               				       		ng-model="Q.remarks" maxlength="99" autocomplete="off" ng-disabled="!Q.response">
-                             				       	 </textarea>
-                           				       	 <span class="col" style="color:red" ng-if="bpaform.response_($index).modelValue">
-                           				       	 	Required
-                           				       	 </span>
-											</div>
-										</div>
-										<div class="form-group row mt-5">
-											<label class="col">Site Inspection Report<span class="fa fa-asterisk"></span></label>
-											<div class="col">
-												<div class="row mb-5" ng-repeat="R in bpa.reports track by $index">
-													<div class="btn btn-outline-primary btn-sm float-left">
-														<input type="file" name="report_{{$index}}" file-model="bpa.reports[$index]" required>
-														<span class="col" style="color:red"></span>
-<!-- 														<span class="col" style="color:red" ng-if="bpa.error[$index].report">{{bpa.error[$index].report}}</span> -->
-														<span class="col" style="color:red" ng-if="bpa.error[$index]">Required</span>
+										<div class="card mt-5">
+											<div class="card-header">Documents</div>
+											<div class="card-body">
+												<div class="form-group row"  ng-repeat="R in SiteEnclosures track by $index">
+													<div class="col-sm-7" ng-hide="R.flag === true">
+														<select class="form-control custom-form-control"
+															name="officelocationcode" ng-model="enclosurecode"
+															ng-options="O.enclosurecode as (O.enclosurename) for O in Enclosures| filter: selected === false"
+															ng-change="setLabel($index, enclosurecode)"
+															required>
+															<option selected="selected" disabled="disabled" value="">Select Options</option>
+														</select>
+														<label class="alert alert-danger" ng-if="R.error === true")>{{R.errormsg}}</label>
 													</div>
-													<div class="plus" ng-if="bpa.reports.length >= 1 && bpa.reports.length == $index+1">
-														<i class="fa fa-plus" title="Add more file" ng-click="addRemoveMoreFile(1)"></i>
-													</div>
-													<div class="minus" ng-if="bpa.reports.length >= 2 && bpa.reports.length == $index+1">
-														<i class="fa fa-minus" title="Remove file" ng-click="addRemoveMoreFile(2)"></i>
+													<label class="col-sm-7" ng-show="R.flag === true">{{($index+1)+":  "+R.name}}<span class="fa fa-asterisk"></span></label>
+													<div class="col-sm-5">
+														<div class="row mb-5">
+															<div class="btn btn-outline-primary btn-sm float-left">
+																<input type="file" name="report_{{$index}}" ng-model="R.file" file-model="R.file" ng-change="setLabel($index, null, R.file)" required>
+																<span class="col" style="color:red"></span>
+																<span class="col" style="color:red" ng-if="bpa.error[$index]">Required</span>
+															</div>
+															<div class="plus" ng-if="SiteEnclosures.length >= 1 && SiteEnclosures.length == $index+1">
+																<i class="fa fa-plus" title="Add more file" ng-click="filterEnclosure(1, enclosurecode)"></i>
+															</div>
+															<div class="minus" ng-if="SiteEnclosures.length >= 2 && SiteEnclosures.length == $index+1">
+																<i class="fa fa-minus" title="Remove file" ng-click="filterEnclosure(2, enclosurecode)"></i>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>

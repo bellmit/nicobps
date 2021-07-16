@@ -1,5 +1,5 @@
 <!-- @author Decent Khongstia -->
-<div class="card mb-4">
+<!-- <div class="card mb-4">
 	<div class="card-body">
 		<div class="card-title h5">Site Report Details</div>
 		<div class="form-group" ng-repeat="D in SiteReportDetails">
@@ -19,6 +19,26 @@
 		   			</div>
 		   		</div>
 	 		</div>
+		</div>
+	</div>
+</div> -->
+<div class="card mb-4">
+	<div class="card-body">
+		<div class="card-title h5">Site Inspection Questionnaires</div>
+		<div class="card-body">
+			<div class="form-group row">
+				<label class="col-sm-1" style="text-align: center;">Slno</label>
+				<label class="col">Questionnaire</label>
+				<label class="col-sm-1">Response</label>
+				<label class="col">Remarks</label>
+			</div>
+			<div class="form-group row"
+				ng-repeat="Q in Questionnaires | filter: {aqcode: '!!'} ">
+				<label class="col-sm-1" style="text-align: center;">{{($index+1)}}</label> 
+				<label class="col">{{Q.questiondescription}}</label>
+				<label class="col-sm-1">{{Q.response}}</label>
+				<label class="col">{{(Q.remarks != null && Q.remarks != '')?Q.remarks:'NA'}}</label>
+			</div>
 		</div>
 	</div>
 </div>

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BpaQuestionnaire implements Serializable {
+public class AppQuestionnaire implements Serializable {
 	private static final long serialVersionUID = 6L;
 
 	private Integer aqcode;

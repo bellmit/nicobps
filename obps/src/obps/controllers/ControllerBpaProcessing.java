@@ -316,10 +316,10 @@ public class ControllerBpaProcessing {
 		return BPAConstants.COMPONENT_URL_MAPPING.concat("/scrutinydetails");
 	}
 
-	@GetMapping(value = "/sitereportdetails.htm")
+	@GetMapping(value = "/siteinspectiondetails.htm")
 	public String siteReportDetails() {
-		LOG.info("URL: sitereportdetails.htm");
-		return BPAConstants.COMPONENT_URL_MAPPING.concat("/sitereportdetails");
+		LOG.info("URL: siteinspectiondetails.htm");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/siteinspectiondetails");
 	}
 
 	/* GET */
@@ -360,6 +360,12 @@ public class ControllerBpaProcessing {
 			@RequestParam(name = "param") String applicationcode) {
 		return SBI.listBPAConditions(applicationcode);
 	};
+	
+	@GetMapping(value = "/listBpaEnclosures.htm")
+	public @ResponseBody List<Map<String, Object>> listBPAEnclosures(
+			@RequestParam(name = "param") String applicationcode) {
+		return SBI.listBPAEnclosures(applicationcode);
+	};
 
 	@GetMapping(value = "/listRejectedApplications.htm")
 	public @ResponseBody List<Map<String, Object>> listRejectedApplications(ModelMap model,
@@ -372,13 +378,6 @@ public class ControllerBpaProcessing {
 	public @ResponseBody List<Map<String, Object>> listSiteInspectionQuestionnaires(
 			@RequestParam(name = "param") String applicationcode) {
 		return SBI.listSiteInspectionQuestionnaires(applicationcode);
-	};
-
-	@GetMapping(value = "/listSiteReportDetails.htm")
-	public @ResponseBody List<Map<String, Object>> listSiteReportDetails(
-			@ModelAttribute("SESSION_USERCODE") Integer usercode,
-			@RequestParam(name = "param") String applicationcode) {
-		return SBI.listSiteReportDetails(usercode, applicationcode);
 	};
 
 	/* CREATE */
