@@ -116,8 +116,8 @@ public class ControllerUserManagement {
 
 	@GetMapping(value = "/initSignupForm.htm")
 	public @ResponseBody Map<String, Object> initSignupForm(HttpServletRequest request) {
-		String issms = environment.getProperty("app.prop.issms");
-		String isemail = environment.getProperty("app.prop.isemail");
+		String issms = environment.getProperty("cansentsms");
+		String isemail = environment.getProperty("cansentemail");
 
 		Map<String, Object> data = new LinkedHashMap<>();
 		data.put("listLicenseetypes", serviceUtilInterface.listLicenseetypes());
@@ -132,8 +132,8 @@ public class ControllerUserManagement {
 	@PostMapping(value = "/resendOTP.htm")
 	public @ResponseBody String resendOTP(HttpServletRequest request) 
 	{			
-		String issms = environment.getProperty("app.prop.issms");
-		String isemail = environment.getProperty("app.prop.isemail");	
+		String issms = environment.getProperty("cansentsms");
+		String isemail = environment.getProperty("cansentemaill");	
 		
 		if (issms.equals("Y")) {
 			Integer mobileotp = Utilty.getRandomNumber();
@@ -163,8 +163,8 @@ public class ControllerUserManagement {
 		String usersessioncaptcha = (String) request.getSession().getAttribute("CAPTCHA_KEY");
 		String userresponsecaptcha = (String) param.get("userresponsecaptcha");
 		String isotp = (String) param.get("isotp");
-		String issms = environment.getProperty("app.prop.issms");
-		String isemail = environment.getProperty("app.prop.isemail");
+		String issms = environment.getProperty("cansentsms");
+		String isemail = environment.getProperty("cansentemail");
 
 		if (usersessioncaptcha == null || userresponsecaptcha == null
 				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
