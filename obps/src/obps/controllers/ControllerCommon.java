@@ -39,6 +39,7 @@ public class ControllerCommon {
 	public @ResponseBody List<Map<String, Object>> listValidUserOffice(HttpServletRequest request) {
 		System.out.println("List valid offices");
 		Integer usercode = Integer.valueOf((String) request.getSession().getAttribute("usercode"));
+
 		return serviceUtilInterface.listUserValidOffices(usercode);
 	}
 

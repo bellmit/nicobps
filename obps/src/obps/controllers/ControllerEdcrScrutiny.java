@@ -55,10 +55,12 @@ public class ControllerEdcrScrutiny {
 	}
 
 	@PostMapping(value = "/scrutinize_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody JSONObject scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String OfficeCode, HttpServletRequest request) {
+	public @ResponseBody JSONObject scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String OfficeCode,@RequestParam String stateid,@RequestParam String tenantid, HttpServletRequest request) {
 		System.out.println("edcrscrutiny.htm POST");
+		System.out.println(stateid);
+		System.out.println(tenantid);
 		String usercode = (String) request.getSession().getAttribute("usercode");
-		return  edcrscrutiny.Scrutinize(planFile,usercode,OfficeCode);
+		return  edcrscrutiny.Scrutinize(planFile,usercode,OfficeCode,stateid,tenantid);
 
 	}
 }

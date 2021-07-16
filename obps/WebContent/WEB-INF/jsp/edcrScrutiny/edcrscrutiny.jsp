@@ -32,10 +32,10 @@
 
 									<td>Please Select Office<span class="mandatory">*</span>:
 										<select class=" " id="validoffice" name="validoffice"
-										ng-model="validoffice" required>
+										ng-model="validoffice" required )>
 											<option selected value="">-- select an option --</option>
 											<option ng-repeat='item in userofficelist'
-												value="{{item.officecode}}">{{item.officename1}}</option>
+												value="{{item}}">{{item.officename1}}</option>
 									</select> <span class=" " style="color: red;">{{errorSelectmsg}}
 									</span>
 									</td>

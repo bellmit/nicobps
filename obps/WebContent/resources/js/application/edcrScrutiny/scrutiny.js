@@ -28,7 +28,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
-				//				alert(JSON.stringify(response));
+			 
 				$timeout(function() {
 					$scope.userofficelist = response;
 				}, 0);
@@ -42,6 +42,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 		$window.open(planreport, '_blank');
 	}
 
+	 
 	$scope.submitDetails = () => {
 
 		if (validateDetails()) {
@@ -52,8 +53,9 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 			jQuery.each(jQuery('#dxffile')[0].files, function(i, file) {
 				data.append('planFile', file);
 			});
-			data.append('OfficeCode', $scope.validoffice);
-			 
+			data.append('OfficeCode', (JSON.parse($scope.validoffice)).officecode);
+			data.append('stateid', (JSON.parse($scope.validoffice)).stateid);
+			data.append('tenantid', (JSON.parse($scope.validoffice)).tenantid);
 
 			jQuery.ajax({
 				type: "POST",
@@ -64,7 +66,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 				processData: false,
 				data: data,
 				success: function(response) {
-					 
+
 					$timeout(function() {
 						$scope.edcrscrutiny = response;
 					}, 0);

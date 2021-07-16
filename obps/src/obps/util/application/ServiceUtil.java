@@ -310,13 +310,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
 
-		String sql = "SELECT  U.USERCODE, USERNAME, O2.OFFICECODE, O2.OFFICENAME1, VALIDTO, EXTENDEDTO, "
-				+ " Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS VALIDTO  "
-				+ " FROM MASTERS.OFFICES O1, MASTERS.OFFICES O2 , nicobps.licenseeofficesvalidities  b, USERLOGINS U "
-				+ " WHERE O1.OFFICECODE = O2.REGISTERINGOFFICECODE AND O1.OFFICECODE = B.OFFICECODE "
-				+ " AND U.USERCODE = B.USERCODE "
-				+ " AND case when EXTENDEDTO is null then b.validto>current_date else   EXTENDEDTO > CURRENT_DATE END "
-				+ " AND U.USERCODE = ?  " + "ORDER BY O1.OFFICENAME1";
+		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,  O1.STATEID, O1.TENANTID,\r\n"
+				+ "Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS NEWVALIDTO \r\n"
+				+ "FROM MASTERS.OFFICES O1, \r\n"
+				+ "nicobps.licenseeofficesvalidities  B, \r\n"
+				+ "nicobps.USERLOGINS U \r\n"
+				+ "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE \r\n"
+				+ "AND U.USERCODE = B.USERCODE\r\n"
+				+ "AND    U.USERCODE = ?  \r\n"
+				+ "ORDER BY O1.OFFICENAME1";
 
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql, criteria);

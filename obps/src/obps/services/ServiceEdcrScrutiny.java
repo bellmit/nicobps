@@ -60,7 +60,7 @@ public class ServiceEdcrScrutiny {
 		return resp;
 	}
 
-	public JSONObject Scrutinize(MultipartFile planFile, String usercode, String OfficeCode) {
+	public JSONObject Scrutinize(MultipartFile planFile, String usercode, String OfficeCode,String stateid,String tenantid) {
 		String resp = null;
 		JSONObject respJson = null;
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
@@ -74,7 +74,7 @@ public class ServiceEdcrScrutiny {
 		edcrRequest.put("applicationSubType", "NEW_CONSTRUCTION");
 		edcrRequest.put("appliactionType", "BUILDING_PLAN_SCRUTINY");
 		edcrRequest.put("applicantName", "Suraj");
-		edcrRequest.put("tenantId", env.getProperty("tenantId"));
+		edcrRequest.put("tenantId", stateid+"."+tenantid);
 		edcrRequest.put("RequestInfo", RequestInfo);
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -90,7 +90,8 @@ public class ServiceEdcrScrutiny {
 			valueMap.add("edcrRequest", edcrRequest);
 //			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
-			String serverUrl = env.getProperty("edcr.scrutitny.url");
+			String serverUrl = env.getProperty("edcr.scrutitny.url").trim()+stateid.trim()+"."+tenantid.trim();
+			System.out.println("serverUrl-------:"+serverUrl);
 			RestTemplate restTemplate = new RestTemplate();
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
 			// --------------save to db------------
