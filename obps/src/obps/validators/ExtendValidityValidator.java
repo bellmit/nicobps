@@ -20,34 +20,34 @@ public class ExtendValidityValidator {
 		if (params.get("usercode") == null || params.get("usercode") == "") {
 			return true;
 		}else
-		if (!validateUsercode((String) params.get("usercode"))) {
+		if (validateUsercode((String) params.get("usercode"))) {
 			return true;
 		}else
 		if (params.get("officecode") == null || params.get("officecode") == "") {
 			return true;
 		}else
-		if (!validateOfficecode((String) params.get("officecode"))) {
+		if (validateOfficecode((String) params.get("officecode"))) {
 			return true;
 		}else
 
 		if (params.get("extendedto") == null || params.get("extendedto") == "") {
 			return true;
 		}else
-		if (!validatedate((String) params.get("extendedto"))) {
+		if (validatedate((String) params.get("extendedto"))) {
 			return true;
 		}else
 
 		if (params.get("validto") == null || params.get("validto") == "") {
 			return true;
 		}else
-		if (!validatedate((String) params.get("validto"))) {
+		if (validatedate((String) params.get("validto"))) {
 			return true;
 		}else
 
 		if (extendedby== null ) {
 			return true;
 		}else
-		if (!validateUsercode(extendedby.toString())) {
+		if (validateUsercode(extendedby.toString())) {
 			return true;
 		}else
 
@@ -55,7 +55,7 @@ public class ExtendValidityValidator {
 				|| params.get("extendedto") == "" || params.get("maxdate") == null || params.get("maxdate") == "") {
 			return true;
 		}else
-		if (!validateExtendedtoDate(params.get("validto"), params.get("extendedto"), params.get("maxdate"))) {
+		if (validateExtendedtoDate(params.get("validto"), params.get("extendedto"), params.get("maxdate"))) {
 			return true;
 		} else {
 			return false;
@@ -67,9 +67,9 @@ public class ExtendValidityValidator {
 		System.out.println("validate usercode");
 		if (usercode == null || usercode.equals("") || !usercode.toString().matches("^[1-9]{1,10}$") || usercode.length()>10) {
 //           System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public boolean validateOfficecode(String licenseetypecode) {
@@ -79,18 +79,18 @@ public class ExtendValidityValidator {
 				|| !licenseetypecode.toString().matches("^[1-9]{1,5}$") || licenseetypecode.length()>5
 				) {
 //           System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public boolean validatedate(String date) {
 		System.out.println("validator date");
 		if (date == null || date.equals("") || !Patterns.PatternCompileMatche(Patterns.PATTERN_DATE, date)) {
 //          System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 
 	}
 
@@ -110,17 +110,17 @@ public class ExtendValidityValidator {
 			// System.out.println("result: " + result);
 			if (result > 0) {
 				System.out.println("Date2 is after Date3");
-				return false;
+				return true;
 			}
 			if (result2 > 0) {
 				System.out.println("Date1 is after Date2");
-				return false;
+				return true;
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 
 }
