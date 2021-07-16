@@ -155,7 +155,8 @@ app.controller('applicationController', function($scope)
 	$scope.otpcount=0;	
     $scope.resendOTP = function() {           
 	    jQuery.ajax({
-	        url: "resendOTP.htm",              
+	        url: "resendOTP.htm",   
+	        data:{'mobileno' : $scope.signupDetails.mobileno,'username': $scope.signupDetails.username},       
 	        type: "POST",
 	        success: function(data)
 	        {   

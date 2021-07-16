@@ -283,7 +283,7 @@
 				     			</tr>     						     			
 				     		</table>
 			     		</div>					     	
-				     	
+			     						     					     		
 				     	<div class="col-md-12 py-12 px-12">				     						     		
 				     		<table id="entrytable" style="border-top:3px solid #005776;border-bottom:3px solid #005776">		     				     					     		
 				     			<tr>

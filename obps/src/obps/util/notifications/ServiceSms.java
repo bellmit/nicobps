@@ -72,7 +72,7 @@ public class ServiceSms {
 			nameValuePairs.add(new BasicNameValuePair("templateid", templateid));
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-			System.out.println(nameValuePairs);
+			//System.out.println(nameValuePairs);
 			HttpResponse response = client.execute(post);
 			BufferedReader bf = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			String line = "";
@@ -80,7 +80,7 @@ public class ServiceSms {
 				responseString = responseString + line;
 
 			}
-			System.out.println(responseString);
+			//System.out.println(responseString);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,7 +137,7 @@ public class ServiceSms {
 				responseString = responseString + line;
 
 			}
-			System.out.println(responseString);
+			//System.out.println(responseString);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
