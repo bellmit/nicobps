@@ -17,14 +17,12 @@ public class ServiceNotification {
 
 	///////////////////////SINGLE MESSAGE//////////////////////////////////////////////////////////////////
 
-	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,
-			String recipientEmailid, String[] params) {
-
+	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,String recipientEmailid, String[] params) 
+	{
 		sentNotification(officecode, messageid, recipientMobileno, recipientEmailid, Arrays.asList(params));
 	}
 
-	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,
-			String recipientEmailid, List<String> params) {
+	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,String recipientEmailid, List<String> params) {
 		Notification notification = daoNotification.notificationDetails(officecode, messageid);
 		String msg = createMessage(notification.getSmsbody(), params);
 		notification.setSmsbody(msg);
@@ -37,12 +35,10 @@ public class ServiceNotification {
 	}
 
 	public void sentSMS(Integer officecode, String messageid, String recipientMobileno, String[] params) {
-
 		sentSMS(officecode, messageid, recipientMobileno, Arrays.asList(params));
 	}
 
 	public void sentSMS(Integer officecode, String messageid, String recipientMobileno, List<String> params) {
-
 		Notification notification = daoNotification.notificationDetails(officecode, messageid);
 		String msg = createMessage(notification.getSmsbody(), params);
 		notification.setSmsbody(msg);
@@ -51,7 +47,6 @@ public class ServiceNotification {
 	}
 
 	public void sentEmail(Integer officecode, String messageid, String recipientEmailid, String[] params) {
-
 		sentEmail(officecode, messageid, recipientEmailid, Arrays.asList(params));
 	}
 

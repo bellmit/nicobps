@@ -182,23 +182,21 @@ public class ControllerUserManagement {
 		}
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
-		
+
 //		Notification notification = serviceNotification.notificationDetails(Integer.valueOf("1"), "REGISTRATION");		
 //		String emailbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getEmailbody());		
 //		notification.setEmailbody(emailbody); 
-//		
+		
 //		String smsbody = serviceNotification.createMessage(Arrays.asList("123"), notification.getSmsbody());		
 //		notification.setSmsbody(smsbody); 
 //		
 //		ServiceSms ss = new ServiceSms();
-//		ServiceEmailApi es = new ServiceEmailApi();
-	
-		
-		
+//		ServiceEmailApi es = new ServiceEmailApi();		
 		
 		if (issms.equals("Y") || isemail.equals("Y")) 
-		{
-			if (isotp.equals("N")) {
+		{			
+			if (isotp.equals("N")) 
+			{
 				if (issms.equals("Y")) {
 					Integer mobileotp = Utilty.getRandomNumber();
 					request.getSession().setAttribute("mobileotp", mobileotp.toString());
