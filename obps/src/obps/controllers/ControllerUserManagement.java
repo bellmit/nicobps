@@ -120,25 +120,18 @@ public class ControllerUserManagement {
 	{			
 		String issms = environment.getProperty("cansentsms");
 		String isemail = environment.getProperty("cansentemail");	
-		String mobileotp="",emailotp="";
+		String mobileotp="",emailotp="",mobileno=null,emailid=null;
 		if (issms.equals("Y")) {
-			String mobileno=null,emailid=null;
-			mobileno=(String)request.getParameter("mobileno");
-			if(mobileno!=null) {				
-				mobileotp = Utilty.getRandomNumber()+"";
-				request.getSession().setAttribute("mobileotp", mobileotp.toString());
-				serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{mobileotp});				
-			}
+			mobileno=(String)request.getParameter("mobileno");					
+			mobileotp = Utilty.getRandomNumber()+"";
+			request.getSession().setAttribute("mobileotp", mobileotp.toString());							
 		}
 		if (isemail.equals("Y")) {
-			String mobileno=null,emailid=null;
-			emailid=(String)request.getParameter("username");
-			if(emailid!=null) {				
-				emailotp = Utilty.getRandomNumber()+"";
-				request.getSession().setAttribute("emailotp", emailotp.toString());
-				serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{emailotp});
-			}
-		}		
+			emailid=(String)request.getParameter("username");						
+			emailotp = Utilty.getRandomNumber()+"";
+			request.getSession().setAttribute("emailotp", emailotp.toString());							
+		}	
+		serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{mobileotp},new String[]{emailotp});
 		return "OTP Sent";
 	}
 	
@@ -175,25 +168,22 @@ public class ControllerUserManagement {
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
 		
-		String mobileotp="",emailotp="";
+		String mobileotp="",emailotp="",mobileno=null,emailid=null;
 		if (issms.equals("Y") || isemail.equals("Y")) 
 		{			
 			if (isotp.equals("N")) 
 			{
-				if (issms.equals("Y")) {
-					String mobileno=null,emailid=null;
+				if (issms.equals("Y")) {					
 					mobileno=(String) param.get("mobileno");
 					mobileotp = Utilty.getRandomNumber()+"";
-					request.getSession().setAttribute("mobileotp", mobileotp.toString());
-					serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{mobileotp});
+					request.getSession().setAttribute("mobileotp", mobileotp.toString());					
 				}
-				if (isemail.equals("Y")) {
-					String mobileno=null,emailid=null;
+				if (isemail.equals("Y")) {					
 					emailid=(String) param.get("username");
 					emailotp = Utilty.getRandomNumber()+"";
-					request.getSession().setAttribute("emailotp", emailotp.toString());
-					serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{emailotp});
-				}				
+					request.getSession().setAttribute("emailotp", emailotp.toString());					
+				}	
+				serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{mobileotp},new String[]{emailotp});
 				return ResponseEntity.ok(new String("0"));
 			} else {
 				if (isemail.equals("Y")) {

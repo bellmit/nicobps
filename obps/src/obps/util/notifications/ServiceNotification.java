@@ -24,6 +24,34 @@ public class ServiceNotification {
 
 	///////////////////////SINGLE MESSAGE//////////////////////////////////////////////////////////////////
 
+	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,String recipientEmailid, String[] paramsMobile, String[] paramsEmail) 
+	{
+		sentNotification(officecode, messageid, recipientMobileno, recipientEmailid, Arrays.asList(paramsMobile), Arrays.asList(paramsEmail));
+	}
+
+	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,String recipientEmailid, List<String> paramsMobile, List<String> paramsEmail) {
+		String cansentsms = environment.getProperty("cansentsms");
+		String cansentemail = environment.getProperty("cansentemail");
+		if(cansentsms.equals("Y") || cansentemail.equals("Y"))
+		{
+			Notification notification = daoNotification.notificationDetails(officecode, messageid);			
+			String msg = createMessage(notification.getSmsbody(), paramsMobile);
+			notification.setSmsbody(msg);
+			msg = createMessage(notification.getEmailbody(), paramsEmail);
+			notification.setEmailbody(msg);
+			notification.setRecipientMobileno(recipientMobileno);
+			notification.setRecipientEmailid(recipientEmailid);	
+			
+			if(cansentsms.equals("Y") && notification.getSmssenderid()!=null && recipientMobileno!=null && notification.getSmsbody()!=null) {
+				serviceSms.sendSingleSMS(notification);	
+			}
+			if(cansentemail.equals("Y") && notification.getSenderemailid()!=null && recipientEmailid!=null && notification.getEmailbody()!=null) {				
+				serviceEmail.sendEmails(notification);	
+			}			
+		}	
+	}	
+	
+	
 	public void sentNotification(Integer officecode, String messageid, String recipientMobileno,String recipientEmailid, String[] params) 
 	{
 		sentNotification(officecode, messageid, recipientMobileno, recipientEmailid, Arrays.asList(params));
