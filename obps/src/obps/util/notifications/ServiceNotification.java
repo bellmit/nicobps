@@ -34,22 +34,17 @@ public class ServiceNotification {
 		String cansentemail = environment.getProperty("cansentemail");
 		if(cansentsms.equals("Y") || cansentemail.equals("Y"))
 		{
-			Notification notification = daoNotification.notificationDetails(officecode, messageid);
-			
+			Notification notification = daoNotification.notificationDetails(officecode, messageid);			
 			String msg = createMessage(notification.getSmsbody(), params);
 			notification.setSmsbody(msg);
 			msg = createMessage(notification.getEmailbody(), params);
 			notification.setEmailbody(msg);
 			notification.setRecipientMobileno(recipientMobileno);
-			notification.setRecipientEmailid(recipientEmailid);
-						
-			System.out.println("Notification : "+notification.toString());
+			notification.setRecipientEmailid(recipientEmailid);			
 			if(cansentsms.equals("Y") && notification.getSmssenderid()!=null && recipientMobileno!=null && notification.getSmsbody()!=null) {
-				System.out.println("===========SMS========");
 				serviceSms.sendSingleSMS(notification);	
 			}
-			if(cansentemail.equals("Y") && notification.getSenderemailid()!=null && recipientEmailid!=null && notification.getEmailbody()!=null) {
-				System.out.println("===========Email========");
+			if(cansentemail.equals("Y") && notification.getSenderemailid()!=null && recipientEmailid!=null && notification.getEmailbody()!=null) {				
 				serviceEmail.sendEmails(notification);	
 			}			
 		}	
