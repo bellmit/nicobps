@@ -35,16 +35,21 @@ public class ServiceNotification {
 		if(cansentsms.equals("Y") || cansentemail.equals("Y"))
 		{
 			Notification notification = daoNotification.notificationDetails(officecode, messageid);
+			
 			String msg = createMessage(notification.getSmsbody(), params);
 			notification.setSmsbody(msg);
 			msg = createMessage(notification.getEmailbody(), params);
 			notification.setEmailbody(msg);
 			notification.setRecipientMobileno(recipientMobileno);
 			notification.setRecipientEmailid(recipientEmailid);
+						
+			System.out.println("Notification : "+notification.toString());
 			if(cansentsms.equals("Y") && notification.getSmssenderid()!=null && recipientMobileno!=null && notification.getSmsbody()!=null) {
+				System.out.println("===========SMS========");
 				serviceSms.sendSingleSMS(notification);	
 			}
 			if(cansentemail.equals("Y") && notification.getSenderemailid()!=null && recipientEmailid!=null && notification.getEmailbody()!=null) {
+				System.out.println("===========Email========");
 				serviceEmail.sendEmails(notification);	
 			}			
 		}	
@@ -85,7 +90,7 @@ public class ServiceNotification {
 	public String createMessage(String message, List<String> params) {
 		String str = "";
 		for (int i = 0; i < params.size(); i++) {
-			str.replace("{" + i + "}", params.get(i));
+			str= message.replace("{" + i + "}", params.get(i));
 		}
 		return str;
 	}

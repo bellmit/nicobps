@@ -34,10 +34,10 @@ public class ServiceEmailApi
             subject = URLEncoder.encode(subject, StandardCharsets.UTF_8.toString());
 
             //String urlString = "http://164.100.149.217/nicavi/ApiEmail?";
-            String urlString = apiurl+"?";
+            String urlString = apiurl+"?";            
             urlString += "toemail=" + toemail + "&subject=" + subject + "&message=" + message;
-            urlString += "&fromemail="+fromemail+"&password="+fromemail+"";
-
+            urlString += "&fromemail="+fromemail+"&password="+password+"";
+            
 //            HostnameVerifier hv = new HostnameVerifier() {
 //                public boolean verify(String urlHostName, SSLSession session) {
 //                    System.out.println("Warning: URL Host: " + urlHostName + " vs. " + session.getPeerHost());
@@ -80,8 +80,10 @@ public class ServiceEmailApi
 //    	String password="*****";
 //    	String toemail="avijitdebnath@gmail.com";
 //    	String subject="Test......!";
-//    	String message="Test......!";
-//    	sendEmails(fromemail,password,toemail,subject,message);
+//    	String message="Test Email!";
+//    	String url="http://164.100.149.217/nicavi/ApiEmail";
+//    	ServiceEmailApi api = new ServiceEmailApi();
+//    	api.sendEmails(fromemail,password,toemail,subject,message,url);
 //    }  
     
     
