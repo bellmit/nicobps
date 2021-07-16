@@ -3,8 +3,7 @@ function signupDetails()
     var signupDetails = {
         usercode:"",
         username:"", 
-        userpassword:"",
-        userpasswordconfirm:"",
+        userpassword:"",        
         fullname:"",        
         mobileno:"",
         designation:"",
@@ -56,6 +55,7 @@ app.controller('applicationController', function($scope)
     $scope.listDistrictsPre = new CommonMap();
     $scope.listDistrictsPer = new CommonMap();
 	$scope.listLicenseesregistrationsm = [];
+	$scope.password="";
     
     loadForm();
     
@@ -111,11 +111,18 @@ app.controller('applicationController', function($scope)
 			{
 				$scope.signupDetails.designation=$scope.listLicenseetypes[index].value;    	
 				//$scope.signupDetails.designation=$scope.listLicenseetypes[$scope.listLicenseetypes.map(function(d){return d["key"]}).indexOf($scope.signupDetails.licenseetypecode)].value;
-			}    			
-			if($scope.signupDetails.isotp==="Y")
+			}
+			    			
+			//if($scope.signupDetails.isotp==="Y")
+			//{       		        
+			//	$scope.signupDetails.userpassword=SHA256($scope.signupDetails.userpassword); 
+			//} 
+			  
+			if($scope.signupDetails.isotp==="N")
 			{       		        
-				$scope.signupDetails.userpassword=SHA256($scope.signupDetails.userpassword); 
-			}       	
+				$scope.password=$scope.signupDetails.userpassword; 
+			}			
+			$scope.signupDetails.userpassword=SHA256($scope.signupDetails.userpassword)    	
         	submitSignupDetails($scope.signupDetails);
         }                                  
     };     
@@ -259,15 +266,15 @@ function validateDetails(signupDetails)
     }else{
 		showMsg("userpassword","");	
 	}
-	
-	if(signupDetails.userpasswordconfirm==""){
+	var userpasswordconfirm = jQuery("#userpasswordconfirm").val();	
+	if(userpasswordconfirm==""){
 		showMsg("userpasswordconfirm","This field is required");
 		return false;
 	}else{
 		showMsg("userpasswordconfirm","");
 	}	
 	
-	if(signupDetails.userpassword!==signupDetails.userpasswordconfirm){
+	if(signupDetails.userpassword!==userpasswordconfirm){
 		showMsg("userpasswordconfirm","Confirm password is not matching");
 		return false;
 	}else{
@@ -443,8 +450,9 @@ function submitSignupDetails(signupDetails)
 						jQuery('#successMsg').html(msg).show();    
 						scope.$apply(function() {   
 							signupDetails.isotp="Y";        
-							signupDetails.userresponsecaptcha="";
-						});			
+							signupDetails.userresponsecaptcha="";							
+							scope.signupDetails.userpassword=scope.password; 	
+						});								
 						changeCaptcha()			
 					}else if(data==="1"){
 						msg="The application has been submitted succesfully, please upload the required documents. Alternatively, you may login and upload at a later stage.";	

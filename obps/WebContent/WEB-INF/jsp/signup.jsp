@@ -111,7 +111,7 @@
 				     				<td>
 					     				<div class="form-group">
 											<label for="userpasswordconfirm" class="">Confirm Password <span class="mandatory">*</span></label>
-			     							<input type="password" ng-model="signupDetails.userpasswordconfirm" id="userpasswordconfirm" name="userpasswordconfirm" maxlength="512" class="form-control" autocomplete="off" >
+			     							<input type="password" id="userpasswordconfirm" name="userpasswordconfirm" maxlength="512" class="form-control" autocomplete="off" >
 										</div>	
 										<span id="userpasswordconfirmMsg" class="formErrorContent"></span>
 										<br/>							     				
