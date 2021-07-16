@@ -25,8 +25,9 @@ app.controller("CommonCtrl", [
 		$scope.EDCR = {};
 		$scope.fileModal = new ModalFile();
 		$scope.modal = new Modal();
+		$scope.Response = ComboResponse;
 		$scope.taskStatus = new TaskStatus();
-
+		
 		$scope.DocumentDetails = [];
 		$scope.OwnerDetails = [];
 		$scope.Questionnaires = [];
@@ -105,12 +106,44 @@ app.controller("CommonCtrl", [
 					$scope.SiteEnclosures[index].error = false;
 			}	
 		}
+		$scope.validateQuestionnairesResponse = (opt = 0, code) => {
+			let valid = true;
+			try{
+				console.log(`validateQuestionnairesResponse: ${opt} - code: ${code}`);
+				if(opt == 1){
+					$scope.Questionnaires.find( q => (q.questioncode == code)).errorMsg = '';
+					$scope.Questionnaires.find( q => {
+						if((q.questioncode == code) && (q.response == null || q.response == ''))
+							valid = false;
+						return !valid;
+					}).errorMsg = 'Please select options';
+				} else{
+					$scope.Questionnaires.find( q => q.questioncode != null).errorMsg = '';
+					$scope.Questionnaires.find( q => {
+						if(q.response == null || q.response == '')
+							valid = false;
+						return !valid;
+					}) .errorMsg = 'Please select options';
+				}
+				if(!valid){
+					$('html, body').animate({
+						scrollTop: $("#car_questionnaires").offset().top
+					});
+				}
+			}catch (e) {
+			}
+			return valid;
+		};
 		
-		$scope.validateForm = () => {
+		$scope.validateForm = (opt = 0) => {
 			let status = true;
 			let form = $scope.bpa;
 			form = $scope.SiteEnclosures;
+			
 			try{
+				status = $scope.validateQuestionnairesResponse(); 
+				if(!status) return status;
+				
 				$scope.SiteEnclosures.find( e => e.file == null || e.file == '').error = true;
 				if($scope.SiteEnclosures.find( e => e.file == null || e.file == '').name != null 
 						&& $scope.SiteEnclosures.find( e => e.file == null || e.file == '').name != '')

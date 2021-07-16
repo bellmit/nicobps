@@ -52,17 +52,30 @@
 								<div class="row">
 									<div class="col">
 										<div class="card">
-											<div class="card-header">Questionnaires</div>
+											<div class="card-header" id="car_questionnaires">Questionnaires</div>
 											<div class="card-body">
 												<div class="form-group row mb-5"ng-repeat="Q in Questionnaires | orderBy: 'Q.questiondescription'">
-													<div class="col-sm-7">
-														<input type="checkbox" name="response_{{$index}}" ng-model="Q.response"/>
-														<span>{{$index+1}}: {{Q.questiondescription}}</span>
+													<div class="col-sm-5">
+														<!-- <input type="checkbox" name="response_{{$index}}" ng-model="Q.response"/> -->
+														<span>{{$index+1}}: {{Q.questiondescription}} <span class="fa fa-asterisk"></span></span>
+													</div>
+													<div class="col">
+														<select class="form-control custom-form-control" 
+															id="response_{{Q.questioncode}}" ng-model="Q.response"
+															ng-options="R.key as R.value for R in Response | filter: {enabled:true}"
+															ng-change="validateQuestionnairesResponse(1, Q.questioncode)">
+															<option value="" selected disabled>-Select options-</option>
+															<option value="Y">Yes</option>
+															<option value="N">No</option>
+															<option value="X">NA</option>
+														</select>
+														<span ng-if="Q.errorMsg != null && Q.errorMsg != ''" style="color:red" >{{Q.errorMsg}}</span>
 													</div>
 													<div class="col-sm-5">
 														<textarea rows="1" cols="10" name="remarks_{{$index}}" class="form-control textarea" 
-		                               				       		ng-model="Q.remarks" maxlength="99" autocomplete="off" ng-disabled="!Q.response">
-		                             				       	 </textarea>
+		                               				       		ng-model="Q.remarks" maxlength="99" autocomplete="off" ng-disabled="Q.response != 'Y'"
+		                               				       		ng-change="validateQuestionnairesResponse(2, Q.questioncode)">
+	                             				       	 </textarea>
 		                           				       	 <span class="col" style="color:red" ng-if="bpaform.response_($index).modelValue">
 		                           				       	 	Required
 		                           				       	 </span>
@@ -100,7 +113,7 @@
 															required>
 															<option selected="selected" disabled="disabled" value="">Select Options</option>
 														</select>
-														<label class="alert alert-danger" ng-if="R.error === true")>{{R.errormsg}}</label>
+														<label style="color:red" ng-if="R.error === true")>{{R.errormsg}}</label>
 													</div>
 													<label class="col-sm-7" ng-show="R.flag === true">{{($index+1)+":  "+R.name}}<span class="fa fa-asterisk"></span></label>
 													<div class="col-sm-5">

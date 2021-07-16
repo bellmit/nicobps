@@ -34,6 +34,12 @@ const Timeout = {
 	TwoSecond: 2000,
 };
 
+const ComboResponse = [
+	{key: 'Y', value: 'YES', enabled: true},
+	{key: 'N', value: 'NO', enabled: true},
+	{key: 'X', value: 'NA', enabled: true}
+];
+
 var ApplicationFlow = function () {
   var ApplicationFlow = {
     applicationcode: '',
