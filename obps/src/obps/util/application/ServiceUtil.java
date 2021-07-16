@@ -309,9 +309,6 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
-//		String sql = "select * from nicobps.licenseeofficesvalidities b "
-//				+ "inner join masters.offices c on b.officecode=c.officecode and c.enabled='Y' "
-//				+ "where b.validto>current_date and b.usercode= ? ";
 
 		String sql = "SELECT  U.USERCODE, USERNAME, O2.OFFICECODE, O2.OFFICENAME1, VALIDTO, EXTENDEDTO, "
 				+ " Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS VALIDTO  "

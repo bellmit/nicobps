@@ -60,7 +60,8 @@ public class Report extends HttpServlet {
 				Long transactioncode = Long.parseLong(request.getParameter("transactioncode"));
 				System.out.println("transactioncode :" + transactioncode);
 				params.put("transactioncode", transactioncode);
-				reportName = "reports/PaymentReceipt.jrxml";
+				//reportName = "reports/PaymentReceipt.jrxml";
+				reportName = "reports/paymentreceipts.jrxml";
 				filename = "PaymentReceipt.pdf";
 			} else if (status != null && status.equals("2")) {
 

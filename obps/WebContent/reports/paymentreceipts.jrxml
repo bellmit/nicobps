@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentreceipts" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentreceipts" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="154"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NO_DATA_ADAPTER"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="transactioncode" class="java.lang.Long"/>
 	<queryString>
 		<![CDATA[SELECT OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END ||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE,TO_CHAR(T.ENTRYDATE, 'dd-mm-yyyy')  AS PAYMENTDATE,LOGO,
-FULLNAME, FEETYPEDESCRIPTION, T.AMOUNT, PAYMENTMODEDESCRIPTION , T.TRANSACTIONCODE, A.APPLICATIONCODE
+FULLNAME, FEETYPEDESCRIPTION, T.AMOUNT, PAYMENTMODEDESCRIPTION , LPAD(T.TRANSACTIONCODE || '', 6, '0') AS TRANSACTIONCODE, A.APPLICATIONCODE, TO_CHAR(T.ENTRYDATE, 'dd-mm-yyyy') AS PAYMENTDATE
 FROM TRANSACTIONS T, applicationstransactionmap ATM, APPLICATIONS A, USERLOGINS U, MASTERS.MODULES M, MASTERS.PAYMENTMODES PM, MASTERS.FEETYPES FT, MASTERS.FEEMASTER FM, MASTERS.OFFICES O
 WHERE T.TRANSACTIONCODE = ATM.TRANSACTIONCODE
 AND A.APPLICATIONCODE = ATM.APPLICATIONCODE
@@ -18,39 +18,49 @@ AND PM.PAYMENTMODECODE = T.PAYMENTMODECODE
 AND FM.FEECODE = T.FEECODE
 AND FT.FEETYPECODE = FM.FEETYPECODE
 AND O.OFFICECODE  = A.OFFICECODE
-AND PAYMENTSTATUS = 'S']]>
+AND PAYMENTSTATUS = 'S'
+AND T.TRANSACTIONCODE  = $P{transactioncode}]]>
 	</queryString>
 	<field name="office" class="java.lang.String"/>
 	<field name="paymentdate" class="java.lang.String"/>
 	<field name="logo" class="java.io.InputStream"/>
 	<field name="fullname" class="java.lang.String"/>
 	<field name="feetypedescription" class="java.lang.String"/>
-	<field name="amount" class="java.lang.Integer"/>
+	<field name="amount" class="java.lang.Short"/>
 	<field name="paymentmodedescription" class="java.lang.String"/>
-	<field name="transactioncode" class="java.lang.Long"/>
+	<field name="transactioncode" class="java.lang.String"/>
 	<field name="applicationcode" class="java.lang.String"/>
+	<variable name="qrdata" class="java.lang.String">
+		<variableExpression><![CDATA["Office  :"+$F{office}+"\n"+
+"Payment Description :"+$F{feetypedescription}+"\n"+
+"Name : "+$F{fullname}+"\n"+
+"Application Code :"+$F{applicationcode}+"\n"+
+"Transaction Code :"+$F{transactioncode}+"\n"+
+"Amount :"+$F{amount}
+]]></variableExpression>
+	</variable>
 	<title>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
 		<band height="64" splitType="Stretch">
 			<textField>
-				<reportElement x="153" y="0" width="272" height="62"/>
+				<reportElement x="123" y="0" width="272" height="62"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{office}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<image onErrorType="Blank">
-				<reportElement x="425" y="0" width="100" height="62"/>
+				<reportElement x="417" y="0" width="100" height="62"/>
 				<imageExpression class="java.io.InputStream"><![CDATA[$F{logo}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="311" splitType="Stretch">
+		<band height="565" splitType="Stretch">
 			<rectangle>
-				<reportElement x="17" y="6" width="510" height="295"/>
+				<reportElement x="17" y="6" width="524" height="514"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="40" y="16" width="485" height="20" forecolor="#000000" backcolor="#3399FF"/>
@@ -60,11 +70,11 @@ AND PAYMENTSTATUS = 'S']]>
 				<text><![CDATA[PAYMENT RECEIPT]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="250" y="45" width="264" height="20"/>
-				<textElement textAlignment="Right">
-					<font isBold="true" isItalic="true" isUnderline="true"/>
+				<reportElement x="69" y="50" width="264" height="20"/>
+				<textElement>
+					<font isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[" Transaction Code : " + $F{transactioncode}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Receipt No: SK/GMC/2021-22/" + $F{transactioncode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="239" y="76" width="264" height="20"/>
@@ -102,43 +112,40 @@ AND PAYMENTSTATUS = 'S']]>
 				<text><![CDATA[Paid by :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="68" y="159" width="150" height="20"/>
+				<reportElement x="68" y="155" width="150" height="20"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Amount   :]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="239" y="159" width="264" height="20"/>
+				<reportElement x="239" y="155" width="264" height="20"/>
 				<textElement>
 					<font isUnderline="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{amount}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Rs. " + $F{amount} + "/-"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="67" y="268" width="436" height="20"/>
+				<reportElement x="66" y="492" width="436" height="20"/>
 				<textElement textAlignment="Right">
-					<font size="8" isBold="false" isItalic="true"/>
+					<font size="8" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[This is a computer generated receipt, no signature is required.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="240" y="189" width="264" height="20"/>
+				<reportElement x="240" y="248" width="264" height="20"/>
 				<textElement>
 					<font isUnderline="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{paymentmodedescription}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="68" y="189" width="150" height="20"/>
+				<reportElement x="68" y="248" width="150" height="20"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Payment Mode   :]]></text>
 			</staticText>
-			<break>
-				<reportElement x="0" y="307" width="100" height="1"/>
-			</break>
 			<staticText>
 				<reportElement x="67" y="76" width="150" height="20"/>
 				<textElement>
@@ -146,12 +153,31 @@ AND PAYMENTSTATUS = 'S']]>
 				</textElement>
 				<text><![CDATA[Application Code :]]></text>
 			</staticText>
-			<componentElement>
-				<reportElement x="68" y="223" width="200" height="32"/>
-				<jr:Code39 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="bottom">
-					<jr:codeExpression><![CDATA[$F{applicationcode}]]></jr:codeExpression>
-				</jr:Code39>
-			</componentElement>
+			<image scaleImage="FillFrame">
+				<reportElement x="183" y="280" width="197" height="190"/>
+				<imageExpression class="java.awt.Image"><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(new com.google.zxing.qrcode.QRCodeWriter().encode($V{qrdata},com.google.zxing.BarcodeFormat.QR_CODE, 100, 100))]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="68" y="216" width="150" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Date   :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="238" y="178" width="289" height="32"/>
+				<textElement>
+					<font isItalic="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Rupees.  " + Rupee.InWords.convert($F{amount}) + "only"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="238" y="216" width="264" height="20"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{paymentdate}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
