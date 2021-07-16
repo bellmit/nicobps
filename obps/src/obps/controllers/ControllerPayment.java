@@ -27,6 +27,7 @@ import obps.daos.DaoPaymentInterface;
 import obps.services.payment.ServiceBilldeskGateway;
 import obps.services.payment.ServicePaymentCommon;
 import obps.util.application.ServiceUtilInterface;
+import obps.validators.PaymentValidator;
 
 @Controller
 public class ControllerPayment {
@@ -40,6 +41,9 @@ public class ControllerPayment {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
 
+	@Autowired
+	private PaymentValidator paymentvalidator;
+
 	@GetMapping(value = "/paymentTest.htm")
 	public String paymentConfirmation_Get() {
 
@@ -49,23 +53,35 @@ public class ControllerPayment {
 	@RequestMapping(value = "/paymentconfirmation.htm", method = { RequestMethod.GET, RequestMethod.POST })
 	public String paymentConfirmation_Post(@RequestParam Map<String, String> params, Model model) {
 
-		// need to get amount based on feecode
-		Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
-		System.out.println("feeDetails--" + feeDetails);
-		// -------------------------------------------
-		Map<String, String> statusMap = validate_payparams(params.get("applicationcode").toString(), Integer.valueOf(params.get("feecode")));
-		model.addAttribute("applicationcode", params.get("applicationcode"));
-		model.addAttribute("feecode", params.get("feecode"));
-		model.addAttribute("modulecode", params.get("modulecode"));
-		model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
-		model.addAttribute("usercode", params.get("usercode"));
-		model.addAttribute("feeamount", params.get("feeamount"));
-		model.addAttribute("toprocesscode", params.get("toprocesscode"));
-		
-		List<Map<String, Object>> userdetails = serviceUtilInterface.getLicensee(Integer.parseInt(params.get("usercode").trim()));
-		model.addAttribute("processby", userdetails.get(0).get("applicantsname"));
+		Map<String, String> statusMap = paymentvalidator.validate_params(params);
+		if (statusMap.get("paramstats").equals("1")) {
+			// need to get amount based on feecode
+			Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
+			System.out.println("feeDetails--" + feeDetails);
+			// -------------------------------------------
+			if (feeDetails != null && !feeDetails.isEmpty()) {
+				model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
+				model.addAttribute("feeamount", params.get("feeamount"));
+			} else {
+				model.addAttribute("feetypedescription", "NA");
+				model.addAttribute("feeamount", "NA");
+			}
+			model.addAttribute("applicationcode", params.get("applicationcode"));
+			model.addAttribute("feecode", params.get("feecode"));
+			model.addAttribute("modulecode", params.get("modulecode"));
+			model.addAttribute("usercode", params.get("usercode"));
+			model.addAttribute("toprocesscode", params.get("toprocesscode"));
 
-//		}
+			List<Map<String, Object>> userdetails = serviceUtilInterface
+					.getLicensee(Integer.parseInt(params.get("usercode").trim()));
+			if (userdetails != null && !userdetails.isEmpty()) {
+				model.addAttribute("processby", userdetails.get(0).get("applicantsname"));
+			} else {
+				model.addAttribute("processby", "NA");
+			}
+
+//			}
+		}
 
 		model.addAttribute("status", statusMap);
 
@@ -81,13 +97,14 @@ public class ControllerPayment {
 		String modulecode = params.get("modulecode");
 		Float amount = Float.parseFloat(params.get("feeamount"));
 		String applicationcode = params.get("applicationcode");
-		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway.generateRedirectURI(usercode, amount.intValue(), feecode, applicationcode, modulecode, toprocesscode).toString()))
-				.build();
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(billdeskgateway
+				.generateRedirectURI(usercode, amount.intValue(), feecode, applicationcode, modulecode, toprocesscode)
+				.toString())).build();
+
 	}
 
 	@GetMapping(value = "/CommonPaymentResponse.htm")
 	public String CommonPaymentResponse1_Get(@RequestParam Map<String, String> params, Model model) {
-		System.out.println("no resubmit:" + params);
 
 		model.addAttribute("status", params.get("status"));
 		model.addAttribute("transactioncode", params.get("transactioncode"));
@@ -95,18 +112,23 @@ public class ControllerPayment {
 		model.addAttribute("message", params.get("message"));
 		model.addAttribute("processby", params.get("processby"));
 		model.addAttribute("transactiondate", params.get("transactiondate"));
+
 		return "payment/CommonPaymentResponse";
 	}
 
 	@PostMapping(value = "/CommonPaymentResponse.htm")
 	public String CommonPayment(@RequestParam Map<String, String> params, Model model) {
+
 		Integer transactioncode = serviceCommon.saveTransaction(params);
 		System.out.println("test for resubmission");
-		System.out.println("params :: "+ params);
+
 		if (transactioncode != 0) {
-			serviceUtilInterface.updateApplicationflowremarks(params.get("applicationcode"), Integer.parseInt(params.get("modulecode").trim()), Integer.parseInt(params.get("toprocesscode").trim()),
+			serviceUtilInterface.updateApplicationflowremarks(params.get("applicationcode"),
+					Integer.parseInt(params.get("modulecode").trim()),
+					Integer.parseInt(params.get("toprocesscode").trim()),
 					Integer.parseInt(params.get("usercode").trim()), null, "Payment Complete");
-			List<Map<String, Object>> userdetails = serviceUtilInterface.getLicensee(Integer.parseInt(params.get("usercode").trim()));
+			List<Map<String, Object>> userdetails = serviceUtilInterface
+					.getLicensee(Integer.parseInt(params.get("usercode").trim()));
 			model.addAttribute("processby", userdetails.get(0).get("applicantsname"));
 			model.addAttribute("status", "0300");
 			model.addAttribute("transactioncode", transactioncode);
@@ -154,7 +176,8 @@ public class ControllerPayment {
 			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
-					List<Map<String, Object>> userdetails = serviceUtilInterface.getLicensee(Integer.parseInt(usercode));
+					List<Map<String, Object>> userdetails = serviceUtilInterface
+							.getLicensee(Integer.parseInt(usercode));
 					message = "Payment Successful. ";
 					model.addAttribute("payer", userdetails.get(0).get("applicantsname"));
 					model.addAttribute("transactioncode", words[1]);
@@ -164,34 +187,40 @@ public class ControllerPayment {
 					model.addAttribute("transactiondate", words[13]);
 					model.addAttribute("message", message);
 					// ----------------UpdateTransaction
-					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]),
+							Integer.parseInt(usercode));
 					// ----------------InsertApplicationFlowRemark
 					String applicationcode = words[17];
 					String toprocesscode = words[19];
 					String modulecode = words[18];
 					System.out.println(applicationcode);
-					serviceUtilInterface.updateApplicationflowremarks(applicationcode, Integer.parseInt(modulecode), Integer.parseInt(toprocesscode), Integer.parseInt(usercode), null,
-							"Payment Complete");
+					serviceUtilInterface.updateApplicationflowremarks(applicationcode, Integer.parseInt(modulecode),
+							Integer.parseInt(toprocesscode), Integer.parseInt(usercode), null, "Payment Complete");
 					break;
 				case "0399":
 					message = "Payment Unsucessful - Invalid Authentication in Bank / Cancelled By User.";
-					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("A", response, Integer.parseInt(words[1]),
+							Integer.parseInt(usercode));
 					break;
 				case "NA":
 					message = "Invalid Input in Payment Request. Please Contact Admin.";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
+							Integer.parseInt(usercode));
 					break;
 				case "0002":
 					message = "Billdesk Waiting Response From Bank.";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
+							Integer.parseInt(usercode));
 					break;
 				case "0001":
 					message = "An Error has occured at billdesk";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
+							Integer.parseInt(usercode));
 					break;
 				default:
 					message = "An error occured";
-					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]), Integer.parseInt(usercode));
+					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
+							Integer.parseInt(usercode));
 					break;
 				}
 				model.addAttribute("message", message);
@@ -203,64 +232,6 @@ public class ControllerPayment {
 		}
 
 		return "payment/BilldeskResponse";
-	}
-
-	public Map<String, String> validate_payparams(String applicationcode, Integer feecode) {
-		String appExist = "";
-		String appTransMap = "";
-		String payStatus = "";
-		String feeAmount = "";
-
-		int appCount = serviceCommon.getApplicationCount(applicationcode);
-		System.out.println(" app count : " + appCount);
-		if (appCount > 0) {
-			appExist = "EXIST";
-		} else {
-			appExist = "NOTEXIST";
-		}
-
-		List<Map<String, Object>> payList = serviceCommon.getPaymentStatus(applicationcode, feecode);
-
-		int payListSize = payList.size();
-		System.out.println("Pay list size : " + payListSize);
-
-		if (payListSize > 0) {
-
-			appTransMap = "NOTEMPTY";
-
-			String paymentStatus = payList.get(0).get("paymentstatus").toString();
-			System.out.println(" Pay Status :: " + paymentStatus);
-
-			if (paymentStatus.equals("S")) {
-				payStatus = "PAID";
-
-			} else {
-				payStatus = "NOTPAID";
-
-			}
-
-		} else {
-			appTransMap = "EMPTY";
-			payStatus = "NOTPAID";
-		}
-		Map<String, Object> fee = serviceCommon.getAmount(feecode);
-
-		if (fee == null) {
-			feeAmount = "NOTAVAILABLE";
-		} else {
-			feeAmount = "AVAILABLE";
-		}
-
-		Map<String, String> statusMap = new HashMap<String, String>();
-
-		statusMap.put("appexist", appExist.trim());
-		statusMap.put("apptransmap", appTransMap.trim());
-		statusMap.put("paystatus", payStatus.trim());
-		statusMap.put("feeamount", feeAmount.trim());
-
-		System.out.println("json obj ::" + statusMap.toString());
-		return statusMap;
-
 	}
 
 }

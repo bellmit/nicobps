@@ -24,7 +24,7 @@
 							<div class="row">
 								<div class="col-md-8">
 									<div class=" bg-light text-black  m-4 p-3 border rounded"
-										style="width: 100%;">
+										style="width: 100%;" ng-show="${status.paramstats eq '1'} ">
 
 										<table class=""
 											style="width: 70%; margin: 0px auto; border-spacing: 10px"
@@ -65,32 +65,52 @@
 									</div>
 									<div class=" m-4 p-3" style="width: 100%;">
 										<core:choose>
-											<core:when test="${status.appexist eq 'NOTEXIST'}">
+											<core:when test="${status.paramstats != '1'}">
 												<div class="alert alert-danger text-center  show">
-													<strong>Status : </strong>Application does not Exist !!
+													<strong>Status : </strong> ${status.paramstats}
 												</div>
-
 											</core:when>
 											<core:otherwise>
 												<core:choose>
-													<core:when test="${status.feeamount eq 'NOTAVAILABLE'}">
-														<div class="alert alert-danger  text-center  show">
-															<strong>Status : </strong> Amount not Available !!
+													<core:when test="${status.appexist eq 'NOTEXIST'}">
+														<div class="alert alert-danger text-center  show">
+															<strong>Status : </strong>Application does not Exist !!
 														</div>
 
 													</core:when>
 													<core:otherwise>
 														<core:choose>
-															<core:when test="${status.paystatus eq 'PAID'}">
-																<div class="alert alert-success  text-center  show">
-																	<strong>Status : </strong> Fee already Processed !!
+															<core:when test="${status.feeamount eq 'NOTAVAILABLE'}">
+																<div class="alert alert-danger  text-center  show">
+																	<strong>Status : </strong> Amount not Available !!
 																</div>
 
 															</core:when>
 															<core:otherwise>
-																<input type="button"
-																	class="offset-5 col-md-2  btn btn-warning"
-																	value="Submit" ng-click="submitDetails();" />
+																<core:choose>
+																	<core:when test="${status.userdet eq 'NOTAVAILABLE'}">
+																		<div class="alert alert-danger  text-center  show">
+																			<strong>Status : </strong> Not a user !!
+																		</div>
+
+																	</core:when>
+																	<core:otherwise>
+																		<core:choose>
+																			<core:when test="${status.paystatus eq 'PAID'}">
+																				<div class="alert alert-success  text-center  show">
+																					<strong>Status : </strong> Fee already Paid !!
+																				</div>
+
+																			</core:when>
+																			<core:otherwise>
+																				<input type="button"
+																					class="offset-5 col-md-2  btn btn-warning"
+																					value="PAY" ng-click="submitDetails();" />
+
+																			</core:otherwise>
+																		</core:choose>
+																	</core:otherwise>
+																</core:choose>
 
 															</core:otherwise>
 														</core:choose>
@@ -118,7 +138,7 @@
 							<div class="row">
 								<div class="col-md-8">
 									<div class=" bg-light text-black  m-4 p-3 border rounded"
-										style="width: 100%;">
+										style="width: 100%;" ng-show="${status.paramstats eq '1'} ">
 
 										<table class=""
 											style="width: 70%; margin: 0px auto; border-spacing: 10px"
@@ -159,32 +179,53 @@
 									</div>
 									<div class=" m-4 p-3" style="width: 100%;">
 										<core:choose>
-											<core:when test="${status.appexist eq 'NOTEXIST'}">
+											<core:when test="${status.paramstats != '1'}">
 												<div class="alert alert-danger text-center  show">
-													<strong>Status : </strong>Application does not Exist !!
+													<strong>Status : </strong> ${status.paramstats}
 												</div>
-
 											</core:when>
 											<core:otherwise>
 												<core:choose>
-													<core:when test="${status.feeamount eq 'NOTAVAILABLE'}">
-														<div class="alert alert-danger  text-center  show">
-															<strong>Status : </strong> Amount not Available !!
+													<core:when test="${status.appexist eq 'NOTEXIST'}">
+														<div class="alert alert-danger text-center  show">
+															<strong>Status : </strong>Application does not Exist !!
 														</div>
 
 													</core:when>
 													<core:otherwise>
 														<core:choose>
-															<core:when test="${status.paystatus eq 'PAID'}">
-																<div class="alert alert-success  text-center  show">
-																	<strong>Status : </strong> Fee already Paid !!
+															<core:when test="${status.feeamount eq 'NOTAVAILABLE'}">
+																<div class="alert alert-danger  text-center  show">
+																	<strong>Status : </strong> Amount not Available !!
 																</div>
 
 															</core:when>
 															<core:otherwise>
-																<input type="button"
-																	class="offset-5 col-md-2  btn btn-warning" value="PAY"
-																	ng-click="submitDetails();" />
+																<core:choose>
+																	<core:when test="${status.userdet eq 'NOTAVAILABLE'}">
+																		<div class="alert alert-danger  text-center  show">
+																			<strong>Status : </strong> Not a user !!
+																		</div>
+
+																	</core:when>
+																	<core:otherwise>
+																		<core:choose>
+																			<core:when test="${status.paystatus eq 'PAID'}">
+																				<div class="alert alert-success  text-center  show">
+																					<strong>Status : </strong> Fee already Paid !!
+																				</div>
+
+																			</core:when>
+																			<core:otherwise>
+																				<input type="button"
+																					class="offset-5 col-md-2  btn btn-warning"
+																					value="PAY" ng-click="submitDetails();" />
+
+																			</core:otherwise>
+																		</core:choose>
+																	</core:otherwise>
+																</core:choose>
+
 
 															</core:otherwise>
 														</core:choose>
@@ -194,6 +235,8 @@
 
 											</core:otherwise>
 										</core:choose>
+
+
 
 									</div>
 								</div>
