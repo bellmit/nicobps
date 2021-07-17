@@ -51,6 +51,7 @@ public class ServiceEdcrScrutiny {
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
+		System.out.println(resp);
 		return resp;
 	}
 

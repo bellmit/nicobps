@@ -79,42 +79,17 @@
 							</table>
 							<div id="errmsg"></div>
 						</div>
-
 						<div class="col-md-12 py-12 px-12"
-							style="border-top: 3px solid #005776; border-bottom: 3px solid #005776">
+							style="border-top: 3px solid #005776; border-bottom: 3px solid #005776; padding-top: 20px; align-content: center;">
 
-							<table class="table col-md-10">
-								<tr>
-									<td colspan="5"
-										style="text-align: center; font-style: italic; font-size: 22px">--------------
-										eDCR Scrutiny List-------------</td>
-								</tr>
-
-								<tr>
-									<th>Slno</th>
-									<th>Office</th>
-									<th>eDCR Number</th>
-									<th>Uploaded On</th>
-									<th>Status</th>
-
-									<th></th>
-								</tr>
-								<tr ng-repeat='item in edcrscrutinylist'>
-									<td>{{$index + 1}}</td>
-
-									<td>{{item.officename}}</td>
-									<td>{{item.edcrnumber}}</td>
-									<td>{{item.entrydate}}</td>
-									<td>{{item.status}}</td>
-
-									<td><input type="button" value="Download Report"
-										ng-click="" class="btn btn-info btn-sm" /></td>
-								</tr>
-							</table>
+							<h4 style="padding-left: 30%; font-style: oblique;">--------------eDCR Scrutiny List --------------</h4>
+							<div class="table-responsive" id="displayRecordsDiv">
+								<div id="displayRecords"
+									style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px'></div>
+							</div>
 
 						</div>
-						<div class="col-md-2"></div>
-						<div class="col-md-2"></div>
+
 					</div>
 				</form>
 			</div>
@@ -122,5 +97,5 @@
 	</div>
 
 </body>
-
+<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 </html>
