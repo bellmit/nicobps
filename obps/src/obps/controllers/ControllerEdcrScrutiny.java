@@ -60,6 +60,7 @@ public class ControllerEdcrScrutiny {
 		System.out.println(stateid);
 		System.out.println(tenantid);
 		String usercode = (String) request.getSession().getAttribute("usercode");
+	 
 		return  edcrscrutiny.Scrutinize(planFile,usercode,OfficeCode,stateid,tenantid);
 
 	}

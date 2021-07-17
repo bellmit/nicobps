@@ -24,7 +24,8 @@
 
 							<br>
 							<h5 style="">
-								Select the Office and Click on Browse and select a .DXF File<span class="mandatory">*</span>
+								Select the Office and Click on Browse and select a .DXF File<span
+									class="mandatory">*</span>
 							</h5>
 							<br>
 							<table id="dxftable">
@@ -34,8 +35,7 @@
 										<select class=" " id="validoffice" name="validoffice"
 										ng-model="validoffice" required )>
 											<option selected value="">-- select an option --</option>
-											<option ng-repeat='item in userofficelist'
-												value="{{item}}">{{item.officename1}}</option>
+											<option ng-repeat='item in userofficelist' value="{{item}}">{{item.officename1}}</option>
 									</select> <span class=" " style="color: red;">{{errorSelectmsg}}
 									</span>
 									</td>
@@ -51,7 +51,7 @@
 										ng-click="submitDetails();" class="btn btn-primary b-btn"></td>
 								</tr>
 								<tr>
-									<td style="height: 20px" colspan="3"></td>
+									<td style="height: 20px" colspan="3" id=" "></td>
 								</tr>
 								<tr class="edcrResp" style="visibility: hidden;">
 									<td style="font-size: 20px; font-weight: bold;"><label
@@ -77,7 +77,7 @@
 									<td></td>
 								</tr>
 							</table>
-
+							<div id="errmsg"></div>
 						</div>
 
 						<div class="col-md-12 py-12 px-12"

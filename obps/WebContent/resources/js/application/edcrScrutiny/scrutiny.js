@@ -28,7 +28,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
-			 
+
 				$timeout(function() {
 					$scope.userofficelist = response;
 				}, 0);
@@ -42,7 +42,7 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 		$window.open(planreport, '_blank');
 	}
 
-	 
+
 	$scope.submitDetails = () => {
 
 		if (validateDetails()) {
@@ -70,13 +70,17 @@ app.controller('edcrscrutinyController', function($scope, $timeout, $window) {
 					$timeout(function() {
 						$scope.edcrscrutiny = response;
 					}, 0);
+					console.log(response.status != '');
+					console.log(response.status == 'error');
 					if (response.status != '') {
 						if (response.status == 'error') {
-							jQuery('#msg').css("color", "red")
-
-							jQuery('#msg').html('<div class="card text-white bg-warning mb-3" style="width: 100%;">' +
-								'<div class="card-body"><h5 class="card-title">eDCR Scrutiny Failed: Error-Please contact System Administrator.</h5></div>' +
+							jQuery('#errmsg').html('<div class="card text-white bg-danger mb-3" style="width: 600px">' +
+								'<div class="card-body"><p class="card-title">eDCR Scrutiny Failed: Error-Please contact System Administrator.</p></div>' +
 								'</div>');
+							$timeout(function() {
+								jQuery('#errmsg').html("");
+							}, 3000);
+
 						} else {
 							jQuery('#entrytable').css("visibility", "hidden");
 							jQuery('.edcrResp').css("visibility", "visible");

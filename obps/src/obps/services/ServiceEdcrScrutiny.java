@@ -93,7 +93,9 @@ public class ServiceEdcrScrutiny {
 			String serverUrl = env.getProperty("edcr.scrutitny.url").trim()+stateid.trim()+"."+tenantid.trim();
 			System.out.println("serverUrl-------:"+serverUrl);
 			RestTemplate restTemplate = new RestTemplate();
+			System.out.println("before post---");
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
+			System.out.println("resp---"+resp);
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(resp);
@@ -137,8 +139,12 @@ public class ServiceEdcrScrutiny {
 		} catch (
 
 		Exception e) {
-			resp = e.getMessage();
-			e.printStackTrace();
+			System.out.println("error at scrutinize---"+e.getMessage());
+			respJson = new JSONObject();
+			respJson.put("status", "error");
+			respJson.put("edcrnumber", "NA");
+			respJson.put("planReport", "NA");
+			respJson.put("msg", "System Error: Please contact System Admin!");
 		}
 		 
 		return respJson;
