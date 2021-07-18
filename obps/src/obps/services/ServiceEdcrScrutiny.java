@@ -1,9 +1,14 @@
 package obps.services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,7 +56,7 @@ public class ServiceEdcrScrutiny {
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
-		 
+
 		return resp;
 	}
 
@@ -65,6 +70,8 @@ public class ServiceEdcrScrutiny {
 			String tenantid) {
 		String resp = null;
 		JSONObject respJson = null;
+		byte[] binaryPlanReport=null;
+		byte[] binaryDxfFile=null;
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
 		JSONObject userInfo = new JSONObject();
 		userInfo.put("id", "1c79f77e-e847-4663-98a7-5aee31f185c5");
@@ -100,21 +107,37 @@ public class ServiceEdcrScrutiny {
 			JSONObject json = (JSONObject) parser.parse(resp);
 			String edcrnumber = null;
 			if (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber") == null) {
-				String Applno = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("applicationNumber")).toString();
+				String Applno = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("applicationNumber"))
+						.toString();
 				edcrnumber = "DCR" + Applno;
 			} else {
 				edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
 			}
 			String status = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
 			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
-			String edcrdetails = (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
+			if (planReport != null || planReport != "") {
+				URL url = new URL(planReport);
+				binaryPlanReport=readfile(url);
+			 
+			}
+			String dxfFile = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("dxfFile")).toString();
+			System.out.println(dxfFile);
+			if (dxfFile != null || dxfFile != "") {
+				URL url = new URL(dxfFile);
+				binaryDxfFile=readfile(url);
+			 
+			}
+			String edcrdetails = (new ObjectMapper())
+					.writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("usercode", usercode);
 			map.put("useroffice", OfficeCode);
 			map.put("edcrnumber", edcrnumber);
 			map.put("status", status);
+			map.put("planreport", binaryPlanReport);
+			map.put("dxffile", binaryDxfFile);
 			map.put("response", edcrdetails);
- 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
+			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
 			if (doaresp) {
 				respJson = new JSONObject();
 				respJson.put("status", status);
@@ -146,5 +169,33 @@ public class ServiceEdcrScrutiny {
 
 		uuid.substring(9);
 		return uuid;
+	}
+
+	private byte[] readfile(URL url) throws IOException {
+		System.out.println("readfile------------");
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		InputStream is = null;
+		byte[] binaryFile = null;
+		try {
+			is = url.openStream();
+			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+			int n;
+
+			while ((n = is.read(byteChunk)) > 0) {
+				baos.write(byteChunk, 0, n);
+			}
+			binaryFile = baos.toByteArray();
+			System.out.println("binaryFile-------"+binaryFile);
+		} catch (IOException e) {
+			System.err.printf("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());
+			e.printStackTrace();
+			// Perform any other exception handling that's appropriate.
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+//		return (binaryFile != null) ? Base64.getEncoder().encodeToString(binaryFile) : null;
+		return binaryFile;
 	}
 }

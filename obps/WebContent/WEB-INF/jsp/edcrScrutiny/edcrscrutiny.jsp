@@ -47,7 +47,7 @@
 									<td style="height: 20px" colspan="3"></td>
 								</tr>
 								<tr>
-									<td colspan="3"><input type="button" value="SCRUTINIZE"
+									<td colspan="3" ><input type="button" value="SCRUTINIZE"
 										ng-click="submitDetails();" class="btn btn-primary b-btn"></td>
 								</tr>
 								<tr>

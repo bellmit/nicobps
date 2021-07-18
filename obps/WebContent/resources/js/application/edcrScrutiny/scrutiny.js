@@ -147,6 +147,8 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 				 
 					if (response.status != '') {
 						if (response.status == 'error') {
+							jQuery('.edcrResp').css("visibility", "hidden");
+							jQuery('#genReport').css("visibility", "hidden");
 							jQuery('#errmsg').html('<div class="card text-white bg-danger mb-3" style="width: 600px">' +
 								'<div class="card-body"><p class="card-title">eDCR Scrutiny Failed: Error-Please contact System Administrator.</p></div>' +
 								'</div>');

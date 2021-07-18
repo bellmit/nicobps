@@ -25,8 +25,6 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	 
-
 	@Autowired
 	public void createTemplate(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -41,15 +39,11 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		try {
 			Integer usercode = Integer.valueOf((String) param.get("usercode"));
 			Integer useroffice = Integer.valueOf((String) param.get("useroffice"));
-//			System.out.println(useroffice);
-//			SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//			Date date = sd.parse(((String) param.get("log_date")).trim());
-//			System.out.println(date);
-			  sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,planinfoobject,status,entrydate,officecode,dxffile,scrutinyreport) "
+			sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,planinfoobject,status,entrydate,officecode,dxffile,scrutinyreport) "
 					+ "VALUES (?,?,?,?,now(),?,?,?) ";
 			Object[] values = { usercode, ((String) param.get("edcrnumber")).trim(),
-					((String) param.get("response")).trim(), ((String) param.get("status")).trim() , useroffice, null,
-					null };
+					((String) param.get("response")).trim(), ((String) param.get("status")).trim(), useroffice, param.get("dxffile"),
+					param.get("planreport") };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -79,9 +73,7 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		List<EdcrScrutiny> list = null;
 		try {
 			String sql = "SELECT a.*,b.officename1 as officename FROM nicobps.edcrscrutiny a\r\n"
-					+ "inner join masters.offices b on a.officecode=b.officecode\r\n"
-					+ "\r\n"
-					+ "WHERE a.usercode=?";
+					+ "inner join masters.offices b on a.officecode=b.officecode\r\n" + "\r\n" + "WHERE a.usercode=? order by a.entrydate desc";
 			Object[] criteria = { usercode };
 			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
 		} catch (Exception e) {
@@ -89,6 +81,5 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		}
 		return list;
 	}
-	
-	 
+
 }
