@@ -40,6 +40,10 @@ public class ControllerStakeholder {
 	@Autowired
 	private StakeHolderValidator stakeHolderValidator;
 
+	@GetMapping("/samplepage.htm")
+	public String samplepage(Model model) {
+		return "z_samplepage";
+	}
 	@GetMapping("/srverify.htm")
 	public String verification(Model model) {
 		model.addAttribute("pageType", "Verification");

@@ -25,7 +25,7 @@
 									action="ulbregistration.htm?${_csrf.parameterName}=${_csrf.token}">
 									<select class="my-2" name='officecode'
 										ng-model='registeringofficecode'
-										ng-value='registeringofficecode' style="min-width: 100%;"
+										ng-value='registeringofficecode' style="max-width: 100%;"
 										ng-change="getOffices(registeringofficecode)">
 										<core:forEach items="${registeringoffices}" var="item">
 											<option value="${item.officecode}">${item.officename1}</option>
@@ -76,7 +76,7 @@
 			</div>
 		</div>
 	</div>
-
+	<%@include file="../common/footer.jsp"%> 
 </body>
 <script src="resources/js/application/stakeholder/ulbregistration.js"></script>
 </html>
