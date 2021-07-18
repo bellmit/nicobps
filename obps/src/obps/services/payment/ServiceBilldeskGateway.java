@@ -65,7 +65,7 @@ public class ServiceBilldeskGateway {
 		CHECK_SUM_PWD = environment.getRequiredProperty("billdesk.merchant.pwd");
 		MERCHANT_URL_PAY = environment.getRequiredProperty("billdesk.url.debit");
 		RETURN_URL = environment.getRequiredProperty("billdesk.url.return");
-		tenantid = environment.getRequiredProperty("tenantId");
+		tenantid = "sk.gangtok";
 	}
 
 	public URI generateRedirectURI(String usercode, Integer amount, String feecode, String applicationcode, String modulecode, String toprocesscode) {

@@ -61,7 +61,8 @@ public class ServiceEdcrScrutiny {
 		return resp;
 	}
 
-	public JSONObject Scrutinize(MultipartFile planFile, String usercode, String OfficeCode,String stateid,String tenantid) {
+	public JSONObject Scrutinize(MultipartFile planFile, String usercode, String OfficeCode, String stateid,
+			String tenantid) {
 		String resp = null;
 		JSONObject respJson = null;
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
@@ -75,7 +76,7 @@ public class ServiceEdcrScrutiny {
 		edcrRequest.put("applicationSubType", "NEW_CONSTRUCTION");
 		edcrRequest.put("appliactionType", "BUILDING_PLAN_SCRUTINY");
 		edcrRequest.put("applicantName", "Suraj");
-		edcrRequest.put("tenantId", stateid+"."+tenantid);
+		edcrRequest.put("tenantId", stateid + "." + tenantid);
 		edcrRequest.put("RequestInfo", RequestInfo);
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -91,12 +92,12 @@ public class ServiceEdcrScrutiny {
 			valueMap.add("edcrRequest", edcrRequest);
 //			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
-			String serverUrl = env.getProperty("edcr.scrutitny.url").trim()+stateid.trim()+"."+tenantid.trim();
-			System.out.println("serverUrl-------:"+serverUrl);
+			String serverUrl = env.getProperty("edcr.scrutitny.url").trim() + stateid.trim() + "." + tenantid.trim();
+			System.out.println("serverUrl-------:" + serverUrl);
 			RestTemplate restTemplate = new RestTemplate();
 			System.out.println("before post---");
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
-			System.out.println("resp---"+resp);
+			System.out.println("resp---" + resp);
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(resp);
@@ -108,9 +109,6 @@ public class ServiceEdcrScrutiny {
 				edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
 			}
 			String status = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
-
-//			System.out.println(status);
-			
 			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
 			String edcrdetails = (new ObjectMapper()).writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -122,13 +120,14 @@ public class ServiceEdcrScrutiny {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();
 			map.put("log_date", dateFormat.format(date));
+			 
 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
 			if (doaresp) {
 				respJson = new JSONObject();
 				respJson.put("status", status);
 				respJson.put("edcrnumber", edcrnumber);
 				respJson.put("planReport", planReport);
-				
+
 			} else {
 				respJson = new JSONObject();
 				respJson.put("status", "error");
@@ -137,23 +136,21 @@ public class ServiceEdcrScrutiny {
 				respJson.put("msg", "System Error: Please contact System Admin!");
 			}
 
-		} catch (
-
-		Exception e) {
-			System.out.println("error at scrutinize---"+e.getMessage());
+		} catch (Exception e) {
+			System.out.println("error at scrutinize---" + e.getMessage());
 			respJson = new JSONObject();
 			respJson.put("status", "error");
 			respJson.put("edcrnumber", "NA");
 			respJson.put("planReport", "NA");
 			respJson.put("msg", "System Error: Please contact System Admin!");
 		}
-		 
+
 		return respJson;
 	}
 
 	private String StringGenerator() {
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
-		
+
 		uuid.substring(9);
 		return uuid;
 	}

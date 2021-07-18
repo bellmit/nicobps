@@ -15,9 +15,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 		});
 	};
 	$scope.setEdcrListTable = (tData) => {
-		console.log(JSON.stringify(tData))
-
-		$("#displayRecords").html("");
+	  	$("#displayRecords").html("");
 		$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;' border='1' class='table table table-bordered  table-hover'></table>");
 		var table = jQuery('#displayRecordsTable').DataTable({
 			"data": tData,
@@ -106,6 +104,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
+				console.log(JSON.stringify(response));
 				$timeout(function() {
 					$scope.userofficelist = response;
 				}, 0);
@@ -124,6 +123,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			jQuery.each(jQuery('#dxffile')[0].files, function(i, file) {
 				data.append('planFile', file);
 			});
+			 
 			data.append('OfficeCode', (JSON.parse($scope.validoffice)).officecode);
 			data.append('stateid', (JSON.parse($scope.validoffice)).stateid);
 			data.append('tenantid', (JSON.parse($scope.validoffice)).tenantid);
@@ -140,8 +140,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 						$scope.edcrscrutiny = response;
 
 					}, 0);
-					console.log(response.status != '');
-					console.log(response.status == 'error');
+				 
 					if (response.status != '') {
 						if (response.status == 'error') {
 							jQuery('#errmsg').html('<div class="card text-white bg-danger mb-3" style="width: 600px">' +

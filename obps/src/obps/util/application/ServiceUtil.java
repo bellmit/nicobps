@@ -310,7 +310,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
 
-		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,  O1.STATEID, O1.TENANTID,\r\n"
+		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,O1.OFFICECODE,  O1.STATEID, O1.TENANTID,\r\n"
 				+ "Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS NEWVALIDTO \r\n"
 				+ "FROM MASTERS.OFFICES O1, \r\n"
 				+ "nicobps.licenseeofficesvalidities  B, \r\n"
