@@ -278,10 +278,8 @@
 							
 								<a href="./Report?status=1&transactioncode={{fee.transactioncode}}" target="_blank"
 									ng-repeat="fee in applicant.transactions">{{fee.feetypedescription}}</a>
-								
 							</div>
 						</div>
-
 						<div class="dropup col-md-6"
 							ng-show="applicant.processcode==4||applicant.processcode==6">
 							<button class="dropbtn">
@@ -293,14 +291,8 @@
 									ng-click="showRemarks(p)">{{p.action||p.flowname}}</a>
 							</div>
 						</div>
-
 					</div>
-
-
 				</div>
-
-
-
 				<div class="col-md-8 py-2 px-2" id="enclosureWindow"></div>
 			</div>
 		</div>
@@ -321,6 +313,7 @@
 			</table>
 		</div>
 	</div>
+	<%@include file="../common/footer.jsp" %> 
 </body>
 <script src="resources/js/application/stakeholder/srverify.js"></script>
 </html>
