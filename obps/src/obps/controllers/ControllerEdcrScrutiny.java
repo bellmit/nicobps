@@ -30,18 +30,15 @@ public class ControllerEdcrScrutiny {
 
 	@Autowired
 	ServiceEdcrScrutiny edcrscrutiny;
-	
 
-	
 	@GetMapping(value = "/edcrscrutiny.htm")
 	public String scrutinize_Get() {
 		System.out.println("edcrscrutiny.htm GET");
-	
 		return "edcrScrutiny/edcrscrutiny";
 	}
 
 	@GetMapping(value = "/fetch_edcr_usercd.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<EdcrScrutiny> fetchEdcrScrutiny_usercode( HttpServletRequest request) {
+	public @ResponseBody List<EdcrScrutiny> fetchEdcrScrutiny_usercode(HttpServletRequest request) {
 		System.out.println("fetch_edcr_usercd GET");
 		String usercode = (String) request.getSession().getAttribute("usercode");
 		return edcrscrutiny.fetch_usercd(usercode);
@@ -50,18 +47,15 @@ public class ControllerEdcrScrutiny {
 	@GetMapping(value = "/fetch_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody EdcrScrutiny fetchEdcrScrutiny(@RequestParam String edcrnumber) {
 		System.out.println("fetchEdcrScrutiny POST-----" + edcrnumber);
-
 		return edcrscrutiny.fetch(edcrnumber);
 	}
 
 	@PostMapping(value = "/scrutinize_edcr.htm", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody JSONObject scrutinize_Post(@RequestBody MultipartFile planFile,@RequestParam String OfficeCode,@RequestParam String stateid,@RequestParam String tenantid, HttpServletRequest request) {
+	public @ResponseBody JSONObject scrutinize_Post(@RequestBody MultipartFile planFile,
+			@RequestParam String OfficeCode, @RequestParam String stateid, @RequestParam String tenantid,
+			HttpServletRequest request) {
 		System.out.println("edcrscrutiny.htm POST");
-		System.out.println(stateid);
-		System.out.println(tenantid);
 		String usercode = (String) request.getSession().getAttribute("usercode");
-	 
-		return  edcrscrutiny.Scrutinize(planFile,usercode,OfficeCode,stateid,tenantid);
-
+		return edcrscrutiny.Scrutinize(planFile, usercode, OfficeCode, stateid, tenantid);
 	}
 }

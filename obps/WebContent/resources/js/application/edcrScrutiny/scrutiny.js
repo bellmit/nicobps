@@ -39,7 +39,11 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 					}
 				}, {
 					"title": "Uploaded On",
-					"data": "entrydate"
+					"data": "entrydate",
+					render: (data, type, row, meta) => {
+						let entrydate = data;
+						return entrydate.substring(0, 19);
+						}
 
 				}, {
 					"title": "Status",

@@ -51,7 +51,7 @@ public class ServiceEdcrScrutiny {
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
-		System.out.println(resp);
+		 
 		return resp;
 	}
 
@@ -93,11 +93,8 @@ public class ServiceEdcrScrutiny {
 //			System.out.println("planfile.getBytes()::" + valueMap.get("planFile"));
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
 			String serverUrl = env.getProperty("edcr.scrutitny.url").trim() + stateid.trim() + "." + tenantid.trim();
-			System.out.println("serverUrl-------:" + serverUrl);
 			RestTemplate restTemplate = new RestTemplate();
-			System.out.println("before post---");
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
-			System.out.println("resp---" + resp);
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(resp);
@@ -117,11 +114,7 @@ public class ServiceEdcrScrutiny {
 			map.put("edcrnumber", edcrnumber);
 			map.put("status", status);
 			map.put("response", edcrdetails);
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-			Date date = new Date();
-			map.put("log_date", dateFormat.format(date));
-			 
-			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
+ 			boolean doaresp = DaoedcrScrutinyInterface.createEdcrScrutiny(map);
 			if (doaresp) {
 				respJson = new JSONObject();
 				respJson.put("status", status);
