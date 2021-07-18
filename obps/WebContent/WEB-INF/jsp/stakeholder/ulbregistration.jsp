@@ -34,23 +34,33 @@
 								</form>
 							</div>
 							<div class="col-md-6 px-5">
-								<button class="btn btn-primary"
+								<button id="registerbtn" class="btn btn-primary"
 									ng-disabled="registeringofficecode==0"
 									ng-click="registerStakeholder()">Register</button>
 							</div>
-							<span class="mt-4 pl-5" ng-show="fee!==-1">Application
+							<span class="mt-4 pl-5" ng-show="fee!==-1"> Application
 								Fees applicable : <span style="font-style: bold">{{fee.feeamount}}/-</span>
 							</span>
 						</div>
 					</core:if>
+					<ul ng-if="errorMsg.length>0" class="mt-4 pl-5" style="color: red">
+						<li ng-repeat='error in errorMsg'>{{error}}</li>
+					</ul>
 					<core:if test="${errorMsg ne null}">
 						<span class="mt-4 pl-5" style="color: red">
-							${(errorMsg=='ALREADY_REPORTED')
+							<span>${(errorMsg=='ALREADY_REPORTED')
 									?'Office is already registered and valid.'
 								:(errorMsg=='REQD_DOCUMENTS_INCOMPLETE')
 									?'Kindly upload all the mandatory documents first. Click on the Upload Enclosures link and upload the documents marked as Mandatory'
 								:'Please try again.' }
 						</span>
+					</core:if>
+					<core:if test="${errorMapList ne null}">
+						<ul class="mt-4 pl-5" style="color: red">
+							<core:forEach items="${errorMapList}" var="item">
+								<li>${item.value}</li>
+							</core:forEach>
+						</ul>
 					</core:if>
 					<div class="col-md-12 pb-4 px-5 mt-1">
 						<h5 class="col-md-12" style="border-top: 3px solid #005776"

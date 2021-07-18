@@ -113,27 +113,31 @@ app.controller("CommonCtrl", [
 								{
 									"title": "Application No.",
 									"data": "applicationcode"
-								},
-								{
+								},{
+									"title": "Application Date",
+									"data": "entrydate",
+									"render":(data,type,row,meta)=>{
+										return (new Date(data)).getDay()+"/"+(new Date(data)).getMonth()+'/'+(new Date(data)).getFullYear()
+									}
+								},{
 									"title": "Licence",
 									"data": "licenseetypename"
-								}, 
-								{
-									"title": "Office",
-									"data": "officename1"
-								},
-								{
+								},{
 									"title": "Firm/Individual",
 									"data": "firmindividual",
 									"render":(data,type,row,meta)=>{
 										return data=='I'?'Individual':'Firm'
-								}
-								},
-								{
+									}
+								},{
+									"title": "Applicant/Firm Name",
+									"data": "applicantsname"
+								},{
+									"title": "Office",
+									"data": "officename1"
+								},{
 									"title": "District",
 									"data": "districtname"
-								},
-								{
+								},{
 									"title": "Action",
 									"data": "nextprocessname"
 								}

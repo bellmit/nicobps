@@ -25,7 +25,6 @@ import obps.util.application.ServiceUtilInterface;
 import obps.validators.ExtendValidityValidator;
 import obps.validators.StakeHolderValidator;
 
-
 @Controller
 public class ControllerStakeholder {
 	@Autowired
@@ -49,7 +48,6 @@ public class ControllerStakeholder {
 
 	@GetMapping("/ulbregistration.htm")
 	public String ulbregistration(Model model, String errorMsg, HttpServletRequest req) {
-		model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
 		String usercode = (String) req.getSession().getAttribute("usercode");
 		String licenseetypecode = (String) req.getSession().getAttribute("licenseetypecode");
 		if (serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode),
@@ -58,16 +56,24 @@ public class ControllerStakeholder {
 			return "stakeholder/ulbregistration";
 		}
 		model.addAttribute("errorMsg", errorMsg);
+		model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
 		return "stakeholder/ulbregistration";
 	}
 
 	@PostMapping("/ulbregistration.htm")
 	public String ulbRegistration(Model model, Integer officecode, HttpServletRequest req) {
 		String usercode = (String) req.getSession().getAttribute("usercode");
+		Map<String,Object> errorList=SSI.getLicenceeValidity(Integer.valueOf(usercode.toString()),officecode);
+		if(!errorList.isEmpty()) {
+			model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
+			model.addAttribute("errorMapList",errorList);
+			return "stakeholder/ulbregistration";
+		}
 		String applicationcode = SSI.ulbRegistration(officecode, Integer.valueOf(usercode));
 		if (applicationcode.equals("ALREADY_REPORTED") || applicationcode.equals("false")) {
 			model.addAttribute("errorMsg", applicationcode);
-			return "redirect:ulbregistration.htm";
+			model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
+			return "stakeholder/ulbregistration";
 		}
 		Map<String, Object> url = serviceUtilInterface.getCurrentProcessStatus(1, applicationcode).get(0);
 		return "redirect:" + url.get("pageurl") + "?applicationcode=" + applicationcode + "&officecode=" + officecode;
@@ -107,6 +113,12 @@ public class ControllerStakeholder {
 				+ (Integer) (serviceUtilInterface.getNextProcessflow(1, applicationcode)).get("toprocesscode");
 	}
 
+	@PostMapping("/getLicenseValidity.htm")
+	public @ResponseBody Map<String, Object> getLicenseValidity(HttpServletRequest req, Integer officecode) {
+		return SSI.getLicenceeValidity(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),
+				officecode);
+	}
+
 	@PostMapping("/listLicensees.htm")
 	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req) {
 		Integer officecode = Integer.valueOf(serviceUtilInterface.listUserOffices().get(0).getKey());
@@ -141,7 +153,8 @@ public class ControllerStakeholder {
 			Integer toprocesscode, String remarks, ModelMap model) {
 		String res = "";
 
-		if(officecode!=null && applicationcode!=null && usercode!=null && toprocesscode!=null && remarks!=null) {
+		if (officecode != null && applicationcode != null && usercode != null && toprocesscode != null
+				&& remarks != null) {
 			res = stakeHolderValidator.validateStackHolder(officecode, applicationcode, usercode, toprocesscode,
 					remarks);
 
@@ -203,10 +216,9 @@ public class ControllerStakeholder {
 	public ResponseEntity<?> extendValidity(HttpServletRequest req, @RequestParam Map<String, String> params) {
 		String res = "false";
 		Integer extendedby = Integer.valueOf(req.getSession().getAttribute("usercode").toString());
-	if(extendValidator.validateExtendValidity(params,extendedby)) {
-		return ResponseEntity.badRequest().body(new String(
-				"Check input details"));
-	}
+		if (extendValidator.validateExtendValidity(params, extendedby)) {
+			return ResponseEntity.badRequest().body(new String("Check input details"));
+		}
 
 		if (SSI.extendValidity(Short.parseShort(params.get("officecode")), Integer.parseInt(params.get("usercode")),
 				params.get("extendedto"), extendedby)) {

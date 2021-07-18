@@ -148,49 +148,121 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			return "false";
 		}
 	}
-
+	@Override
 	public Map<String, Object> getLicenceeValidity(Integer usercode, Integer officecode) {
-		String sql = "SELECT  U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
-				+ "		(O.OFFICENAME1::TEXT ||    CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) ||"
-				+ "        CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
-				+ "        to_char(VALIDTO, 'DD-MM-YYYY') VALIDTO, "
-				+ "        CASE WHEN EXTENDEDTO IS NULL THEN 'VALID UPTO : ' || TO_CHAR(VALIDTO, 'dd-mm-yyyy')   ELSE 'VALID UPTO : ' || TO_CHAR(EXTENDEDTO, 'dd-mm-yyyy')  END AS STATUS, "
-				+ "        CASE WHEN VALIDTO > CURRENT_DATE THEN 1 ELSE 2 END AS STATUSCODE "
-				+ "FROM  nicobps.USERLOGINS U,   MASTERS.OFFICES O, nicobps.LICENSEEOFFICESVALIDITIES V, nicobps.APPLICATIONS A"
-				+ "WHERE 1 = 1 AND U.USERCODE = V.USERCODE AND O.OFFICECODE = V.OFFICECODE AND (O.OFFICECODE = A.OFFICECODE AND U.USERCODE = A.USERCODE AND MODULECODE IN (1,3) ) "
-				+ "AND A.APPLICATIONCODE = V.APPLICATIONCODE AND O.OFFICECODE = ? AND U.USERCODE = ? "
-				+ "ORDER BY CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END DESC LIMIT 1; ";
-		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		Map<String, Object> response = new HashMap<String, Object>();
-		if (!list.isEmpty() && list.get(0).get("statuscode").equals("1")) {
+
+		// -------------------------
+		// -------Valid
+		// -------------------------
+		String sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
+				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
+				+ "CASE WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3 ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
+				+ "validto,extendedto,CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END AS VALIDITY, "
+				+ "CASE WHEN EXTENDEDTO IS NULL THEN 'VALID UPTO : ' || TO_CHAR(VALIDTO, 'dd-mm-yyyy') ELSE 'VALID UPTO : ' || TO_CHAR(EXTENDEDTO, 'dd-mm-yyyy') END AS STATUS, "
+				+ "CASE WHEN VALIDTO > CURRENT_DATE THEN 1 ELSE 2 END AS STATUSCODE "
+				+ "FROM nicobps.USERLOGINS U, MASTERS.OFFICES O, nicobps.LICENSEEOFFICESVALIDITIES V, nicobps.APPLICATIONS A "
+				+ "WHERE 1 = 1 AND U.USERCODE = V.USERCODE AND O.OFFICECODE = V.OFFICECODE AND (O.OFFICECODE = A.OFFICECODE AND U.USERCODE = A.USERCODE AND MODULECODE IN (1,3) ) "
+				+ "and CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END >= current_date "
+				+ "AND A.APPLICATIONCODE = V.APPLICATIONCODE AND O.OFFICECODE = ? AND U.USERCODE = ? "
+				+ "ORDER BY CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END DESC LIMIT 1";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!list.isEmpty()) {
 			response.put("VALID_LICENCE", "You are already empanelled " + list.get(0).get("office")
-					+ " and its valid till " + list.get(0).get("validto"));
+					+ " and its valid till " + list.get(0).get("validity"));
 			return response;
 		}
-		if (!list.isEmpty() && list.get(0).get("statuscode").equals("2")) {
-			response.put("EXPIRED_LICENCE", "Your emnpanelment with " + list.get(0).get("office") + " has expired on "
-					+ list.get(0).get("validto") + ".Please click on the button above to renew your empanelment.");
-//			return response;
-		}
+		// -------------------------
+		// -------Expired
+		// -------------------------
 		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
-				+ "	    (O.OFFICENAME1::TEXT ||    CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2  ELSE ''::CHARACTER VARYING END::TEXT) ||"
-				+ "	    CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
-				+ "            CASE WHEN PAYMENTSTATUS  = 'S'  AND V.APPLICATIONCODE IS NULL THEN 'AWAITING APPROVAL ' "
-				+ "		 WHEN PAYMENTSTATUS  = 'I'  AND V.APPLICATIONCODE IS NULL THEN 'PAYMENT STATUS CANNOT BE ASCERTAINED ' "
-				+ "             END AS STATUS, "
-				+ "            CASE WHEN PAYMENTSTATUS  = 'S'  AND V.APPLICATIONCODE IS NULL THEN 3 "
-				+ "		 WHEN PAYMENTSTATUS  = 'I'  AND V.APPLICATIONCODE IS NULL THEN 4 "
-				+ "             END AS STATUSCODE "
-				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE "
+				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
+				+ "CASE WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3 ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
+				+ "validto,extendedto,CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END AS VALIDITY, "
+				+ "CASE WHEN EXTENDEDTO IS NULL THEN 'VALID UPTO : ' || TO_CHAR(VALIDTO, 'dd-mm-yyyy') ELSE 'VALID UPTO : ' || TO_CHAR(EXTENDEDTO, 'dd-mm-yyyy') END AS STATUS, "
+				+ "CASE WHEN VALIDTO > CURRENT_DATE THEN 1 ELSE 2 END AS STATUSCODE "
+				+ "FROM nicobps.USERLOGINS U, MASTERS.OFFICES O, nicobps.LICENSEEOFFICESVALIDITIES V, nicobps.APPLICATIONS A "
+				+ "WHERE 1 = 1 AND U.USERCODE = V.USERCODE AND O.OFFICECODE = V.OFFICECODE AND (O.OFFICECODE = A.OFFICECODE AND U.USERCODE = A.USERCODE AND MODULECODE IN (1,3) ) "
+				+ "and CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END < current_date "
+				+ "AND A.APPLICATIONCODE = V.APPLICATIONCODE AND O.OFFICECODE = ? AND U.USERCODE = ? "
+				+ "ORDER BY CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END DESC LIMIT 1";
+		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!list.isEmpty()) {
+			response.put("EXPIRED_LICENCE", "Your emnpanelment with " + list.get(0).get("office") + " has expired on "
+					+ list.get(0).get("validity") + ".Please click on the button above to renew your empanelment.");
+//			return response; // Should it be returned from here?
+		}
+		// -------------------------
+		// -------Awaiting Verification
+		// -------------------------
+		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
+				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
+				+ "         CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
+				+ "             "
+				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
 				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
 				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
-				+ "INNER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE "
-				+ "INNER JOIN nicobps.TRANSACTIONS T ON T.TRANSACTIONCODE = ATM.TRANSACTIONCODE "
-				+ "LEFT OUTER JOIN nicobps.LICENSEEOFFICESVALIDITIES V ON A.APPLICATIONCODE = V.APPLICATIONCODE "
-				+ "WHERE PAYMENTSTATUS IN ('S') AND A.MODULECODE IN (1, 3) "
+				+ "LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+				+ "WHERE 1 = 1  " + "AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
+				+ "AND U.USERCODE  = ? " + "AND A.MODULECODE IN (1, 3) "
+				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!list.isEmpty()) {
+			response.put("VERIFICATION_PENDING",
+					"Your application for emnpanelment with " + list.get(0).get("office")
+							+ " office bearing application code " + list.get(0).get("applicationcode")
+							+ " is under process and awaiting verification.");
+			return response;
+		}
+
+		// -------------------------
+		// -------Paid and Awaiting Approval
+		// -------------------------
+		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
+				+ "	    (O.OFFICENAME1::TEXT ||    CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2  ELSE ''::CHARACTER VARYING END::TEXT) || "
+				+ "	    CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
+				+ "              "
+				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
+				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
+				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
+				+ "INNER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+				+ "INNER JOIN nicobps.TRANSACTIONS T ON T.TRANSACTIONCODE = ATM.TRANSACTIONCODE  "
+				+ "LEFT OUTER JOIN nicobps.LICENSEEOFFICESVALIDITIES V ON A.APPLICATIONCODE = V.APPLICATIONCODE  "
+				+ "WHERE A.MODULECODE IN (1, 3) " + "AND PAYMENTSTATUS='S' "
 				+ "AND O.OFFICECODE = ? AND U.USERCODE  = ? "
 				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
-		return null;
+		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!list.isEmpty()) {
+			response.put("AWAITING_APPROVAL",
+					"Your application for emnpanelment with " + list.get(0).get("office")
+							+ " office bearing application code " + list.get(0).get("applicationcode")
+							+ " is under process and awaiting approval.");
+			return response;
+		}
+		// -------------------------
+		// -------Payment Cannot be ascertained
+		// -------------------------
+		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
+				+ "	    (O.OFFICENAME1::TEXT ||    CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2  ELSE ''::CHARACTER VARYING END::TEXT) || "
+				+ "	    CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
+				+ "              "
+				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
+				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
+				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
+				+ "INNER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+				+ "INNER JOIN nicobps.TRANSACTIONS T ON T.TRANSACTIONCODE = ATM.TRANSACTIONCODE  "
+				+ "LEFT OUTER JOIN nicobps.LICENSEEOFFICESVALIDITIES V ON A.APPLICATIONCODE = V.APPLICATIONCODE  "
+				+ "WHERE A.MODULECODE IN (1, 3) " + "AND PAYMENTSTATUS='I' "
+				+ "AND O.OFFICECODE = ? AND U.USERCODE  = ? "
+				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!list.isEmpty()) {
+			response.put("PAYMENT_INITIATED", "Your application for emnpanelment with " + list.get(0).get("office")
+					+ " office bearing application code " + list.get(0).get("applicationcode")
+					+ " is under process. The payment status of the application cannot be ascertained at the moment.");
+			return response;
+		}
+		return response;
 	}
 
 	@Override
