@@ -279,11 +279,9 @@ public class ControllerBuildingPermit {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.BpaValidatebpaMakePayment(bpa, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//			response.put("msg", "Error: Failed to save building permit application.");
+		Bvalid.BpaValidatebpaMakePayment(bpa, response);
+		if (!response.isEmpty()) {
+			LOG.info("ErrorMap: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
@@ -302,12 +300,11 @@ public class ControllerBuildingPermit {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
 
-//-------------------------------------------VALIDATION STARTS---------------------------------------------------------------------		
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.BpaValidateSaveBpa(bpa, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//		    response.put("msg", "Error: Failed to save building permit application.");
+		System.out.println("application code ============="+bpa.getApplicationcode());
+//-------------------------------------------VALIDATION STARTS---------------------------------------------------------------------				
+		Bvalid.BpaValidateSaveBpa(bpa, response);
+		if (!response.isEmpty()) {
+			LOG.info("ErrorMap: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 //-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
@@ -328,11 +325,9 @@ public class ControllerBuildingPermit {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
 //-------------------------------------------VALIDATION STARTS---------------------------------------------------------------------		
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.BpaValidatesaveBPAStepTwo(bpa, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//			response.put("msg", "Error: Failed to save building permit application Step 2.");
+		Bvalid.BpaValidatesaveBPAStepTwo(bpa, response);
+		if (!response.isEmpty()) {
+			LOG.info("ErrorMap: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 //-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		

@@ -85,7 +85,7 @@ public class ControllerUploadBpaEnclosures {
 		bpaenclosures.setAppenclosurecode(appenclosurecode);
 		bpaenclosures.setUsercode(usercode);
 		bpaenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
-
+		System.out.println("application code =================== " + bpaenclosures.getApplicationcode());
 		vle.validate(bpaenclosures, result);
 
 		if (!result.hasErrors()) {

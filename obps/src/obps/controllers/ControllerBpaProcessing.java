@@ -360,7 +360,7 @@ public class ControllerBpaProcessing {
 			@RequestParam(name = "param") String applicationcode) {
 		return SBI.listBPAConditions(applicationcode);
 	};
-	
+
 	@GetMapping(value = "/listBpaEnclosures.htm")
 	public @ResponseBody List<Map<String, Object>> listBPAEnclosures(
 			@RequestParam(name = "param") String applicationcode) {
@@ -388,11 +388,9 @@ public class ControllerBpaProcessing {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.ValidateapproveApplication(bpa, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//			response.put("msg", "Error: Failed to save building permit application.");
+		Bvalid.ValidateapproveApplication(bpa, response);
+		if (!response.isEmpty()) {
+			LOG.info("ErrorMap: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
@@ -413,12 +411,10 @@ public class ControllerBpaProcessing {
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
-// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.Validateprocessbpapplication(data, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//			response.put("msg", "Error: Failed to save building permit application.");
+// -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------		
+		Bvalid.Validateprocessbpapplication(data, response);
+		if (!response.isEmpty()) {
+			LOG.info("ErrorMap: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
@@ -440,11 +436,9 @@ public class ControllerBpaProcessing {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.ValidaterejectBPApplication(data, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//			response.put("msg", "Error: Failed to save building permit application.");
+		Bvalid.ValidaterejectBPApplication(data, response);
+		if (!response.isEmpty()) {
+			LOG.info("response: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
@@ -472,11 +466,9 @@ public class ControllerBpaProcessing {
 		 * else LOG.info(matcher.group(1).toLowerCase());
 		 */
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
-		Map<String, String> errorMap = new HashMap<>();
-		Bvalid.ValidatesaveBPASiteInspection(bpa, errorMap);
-		if (!errorMap.isEmpty()) {
-			LOG.info("ErrorMap: " + errorMap.toString());
-//					response.put("msg", "Error: Failed to save building permit application.");
+		Bvalid.ValidatesaveBPASiteInspection(bpa, response);
+		if (!response.isEmpty()) {
+			LOG.info("ErrorMap: " + response.toString());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
