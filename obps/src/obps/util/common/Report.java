@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import net.minidev.json.JSONObject;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -26,11 +29,17 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import obps.daos.DaoEdcrScrutiny;
+import obps.util.application.ServiceUtilInterface;
+
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class Report extends HttpServlet {
+
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("----------------Reports-----------");
@@ -53,14 +62,14 @@ public class Report extends HttpServlet {
 			con = ds.getConnection();
 
 			String reportDirectory = getServletContext().getRealPath("/") + "reports/";
-			// String logoPath = reportDirectory+"db.png";
+			String logoPath = reportDirectory + "gmc_logobw.png";
 			// String embPath = reportDirectory+"nei.gif";
 
 			if (status != null && status.equals("1")) {
 				Long transactioncode = Long.parseLong(request.getParameter("transactioncode"));
 				System.out.println("transactioncode :" + transactioncode);
 				params.put("transactioncode", transactioncode);
-				//reportName = "reports/PaymentReceipt.jrxml";
+				// reportName = "reports/PaymentReceipt.jrxml";
 				reportName = "reports/paymentreceipts.jrxml";
 				filename = "PaymentReceipt.pdf";
 			} else if (status != null && status.equals("2")) {
@@ -69,7 +78,8 @@ public class Report extends HttpServlet {
 				System.out.println("permitnumber :" + permitnumber);
 
 				params.put("permitnumber", permitnumber);
-				reportName = "reports/BuildingPermit.jrxml";
+				params.put("logopath", logoPath);
+				reportName = "reports/buildingpermit02.jrxml";
 				filename = "BuildingPermit.pdf";
 
 			}

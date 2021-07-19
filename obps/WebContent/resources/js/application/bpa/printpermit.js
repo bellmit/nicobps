@@ -52,7 +52,7 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 							$("#searchresults").removeClass("d-none");
 							$scope.setDataTable(data);
 						} else {
-							alert("Error occured");
+							alert("Error :" + data[0].error);
 						}
 					} else {
 						$("#searchresults").removeClass("d-none");
