@@ -24,7 +24,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid licenseetype";
 			return response;
 		}
-		if (validatecommoncodes((String) param.get("licenseetypecode"))) {
+		if (validatecommoncodes(((String) param.get("licenseetypecode")).trim())) {
 			LOG.info(" validate licenseetype");
 			response = "invalid licenseetype";
 		}
@@ -33,7 +33,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid designation";
 			return response;
 		}
-		if (validatenamedesignationfirm((String) param.get("designation"))) {
+		if (validatenamedesignationfirm(((String) param.get("designation")).trim())) {
 			LOG.info(" designation validate");
 			response = "invalid designation";
 			return response;
@@ -44,20 +44,20 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid firmindividual";
 			return response;
 		}
-		if (((String) param.get("firmindividual")).length() > 1 || !Patterns
-				.PatternCompileMatche(Patterns.PATTERN_FIRMINDIVIDUAL, (String) param.get("firmindividual"))) {
+		if (((String) param.get("firmindividual")).trim().length() > 1 || !Patterns
+				.PatternCompileMatche(Patterns.PATTERN_FIRMINDIVIDUAL, ((String) param.get("firmindividual")).trim())) {
 			LOG.info(" validate firmindividual");
 			response = "invalid firmindividual";
 			return response;
 		}
 
-		if (((String) param.get("firmindividual")).equals("F")) {
+		if (((String) param.get("firmindividual")).trim().equals("F")) {
 			if (param.get("firmname") == null || param.get("firmname") == "") {
 				LOG.info(" validate firmname");
 				response = "invalid firmname";
 				return response;
 			}
-			if (validatenamedesignationfirm((String) param.get("firmname"))) {
+			if (validatenamedesignationfirm(((String) param.get("firmname")).trim())) {
 				LOG.info(" validate firmname");
 				response = "invalid firmname";
 				return response;
@@ -72,7 +72,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid fullname";
 			return response;
 		}
-		if (validatenamedesignationfirm((String) param.get("fullname"))) {
+		if (validatenamedesignationfirm(((String) param.get("fullname")).trim())) {
 			LOG.info(" validate fullname");
 			response = "invalid fullname";
 			return response;
@@ -83,7 +83,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid gender";
 			return response;
 		}
-		if (!validategender((String) param.get("gender"))) {
+		if (validategender(((String) param.get("gender")).trim())) {
 			LOG.info(" validate gender");
 			response = "invalid gender";
 			return response;
@@ -93,9 +93,9 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid username";
 			return response;
 		}
-		if (!Patterns.PatternCompileMatche(Patterns.PATTERN_EMAIL, (String) param.get("username"))
+		if (!Patterns.PatternCompileMatche(Patterns.PATTERN_EMAIL,((String) param.get("username")).trim())
 				|| ((String) param.get("username")).length() > 99) {
-			response = "invalid username";
+			response = "invalid email";
 			return response;
 		}
 		if (param.get("mobileno") == null || param.get("mobileno") == "") {
@@ -103,7 +103,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid mobileno";
 			return response;
 		}
-		if (!validateMobileno((String) param.get("mobileno"))) {
+		if (!validateMobileno(((String) param.get("mobileno")).trim())) {
 			LOG.info(" validate mobileno");
 			response = "invalid mobileno";
 			return response;
@@ -118,29 +118,35 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid userpassword";
 			return response;
 		}
-		if (param.get("preaddressline1") != null || param.get("preaddressline1") != "") {
-			LOG.info(" validate preaddressline1::: before"+(String) param.get("preaddressline1"));
-			if (validateaddressline((String) param.get("preaddressline1"))) {
-				LOG.info(" validate preaddressline1:::"+(String) param.get("preaddressline1"));
-				response = "invalid preaddressline1";
-				return response;
-			}
-
+		
+		if (param.get("preaddressline1") != null || ((String) param.get("preaddressline1")).trim().length() > 0 ) {
+			if(((String) param.get("preaddressline1")).trim().length() > 99) {
+				
+					LOG.info(" validate preaddressline1:::"+(String) param.get("preaddressline1"));
+					response = "invalid preaddressline1";
+					return response;
+				}
 		}
-		if (param.get("preaddressline2") != null || param.get("preaddressline2") != "") {
-			if (validateaddressline((String) param.get("preaddressline2"))) {
-				LOG.info(" validate preaddressline2");
-				response = "invalid preaddressline2";
-				return response;
-			}
-
+		
+		if (param.get("preaddressline2") != null || ((String) param.get("preaddressline2")).trim().length() > 0 ) {
+			if(((String) param.get("preaddressline2")).trim().length() > 99) {
+				
+					LOG.info(" validate preaddressline2:::"+(String) param.get("preaddressline2"));
+					response = "invalid preaddressline2";
+					return response;
+				}
 		}
+
+		
+		
+		
+	
 		if (param.get("previllagetown") == null || param.get("previllagetown") == "") {
 			LOG.info(" validate previllagetown");
 			response = "invalid previllagetown";
 			return response;
 		}
-		if (validateaddressline((String) param.get("previllagetown"))) {
+		if (validateaddressline(((String) param.get("previllagetown")).trim())) {
 			LOG.info(" validate previllagetown");
 			response = "invalid previllagetown";
 			return response;
@@ -156,7 +162,7 @@ public class RegistrationsStakeholderValidator {
 			return response;
 		}
 
-		if (validatecommoncodes((String) param.get("predistrictcode"))) {
+		if (validatecommoncodes(((String) param.get("predistrictcode")).trim())) {
 
 			LOG.info(" validate predistrictcode");
 			response = "invalid";
@@ -168,29 +174,42 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid";
 			return response;
 		}
-		if (validatepincode((String) param.get("prepincode"))) {
+		if (validatepincode(((String) param.get("prepincode")).trim())) {
 			LOG.info(" validate prepincode");
 			response = "invalid";
 			return response;
 		}
-		if (param.get("peraddressline1") != null && param.get("peraddressline1") != "") {
-			if (validateaddressline((String) param.get("peraddressline1")))
-				LOG.info(" validate peraddressline1");
-			response = "invalid peraddressline1";
-			return response;
+		
+		
+		
+		if (param.get("peraddressline1") != null || ((String) param.get("peraddressline1")).trim().length() > 0 ) {
+			if(((String) param.get("peraddressline1")).trim().length() > 99) {
+				
+					LOG.info(" validate peraddressline1:::"+(String) param.get("peraddressline1"));
+					response = "invalid peraddressline1";
+					return response;
+				}
 		}
-		if (param.get("peraddressline2") != null && param.get("peraddressline2") != "") {
-			if (validateaddressline((String) param.get("peraddressline2")))
-				LOG.info(" validate peraddressline1");
-			response = "invalid peraddressline1";
-			return response;
+		
+		if (param.get("peraddressline2") != null || ((String) param.get("peraddressline2")).trim().length() > 0 ) {
+			if(((String) param.get("peraddressline2")).trim().length() > 99) {
+				
+					LOG.info(" validate peraddressline2:::"+(String) param.get("peraddressline2"));
+					response = "invalid peraddressline2";
+					return response;
+				}
 		}
+		
+		
+		
+		
+		
 		if (param.get("pervillagetown") == null || param.get("pervillagetown") == "") {
 			LOG.info(" validate pervillagetown");
 			response = "invalid pervillagetown";
 			return response;
 		}
-		if (validateaddressline((String) param.get("pervillagetown"))) {
+		if (validateaddressline(((String) param.get("pervillagetown")).trim())) {
 			LOG.info(" validate pervillagetown");
 			response = "invalid pervillagetown";
 			return response;
@@ -205,7 +224,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid perdistrictcode";
 			return response;
 		}
-		if (validatecommoncodes((String) param.get("perdistrictcode"))) {
+		if (validatecommoncodes(((String) param.get("perdistrictcode")).trim())) {
 			LOG.info(" validate perdistrictcode");
 			response = "invalid perdistrictcode";
 			return response;
@@ -215,7 +234,7 @@ public class RegistrationsStakeholderValidator {
 			response = "invalid perpincode";
 			return response;
 		}
-		if (validatepincode((String) param.get("perpincode"))) {
+		if (validatepincode(((String) param.get("perpincode")).trim())) {
 			LOG.info(" validate perpincode");
 			response = "invalid perpincode";
 			return response;
@@ -227,12 +246,12 @@ public class RegistrationsStakeholderValidator {
 			return response;
 		}
 		if ((String) param.get("listLicenseesregistrationsm") != null
-				&& (String) param.get("listLicenseesregistrationsm") != "") {
+				|| (String) param.get("listLicenseesregistrationsm") != "") {
 			LOG.info(" validate listLicenseesregistrationsm");
 			JSONParser parser = new JSONParser();
 			Object obj;
 			try {
-				obj = parser.parse((String) param.get("listLicenseesregistrationsm"));
+				obj = parser.parse(((String) param.get("listLicenseesregistrationsm")).trim());
 				JSONArray listLicenseesregistrationsm = (JSONArray) obj;
 
 				if (listLicenseesregistrationsm.size() > 0) {
@@ -244,19 +263,19 @@ public class RegistrationsStakeholderValidator {
 							response = "invalid licenseeregistrationcode";
 							return response;
 						}
-						if (validatecommoncodes((String) row.get("licenseeregistrationcode"))) {
+						if (validatecommoncodes(((String) row.get("licenseeregistrationcode")).trim())) {
 							LOG.info(" validate licenseeregistrationcode---"
 									+ (String) row.get("licenseeregistrationcode"));
 							response = "invalid licenseeregistrationcode";
 							return response;
 						}
 						System.out.println(":::::::regis"+row.get("registrationdescription"));
-						if ( row.get("registrationdescription")==null || row.get("registrationdescription")==""||  row.get("registrationdescription").equals("")) {
+						if ( row.get("registrationdescription")==null || row.get("registrationdescription")=="" ||  row.get("registrationdescription").equals("")) {
 							LOG.info(" validate registrationdescription-----");
 							response = "invalid registrationdescription";
 							return response;
 						}
-						if (validatelicenseedescription((String) row.get("registrationdescription"))) {
+						if (validatelicenseedescription(((String) row.get("registrationdescription")).trim())) {
 							LOG.info(" validate registrationdescription:::"
 									+ (String) row.get("registrationdescription"));
 							response = "invalid registrationdescription";
@@ -322,15 +341,15 @@ public class RegistrationsStakeholderValidator {
 	public boolean validategender(String gender) {
 		if (gender.length() > 1 || !Patterns.PatternCompileMatche(Patterns.PATTERN_GENDER, gender)) {
 //          System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public boolean validateaddressline(String address) {
-		System.out.println(address);
-		if (address.length() > 99 || !Patterns.PatternCompileMatche("^(?![ .]+$)[a-zA-Z0-9 .]*$", address)) {
-//			if (address.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_STRING_SPACE, address)) {
+		System.out.println(" Address : " + address);
+//		if (address.length() > 99 || !Patterns.PatternCompileMatche("^(?![ .]+$)[a-zA-Z0-9 .]*$", address)) {
+			if (address.length() > 99) {
 //          System.out.println("invalid format");
 			return true;
 		}
@@ -338,7 +357,7 @@ public class RegistrationsStakeholderValidator {
 	}
 
 	public boolean validatepincode(String pincode) {
-		if (pincode.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_PINCODE, pincode)) {
+		if (pincode.length() > 6 || !Patterns.PatternCompileMatche(Patterns.PATTERN_PINCODE, pincode)) {
 //          System.out.println("invalid format");
 			return true;
 		}

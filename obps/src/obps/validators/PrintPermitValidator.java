@@ -36,7 +36,7 @@ public class PrintPermitValidator {
 				if (permitnumber != null) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, permitnumber)) {
 						response = "application code is invalid";
-					} else if (permitnumber.length() > 20) {
+					} else if (permitnumber.length() > 30) {
 						response = "permit number size error";
 					}
 
