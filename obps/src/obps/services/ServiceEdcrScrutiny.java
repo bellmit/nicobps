@@ -101,6 +101,7 @@ public class ServiceEdcrScrutiny {
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(valueMap, headers);
 			String serverUrl = env.getProperty("edcr.scrutitny.url").trim() + stateid.trim() + "." + tenantid.trim();
 			RestTemplate restTemplate = new RestTemplate();
+			System.out.println(serverUrl);
 			resp = restTemplate.postForObject(serverUrl, valueMap, String.class);
 			// --------------save to db------------
 			JSONParser parser = new JSONParser();
