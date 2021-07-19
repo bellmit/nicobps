@@ -59,9 +59,9 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 					}
 				}, {
 					"title": "Plan Report",
-					"data": "scrutinyreport",
+					"data": "edcrnumber",
 					render: (data, type, row, meta) => {
-						let planreport = '<a href="' + data + '" target="_blank">View/Download<a>';
+						let planreport = '<a href="./ScrutinyshowFile.htm?edcrnumber=' + data + '" target="_blank">View/Download<a>';
 						return planreport;
 					}
 				},
