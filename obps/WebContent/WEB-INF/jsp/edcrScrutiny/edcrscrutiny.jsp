@@ -95,7 +95,8 @@
 			</div>
 		</div>
 	</div>
-
+<%@include file="../common/footer.jsp" %> 
 </body>
+
 <script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 </html>
