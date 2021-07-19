@@ -74,7 +74,7 @@ public class ServiceEdcrScrutiny {
 		byte[] binaryDxfFile=null;
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
 		JSONObject userInfo = new JSONObject();
-		userInfo.put("id", "1c79f77e-e847-4663-98a7-5aee31f185c5");
+		userInfo.put("uuid", "1c79f77e-e847-4663-98a7-5aee31f185c5");
 		userInfo.put("tenantId", "0003");
 		JSONObject RequestInfo = new JSONObject();
 		RequestInfo.put("userInfo", userInfo);
