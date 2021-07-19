@@ -1,6 +1,7 @@
 package obps.validators;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -8,100 +9,226 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
+import obps.controllers.ControllerBuildingPermit;
+import obps.controllers.ControllerUserManagement;
 import obps.util.common.Patterns;
 
 @Component
 public class RegistrationsStakeholderValidator {
+	private static final Logger LOG = Logger.getLogger(ControllerUserManagement.class.toGenericString());
 
-	public boolean validateUserDetails(Map<String, Object> param) {
-
+	public String validateUserDetails(Map<String, Object> param) {
+		String response = "";
 		if (param.get("licenseetypecode") == null || param.get("licenseetypecode") == "") {
-			return true;
-		} else if (!validatelicenseetypecode((String) param.get("licenseetypecode"))) {
-			return true;
-		} else
+			LOG.info("validate licenseetype");
+			response = "invalid licenseetype";
+			return response;
+		}
+		if (validatecommoncodes((String) param.get("licenseetypecode"))) {
+			LOG.info(" validate licenseetype");
+			response = "invalid licenseetype";
+		}
+		if (param.get("designation") == null || param.get("designation") == "") {
+			LOG.info(" designation validate");
+			response = "invalid designation";
+			return response;
+		}
+		if (validatenamedesignationfirm((String) param.get("designation"))) {
+			LOG.info(" designation validate");
+			response = "invalid designation";
+			return response;
+		}
 
 		if (param.get("firmindividual") == null || param.get("firmindividual") == "") {
-			return true;
-		} else if (!validatefirmindividual((String) param.get("firmindividual"))) {
-			return true;
-		} else
+			LOG.info(" validate firmindividual");
+			response = "invalid firmindividual";
+			return response;
+		}
+		if (((String) param.get("firmindividual")).length() > 1 || !Patterns
+				.PatternCompileMatche(Patterns.PATTERN_FIRMINDIVIDUAL, (String) param.get("firmindividual"))) {
+			LOG.info(" validate firmindividual");
+			response = "invalid firmindividual";
+			return response;
+		}
 
-		if (param.get("firmindividual") == null || param.get("firmindividual") == "") {
-			return true;
-		} else if (((String) param.get("firmindividual")).equals("F")) {
+		if (((String) param.get("firmindividual")).equals("F")) {
 			if (param.get("firmname") == null || param.get("firmname") == "") {
-				return true;
-			} else {
-				if (!validatefirmname((String) param.get("firmname"))) {
-					return true;
-				}
-
+				LOG.info(" validate firmname");
+				response = "invalid firmname";
+				return response;
 			}
-		} else
+			if (validatenamedesignationfirm((String) param.get("firmname"))) {
+				LOG.info(" validate firmname");
+				response = "invalid firmname";
+				return response;
+			}
 
-		if (param.get("fullname") == null || param.get("fullname") == "") {
-			System.out.println("validate fullname");
-			return true;
-		} else if (!validateFullname((String) param.get("fullname"))) {
-			return true;
-		} else
+		}
+
+		if (param.get("fullname") == null || param.get("fullname") == "")
+
+		{
+			LOG.info(" validate fullname");
+			response = "invalid fullname";
+			return response;
+		}
+		if (validatenamedesignationfirm((String) param.get("fullname"))) {
+			LOG.info(" validate fullname");
+			response = "invalid fullname";
+			return response;
+		}
 
 		if (param.get("gender") == null || param.get("gender") == "") {
-			return true;
-		} else if (!validategender((String) param.get("gender"))) {
-			return true;
-		} else if (param.get("username") == null || param.get("username") == "") {
-			return true;
-		} else if (!validateUsername((String) param.get("username"))) {
-			return true;
-		} else if (param.get("mobileno") == null || param.get("mobileno") == "") {
-			return true;
-		} else if (!validateMobileno((String) param.get("mobileno"))) {
-			return true;
-		} else 
+			LOG.info(" validate gender");
+			response = "invalid gender";
+			return response;
+		}
+		if (!validategender((String) param.get("gender"))) {
+			LOG.info(" validate gender");
+			response = "invalid gender";
+			return response;
+		}
+		if (param.get("username") == null || param.get("username") == "") {
+			LOG.info(" validate username");
+			response = "invalid username";
+			return response;
+		}
+		if (!Patterns.PatternCompileMatche(Patterns.PATTERN_EMAIL, (String) param.get("username"))
+				|| ((String) param.get("username")).length() > 99) {
+			response = "invalid username";
+			return response;
+		}
+		if (param.get("mobileno") == null || param.get("mobileno") == "") {
+			LOG.info(" validate mobileno");
+			response = "invalid mobileno";
+			return response;
+		}
+		if (!validateMobileno((String) param.get("mobileno"))) {
+			LOG.info(" validate mobileno");
+			response = "invalid mobileno";
+			return response;
+		}
+		if (param.get("userpassword") == null || param.get("userpassword") == "") {
+			LOG.info(" validate userpassword");
+			response = "invalid userpassword";
+			return response;
+		}
+		if (((String) param.get("userpassword")).length() > 512) {
+			LOG.info(" validate userpassword");
+			response = "invalid userpassword";
+			return response;
+		}
+		if (param.get("preaddressline1") != null || param.get("preaddressline1") != "") {
+			LOG.info(" validate preaddressline1::: before"+(String) param.get("preaddressline1"));
+			if (validateaddressline((String) param.get("preaddressline1"))) {
+				LOG.info(" validate preaddressline1:::"+(String) param.get("preaddressline1"));
+				response = "invalid preaddressline1";
+				return response;
+			}
 
-		 if (param.get("preaddressline1") != null && param.get("preaddressline1") != "") {
-			if (!validatepreaddressline1((String) param.get("preaddressline1")))
-				return true;
-		} else if (param.get("preaddressline2") != null && param.get("preaddressline2") != "") {
-			if (!validatepreaddressline2((String) param.get("preaddressline2")))
-				return true;
-		} else if (param.get("previllagetown") == null || param.get("previllagetown") == "") {
-			return true;
-		} else if (!validateprevillagetown((String) param.get("previllagetown"))) {
-			return true;
-		} else if (param.get("predistrictcode") == null || param.get("predistrictcode") == "") {
-			return true;
-		} else if (!validatepredistrictcode((String) param.get("predistrictcode"))) {
-			return true;
-		} else if (param.get("prepincode") == null || param.get("prepincode") == "") {
-			return true;
-		} else if (!validateprepincode((String) param.get("prepincode"))) {
-			return true;
-		} else if (param.get("peraddressline1") != null && param.get("peraddressline1") != "") {
-			if (!validatepreaddressline1((String) param.get("peraddressline1")))
-				return true;
-		} else if (param.get("peraddressline2") != null && param.get("peraddressline2") != "") {
-			if (!validatepreaddressline2((String) param.get("peraddressline2")))
-				return true;
-		} else if (param.get("pervillagetown") == null || param.get("pervillagetown") == "") {
-			return true;
-		} else if (!validatepervillagetown((String) param.get("pervillagetown"))) {
-			return true;
-		} else if (param.get("perdistrictcode") == null || param.get("perdistrictcode") == "") {
-			return true;
-		} else if (!validateperdistrictcode((String) param.get("perdistrictcode"))) {
-			return true;
-		} else if (param.get("perpincode") == null || param.get("perpincode") == "") {
-			return true;
-		} else if (!validateperpincode((String) param.get("perpincode"))) {
-			return true;
-		} else if ((String) param.get("listLicenseesregistrationsm") == null
+		}
+		if (param.get("preaddressline2") != null || param.get("preaddressline2") != "") {
+			if (validateaddressline((String) param.get("preaddressline2"))) {
+				LOG.info(" validate preaddressline2");
+				response = "invalid preaddressline2";
+				return response;
+			}
+
+		}
+		if (param.get("previllagetown") == null || param.get("previllagetown") == "") {
+			LOG.info(" validate previllagetown");
+			response = "invalid previllagetown";
+			return response;
+		}
+		if (validateaddressline((String) param.get("previllagetown"))) {
+			LOG.info(" validate previllagetown");
+			response = "invalid previllagetown";
+			return response;
+		}
+		if (param.get("prestatecode") == null || param.get("prestatecode") == "") {
+			LOG.info(" validate prestatecode");
+			response = "invalid prestatecode";
+			return response;
+		}
+		if (param.get("predistrictcode") == null || param.get("predistrictcode") == "") {
+			LOG.info(" validate predistrictcode");
+			response = "invalid predistrictcode";
+			return response;
+		}
+
+		if (validatecommoncodes((String) param.get("predistrictcode"))) {
+
+			LOG.info(" validate predistrictcode");
+			response = "invalid";
+			return response;
+		}
+
+		if (param.get("prepincode") == null || param.get("prepincode") == "") {
+			LOG.info(" validate prepincode");
+			response = "invalid";
+			return response;
+		}
+		if (validatepincode((String) param.get("prepincode"))) {
+			LOG.info(" validate prepincode");
+			response = "invalid";
+			return response;
+		}
+		if (param.get("peraddressline1") != null && param.get("peraddressline1") != "") {
+			if (validateaddressline((String) param.get("peraddressline1")))
+				LOG.info(" validate peraddressline1");
+			response = "invalid peraddressline1";
+			return response;
+		}
+		if (param.get("peraddressline2") != null && param.get("peraddressline2") != "") {
+			if (validateaddressline((String) param.get("peraddressline2")))
+				LOG.info(" validate peraddressline1");
+			response = "invalid peraddressline1";
+			return response;
+		}
+		if (param.get("pervillagetown") == null || param.get("pervillagetown") == "") {
+			LOG.info(" validate pervillagetown");
+			response = "invalid pervillagetown";
+			return response;
+		}
+		if (validateaddressline((String) param.get("pervillagetown"))) {
+			LOG.info(" validate pervillagetown");
+			response = "invalid pervillagetown";
+			return response;
+		}
+		if (param.get("perstatecode") == null || param.get("perstatecode") == "") {
+			LOG.info(" validate perstatecode");
+			response = "invalid perstatecode";
+			return response;
+		}
+		if (param.get("perdistrictcode") == null || param.get("perdistrictcode") == "") {
+			LOG.info(" validate perdistrictcode");
+			response = "invalid perdistrictcode";
+			return response;
+		}
+		if (validatecommoncodes((String) param.get("perdistrictcode"))) {
+			LOG.info(" validate perdistrictcode");
+			response = "invalid perdistrictcode";
+			return response;
+		}
+		if (param.get("perpincode") == null || param.get("perpincode") == "") {
+			LOG.info(" validate perpincode");
+			response = "invalid perpincode";
+			return response;
+		}
+		if (validatepincode((String) param.get("perpincode"))) {
+			LOG.info(" validate perpincode");
+			response = "invalid perpincode";
+			return response;
+		}
+		if ((String) param.get("listLicenseesregistrationsm") == null
 				|| (String) param.get("listLicenseesregistrationsm") == "") {
-			return true;
-		} else if ((String) param.get("listLicenseesregistrationsm") != null
+			LOG.info(" validate listLicenseesregistrationsm");
+			response = "invalid listLicenseesregistrationsm";
+			return response;
+		}
+		if ((String) param.get("listLicenseesregistrationsm") != null
 				&& (String) param.get("listLicenseesregistrationsm") != "") {
+			LOG.info(" validate listLicenseesregistrationsm");
 			JSONParser parser = new JSONParser();
 			Object obj;
 			try {
@@ -112,18 +239,28 @@ public class RegistrationsStakeholderValidator {
 					for (int i = 0; i < listLicenseesregistrationsm.size(); i++) {
 						JSONObject row = (JSONObject) listLicenseesregistrationsm.get(i);
 						Boolean ischecked = (Boolean) row.get("ischecked");
-						if (param.get("licenseeregistrationcode") == null
-								|| param.get("licenseeregistrationcode") == "") {
-							return true;
-						} else if (!validatelicenseeregistrationcode((String) row.get("licenseeregistrationcode"))) {
-							return true;
+						if (ischecked == false) {
+							LOG.info(" validate licenseeregistrationcode:::");
+							response = "invalid licenseeregistrationcode";
+							return response;
 						}
-
-						if (param.get("registrationdescription") == null
-								|| param.get("registrationdescription") == "") {
-							return true;
-						} else if (!validateregistrationdescription((String) row.get("registrationdescription"))) {
-							return true;
+						if (validatecommoncodes((String) row.get("licenseeregistrationcode"))) {
+							LOG.info(" validate licenseeregistrationcode---"
+									+ (String) row.get("licenseeregistrationcode"));
+							response = "invalid licenseeregistrationcode";
+							return response;
+						}
+						System.out.println(":::::::regis"+row.get("registrationdescription"));
+						if ( row.get("registrationdescription")==null || row.get("registrationdescription")==""||  row.get("registrationdescription").equals("")) {
+							LOG.info(" validate registrationdescription-----");
+							response = "invalid registrationdescription";
+							return response;
+						}
+						if (validatelicenseedescription((String) row.get("registrationdescription"))) {
+							LOG.info(" validate registrationdescription:::"
+									+ (String) row.get("registrationdescription"));
+							response = "invalid registrationdescription";
+							return response;
 						}
 
 					}
@@ -132,48 +269,28 @@ public class RegistrationsStakeholderValidator {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			return false;
 		}
 
 		// end validate
-		return false;
+		return response;
 	}
 
 	public boolean validateUsercode(String usercode) {
-		System.out.println("validate usercode");
 		if (usercode == null || usercode.equals("") || !usercode.toString().matches("^[1-9]{1,10}$")
 				|| usercode.length() > 10) {
 //           System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
-	public boolean validateUsername(String username) {
+	public boolean validateUsername(String email) {
 		// TODO Auto-generated method stub
-		if (!Patterns.PatternCompileMatche(Patterns.PATTERN_EMAIL, username) || username.length() > 99) {
-			return false;
+		if (!Patterns.PatternCompileMatche(Patterns.PATTERN_EMAIL, email) || email.length() > 99) {
+			return true;
 		}
 
-		return true;
-	}
-
-	public boolean validateUserpassword(String userpassword) {
-		System.out.println("validate password");
-		if (userpassword.length() > 512 || !Patterns.PatternCompileMatche(Patterns.PATTERN_ALLOW_ALL, userpassword)) {
-//           System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validateFullname(String fullname) {
-		if (fullname.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, fullname)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
+		return false;
 	}
 
 	public boolean validateMobileno(String mobileno) {
@@ -184,39 +301,22 @@ public class RegistrationsStakeholderValidator {
 		return true;
 	}
 
-	public boolean validateDesignation(String designation) {
-		if (designation.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, designation)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validatelicenseetypecode(String licenseetypecode) {
-		System.out.println("validator licenseetypecode");
-		if (!licenseetypecode.toString().matches("^[1-9]{1,5}$") || licenseetypecode.length() > 5) {
+	public boolean validatecommoncodes(String data) {
+		if (!data.toString().matches("^[1-9]{1,5}$") || data.length() > 5) {
 //           System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public boolean validatefirmindividual(String firmindividual) {
 		if (firmindividual.length() > 1
 				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_FIRMINDIVIDUAL, firmindividual)) {
 //          System.out.println("invalid format");
-			return false;
+			return true;
 		}
 		return true;
 
-	}
-
-	public boolean validateapplicantsname(String applicantsname) {
-		if (applicantsname.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, applicantsname)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
 	}
 
 	public boolean validategender(String gender) {
@@ -227,126 +327,40 @@ public class RegistrationsStakeholderValidator {
 		return true;
 	}
 
-	public boolean validatepreaddressline1(String preaddressline1) {
-		if (preaddressline1 == null || preaddressline1.equals("") || preaddressline1.length() > 99
-				|| !Patterns.PatternCompileMatche("^[a-zA-Z0-9\\s\\,\\@\\.\\-]*$", preaddressline1)) {
+	public boolean validateaddressline(String address) {
+		System.out.println(address);
+		if (address.length() > 99 || !Patterns.PatternCompileMatche("^(?![ .]+$)[a-zA-Z0-9 .]*$", address)) {
+//			if (address.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_STRING_SPACE, address)) {
 //          System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
-	public boolean validatepreaddressline2(String preaddressline2) {
-		if (preaddressline2 == null || preaddressline2.equals("") || preaddressline2.length() > 99
-				|| !Patterns.PatternCompileMatche("^[a-zA-Z0-9\\s\\,\\@\\.\\-]*$", preaddressline2)) {
+	public boolean validatepincode(String pincode) {
+		if (pincode.length() > 99 || !Patterns.PatternCompileMatche(Patterns.PATTERN_PINCODE, pincode)) {
 //          System.out.println("invalid format");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
-	public boolean validateprevillagetown(String previllagetown) {
-		if (previllagetown == null || previllagetown.equals("") || previllagetown.length() > 99
-				|| !Patterns.PatternCompileMatche("^[a-zA-Z0-9\\s\\,\\@\\.\\-]*$", previllagetown)) {
-//          System.out.println("invalid format");
-			return false;
+	public boolean validatenamedesignationfirm(String commondata) {
+		if (commondata == null || commondata.equals("") || commondata.length() > 99
+				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, commondata)) {
+			System.out.println("invalid data" + commondata);
+			return true;
 		}
-		return true;
+		return false;
 	}
 
-	public boolean validatepredistrictcode(String predistrictcode) {
-		System.out.println("validator predistrictcode");
-		if (predistrictcode == null || predistrictcode.equals("") || !predistrictcode.toString().matches("^[1-9]{1,5}$")
-				|| predistrictcode.length() > 5) {
-//           System.out.println("invalid format");
-			return false;
+	public boolean validatelicenseedescription(String licenseedescription) {
+		if (licenseedescription.length() > 99
+				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, licenseedescription)) {
+			System.out.println("invalid data" + licenseedescription);
+			return true;
 		}
-		return true;
-	}
-
-	public boolean validateprepincode(String prepincode) {
-		if (prepincode == null || prepincode.equals("") || prepincode.length() > 99
-				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_PINCODE, prepincode)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validateperaddressline1(String peraddressline1) {
-		if (peraddressline1 == null || peraddressline1.equals("") || peraddressline1.length() > 99
-				|| !Patterns.PatternCompileMatche("^[a-zA-Z0-9\\s\\,\\@\\.\\-]*$", peraddressline1)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validateperaddressline2(String peraddressline2) {
-		if (peraddressline2 == null || peraddressline2.equals("") || peraddressline2.length() > 99
-				|| !Patterns.PatternCompileMatche("^[a-zA-Z0-9\\s\\,\\@\\.\\-]*$", peraddressline2)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validatepervillagetown(String pervillagetown) {
-		if (pervillagetown == null || pervillagetown.equals("") || pervillagetown.length() > 99
-				|| !Patterns.PatternCompileMatche("^[a-zA-Z0-9\\s\\,\\@\\.\\-]*$", pervillagetown)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validateperdistrictcode(String perdistrictcode) {
-		System.out.println("validator perdistrictcode");
-		if (perdistrictcode == null || perdistrictcode.equals("") || !perdistrictcode.toString().matches("^[1-9]{1,5}$")
-				|| perdistrictcode.length() > 5) {
-//           System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validateperpincode(String perpincode) {
-		if (perpincode == null || perpincode.equals("") || perpincode.length() > 10
-				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_PINCODE, perpincode)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validatefirmname(String firmname) {
-		if (firmname == null || firmname.equals("") || firmname.length() > 99
-				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, firmname)) {
-			System.out.println("invalid firmname");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validatelicenseeregistrationcode(String licenseeregistrationcode) {
-		System.out.println("validator licenseeregistrationcode");
-		if (licenseeregistrationcode == null || licenseeregistrationcode.equals("")
-				|| !licenseeregistrationcode.toString().matches("^[1-9]{1,5}$")
-				|| licenseeregistrationcode.length() > 5) {
-//           System.out.println("invalid format");
-			return false;
-		}
-		return true;
-	}
-
-	public boolean validateregistrationdescription(String registrationdescription) {
-		if (registrationdescription == null || registrationdescription.equals("")
-				|| registrationdescription.length() > 99
-				|| !Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, registrationdescription)) {
-//          System.out.println("invalid format");
-			return false;
-		}
-		return true;
+		return false;
 	}
 
 }

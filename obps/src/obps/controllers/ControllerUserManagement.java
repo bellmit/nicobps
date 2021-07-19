@@ -50,7 +50,6 @@ import obps.util.notifications.ServiceSms;
 import obps.validators.RegistrationsStakeholderValidator;
 import obps.validators.UserManagementValidator;
 
-
 import obps.validators.ValidateLicenseEnclosures;
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.daos.DaoUserManagementInterface;
@@ -64,7 +63,7 @@ import obps.services.ServiceUserManagementInterface;
 @Controller
 @Configuration
 @PropertySource("classpath:application.properties")
-public class ControllerUserManagement { 
+public class ControllerUserManagement {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
@@ -74,16 +73,16 @@ public class ControllerUserManagement {
 
 	@Autowired
 	private RegistrationsStakeholderValidator registrationstakeholderValidator;
-	
+
 	@Autowired
 	private ServiceNotification serviceNotification;
-	
+
 	@Autowired
 	private UserManagementValidator userManagementValidator;
 
 	@Resource
-	private Environment environment;	
-	
+	private Environment environment;
+
 	@Autowired
 	private ValidateLicenseEnclosures vle;
 
@@ -95,8 +94,10 @@ public class ControllerUserManagement {
 	// =================================Registration====================================//
 	@RequestMapping("/signup.htm")
 	public String signup() {
-		//sentNotification(Integer officecode, String messageid, String recipientMobileno,String recipientEmailid, String[] params)
-		//serviceNotification.sentNotification(1, "REGISTRATION", "9366554970", "avijitdebnath@gmail.com",new String[]{"12345"});		
+		// sentNotification(Integer officecode, String messageid, String
+		// recipientMobileno,String recipientEmailid, String[] params)
+		// serviceNotification.sentNotification(1, "REGISTRATION", "9366554970",
+		// "avijitdebnath@gmail.com",new String[]{"12345"});
 		return "signup";
 	}
 
@@ -114,33 +115,32 @@ public class ControllerUserManagement {
 		data.put("isemail", isemail);
 		return data;
 	}
-	
+
 	@PostMapping(value = "/resendOTP.htm")
-	public @ResponseBody String resendOTP(HttpServletRequest request) 
-	{			
+	public @ResponseBody String resendOTP(HttpServletRequest request) {
 		String issms = environment.getProperty("cansentsms");
-		String isemail = environment.getProperty("cansentemail");	
-		String mobileotp="",emailotp="",mobileno=null,emailid=null;
+		String isemail = environment.getProperty("cansentemail");
+		String mobileotp = "", emailotp = "", mobileno = null, emailid = null;
 		if (issms.equals("Y")) {
-			mobileno=(String)request.getParameter("mobileno");					
-			mobileotp = Utilty.getRandomNumber()+"";
-			request.getSession().setAttribute("mobileotp", mobileotp.toString());							
+			mobileno = (String) request.getParameter("mobileno");
+			mobileotp = Utilty.getRandomNumber() + "";
+			request.getSession().setAttribute("mobileotp", mobileotp.toString());
 		}
 		if (isemail.equals("Y")) {
-			emailid=(String)request.getParameter("username");						
-			emailotp = Utilty.getRandomNumber()+"";
-			request.getSession().setAttribute("emailotp", emailotp.toString());							
-		}	
-		serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{mobileotp},new String[]{emailotp});
+			emailid = (String) request.getParameter("username");
+			emailotp = Utilty.getRandomNumber() + "";
+			request.getSession().setAttribute("emailotp", emailotp.toString());
+		}
+		serviceNotification.sentNotification(1, "REGISTRATION", mobileno, emailid, new String[] { mobileotp },
+				new String[] { emailotp });
 		return "OTP Sent";
 	}
-	
 
 	@PostMapping("/submitSignupDetails.htm")
 	// public ResponseEntity<?> submitProfilePersonalDetails(@RequestBody
 	// Map<String,Object> param,HttpServletRequest request)
-	public ResponseEntity<?> submitProfilePersonalDetails(@RequestParam Map<String, Object> param,HttpServletRequest request) 
-	{
+	public ResponseEntity<?> submitProfilePersonalDetails(@RequestParam Map<String, Object> param,
+			HttpServletRequest request) {
 		// for (Map.Entry<String, Object> entry : param.entrySet()){
 		// System.out.println(entry.getKey() +" ::: " + entry.getValue());
 		// }
@@ -155,10 +155,13 @@ public class ControllerUserManagement {
 				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
 			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
 		}
-		
-		if(registrationstakeholderValidator.validateUserDetails(param)) {
-			return ResponseEntity.badRequest().body(new String("Please check your inputs!"));
+
+		String validate = registrationstakeholderValidator.validateUserDetails(param);
+
+		if (validate != "") {
+			return ResponseEntity.badRequest().body(new String(validate));
 		}
+		
 		if (serviceUserManagementInterface.checkEmailExistance((String) param.get("username"))) {
 			return ResponseEntity.badRequest().body(new String("Email already exists!"));
 		}
@@ -167,23 +170,22 @@ public class ControllerUserManagement {
 		}
 		String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 		param.put("afrcode", afrcode);
-		
-		String mobileotp="",emailotp="",mobileno=null,emailid=null;
-		if (issms.equals("Y") || isemail.equals("Y")) 
-		{			
-			if (isotp.equals("N")) 
-			{
-				if (issms.equals("Y")) {					
-					mobileno=(String) param.get("mobileno");
-					mobileotp = Utilty.getRandomNumber()+"";
-					request.getSession().setAttribute("mobileotp", mobileotp.toString());					
+
+		String mobileotp = "", emailotp = "", mobileno = null, emailid = null;
+		if (issms.equals("Y") || isemail.equals("Y")) {
+			if (isotp.equals("N")) {
+				if (issms.equals("Y")) {
+					mobileno = (String) param.get("mobileno");
+					mobileotp = Utilty.getRandomNumber() + "";
+					request.getSession().setAttribute("mobileotp", mobileotp.toString());
 				}
-				if (isemail.equals("Y")) {					
-					emailid=(String) param.get("username");
-					emailotp = Utilty.getRandomNumber()+"";
-					request.getSession().setAttribute("emailotp", emailotp.toString());					
-				}	
-				serviceNotification.sentNotification(1,"REGISTRATION",mobileno,emailid,new String[]{mobileotp},new String[]{emailotp});
+				if (isemail.equals("Y")) {
+					emailid = (String) param.get("username");
+					emailotp = Utilty.getRandomNumber() + "";
+					request.getSession().setAttribute("emailotp", emailotp.toString());
+				}
+				serviceNotification.sentNotification(1, "REGISTRATION", mobileno, emailid, new String[] { mobileotp },
+						new String[] { emailotp });
 				return ResponseEntity.ok(new String("0"));
 			} else {
 				if (isemail.equals("Y")) {
@@ -208,11 +210,12 @@ public class ControllerUserManagement {
 					request.getSession().setAttribute("username", (String) param.get("username"));
 					request.getSession().setAttribute("mobileno", (String) param.get("mobileno"));
 					request.getSession().setAttribute("licenseetypecode", (String) param.get("licenseetypecode"));
-					
+
 					// return ResponseEntity.ok(new String("Details submitted successfully!"));
 					return ResponseEntity.ok(new String("1"));
 				} else {
-					return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+					return ResponseEntity.badRequest().body(new String(
+							"Sorry, but we are unable to process the request at the moment. Please try again later."));
 				}
 			}
 		} else {
@@ -223,7 +226,8 @@ public class ControllerUserManagement {
 				// return ResponseEntity.ok(new String("Details submitted successfully!"));
 				return ResponseEntity.ok(new String("1"));
 			} else {
-				return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+				return ResponseEntity.badRequest().body(new String(
+						"Sorry, but we are unable to process the request at the moment. Please try again later."));
 			}
 		}
 
@@ -259,11 +263,14 @@ public class ControllerUserManagement {
 			// model.addAttribute("enclosuresList",serviceUtilInterface.listEnclosures(Short.valueOf("1"),Integer.valueOf(usercode)));
 			model.addAttribute("enclosuresList", serviceUtilInterface.listEnclosures(Short.valueOf("1"),
 					Integer.valueOf(usercode), Short.valueOf(licenseetypecode)));
-			List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));			
-			model.addAttribute("listEnclosuresNotUploades",listEnclosuresNotUploades );
-			//System.out.println("listEnclosuresNotUploades.size() : "+listEnclosuresNotUploades.size());
-			if(listEnclosuresNotUploades.size()>0) {
-				model.addAttribute("successNotUploadedMsg", "Please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs");
+			List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(
+					Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));
+			model.addAttribute("listEnclosuresNotUploades", listEnclosuresNotUploades);
+			// System.out.println("listEnclosuresNotUploades.size() :
+			// "+listEnclosuresNotUploades.size());
+			if (listEnclosuresNotUploades.size() > 0) {
+				model.addAttribute("successNotUploadedMsg",
+						"Please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs");
 			}
 		}
 		return "uploadenclosuresint";
@@ -280,8 +287,7 @@ public class ControllerUserManagement {
 		String licenseetypecode = (String) request.getSession().getAttribute("licenseetypecode");
 		model.addAttribute("successMsg", "");
 		model.addAttribute("successNotUploadedMsg", "");
-		if (usercode != null && licenseetypecode != null) 
-		{
+		if (usercode != null && licenseetypecode != null) {
 			licenseesenclosures.setUsercode(usercode);
 			licenseesenclosures.setLicenseetypecode(usercode);
 			licenseesenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
@@ -290,28 +296,30 @@ public class ControllerUserManagement {
 				String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 				licenseesenclosures.setAfrcode(afrcode);
 
-				if (serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures)) 
-				{
-					
-					List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));			
-					String successMsg="";
-					if(user != null) {
-						if(listEnclosuresNotUploades.size()==0) {
-							successMsg="Documents uploaded successfully, please register with UBLs";							
-						}else {
-							successMsg="Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
+				if (serviceUserManagementInterface.submitLicenseesenclosures(licenseesenclosures)) {
+
+					List<CommonMap> listEnclosuresNotUploades = serviceUtilInterface.listEnclosuresNotUploades(
+							Short.valueOf("1"), Integer.valueOf(usercode), Short.valueOf(licenseetypecode));
+					String successMsg = "";
+					if (user != null) {
+						if (listEnclosuresNotUploades.size() == 0) {
+							successMsg = "Documents uploaded successfully, please register with UBLs";
+						} else {
+							successMsg = "Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
 						}
-					}else {
-						if(listEnclosuresNotUploades.size()==0) {
-							successMsg="Documents uploaded successfully, please login and register with UBLs";							
-						}else {
-							successMsg="Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
-						}						
-					}										
-					model.addAttribute("successMsg",successMsg);
-					//model.addAttribute("successMsg", "The documents have been uploaded successfully.");
+					} else {
+						if (listEnclosuresNotUploades.size() == 0) {
+							successMsg = "Documents uploaded successfully, please login and register with UBLs";
+						} else {
+							successMsg = "Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
+						}
+					}
+					model.addAttribute("successMsg", successMsg);
+					// model.addAttribute("successMsg", "The documents have been uploaded
+					// successfully.");
 				} else {
-					model.addAttribute("successMsg", "Sorry, but we are unable to process the request at the moment. Please try again later.!");
+					model.addAttribute("successMsg",
+							"Sorry, but we are unable to process the request at the moment. Please try again later.!");
 				}
 			}
 			if (licenseetypecode != null && usercode != null) {
@@ -353,16 +361,18 @@ public class ControllerUserManagement {
 	 * param.put("afrcode", afrcode);
 	 * 
 	 * if (usercode != null) { param.put("usercode", usercode); } else { return
-	 * ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later.")); }
-	 * System.out.println("validate file param controller"+param);
+	 * ResponseEntity.badRequest().body(new
+	 * String("Sorry, but we are unable to process the request at the moment. Please try again later."
+	 * )); } System.out.println("validate file param controller"+param);
 	 * Log.info("validate file param controller"+param); //validate file
 	 * if(uploadBpaEnclosuersValidatorInterface.validateEnclosureDetails(param)) {
 	 * System.out.println("validated file!"); if
 	 * (serviceUserManagementInterface.submitEnclosureDetails(param)) { return
 	 * ResponseEntity.ok(new
 	 * String("The documents have been uploaded successfully.")); } else { return
-	 * ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later.")); }
-	 * }else { return ResponseEntity.badRequest().body(new
+	 * ResponseEntity.badRequest().body(new
+	 * String("Sorry, but we are unable to process the request at the moment. Please try again later."
+	 * )); } }else { return ResponseEntity.badRequest().body(new
 	 * String("Invalid File!Documents could not be uploaded!")); }
 	 * 
 	 * }
@@ -450,13 +460,15 @@ public class ControllerUserManagement {
 		if (usercode != null) {
 			param.put("usercode", usercode);
 		} else {
-			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+			return ResponseEntity.badRequest().body(new String(
+					"Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 
 		if (serviceUserManagementInterface.updatePassword(param)) {
 			return ResponseEntity.ok(new String("Password updated successfully!"));
 		} else {
-			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+			return ResponseEntity.badRequest().body(new String(
+					"Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 	}
 
@@ -478,48 +490,47 @@ public class ControllerUserManagement {
 					exist = true;
 					break;
 				}
-			} 
+			}
 			if (!exist) {
 				response.put("code", 400);
 				response.put("msg", "Not Authorized to create user from selected office.");
 				return ResponseEntity.ok().body(response);
 			}
 		}
-		String usercode ="";
-		if(serviceUserManagementInterface.getMaxUsercode()!=null)
+		String usercode = "";
+		if (serviceUserManagementInterface.getMaxUsercode() != null)
 			usercode = serviceUserManagementInterface.getMaxUsercode() + "";
 		user.put("usercode", usercode);
 		user.put("usertype", "BACKEND_USER");
-		
-		String validate=userManagementValidator.validateCreateUser(user);
-		System.out.println("Validate"+validate);
-		if(validate!="") {
+
+		String validate = userManagementValidator.validateCreateUser(user);
+		System.out.println("Validate" + validate);
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-		String username=((String) user.get("username")).trim();
+		String username = ((String) user.get("username")).trim();
 		String sql = "Select count(*) from  nicobps.userlogins where LOWER(username)=LOWER(?)";
-		Object[] values = {username};
+		Object[] values = { username };
 		boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
-		System.out.println("easdasd"+exist);
-		if(exist)
+		System.out.println("easdasd" + exist);
+		if (exist)
 			response.put("data", "exist");
 		else {
-			
-				
+
 			if (serviceUserManagementInterface.createUser(user)) {
 				response.put("code", 200);
 				response.put("data", "Success");
 				response.put("msg", "");
 				return ResponseEntity.ok().body(response);
-			}else {
-			response.put("code", 200);
-			response.put("data", "Error");
-			return ResponseEntity.ok().body(response);
+			} else {
+				response.put("code", 200);
+				response.put("data", "Error");
+				return ResponseEntity.ok().body(response);
 			}
 		}
-		
+
 		response.put("code", 200);
 		return ResponseEntity.ok().body(response);
 	}
@@ -527,25 +538,25 @@ public class ControllerUserManagement {
 	@PostMapping(value = "/updateuser.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateUser(@RequestBody Map<String, Object> user) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate=userManagementValidator.validateCreateUser(user);
-		System.out.println("Validate"+validate);
-		if(validate!="") {
+		String validate = userManagementValidator.validateCreateUser(user);
+		System.out.println("Validate" + validate);
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-			
+
 		if (serviceUserManagementInterface.updateUser(user)) {
 			response.put("code", 200);
 			response.put("data", "Success");
 			response.put("msg", "");
 			return ResponseEntity.ok().body(response);
-		}else {
-		response.put("code", 200);
-		response.put("data", "Error");
-		return ResponseEntity.ok().body(response);
+		} else {
+			response.put("code", 200);
+			response.put("data", "Error");
+			return ResponseEntity.ok().body(response);
 		}
-		
+
 	}
 
 	@GetMapping("/listOfficeUsers.htm")
@@ -562,42 +573,41 @@ public class ControllerUserManagement {
 
 	@PostMapping(value = "/saveurl.htm")
 	public ResponseEntity<HashMap<String, Object>> saveurl(@RequestBody Pageurls url) {
-		String validate="";
+		String validate = "";
 		HashMap<String, Object> response = new HashMap<String, Object>();
 //		System.out.println(url);
-		if(url!=null) {
-			validate=userManagementValidator.validatePageUrls(url);
-			if(validate!="") {
+		if (url != null) {
+			validate = userManagementValidator.validatePageUrls(url);
+			if (validate != "") {
 				response.put("code", 200);
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
-			String pageurl=url.getPageurl();
+			String pageurl = url.getPageurl();
 			String sql = "Select count(*) from  masters.pageurls where LOWER(pageurl)=LOWER(?)";
-			Object[] values = {pageurl};
+			Object[] values = { pageurl };
 			boolean exist = daoEnclosureManagementInterface.checkExistance(sql, values);
-			if(exist) {
+			if (exist) {
 				response.put("code", 200);
 				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
-				
-			if(serviceUserManagementInterface.savePageurl(url).equalsIgnoreCase("Saved")) {
+
+			if (serviceUserManagementInterface.savePageurl(url).equalsIgnoreCase("Saved")) {
 				response.put("code", 200);
 				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
-			}else {
+			} else {
 				response.put("code", 200);
 				response.put("data", "Failed");
 				return ResponseEntity.ok().body(response);
 			}
-		
+
 		}
 		response.put("code", 200);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
-		
-			
+
 //		return ResponseEntity.ok().body(serviceUserManagementInterface.savePageurl(url));
 	}
 
@@ -621,17 +631,17 @@ public class ControllerUserManagement {
 
 	@PostMapping(value = "/saveUserpages.htm")
 	public @ResponseBody String saveUserpages(@RequestBody List<Map<String, Object>> userpages) {
-		String response="";
-		
-		String validate= userManagementValidator.validateAccessControl(userpages);
-		if(validate!="") {
-			response=validate;
-		}else {
-		response = serviceUserManagementInterface.saveUserpages(userpages);
+		String response = "";
+
+		String validate = userManagementValidator.validateAccessControl(userpages);
+		if (validate != "") {
+			response = validate;
+		} else {
+			response = serviceUserManagementInterface.saveUserpages(userpages);
 		}
 		return response;
 	}
-	
+
 	@GetMapping("/userwards.htm")
 	public String extendstakeholdervalidity(Model model, HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
