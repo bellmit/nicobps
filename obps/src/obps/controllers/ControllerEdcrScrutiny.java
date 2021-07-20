@@ -67,40 +67,59 @@ public class ControllerEdcrScrutiny {
 		return edcrscrutiny.Scrutinize(planFile, usercode, OfficeCode, stateid, tenantid);
 	}
 
+//	@RequestMapping(value = "/ScrutinyshowFile.htm", method = RequestMethod.GET)
+//	public @ResponseBody String showFile(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam(value = "edcrnumber", required = true) String edcrnumber) {
+//		String successUrel = "output";
+//		try {
+//			String sql = "select scrutinyreport from nicobps.edcrscrutiny where edcrnumber=?";
+//			Object[] criteria = { edcrnumber };
+//			byte[] binaryFile = serviceUtilInterface.getBytes(sql, criteria);
+//
+//			String planFile = "planFile-" + edcrnumber;
+//			String ContentType = UtilFile.getFileContentType(binaryFile);
+//
+//			if (ContentType.contentEquals("application/pdf")) {
+//				planFile += ".pdf";
+//			} else {
+//				planFile += ".jpg";
+//			}
+//
+//			response.setContentType(ContentType);
+//			response.setHeader("Content-Disposition", "filename=" + planFile);
+//			response.setContentLength(binaryFile.length);
+//			OutputStream os = response.getOutputStream();
+//
+//			try {
+//				os.write(binaryFile, 0, binaryFile.length);
+//			} catch (Exception excp) {
+//				// handle error
+//			} finally {
+//				os.close();
+//			}
+//		} catch (Exception e) {
+//			System.out.println("Exception :: " + e);
+//			// successUrel="rdirect:error.jsp";
+//		}
+//		return successUrel;
+//	}
+
 	@RequestMapping(value = "/ScrutinyshowFile.htm", method = RequestMethod.GET)
 	public @ResponseBody String showFile(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "edcrnumber", required = true) String edcrnumber) {
-		String successUrel = "output";
+	
+		byte[] binaryFile = null;
 		try {
 			String sql = "select scrutinyreport from nicobps.edcrscrutiny where edcrnumber=?";
-			Object[] criteria = { edcrnumber };
-			byte[] binaryFile = serviceUtilInterface.getBytes(sql, criteria);
-
-			String planFile = "planFile-" + edcrnumber;
-			String ContentType = UtilFile.getFileContentType(binaryFile);
-
-			if (ContentType.contentEquals("application/pdf")) {
-				planFile += ".pdf";
-			} else {
-				planFile += ".jpg";
-			}
-
-			response.setContentType(ContentType);
-			response.setHeader("Content-Disposition", "filename=" + planFile);
-			response.setContentLength(binaryFile.length);
-			OutputStream os = response.getOutputStream();
-
-			try {
-				os.write(binaryFile, 0, binaryFile.length);
-			} catch (Exception excp) {
-				// handle error
-			} finally {
-				os.close();
-			}
+			Object[] criteria = { (edcrnumber) };
+			binaryFile = serviceUtilInterface.getBytes(sql, criteria);
+			System.out.println(binaryFile);
+			System.out.println("iframe src=\"data:application/pdf;base64,"+Base64.getEncoder().encodeToString("adasd".getBytes())+"\"></iframe");
+			
 		} catch (Exception e) {
 			System.out.println("Exception :: " + e);
-			// successUrel="rdirect:error.jsp";
+
 		}
-		return successUrel;
+		return (binaryFile != null)? "<iframe src=\"data:application/pdf;base64,"+Base64.getEncoder().encodeToString(binaryFile)+"\" height=\"100%\" width=\"100%\"></iframe>" : null; 
 	}
 }
