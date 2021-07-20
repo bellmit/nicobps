@@ -16,6 +16,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -252,15 +253,15 @@ public class DaoUtil implements DaoUtilInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public <T> boolean update(List<BatchUpdateModel> list) {
 		boolean response = false;
 		try {
-			for(BatchUpdateModel m:list) {
+			for (BatchUpdateModel m : list) {
 				response = jdbcTemplate.update(m.getSql(), m.getParams()) >= 0;
-				if(!response) {
+				if (!response) {
 					throw new Exception();
 				}
 			}
@@ -270,42 +271,72 @@ public class DaoUtil implements DaoUtilInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
-	public boolean updateApplicationflowremarks(Integer afrcode,String applicationcode,Integer modulecode,Integer fromprocesscode,Integer toprocesscode,Integer fromusercode,Integer tousercode,String remarks) 
-	{
+	public boolean updateApplicationflowremarks(Integer afrcode, String applicationcode, Integer modulecode,
+			Integer fromprocesscode, Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks) {
 		boolean response = false;
 		String sql = null;
-		try 
-		{	
+		try {
 			sql = "INSERT INTO nicobps.applicationflowremarks(afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks) "
-				+ "VALUES (?,?,?,?,?,?,?,?) ";
-			Object[] values2 = {afrcode,applicationcode,modulecode,fromprocesscode,toprocesscode,fromusercode,tousercode,remarks};
-			response = jdbcTemplate.update(sql, values2) > 0;																
+					+ "VALUES (?,?,?,?,?,?,?,?) ";
+			Object[] values2 = { afrcode, applicationcode, modulecode, fromprocesscode, toprocesscode, fromusercode,
+					tousercode, remarks };
+			response = jdbcTemplate.update(sql, values2) > 0;
 		} catch (Exception e) {
 			e.getStackTrace();
 			response = false;
 			System.out.println("Error in DaoUtil.updateApplicationflowremarks(Map<String,String> param) : " + e);
 		}
 		return response;
-	}	
-	
+	}
+
 	@Override
-	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) 
-	{
+	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
 		boolean response = false;
 		String sql = null;
-		try 
-		{	
+		try {
 			sql = "UPDATE nicobps.licenseeofficesvalidities set extendedto=TO_DATE(?, 'dd-mm-yyyy') , extendedby=? where officecode=? and usercode=?";
-			Object[] values = {extendedto,extendedby,officecode,usercode};
-			response = jdbcTemplate.update(sql, values) > 0;																
+			Object[] values = { extendedto, extendedby, officecode, usercode };
+			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			e.getStackTrace();
 			response = false;
 			System.out.println("Error in DaoUtil.updateApplicationflowremarks(Map<String,String> param) : " + e);
 		}
 		return response;
-	}		
+	}
+
+	@Override
+	public Map<String, Object> getPlanInfo(String permitnumber) {
+
+		System.out.println(" =================getPlanInfoObj==============");
+		System.out.println("permitnumber :" + permitnumber);
+		Map<String, Object> resp = null;
+		try {
+
+			String sqlquery = " select es.planinfoobject from nicobps.bpaapplications ba ,nicobps.bpaapproveapplications bap,nicobps.edcrscrutiny es "
+					+ "	where  ba.applicationcode=bap.applicationcode and es.edcrnumber=ba.edcrnumber "
+					+ "	 and status='Accepted' and bap.permitnumber= ? ;";
+			Object[] values = { permitnumber };
+
+			resp = jdbcTemplate.queryForMap(sqlquery, values);
+
+			System.out.println("resp :: " + resp);
+
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+
+		} catch (Exception e) {
+
+			e.getStackTrace();
+
+			System.out.println("Error in getPlanInfo  : " + e);
+		}
+
+		return resp;
+
+	};
+
 }

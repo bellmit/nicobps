@@ -45,6 +45,8 @@ public interface DaoUtilInterface {
 
 	public boolean updateApplicationflowremarks(Integer afrcode, String applicationcode, Integer modulecode,
 			Integer fromprocesscode, Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);
-	
+
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
+
+	public Map<String, Object> getPlanInfo(String permitnumber);
 }

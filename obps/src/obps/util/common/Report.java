@@ -4,23 +4,21 @@ package obps.util.common;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigInteger;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import javax.sql.DataSource;
 
-import net.minidev.json.JSONObject;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -29,16 +27,29 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import obps.daos.DaoEdcrScrutiny;
-import obps.util.application.ServiceUtilInterface;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class Report extends HttpServlet {
+
+	@Autowired
+	private PlanInfoDetails planinfo;
+
+	public void init(ServletConfig config) {
+		try {
+			super.init(config);
+			SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -78,10 +89,14 @@ public class Report extends HttpServlet {
 				System.out.println("permitnumber :" + permitnumber);
 
 				params.put("permitnumber", permitnumber);
-				params.put("logopath", logoPath);
+
 				reportName = "reports/buildingpermit02.jrxml";
 				filename = "BuildingPermit.pdf";
 
+				HashMap plandet = planinfo.getPlanInfoDetails(permitnumber);
+				params.putAll(plandet);
+
+				System.out.println("params for buildingpermit:: " + params.toString());
 			}
 
 			// System.out.println("status : "+status);
@@ -89,7 +104,7 @@ public class Report extends HttpServlet {
 
 			// System.out.println("reportName : "+reportName);
 			// params.put("embPath", embPath);
-			// params.put("logoPath", logoPath);
+			params.put("logopath", logoPath);
 			params.put("SUBREPORT_DIR", reportDirectory);
 
 			JasperDesign jasperDesign = JRXmlLoader.load(getServletContext().getRealPath("/") + reportName);
@@ -124,8 +139,8 @@ public class Report extends HttpServlet {
 				al = null;
 				params = null;
 			} catch (SQLException e) {
-				// System.out.println("Exception thrown by class " + this.getClass() + " at " +
-				// new java.util.Date() + " :: " + e);
+				System.out.println(
+						"SQLException thrown by class " + this.getClass() + " at " + new java.util.Date() + " :: " + e);
 				// Logger.getLogger(Report.class.getName()).log(Level.SEVERE, null, e);
 			}
 		}

@@ -312,13 +312,9 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,O1.OFFICECODE,  O1.STATEID, O1.TENANTID,\r\n"
 				+ "Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS NEWVALIDTO \r\n"
-				+ "FROM MASTERS.OFFICES O1, \r\n"
-				+ "nicobps.licenseeofficesvalidities  B, \r\n"
-				+ "nicobps.USERLOGINS U \r\n"
-				+ "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE \r\n"
-				+ "AND U.USERCODE = B.USERCODE\r\n"
-				+ "AND    U.USERCODE = ?  \r\n"
-				+ "ORDER BY O1.OFFICENAME1";
+				+ "FROM MASTERS.OFFICES O1, \r\n" + "nicobps.licenseeofficesvalidities  B, \r\n"
+				+ "nicobps.USERLOGINS U \r\n" + "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE \r\n"
+				+ "AND U.USERCODE = B.USERCODE\r\n" + "AND    U.USERCODE = ?  \r\n" + "ORDER BY O1.OFFICENAME1";
 
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql, criteria);
@@ -456,5 +452,10 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby) {
 
 		return daoUtilInterface.updateextendValidity(officecode, usercode, extendedto, extendedby);
+	}
+
+	@Override
+	public Map<String, Object> getPlanInfo(String permitnumber) {
+		return daoUtilInterface.getPlanInfo(permitnumber);
 	}
 }
