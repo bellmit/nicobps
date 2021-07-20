@@ -12,6 +12,7 @@ import obps.models.Occupancies;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
+import obps.models.UserDetails;
 import obps.models.Userlogin;
 
 public interface ServiceUserManagementInterface {
@@ -44,5 +45,7 @@ public interface ServiceUserManagementInterface {
 	public List<Userlogin> listUserAndMappedPages(Integer officecode);
 
 	public String saveUserpages(List<Map<String, Object>> upages);
+	
+	public UserDetails getUserDetails(Integer usercode);
 
 }

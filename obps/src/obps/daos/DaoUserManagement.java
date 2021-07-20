@@ -32,6 +32,7 @@ import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
+import obps.models.UserDetails;
 import obps.models.Userlogin;
 import obps.util.application.CommonMap;
 import obps.util.application.DaoUtil;
@@ -394,7 +395,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		try {
 			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url WHERE 1 = 1 and url.showinmenu != 'N' AND up.urlcode=url.urlcode AND up.usercode=? /*and showinmenu='Y' */ "
 					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
-			System.out.println(" SQL  2 : "  + sql);
+			//System.out.println(" SQL  2 : "  + sql);
 			Object[] criteria = { usercode };
 			urls = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Pageurls.class), criteria);
 		} catch (Exception e) {
@@ -455,7 +456,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 			String sql = "Select url.* From nicobps.UserPages up,masters.pageurls url "
 					+ "WHERE up.urlcode=url.urlcode and usercode=:usercode /* and showinmenu='Y' */ "
 					+ "ORDER BY parentorder,parent,submenuorder,submenu,subsubmenuorder,subsubmenu";
-			System.out.println(" SQL  3 : "  + sql);
+			//System.out.println(" SQL  3 : "  + sql);
 			MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("usercode", usercode);
 			rowList = (List<Map<String, Object>>) namedParameterJdbcTemplate.queryForList(sql, parameters);
 		} catch (Exception ex) {
@@ -494,6 +495,35 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		return response;
 	}
 
+	@Override
+	public UserDetails getUserDetails(Integer usercode) {
+		UserDetails ud = new UserDetails();
+		String sql="SELECT O.officecode, officename1 || CASE WHEN officename2 IS NOT NULL THEN ' '|| officename2|| ' ' ELSE '' END ||  CASE WHEN officename3 IS NOT NULL THEN officename3 ELSE '' END AS office, " + 
+				   "username, fullname,mobileno, designation " + 
+				   "FROM nicobps.userlogins U, masters.offices O, nicobps.useroffices UO WHERE U.usercode = UO.usercode AND O.officecode = UO.officecode " + 
+				   "AND U.usercode = ?";
+		List<UserDetails>  list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserDetails.class),new Object[] { usercode});
+		System.out.println("list.size() : "+list.size());
+		if(list.size()==0) {
+			sql="SELECT username, applicantsname,fullname, " + 
+				"preaddressline1  || ' ' || preaddressline2  || ' ' || previllagetown  || ', ' || PRED.districtname  || ', ' || PRES.statename || '-' || prepincode AS presentaddress, " + 
+				"peraddressline1  || ' ' || peraddressline2  || ' ' || pervillagetown  || ', ' || PERD.districtname  || ', ' || PERS.statename || '-' || perpincode AS permanentaddress, " + 
+				"licenseetypename, " + 
+				"mobileno " + 
+				"FROM nicobps.userlogins U, nicobps.licensees L, masters.licenseetypes LT, masters.districts PRED, masters.districts PERD,masters.states PRES, masters.states PERS " + 
+				"WHERE U.usercode = L.usercode " + 
+				"AND LT.licenseetypecode = L.licenseetypecode " + 
+				"AND PRED.districtcode = predistrictcode " + 
+				"AND PERD.districtcode = perdistrictcode " + 
+				"AND PRES.statecode = PRED.statecode " + 
+				"AND PERS.statecode = PERD.statecode " + 
+				"AND U.usercode =? ";			
+			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserDetails.class),new Object[] { usercode});
+		}		
+		ud=list.get(0);		
+		System.out.println("userdetails : "+ud.toString());
+		return ud;		
+	}
 	
 
 }

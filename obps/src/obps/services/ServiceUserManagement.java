@@ -17,6 +17,7 @@ import obps.models.Occupancies;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
+import obps.models.UserDetails;
 import obps.models.Userlogin;
 import obps.util.application.ServiceUtilInterface;
 
@@ -122,6 +123,8 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 		return (DaoUserManagementInterface.mapUserpages(upages)) ? "Mapped" : "Failed";
 	}
     
-
+    public UserDetails getUserDetails(Integer usercode) {
+    	return DaoUserManagementInterface.getUserDetails(usercode);
+    }
     
 }

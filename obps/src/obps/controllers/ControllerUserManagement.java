@@ -56,6 +56,7 @@ import obps.daos.DaoUserManagementInterface;
 import obps.models.AppEnclosures;
 import obps.models.LicenseesEnclosures;
 import obps.models.Pageurls;
+import obps.models.UserDetails;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
 
@@ -650,4 +651,15 @@ public class ControllerUserManagement {
 
 		return "initialization/userwards";
 	}
+	
+	
+	@RequestMapping("/profile.htm")
+	public String profile(Model model,HttpServletRequest request) {
+		String usercode = (String) request.getSession().getAttribute("usercode");
+		System.out.println("usercode : "+usercode);
+		UserDetails userdetails = serviceUserManagementInterface.getUserDetails(Integer.valueOf(usercode));		
+		model.addAttribute("userdetails",userdetails);
+		return "profile";
+	}
+	
 }

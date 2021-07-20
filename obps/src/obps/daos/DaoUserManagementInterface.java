@@ -11,6 +11,7 @@ import obps.models.Occupancies;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
+import obps.models.UserDetails;
 import obps.models.Userlogin;
 
 public interface DaoUserManagementInterface {
@@ -38,5 +39,6 @@ public interface DaoUserManagementInterface {
 
 	public boolean mapUserpages(List<Map<String, Object>> upage);
 
+	public UserDetails getUserDetails(Integer usercode);
 	
 }
