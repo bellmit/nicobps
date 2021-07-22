@@ -656,7 +656,7 @@ public class ControllerUserManagement {
 	@RequestMapping("/profile.htm")
 	public String profile(Model model,HttpServletRequest request) {
 		String usercode = (String) request.getSession().getAttribute("usercode");
-		System.out.println("usercode : "+usercode);
+		//System.out.println("usercode : "+usercode);
 		UserDetails userdetails = serviceUserManagementInterface.getUserDetails(Integer.valueOf(usercode));		
 		model.addAttribute("userdetails",userdetails);
 		return "profile";
