@@ -97,7 +97,20 @@ public class Report extends HttpServlet {
 				params.putAll(plandet);
 
 				System.out.println("params for buildingpermit:: " + params.toString());
+			}else if (status != null && status.equals("3")) {
+
+				String fromdate = request.getParameter("fromdate").trim();
+				String todate = request.getParameter("todate").trim();
+				String officecode = request.getParameter("officecode").trim();
+				
+				params.put("officecode", officecode);
+				params.put("permitnumber", fromdate);
+				params.put("permitnumber", todate);
+
+				reportName = "reports/dayendstatement.jrxml";
+				filename = "Dayendstatement.pdf";
 			}
+
 
 			// System.out.println("status : "+status);
 			// System.out.println("reportName : "+reportName);

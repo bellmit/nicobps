@@ -189,17 +189,13 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 	});
 
 	$scope.getDate = function(element) {
-
 		try {
 			$scope.date = $.datepicker.parseDate($scope.dateFormat, element.value);
 		} catch (error) {
 			$scope.date = null;
 		}
-
 		return $scope.date;
 	}
-
-
 
 });
 

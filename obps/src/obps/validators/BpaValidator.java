@@ -19,7 +19,7 @@ import obps.util.common.Patterns;
 public class BpaValidator {
 
 //	-------------------------------------------------ControllerBuildingPermit validator-----------------------------
-	public void BpaValidateSaveBpa(BpaApplication bpaApplication, Map<String, Object> response) {
+	public void BpaValidateSaveBpa(BpaApplication bpaApplication, Map<String,Object> response) {
 		BpaApplication bpa = bpaApplication;
 
 		if (bpa.getApplicationcode() != null) {
@@ -265,7 +265,7 @@ public class BpaValidator {
 		}
 
 		if (bpaAl.getProcessflow().getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.NO_SPECIAL, bpaAl.getProcessflow().getRemarks())
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaAl.getProcessflow().getRemarks())
 					|| bpaAl.getProcessflow().getRemarks().length() > 255) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER VALID REMARKS ");
@@ -310,7 +310,7 @@ public class BpaValidator {
 		}
 
 		if (bpaPf.getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.NO_SPECIAL, bpaPf.getRemarks()) || bpaPf.getRemarks().length() > 255) {
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks()) || bpaPf.getRemarks().length() > 255) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER VALID REMARKS ");
 			}
@@ -345,7 +345,7 @@ public class BpaValidator {
 		}
 
 		if (bpaPf.getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.NO_SPECIAL, bpaPf.getRemarks()) || bpaPf.getRemarks().length() > 255) {
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks()) || bpaPf.getRemarks().length() > 255) {
 //				errorMap.put("INVALID REMARKS SIZE", "ENTER REMARKS NOT MORE THEN 255 IN LENGTH");
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER  VALID REMARKS");
@@ -366,22 +366,6 @@ public class BpaValidator {
 			response.put("msg", " FROM_USERCODE IS NULL, ENTER A VALID FROM_USERCODE");
 		}
 	}
-
-//	public void ValidatesaveBPASiteInspection(BpaSiteInspection bpaSi, Map<String, Object> response) {
-//		if (bpaSi.getApplicationcode() != null) {
-//			if (bpaSi.getApplicationcode().trim().isEmpty()
-//					|| !Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_INTEGER, bpaSi.getApplicationcode())
-//					|| bpaSi.getApplicationcode().length() > 20) {
-//				
-//				response.put("code", "arg1");
-//				response.put("msg", "THE ENTERED APPLICATION CODE IS INVALID, ENTER A VALID APPLICATION CODE");
-////				errorMap.put("INVALID APPLICATION CODE", "ENTER A VALID APPLICATION CODE");
-//			}
-//		} else {
-//			errorMap.put("APPLICATION CODE NULL", "ENTER A VALID APPLICATION CODE");
-//		}
-//	}
-//	
 
 	public void ValidatesaveBPASiteInspection(BpaSiteInspection bpaSi, HashMap<String, Object> response) {
 

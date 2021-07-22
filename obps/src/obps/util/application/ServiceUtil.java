@@ -297,10 +297,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listUserOffices() {
-		Integer usercode = Integer.valueOf(session().getAttribute("usercode").toString());
-		if (usercode == 1) {
-			return listOffices();
-		}
+//		Integer usercode = Integer.valueOf(session().getAttribute("usercode").toString());
+//		if (usercode == 1) {
+//			return listOffices();
+//		}
+		Integer usercode =10;
 		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value "
 				+ "FROM masters.offices T INNER JOIN nicobps.useroffices uo on T.officecode=uo.officecode "
 				+ "WHERE usercode=? ORDER BY T.officename1 ";
