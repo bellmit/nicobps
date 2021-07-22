@@ -503,7 +503,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 				   "FROM nicobps.userlogins U, masters.offices O, nicobps.useroffices UO WHERE U.usercode = UO.usercode AND O.officecode = UO.officecode " + 
 				   "AND U.usercode = ?";
 		List<UserDetails>  list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserDetails.class),new Object[] { usercode});
-		System.out.println("list.size() : "+list.size());
+		//System.out.println("list.size() : "+list.size());
 		if(list.size()==0) {
 			sql="SELECT username, applicantsname,fullname, " + 
 				"preaddressline1  || ' ' || preaddressline2  || ' ' || previllagetown  || ', ' || PRED.districtname  || ', ' || PRES.statename || '-' || prepincode AS presentaddress, " + 
@@ -521,7 +521,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserDetails.class),new Object[] { usercode});
 		}		
 		ud=list.get(0);		
-		System.out.println("userdetails : "+ud.toString());
+		//System.out.println("userdetails : "+ud.toString());
 		return ud;		
 	}
 	
