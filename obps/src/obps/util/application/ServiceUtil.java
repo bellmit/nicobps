@@ -297,11 +297,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listUserOffices() {
-//		Integer usercode = Integer.valueOf(session().getAttribute("usercode").toString());
-//		if (usercode == 1) {
-//			return listOffices();
-//		}
-		Integer usercode =10;
+		Integer usercode = Integer.valueOf(session().getAttribute("usercode").toString());
+		if (usercode == 1) {
+			return listOffices();
+		}
+		
 		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value "
 				+ "FROM masters.offices T INNER JOIN nicobps.useroffices uo on T.officecode=uo.officecode "
 				+ "WHERE usercode=? ORDER BY T.officename1 ";
@@ -458,5 +458,17 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public Map<String, Object> getPlanInfo(String permitnumber) {
 		return daoUtilInterface.getPlanInfo(permitnumber);
+	}
+	
+	
+	@Override
+	public 	List<Map<String, Object>> listUsers(Integer officecode) {
+		System.out.println("officecode:::"+officecode);
+		String sql = "SELECT distinct u.usercode as key,u.fullname as value FROM nicobps.userlogins u\r\n"
+				+ "INNER JOIN nicobps.useroffices uo on uo.usercode=u.usercode \r\n"
+				+ "INNER JOIN masters.offices o on o.officecode=uo.officecode\r\n"
+				+ "where uo.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N'  and registeringofficecode=? ORDER BY officename1) or uo.officecode=?   ORDER BY u.fullname DESC ";
+		
+		return this.listGeneric(sql,new Object[] {  officecode,officecode });
 	}
 }

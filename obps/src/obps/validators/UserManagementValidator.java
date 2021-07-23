@@ -212,4 +212,26 @@ public class UserManagementValidator{
 		return response;
 	}
 
+	
+	public String validateUserWards(List<Map<String, Object>> param) { 
+		String response="";
+		System.out.println("validate"+param);
+		Integer usercode=0;
+		for (Map<String, Object> up : param) {
+			if(up.get("usercode")!=null)
+				usercode = (Integer) up.get("usercode");
+			if(up.get("usercode")==null || usercode==0) {
+				response = "usercodenull";
+				return response;
+			}
+			if(((Map<String, Object>) up.get("ward")).get("locationcode")==null) {
+				response = "locationcodenull";
+				return response;
+			}
+			System.out.println(up.get("usercode"));
+			System.out.println("response="+response);
+//			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
+		}
+		return response;
+	}
 }

@@ -28,11 +28,13 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.OfficeLocations;
 import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.models.UserDetails;
+import obps.models.UserOfficeLocations;
 import obps.models.Userlogin;
 import obps.util.application.CommonMap;
 import obps.util.application.DaoUtil;
@@ -525,5 +527,82 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 		return ud;		
 	}
 	
+	@Override
+	public boolean mapUserWards(List<Map<String, Object>> uward) {
+		boolean response = false;
+		try {
+			System.out.println("mapUserWards usercode:::"+uward.get(0).get("usercode"));
+			String sql = "DELETE From nicobps.userofficelocations WHERE usercode=? ";
+			if (jdbcTemplate.update(sql, uward.get(0).get("usercode")) < 0) {
+				return false;
+			}
+			/////////////////////////////////////
+			sql = "INSERT INTO nicobps.userofficelocations(usercode, locationcode) VALUES (?, ?)";
+			for (Map<String, Object> uw : uward) {
+				jdbcTemplate.update(sql,uw.get("usercode"),((Map<String, Object>) uw.get("ward")).get("locationcode"));
+			}
+			response = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.out.println("\n\nError in mapUserpages(List<Map<String,Object>> uward) " + ex);
+		}
+		return response;
+	}
 
+	@Override
+	public List<OfficeLocations> listWards(Integer officecode) {
+		List<OfficeLocations> wards = null;
+		System.out.println("list wards");
+		try {
+			String sql = "Select ol.locationcode, ol.locationname, ol.nomenclature From masters.officelocations ol \r\n"
+					+ "inner join masters.offices o on o.officecode=ol.officecode where o.registeringofficecode=? \r\n "
+					+ " OR o.officecode=? ORDER BY o.officename1";
+			wards = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(OfficeLocations.class), officecode,officecode);
+		} catch (Exception e) {
+			System.out.println("Error in DaoUserManagement.getWards() : " + e);
+		}
+		return wards;
+	}
+
+	@Override
+	public List<OfficeLocations> getMappedWards(Integer usercode) {
+		ObjectMapper mapper = new ObjectMapper();
+		List<OfficeLocations> wardlist = null;
+		List<Map<String, Object>> rowList = null;
+		try {
+			String sql = "Select w.locationcode,off.locationname from nicobps.userofficelocations w,masters.officelocations off\r\n"
+					+ "					WHERE w.locationcode=off.locationcode and usercode=:usercode\r\n"
+					+ "					ORDER BY locationname, nomenclature";
+			System.out.println(" SQL  3 : " + sql);
+			MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("usercode", usercode);
+			rowList = (List<Map<String, Object>>) namedParameterJdbcTemplate.queryForList(sql, parameters);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.out.println("\n\nError in getMappedPageurls(Integer usercode) " + ex);
+		}
+		if (rowList != null) {
+			wardlist = new LinkedList<OfficeLocations>();
+			for (Map<String, Object> row : rowList) {
+				wardlist.add(mapper.convertValue(row, OfficeLocations.class));
+			}
+		}
+		return (wardlist != null) ? wardlist : new LinkedList();
+	}
+
+	@Override
+	public List<UserOfficeLocations> listWardsUser(Integer officecode) {
+		List<UserOfficeLocations> list = null;
+		try {
+			String sql = "Select distinct uo.usercode from masters.officelocations off\r\n"
+					+ "					INNER JOIN nicobps.userofficelocations uo on uo.locationcode=off.locationcode \r\n"
+					+ "					INNER JOIN masters.offices o on o.officecode=off.officecode  where o.officecode=? or o.registeringofficecode=?";
+
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<UserOfficeLocations>(UserOfficeLocations.class),
+					new Object[] { officecode, officecode });
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listUsers()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
 }

@@ -8,10 +8,12 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.OfficeLocations;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.models.UserDetails;
+import obps.models.UserOfficeLocations;
 import obps.models.Userlogin;
 
 public interface DaoUserManagementInterface {
@@ -40,5 +42,13 @@ public interface DaoUserManagementInterface {
 	public boolean mapUserpages(List<Map<String, Object>> upage);
 
 	public UserDetails getUserDetails(Integer usercode);
+	
+	public boolean mapUserWards(List<Map<String, Object>> uwards);
+	
+	public List<OfficeLocations> listWards(Integer officecode);
+	
+	public List<UserOfficeLocations> listWardsUser(Integer officecode);
+	
+	public List<OfficeLocations> getMappedWards(Integer usercode);
 	
 }

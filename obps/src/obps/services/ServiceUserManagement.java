@@ -14,10 +14,12 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.OfficeLocations;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.models.UserDetails;
+import obps.models.UserOfficeLocations;
 import obps.models.Userlogin;
 import obps.util.application.ServiceUtilInterface;
 
@@ -127,4 +129,32 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     	return DaoUserManagementInterface.getUserDetails(usercode);
     }
     
+    
+    
+	@Override
+	public String saveUserWards(List<Map<String, Object>> uwards) {
+		
+		return (DaoUserManagementInterface.mapUserWards(uwards)) ? "Mapped" : "Failed";
+	}
+
+	@Override
+	public List<OfficeLocations> listWards(Integer officecode) {
+		
+		return 		DaoUserManagementInterface.listWards(officecode);
+	}
+
+	@Override
+	public List<UserOfficeLocations> listWardsUser(Integer officecode) {
+		return DaoUserManagementInterface.listWardsUser(officecode);
+	}
+
+	@Override
+	public List<UserOfficeLocations> listUserAndMappedWards(Integer officecode) {
+
+		List<UserOfficeLocations> list = listWardsUser(officecode);
+		for (UserOfficeLocations wards : list) {
+			wards.setMappedofficelocations(DaoUserManagementInterface.getMappedWards(wards.getUsercode()));
+		}
+		return list;
+	}
 }
