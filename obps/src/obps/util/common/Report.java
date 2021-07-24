@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -97,12 +97,41 @@ public class Report extends HttpServlet {
 				params.putAll(plandet);
 
 				System.out.println("params for buildingpermit:: " + params.toString());
-			}else if (status != null && status.equals("3")) {
+			} else if (status != null && status.equals("3")) {
 
 				String fromdate = request.getParameter("fromdate").trim();
 				String todate = request.getParameter("todate").trim();
 				String officecode = request.getParameter("officecode").trim();
+
 				
+				if (fromdate != null) {
+					if (!Patterns.PatternMatche(Patterns.PATTERN_DATE, fromdate) || fromdate.length() > 30) {
+						response.sendRedirect("error.jsp");
+					}
+				} else {
+					response.sendRedirect("error.jsp");
+				}
+				
+
+				if (todate != null) {
+					if (!Patterns.PatternMatche(Patterns.PATTERN_DATE, todate) || todate.length() > 30) {
+						response.sendRedirect("error.jsp");
+					}
+				} else {
+					response.sendRedirect("error.jsp");
+				}
+
+				
+				if (officecode != null) {
+					if (!Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_INTEGER, officecode)
+							|| officecode.length() > 2) {
+						response.sendRedirect("error.jsp");
+					}
+				} else {
+					response.sendRedirect("error.jsp");
+				}
+				
+
 				params.put("officecode", officecode);
 				params.put("permitnumber", fromdate);
 				params.put("permitnumber", todate);
@@ -110,7 +139,6 @@ public class Report extends HttpServlet {
 				reportName = "reports/dayendstatement.jrxml";
 				filename = "Dayendstatement.pdf";
 			}
-
 
 			// System.out.println("status : "+status);
 			// System.out.println("reportName : "+reportName);
