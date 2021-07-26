@@ -22,21 +22,21 @@ public class PrintPermitValidator {
 		String criteria = params.get("criteria");
 
 		if (criteria != null) {
-			if (criteria.equals("byappcode")) {
+			if (criteria.trim().equals("byappcode")) {
 				if (applicationcode != null) {
-					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, applicationcode)) {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, applicationcode.trim())) {
 						response = "application code is invalid";
-					} else if (applicationcode.length() > 20) {
+					} else if (applicationcode.trim().length() > 20) {
 						response = "application code size error";
 					}
 				} else {
 					response = "application code is NULL";
 				}
-			} else if (criteria.equals("bypermitno")) {
+			} else if (criteria.trim().equals("bypermitno")) {
 				if (permitnumber != null) {
-					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, permitnumber)) {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, permitnumber.trim())) {
 						response = "application code is invalid";
-					} else if (permitnumber.length() > 30) {
+					} else if (permitnumber.trim().length() > 30) {
 						response = "permit number size error";
 					}
 
@@ -44,11 +44,11 @@ public class PrintPermitValidator {
 					response = "permit number is NULL";
 				}
 
-			} else if (criteria.equals("byedcrno")) {
+			} else if (criteria.trim().equals("byedcrno")) {
 				if (edcrnumber != null) {
-					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, edcrnumber)) {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, edcrnumber.trim())) {
 						response = "edcr number is invalid";
-					} else if (edcrnumber.length() > 30) {
+					} else if (edcrnumber.trim().length() > 30) {
 						response = "edcr number size error";
 					}
 
@@ -56,30 +56,30 @@ public class PrintPermitValidator {
 					response = "edcr number is NULL";
 				}
 
-			} else if (criteria.equals("byowner")) {
+			} else if (criteria.trim().equals("byowner")) {
 				if (ownername != null) {
-					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, ownername)) {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_NAME, ownername.trim())) {
 						response = "owner name is invalid";
-					} else if (ownername.length() > 50) {
+					} else if (ownername.trim().length() > 50) {
 						response = "owner name size error";
 					}
 
 				} else {
 					response = "owner name is NULL";
 				}
-			} else if (criteria.equals("byentrydate")) {
+			} else if (criteria.trim().equals("byentrydate")) {
 				if (fromentrydate != null && toentrydate != null && !fromentrydate.equals("")
 						&& !toentrydate.equals("")) {
-					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_DATE, fromentrydate)) {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_DATE, fromentrydate.trim())) {
 						response = "from entry date is invalid";
-					} else if (!Patterns.PatternCompileMatche(Patterns.PATTERN_DATE, toentrydate)) {
+					} else if (!Patterns.PatternCompileMatche(Patterns.PATTERN_DATE, toentrydate.trim())) {
 						response = " to entry date is invalid";
 					} else {
 						SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 						try {
-							Date date1 = sdf.parse(fromentrydate);
+							Date date1 = sdf.parse(fromentrydate.trim());
 
-							Date date2 = sdf.parse(toentrydate);
+							Date date2 = sdf.parse(toentrydate.trim());
 
 							System.out.println("date1:::" + date1 + "date2:::" + date2);
 
@@ -112,13 +112,15 @@ public class PrintPermitValidator {
 		return response;
 	}
 
-	public String validate_transactioncode(Long transactioncode) {
-		String response = "";
+	public String validate_transactioncode(String transactioncode) {
+		String response = "1";
 
 		if (transactioncode != null) {
 
-			if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER, transactioncode.toString())) {
+			if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER, transactioncode.trim())) {
 				response = "Not a Number";
+			} else if (transactioncode.trim().length() > 20) {
+				response = "transaction number  size error";
 			}
 		} else {
 			response = "NULL value";
@@ -128,12 +130,12 @@ public class PrintPermitValidator {
 	}
 
 	public String validate_permitnumber(String permitnumber) {
-		String response = "";
+		String response = "1";
 
 		if (permitnumber != null) {
-			if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, permitnumber)) {
+			if (!Patterns.PatternCompileMatche(Patterns.PATTERN_ALPHA_NUMERIC, permitnumber.trim())) {
 				response = "application code is invalid";
-			} else if (permitnumber.length() > 20) {
+			} else if (permitnumber.trim().length() > 30) {
 				response = "permit number  size error";
 			}
 
