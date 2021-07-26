@@ -33,7 +33,6 @@
 	background-color: #3896d3;
 	min-width: 100%;
 	bottom: 44px;
-	right: 0;
 	z-index: 1;
 }
 
