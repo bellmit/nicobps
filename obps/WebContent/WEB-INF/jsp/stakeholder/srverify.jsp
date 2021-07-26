@@ -276,6 +276,7 @@
 							</button>
 							<div class="dropup-content">
 							
+								<a href="./Report?status=4&applicationcode={{applicant.applicationcode}}" target="_blank">Application</a>
 								<a href="./Report?status=1&transactioncode={{fee.transactioncode}}" target="_blank"
 									ng-repeat="fee in applicant.transactions">{{fee.feetypedescription}}</a>
 							</div>

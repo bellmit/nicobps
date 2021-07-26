@@ -103,7 +103,6 @@ public class Report extends HttpServlet {
 				String todate = request.getParameter("todate").trim();
 				String officecode = request.getParameter("officecode").trim();
 
-				
 				if (fromdate != null) {
 					if (!Patterns.PatternMatche(Patterns.PATTERN_DATE, fromdate) || fromdate.length() > 30) {
 						response.sendRedirect("error.jsp");
@@ -111,7 +110,6 @@ public class Report extends HttpServlet {
 				} else {
 					response.sendRedirect("error.jsp");
 				}
-				
 
 				if (todate != null) {
 					if (!Patterns.PatternMatche(Patterns.PATTERN_DATE, todate) || todate.length() > 30) {
@@ -121,7 +119,6 @@ public class Report extends HttpServlet {
 					response.sendRedirect("error.jsp");
 				}
 
-				
 				if (officecode != null) {
 					if (!Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_INTEGER, officecode)
 							|| officecode.length() > 2) {
@@ -130,7 +127,6 @@ public class Report extends HttpServlet {
 				} else {
 					response.sendRedirect("error.jsp");
 				}
-				
 
 				params.put("officecode", officecode);
 				params.put("permitnumber", fromdate);
@@ -138,6 +134,20 @@ public class Report extends HttpServlet {
 
 				reportName = "reports/dayendstatement.jrxml";
 				filename = "Dayendstatement.pdf";
+			} else if (status != null && status.equals("4")) {
+				System.out.println("applicationcode="+request.getParameter("applicationcode"));
+				String applicationcode = (request.getParameter("applicationcode") == null
+						|| request.getParameter("applicationcode").equals("")) ? null
+								: request.getParameter("applicationcode").trim();
+				if (applicationcode == null) {
+					response.sendRedirect("error.jsp?msg=REPORT_PARAM_MISSING");
+				}
+				params.put("applicationcode", applicationcode);
+
+				reportName = "reports/stakeholder.jrxml";
+				filename = "stakeholder_" + applicationcode + ".pdf";
+			} else {
+				response.sendRedirect("error.jsp?msg=REPORT_STATUS_MISSING");
 			}
 
 			// System.out.println("status : "+status);
