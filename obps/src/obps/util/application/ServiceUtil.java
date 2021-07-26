@@ -467,8 +467,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 		String sql = "SELECT distinct u.usercode as key,u.fullname as value FROM nicobps.userlogins u\r\n"
 				+ "INNER JOIN nicobps.useroffices uo on uo.usercode=u.usercode \r\n"
 				+ "INNER JOIN masters.offices o on o.officecode=uo.officecode\r\n"
-				+ "where uo.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N'  and registeringofficecode=? ORDER BY officename1) or uo.officecode=?   ORDER BY u.fullname DESC ";
+				+ "where uo.officecode=?   ORDER BY u.fullname DESC ";
 		
-		return this.listGeneric(sql,new Object[] {  officecode,officecode });
+		return this.listGeneric(sql,new Object[] {  officecode });
 	}
 }

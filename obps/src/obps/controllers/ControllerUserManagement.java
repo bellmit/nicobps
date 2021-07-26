@@ -675,8 +675,6 @@ public class ControllerUserManagement {
 	@PostMapping(value = "/listUsers.htm")
 	public @ResponseBody Map<String, Object> listUsers(HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
-		Integer usercode = Integer.valueOf(req.getSession().getAttribute("usercode").toString());
-		System.out.println(Integer.parseInt(params.get("officecode")));
 		Map<String, Object> data = new LinkedHashMap<>();
 		
 			data.put("usersList", serviceUtilInterface.listUsers(Integer.parseInt(params.get("officecode"))));
