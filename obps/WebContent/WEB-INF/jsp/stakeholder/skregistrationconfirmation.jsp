@@ -14,7 +14,7 @@
 				<h3 class="mt-4" style="font-size: 32px;">ULB Registration</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5">
-						<div class="card text-white bg-warning mb-3" style="width: 100%;">
+						<div class="card bg-warning mb-3" style="width: 100%;color:#005776">
 							<div class="card-body">
 								<h5 class="card-title">Your application has been submitted successfully and forwarded to the concerned office. 
 								<br>
