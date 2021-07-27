@@ -10,6 +10,8 @@ import java.util.Base64;
 import javax.sql.DataSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.json.simple.JSONArray;
@@ -24,10 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("daoUtil")
 public class DaoUtil implements DaoUtilInterface {
 	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public void createTemplate(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
 
 	@Override
@@ -237,6 +241,18 @@ public class DaoUtil implements DaoUtilInterface {
 			list = jdbcTemplate.queryForList(sql, params);
 		} catch (Exception e) {
 			System.out.println("Error in DaoUtil.listGeneric(String sql, Object[] params) : " + e);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> listGenericParameterized(String sql, MapSqlParameterSource param) {
+		List<Map<String, Object>> list = new ArrayList<>();
+		try {
+			list = namedParameterJdbcTemplate.queryForList(sql, param);
+		} catch (Exception e) {
+			System.out.println(
+					"Error in DaoUtil.listGenericParameterized(String sql, MapSqlParameterSource param) : " + e);
 		}
 		return list;
 	}

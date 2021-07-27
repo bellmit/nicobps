@@ -8,6 +8,8 @@ public interface DaoPaymentInterface {
 
 	public boolean UpdatePayment(String paymentstatus, String responseparameters, Integer transactioncode,
 			Integer usercode);
+	
+	public boolean saveTransactionReceipt(Integer transactioncode, String receiptno );
 
 	public boolean SavePaymentMap(Map<String, Object> param);
 

@@ -3,6 +3,8 @@ package obps.util.application;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 public interface DaoUtilInterface {
 	public List<CommonMap> listCommonMap(final String sql);
 
@@ -34,6 +36,8 @@ public interface DaoUtilInterface {
 	public <T> List<T> listGeneric(Class<T> clazz, String sql);
 
 	public <T> List<T> listGeneric(Class<T> clazz, String sql, Object[] params);
+
+	public List<Map<String, Object>> listGenericParameterized(String sql, MapSqlParameterSource param);
 
 	public List<Map<String, Object>> listGeneric(String sql);
 

@@ -42,9 +42,9 @@ public class DaoPayment implements DaoPaymentInterface {
 			Date date = sd.parse(((String) param.get("entrydate")).trim());
 			sql = "INSERT INTO nicobps.transactions(transactioncode,usercode,feecode,amount,paymentmodecode,paymentstatus,sentparameters,entrydate) "
 					+ "VALUES (?,?,?,?,?,?,?,?) ";
-			Object[] values = { param.get("transactioncode"), usercode, Integer.valueOf((String) param.get("feecode")),
-					param.get("amount"), param.get("paymentmodecode"), param.get("paymentstatus"),
-					param.get("sentparameters"), date };
+			Object[] values = { Integer.valueOf((String) param.get("transactioncode")), usercode,
+					Integer.valueOf((String) param.get("feecode")), param.get("amount"), param.get("paymentmodecode"),
+					param.get("paymentstatus"), param.get("sentparameters"), date };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -66,7 +66,8 @@ public class DaoPayment implements DaoPaymentInterface {
 			Date date = sd.parse(((String) param.get("entrydate")).trim());
 			sql = "INSERT INTO nicobps.applicationstransactionmap(applicationcode,transactioncode,entrydate) "
 					+ "VALUES (?,?,?) ";
-			Object[] values = { ((String) param.get("applicationcode")).trim(), param.get("transactioncode"), date };
+			Object[] values = { ((String) param.get("applicationcode")).trim(),
+					Integer.valueOf((String) param.get("transactioncode")), date };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -80,17 +81,33 @@ public class DaoPayment implements DaoPaymentInterface {
 	@Override
 	public boolean UpdatePayment(String paymentstatus, String responseparameters, Integer transactioncode,
 			Integer usercode) {
-		System.out.println("UpdatePayment");
-		System.out.println(paymentstatus);
-		System.out.println(responseparameters);
-		System.out.println(transactioncode);
-		System.out.println(usercode);
+		
 		boolean response = false;
 		String sql = null;
 		try {
 
 			sql = " Update nicobps.transactions set paymentstatus=?,responseparameters=? where transactioncode=? and usercode=?";
 			Object[] values = { paymentstatus, responseparameters.trim(), transactioncode, usercode };
+			response = jdbcTemplate.update(sql, values) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoPayment.UpdatePayment  : " + e);
+		}
+		return response;
+	}
+
+	@Override
+	public boolean saveTransactionReceipt(Integer paymentstatus, String receiptno) {
+//		System.out.println("saveTransactionReceipt");
+
+		boolean response = false;
+		String sql = null;
+		try {
+
+			sql = " insert into nicobps.transactionsreceipts(transactioncode,receiptno,entrydate)values(?,?,NOW())";
+			Object[] values = { paymentstatus, receiptno };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -221,7 +238,7 @@ public class DaoPayment implements DaoPaymentInterface {
 		return resp;
 
 	}
-	
+
 	public List<Map<String, Object>> getTransaction(String applicationcode) {
 		List<Map<String, Object>> resp = null;
 		String sql = null;
@@ -232,8 +249,7 @@ public class DaoPayment implements DaoPaymentInterface {
 					+ " inner join nicobps.applicationstransactionmap at on t.transactioncode=at.transactioncode "
 					+ " inner join masters.feemaster fm on t.feecode=fm.feecode"
 					+ " inner join masters.feetypes ft on fm.feetypecode=ft.feetypecode"
-					+ " where t.amount<>0 and applicationcode=? "
-					+ " group by t.feecode,ft.feetypedescription";
+					+ " where t.amount<>0 and applicationcode=? " + " group by t.feecode,ft.feetypedescription";
 
 			Object[] values = { applicationcode };
 			resp = jdbcTemplate.queryForList(sql, values);

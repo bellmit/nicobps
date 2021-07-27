@@ -68,13 +68,16 @@ public class ServiceBilldeskGateway {
 		tenantid = "sk.gangtok";
 	}
 
-	public URI generateRedirectURI(String usercode, Integer amount, String feecode, String applicationcode, String modulecode, String toprocesscode) {
-		System.out.println("Generate URI");
+	public URI generateRedirectURI(String usercode, Integer amount, String feecode, String applicationcode,
+			String modulecode, String toprocesscode) {
+//		System.out.println("Generate URI");
 		Integer transactioncode = serviceUtilInterface.getMax("nicobps", "transactions", "transactioncode");
 		transactioncode++;
+		String customerid = transactioncode.toString();
+//		System.out.println("customerid-------" + customerid);
 		String hashSequence = "MerchantId|CustomerId|NA|Amount|NA|NA|NA|Currency|NA|R|SecureSecret|NA|NA|F|TenantId|ApplicationCode|ModuleCode|ToProcessCode|5|UserCode|NA|ReturnUrl";
 		hashSequence = hashSequence.replace("MerchantId", MERCHANT_ID);
-		hashSequence = hashSequence.replace("CustomerId", transactioncode.toString());
+		hashSequence = hashSequence.replace("CustomerId", customerid);
 		hashSequence = hashSequence.replace("TenantId", tenantid);
 		hashSequence = hashSequence.replace("Amount", amount.toString());
 		hashSequence = hashSequence.replace("Currency", CURRENCY);
@@ -86,7 +89,7 @@ public class ServiceBilldeskGateway {
 		hashSequence = hashSequence.replace("ReturnUrl", RETURN_URL);
 		String hash = HmacSHA256(hashSequence, CHECK_SUM_PWD);
 		hashSequence = hashSequence + "|" + hash;
-		System.out.println("hashSequence=======================" + hashSequence);
+//		System.out.println("hashSequence=======================" + hashSequence);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("msg", hashSequence);
 		UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host(MERCHANT_URL_PAY).build();
@@ -94,25 +97,25 @@ public class ServiceBilldeskGateway {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			RestTemplate restTemplate = new RestTemplate();
+//			RestTemplate restTemplate = new RestTemplate();
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 //			redirectUri = restTemplate.postForLocation(uriComponents.toUriString(), entity);
 			try {
-				hashSequence = hashSequence.replace("|","%7C");
-				hashSequence = hashSequence.replace( ":","%3A");
-				redirectUri =new URI(uriComponents.toUriString()+"?msg="+hashSequence);
+				hashSequence = hashSequence.replace("|", "%7C");
+				hashSequence = hashSequence.replace(":", "%3A");
+				redirectUri = new URI(uriComponents.toUriString() + "?msg=" + hashSequence);
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 			if (redirectUri.equals(null)) {
 				System.out.println("BILLDESK_REDIRECT_URI_GEN_FAILED , Failed to generate redirect URI");
 			} else {
-				System.out.println("redirectUri-----------" + redirectUri);
+//				System.out.println("redirectUri-----------" + redirectUri);
 				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 				Date date = new Date();
 				// save to db
 				Map<String, Object> transaction = new HashMap<String, Object>();
-				transaction.put("transactioncode", transactioncode);
+				transaction.put("transactioncode", customerid);
 				transaction.put("usercode", usercode);
 				transaction.put("feecode", feecode);
 				transaction.put("amount", amount);
@@ -122,10 +125,10 @@ public class ServiceBilldeskGateway {
 				transaction.put("entrydate", dateFormat.format(date));
 				daoPaymentInterface.InitiatePayment(transaction);
 				Map<String, Object> paymentappl = new HashMap<String, Object>();
-				paymentappl.put("transactioncode", transactioncode);
+				paymentappl.put("transactioncode", customerid);
 				paymentappl.put("applicationcode", applicationcode);
 				paymentappl.put("entrydate", dateFormat.format(date));
-				//===========save to  transaction======================
+				// ===========save to transaction======================
 				daoPaymentInterface.SavePaymentMap(paymentappl);
 			}
 
@@ -141,10 +144,10 @@ public class ServiceBilldeskGateway {
 		Boolean resp = null;
 		String hash = HmacSHA256(msg.trim(), CHECK_SUM_PWD.trim());
 		if (checksum.equals(hash)) {
-		 
+
 			resp = true;
 		} else {
-			 
+
 			resp = false;
 
 		}
@@ -181,11 +184,12 @@ public class ServiceBilldeskGateway {
 	public void setProxy() {
 		try {
 			if (Boolean.valueOf(environment.getRequiredProperty("proxy.set"))) {
-				System.out.println("------------------SET PROXY URL-----------------------------------------");
+//				System.out.println("------------------SET PROXY URL-----------------------------------------");
 				HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 				clientBuilder.useSystemProperties();
 
-				clientBuilder.setProxy(new HttpHost(environment.getRequiredProperty("proxy.url"), Integer.valueOf(environment.getRequiredProperty("proxy.port"))));
+				clientBuilder.setProxy(new HttpHost(environment.getRequiredProperty("proxy.url"),
+						Integer.valueOf(environment.getRequiredProperty("proxy.port"))));
 				CloseableHttpClient client = clientBuilder.build();
 				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 				factory.setHttpClient(client);
@@ -202,7 +206,7 @@ public class ServiceBilldeskGateway {
 
 		try {
 			if (Boolean.valueOf(environment.getRequiredProperty("proxy.set"))) {
-				System.out.println("------------------UNSET PROXY URL-----------------------------------------");
+//				System.out.println("------------------UNSET PROXY URL-----------------------------------------");
 				HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 				clientBuilder.useSystemProperties();
 				CloseableHttpClient client = clientBuilder.build();

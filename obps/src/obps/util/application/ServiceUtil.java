@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 @Service("serviceUtil")
 public class ServiceUtil implements ServiceUtilInterface {
@@ -108,6 +109,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public List<Map<String, Object>> listGeneric(String sql, Object[] params) {
 		return daoUtilInterface.listGeneric(sql, params);
+	}
+
+	@Override
+	public List<Map<String, Object>> listGenericParameterized(String sql, MapSqlParameterSource param) {
+		return daoUtilInterface.listGenericParameterized(sql, param);
 	}
 
 	@Override
@@ -301,7 +307,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 		if (usercode == 1) {
 			return listOffices();
 		}
-		
+
 		String sql = "SELECT T.officecode AS key, T.officename1 || ' ' || T.officename2 AS value "
 				+ "FROM masters.offices T INNER JOIN nicobps.useroffices uo on T.officecode=uo.officecode "
 				+ "WHERE usercode=? ORDER BY T.officename1 ";
@@ -367,6 +373,28 @@ public class ServiceUtil implements ServiceUtilInterface {
 				String.format("%03d", officecode) + String.format("%03d", modulecode) + String.format("%04d", usercode)
 						+ String.format("%02d", servicetypecode) + String.format("%06d", applicationslno),
 				applicationslno);
+	}
+
+	@Override
+	public String generateTransactionReceipt(Integer officecode, String purpose, String... components) {
+		String sql = "select case when component1 is not null then (case when derivedfixed1 ='FIXED' then component1 else :component1 end) else '' end || "
+				+ "	case when component2 is not null then (case when derivedfixed2 ='FIXED' then component2 else :component2 end) else '' end|| "
+				+ "	case when component3 is not null then (case when derivedfixed3 ='FIXED' then component3 else :component3 end) else '' end || "
+				+ "	case when component4 is not null then (case when derivedfixed4 ='FIXED' then component4 else :component4 end) else '' end|| "
+				+ "	case when component5 is not null then (case when derivedfixed5 ='FIXED' then component5 else :component5 end) else '' end as receiptno "
+				+ "from masters.officereceiptformats where officecode=:officecode and purpose=:purpose ";
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("officecode", officecode)
+				.addValue("purpose", purpose);
+		for (int i = 1; i <= 5; i++) {
+			parameters.addValue("component" + i, (components.length >= i) ? components[i - 1] : "");
+		}
+		List<Map<String, Object>> list = listGenericParameterized(sql, parameters);
+		String receiptno = null;
+		if (!list.isEmpty()) {
+			receiptno = list.get(0).get("receiptno").toString();
+		}
+		return receiptno;
 	}
 
 	@Override // contains both fromprocesscode & toprocesscode
@@ -459,16 +487,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public Map<String, Object> getPlanInfo(String permitnumber) {
 		return daoUtilInterface.getPlanInfo(permitnumber);
 	}
-	
-	
+
 	@Override
-	public 	List<Map<String, Object>> listUsers(Integer officecode) {
-		System.out.println("officecode:::"+officecode);
+	public List<Map<String, Object>> listUsers(Integer officecode) {
+		System.out.println("officecode:::" + officecode);
 		String sql = "SELECT distinct u.usercode as key,u.fullname as value FROM nicobps.userlogins u\r\n"
 				+ "INNER JOIN nicobps.useroffices uo on uo.usercode=u.usercode \r\n"
 				+ "INNER JOIN masters.offices o on o.officecode=uo.officecode\r\n"
 				+ "where uo.officecode=?   ORDER BY u.fullname DESC ";
-		
-		return this.listGeneric(sql,new Object[] {  officecode });
+
+		return this.listGeneric(sql, new Object[] { officecode });
 	}
 }

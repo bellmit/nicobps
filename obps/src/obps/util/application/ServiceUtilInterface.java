@@ -3,6 +3,8 @@ package obps.util.application;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 public interface ServiceUtilInterface {
 	public List<CommonMap> listCommonMap(final String sql);
 
@@ -38,6 +40,8 @@ public interface ServiceUtilInterface {
 	public List<Map<String, Object>> listGeneric(String sql);
 
 	public List<Map<String, Object>> listGeneric(String sql, Object[] params);
+
+	public List<Map<String, Object>> listGenericParameterized(String sql, MapSqlParameterSource param);
 
 	public <T> boolean update(String tablename, String sql, Object[] params);
 
@@ -103,6 +107,8 @@ public interface ServiceUtilInterface {
 	public CommonMap generateApplicationcode(Integer officecode, Integer modulecode, Integer usercode,
 			Integer servicetypecode);
 
+	public String generateTransactionReceipt(Integer officecode, String purpose, String... components);
+
 	public boolean updateApplicationflowremarks(String applicationcode, Integer modulecode, Integer fromprocesscode,
 			Integer toprocesscode, Integer fromusercode, Integer tousercode, String remarks);
 
@@ -130,6 +136,6 @@ public interface ServiceUtilInterface {
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
 
 	public Map<String, Object> getPlanInfo(String permitnumber);
-	
+
 	public List<Map<String, Object>> listUsers(Integer officecode);
 }

@@ -57,7 +57,7 @@ public class ControllerPayment {
 		if (statusMap.get("paramstats").equals("1")) {
 			// need to get amount based on feecode
 			Map<String, Object> feeDetails = serviceCommon.getAmount(Integer.parseInt(params.get("feecode")));
-			System.out.println("feeDetails--" + feeDetails);
+//			System.out.println("feeDetails--" + feeDetails);
 			// -------------------------------------------
 			if (feeDetails != null && !feeDetails.isEmpty()) {
 				model.addAttribute("feetypedescription", feeDetails.get("feetypedescription"));
@@ -120,7 +120,7 @@ public class ControllerPayment {
 	public String CommonPayment(@RequestParam Map<String, String> params, Model model) {
 
 		Integer transactioncode = serviceCommon.saveTransaction(params);
-		System.out.println("test for resubmission");
+//		System.out.println("test for resubmission");
 
 		if (transactioncode != 0) {
 			serviceUtilInterface.updateApplicationflowremarks(params.get("applicationcode"),
@@ -136,7 +136,7 @@ public class ControllerPayment {
 			model.addAttribute("message", "Application submitted succesfully");
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date = new Date();
-			System.out.println(formatter.format(date));
+//			System.out.println(formatter.format(date));
 			model.addAttribute("transactiondate", formatter.format(date));
 
 		} else {
@@ -172,28 +172,33 @@ public class ControllerPayment {
 			String msg = response.substring(0, lastIndexOf);
 			String checksum = response.substring(lastIndexOf + 1, response.length());
 			Boolean validatehash = billdeskgateway.checkHmac(msg, checksum);
-			System.out.println("validatehash:" + validatehash);
+//			System.out.println("validatehash:" + validatehash);
 			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
+					int transactioncode=Integer.valueOf(words[1]);
 					List<Map<String, Object>> userdetails = serviceUtilInterface
 							.getLicensee(Integer.parseInt(usercode));
 					message = "Payment Successful. ";
 					model.addAttribute("payer", userdetails.get(0).get("applicantsname"));
-					model.addAttribute("transactioncode", words[1]);
+					model.addAttribute("transactioncode", transactioncode);
 					model.addAttribute("billdeskreferenceNo", words[2]);
 					model.addAttribute("bankreferenceno", words[3]);
 					model.addAttribute("amount", words[4]);
 					model.addAttribute("transactiondate", words[13]);
 					model.addAttribute("message", message);
-					// ----------------UpdateTransaction
+					// ----------------UpdateTransaction and insert into transactionreceipt
 					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]),
 							Integer.parseInt(usercode));
+					
+					String receiptno=serviceUtilInterface.generateTransactionReceipt(1, "FEERECEIPT", "","",transactioncode+"");
+					 
+					daoPaymentInterface.saveTransactionReceipt(transactioncode, receiptno+"");
 					// ----------------InsertApplicationFlowRemark
 					String applicationcode = words[17];
 					String toprocesscode = words[19];
 					String modulecode = words[18];
-					System.out.println(applicationcode);
+			 
 					serviceUtilInterface.updateApplicationflowremarks(applicationcode, Integer.parseInt(modulecode),
 							Integer.parseInt(toprocesscode), Integer.parseInt(usercode), null, "Payment Complete");
 					break;
