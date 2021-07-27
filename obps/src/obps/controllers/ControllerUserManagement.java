@@ -55,7 +55,10 @@ import obps.daos.DaoEnclosureManagementInterface;
 import obps.daos.DaoUserManagementInterface;
 import obps.models.AppEnclosures;
 import obps.models.LicenseesEnclosures;
+import obps.models.OfficeLocations;
 import obps.models.Pageurls;
+import obps.models.UserDetails;
+import obps.models.UserOfficeLocations;
 import obps.models.Userlogin;
 import obps.services.ServiceUserManagementInterface;
 
@@ -642,12 +645,70 @@ public class ControllerUserManagement {
 		return response;
 	}
 
+	
+	
+	
+	@RequestMapping("/profile.htm")
+	public String profile(Model model,HttpServletRequest request) {
+		String usercode = (String) request.getSession().getAttribute("usercode");
+		//System.out.println("usercode : "+usercode);
+		UserDetails userdetails = serviceUserManagementInterface.getUserDetails(Integer.valueOf(usercode));		
+		model.addAttribute("userdetails",userdetails);
+		return "profile";
+	}
+	
+	
 	@GetMapping("/userwards.htm")
-	public String extendstakeholdervalidity(Model model, HttpServletRequest req,
+	public String userwards(Model model, HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
 
-		model.addAttribute("offices", serviceUtilInterface.listUserOffices());
+		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
 
 		return "initialization/userwards";
 	}
+
+	@GetMapping(value = "/listWards.htm")
+	public @ResponseBody List<OfficeLocations> listWards(@RequestParam Map<String, String> params) {
+		return serviceUserManagementInterface.listWards(Integer.parseInt(params.get("officecode")));
+	}
+
+	@PostMapping(value = "/listUsers.htm")
+	public @ResponseBody Map<String, Object> listUsers(HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+		Map<String, Object> data = new LinkedHashMap<>();
+		
+			data.put("usersList", serviceUtilInterface.listUsers(Integer.parseInt(params.get("officecode"))));
+		
+
+		return data;
+	}
+
+	@GetMapping(value = "/listUserAndMappedWards.htm")
+	public @ResponseBody List<UserOfficeLocations> listUserandMappedWards(HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+
+		System.out.println("office::" + params.get("officecode"));
+		return serviceUserManagementInterface.listUserAndMappedWards(Integer.parseInt(params.get("officecode")));
+
+	}
+	
+	@PostMapping(value = "/saveUserWards.htm")
+	public @ResponseBody String saveUserWards(@RequestBody List<Map<String, Object>> userwards) {
+		String response = "";
+		if(userwards==null || userwards.isEmpty()) {
+			response="nodata";
+			return response;
+		}
+		
+
+		String validate = userManagementValidator.validateUserWards(userwards);
+		if (validate != "") {
+			response = validate;
+			return response;
+		} else {
+			response = serviceUserManagementInterface.saveUserWards(userwards);
+		}
+		return response;
+	}
+	
 }

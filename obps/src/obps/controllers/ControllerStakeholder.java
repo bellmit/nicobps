@@ -44,6 +44,7 @@ public class ControllerStakeholder {
 	public String samplepage(Model model) {
 		return "z_samplepage";
 	}
+
 	@GetMapping("/srverify.htm")
 	public String verification(Model model) {
 		model.addAttribute("pageType", "Verification");
@@ -67,10 +68,10 @@ public class ControllerStakeholder {
 	@PostMapping("/ulbregistration.htm")
 	public String ulbRegistration(Model model, Integer officecode, HttpServletRequest req) {
 		String usercode = (String) req.getSession().getAttribute("usercode");
-		Map<String,Object> errorList=SSI.getLicenceeValidity(Integer.valueOf(usercode.toString()),officecode);
-		if(!errorList.isEmpty()) {
+		Map<String, Object> errorList = SSI.getLicenceeValidity(Integer.valueOf(usercode.toString()), officecode);
+		if (!errorList.isEmpty()) {
 			model.addAttribute("registeringoffices", serviceUtilInterface.listRegisteringOffices());
-			model.addAttribute("errorMapList",errorList);
+			model.addAttribute("errorMapList", errorList);
 			return "stakeholder/ulbregistration";
 		}
 		String applicationcode = SSI.ulbRegistration(officecode, Integer.valueOf(usercode));
@@ -125,7 +126,8 @@ public class ControllerStakeholder {
 
 	@PostMapping("/listLicensees.htm")
 	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req) {
-		Integer officecode = Integer.valueOf(serviceUtilInterface.listUserOffices().get(0).getKey());
+		List<CommonMap> offices = serviceUtilInterface.listUserOffices();
+		Integer officecode = Integer.valueOf((!offices.isEmpty()) ? offices.get(0).getKey() : "0");
 		return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),
 				officecode != null ? officecode : 0);
 	}

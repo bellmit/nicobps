@@ -73,9 +73,11 @@ public class PlanInfoDetails {
 			params.put("wardname", wardname);
 			params.put("district", district);
 			params.put("buildingheight", buildingheight);
+			
+//			JSONArray jarr=edcrContext.read("planDetail.blocks.*.building.floors.*.occupancies.*.typeHelper.type"); 
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			System.out.println("Exception in getPlanInfoDetails :" + e);
 			e.printStackTrace();
 		}

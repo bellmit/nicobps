@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stakeholder" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NO_DATA_ADAPTER"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="applicationcode" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,off.officecode,off.officename1,
+ u.mobileno,u.username as email,
+ (SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures,off.logo
+  FROM nicobps.licensees l
+ INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode
+ INNER JOIN masters.districts d on d.districtcode=l.predistrictcode
+ INNER JOIN nicobps.applications app on app.usercode=l.usercode
+ INNER JOIN nicobps.applicationflowremarks afr on
+		afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=app.applicationcode::text)
+ INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' and pf.modulecode=1
+ INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode
+ INNER JOIN nicobps.userlogins u on l.usercode=u.usercode
+ INNER JOIN masters.offices off on off.officecode=app.officecode
+ INNER JOIN masters.states s on s.statecode=d.statecode
+ WHERE app.applicationcode=$P{applicationcode}
+ ORDER BY l.entrydate DESC]]>
+	</queryString>
+	<field name="usercode" class="java.lang.Integer"/>
+	<field name="licenseetypecode" class="java.lang.Integer"/>
+	<field name="firmindividual" class="java.lang.String"/>
+	<field name="applicantsname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="preaddressline1" class="java.lang.String"/>
+	<field name="preaddressline2" class="java.lang.String"/>
+	<field name="previllagetown" class="java.lang.String"/>
+	<field name="predistrictcode" class="java.lang.Integer"/>
+	<field name="prepincode" class="java.lang.Integer"/>
+	<field name="peraddressline1" class="java.lang.String"/>
+	<field name="peraddressline2" class="java.lang.String"/>
+	<field name="pervillagetown" class="java.lang.String"/>
+	<field name="perdistrictcode" class="java.lang.Integer"/>
+	<field name="perpincode" class="java.lang.Integer"/>
+	<field name="entrydate" class="java.sql.Timestamp"/>
+	<field name="firmname" class="java.lang.String"/>
+	<field name="licenseetypename" class="java.lang.String"/>
+	<field name="enabled" class="java.lang.String"/>
+	<field name="districtcode" class="java.lang.Integer"/>
+	<field name="statecode" class="java.lang.Integer"/>
+	<field name="districtname" class="java.lang.String"/>
+	<field name="dnl" class="java.lang.String"/>
+	<field name="dareaskm" class="java.lang.Double"/>
+	<field name="gd" class="java.lang.String"/>
+	<field name="vnd" class="java.lang.String"/>
+	<field name="doud" class="java.sql.Timestamp"/>
+	<field name="updatedby" class="java.lang.Integer"/>
+	<field name="statename" class="java.lang.String"/>
+	<field name="processcode" class="java.lang.Integer"/>
+	<field name="nextprocessname" class="java.lang.String"/>
+	<field name="applicationcode" class="java.lang.String"/>
+	<field name="officecode" class="java.lang.Integer"/>
+	<field name="officename1" class="java.lang.String"/>
+	<field name="mobileno" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="enclosures" class="java.lang.Object"/>
+	<field name="logo" class="java.io.InputStream"/>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="64" splitType="Stretch">
+			<textField>
+				<reportElement x="123" y="0" width="272" height="62"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{officename1}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="417" y="0" width="100" height="62"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[$F{logo}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="565" splitType="Stretch">
+			<staticText>
+				<reportElement x="11" y="10" width="152" height="25"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Licensee Details]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="35" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="11" y="85" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Application No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="152" y="85" width="393" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{applicationcode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="153" y="48" width="121" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{licenseetypename}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="12" y="48" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Licensee Type]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="151" y="121" width="394" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{applicantsname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="121" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Applicant's Name]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="153" y="189" width="136" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{gender}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="12" y="189" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="287" y="48" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firm/Individual]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="417" y="48" width="128" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{firmindividual}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="154" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firm Name]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="153" y="154" width="393" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{firmname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="13" y="221" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mobile No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="154" y="221" width="392" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{mobileno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="13" y="255" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="154" y="255" width="392" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="325" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="12" y="300" width="152" height="25"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="153" y="346" width="391" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{preaddressline1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="346" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address Line 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="378" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address Line 2]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="153" y="378" width="392" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{preaddressline2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="413" width="125" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Village/Town]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="152" y="413" width="122" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{previllagetown}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="413" width="135" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{statename}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="285" y="413" width="125" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[State]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="153" y="448" width="121" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{districtname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="12" y="448" width="125" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[District]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="412" y="448" width="135" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{prepincode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="285" y="448" width="125" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pincode]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

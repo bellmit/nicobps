@@ -137,6 +137,21 @@ function FeeMaster() {
 	};
 	return FeeMaster;
 }
+
+
+function OfficeLocations(){
+var OfficeLocations = {
+		"officecode": 0,
+		"locationcode": 0,
+		"locationname": "",
+		"nomenclature": "",
+		"wardlocationlgdcode": "",
+		"wardlocationno":0,
+		
+	};
+	return OfficeLocations;
+
+}
 /*Bankit*/
 function Enclosures(){
 var Enclosures={

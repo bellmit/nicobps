@@ -9,9 +9,12 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesEnclosures;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.OfficeLocations;
 import obps.models.Pageurls;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
+import obps.models.UserDetails;
+import obps.models.UserOfficeLocations;
 import obps.models.Userlogin;
 
 public interface ServiceUserManagementInterface {
@@ -44,5 +47,15 @@ public interface ServiceUserManagementInterface {
 	public List<Userlogin> listUserAndMappedPages(Integer officecode);
 
 	public String saveUserpages(List<Map<String, Object>> upages);
+	
+	public UserDetails getUserDetails(Integer usercode);
 
+
+	public String saveUserWards(List<Map<String, Object>> uwards);
+
+	public List<OfficeLocations> listWards(Integer officecode);
+
+	public List<UserOfficeLocations> listUserAndMappedWards(Integer officecode);
+
+	public List<UserOfficeLocations> listWardsUser(Integer usercode);
 }

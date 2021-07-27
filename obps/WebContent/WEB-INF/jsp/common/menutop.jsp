@@ -39,7 +39,9 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right text-left b-dropmenu-db" aria-labelledby="navbarDropdown">
           <!-- <a class="dropdown-item" href="#">Edit Profile</a> -->         
-          <a class="dropdown-item" href="changepassword.htm">Change Password</a>              
+          <a class="dropdown-item" href="changepassword.htm">Change Password</a>   
+          <a class="dropdown-item" href=" profile.htm">View Profile</a>   
+                  
           <div class="dropdown-divider"></div>
           <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#signout-modal">Logout</a> -->  
           <a class="dropdown-item" href="logout.htm">Logout</a>                 

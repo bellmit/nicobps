@@ -130,4 +130,6 @@ public interface ServiceUtilInterface {
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
 
 	public Map<String, Object> getPlanInfo(String permitnumber);
+	
+	public List<Map<String, Object>> listUsers(Integer officecode);
 }

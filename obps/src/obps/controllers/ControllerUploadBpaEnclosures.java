@@ -149,4 +149,11 @@ public class ControllerUploadBpaEnclosures {
 		}
 		return successUrel;
 	}
+
+
+	@GetMapping(value = { "/dayendstat.htm", "/dayendStat.htm" })
+	public String dayendstat(Model model, HttpServletRequest request) {
+		model.addAttribute("Listofficecode", serviceUtilInterface.listUserOffices());
+		return "dayendstatement";
+	}
 }
