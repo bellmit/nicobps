@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.crypto.Mac;
@@ -34,6 +35,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import obps.daos.DaoPaymentInterface;
+import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 
 @Service
@@ -73,9 +75,10 @@ public class ServiceBilldeskGateway {
 //		System.out.println("Generate URI");
 		Integer transactioncode = serviceUtilInterface.getMax("nicobps", "transactions", "transactioncode");
 		transactioncode++;
-		String customerid = transactioncode.toString();
-//		System.out.println("customerid-------" + customerid);
-		String hashSequence = "MerchantId|CustomerId|NA|Amount|NA|NA|NA|Currency|NA|R|SecureSecret|NA|NA|F|TenantId|ApplicationCode|ModuleCode|ToProcessCode|5|UserCode|NA|ReturnUrl";
+		 
+		String customerid = String.format("%06d", transactioncode);
+		System.out.println("customerid-------" + customerid);
+		String hashSequence = "MerchantId|CustomerId|NA|Amount|NA|NA|NA|Currency|NA|R|SecureSecret|NA|NA|F|TenantId|ApplicationCode|ModuleCode|ToProcessCode|OfficeCode|UserCode|NA|ReturnUrl";
 		hashSequence = hashSequence.replace("MerchantId", MERCHANT_ID);
 		hashSequence = hashSequence.replace("CustomerId", customerid);
 		hashSequence = hashSequence.replace("TenantId", tenantid);
@@ -86,6 +89,10 @@ public class ServiceBilldeskGateway {
 		hashSequence = hashSequence.replace("ModuleCode", modulecode.trim());
 		hashSequence = hashSequence.replace("ToProcessCode", toprocesscode.trim());
 		hashSequence = hashSequence.replace("UserCode", usercode.trim());
+		String sql="select officecode as key from nicobps.applications where applicationcode=?";
+		Object[] criteria = { (applicationcode) };
+		List<CommonMap> officecode = serviceUtilInterface.listCommonMap(sql, criteria);
+		hashSequence = hashSequence.replace("OfficeCode", officecode.get(0).getKey());
 		hashSequence = hashSequence.replace("ReturnUrl", RETURN_URL);
 		String hash = HmacSHA256(hashSequence, CHECK_SUM_PWD);
 		hashSequence = hashSequence + "|" + hash;
@@ -138,6 +145,7 @@ public class ServiceBilldeskGateway {
 
 		}
 		return redirectUri;
+//		return null;
 	}
 
 	public Boolean checkHmac(String msg, String checksum) {

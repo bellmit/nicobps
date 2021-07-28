@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.rmi.CORBA.Util;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.daos.DaoPaymentInterface;
 import obps.services.payment.ServiceBilldeskGateway;
 import obps.services.payment.ServicePaymentCommon;
+import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.PaymentValidator;
 
@@ -151,15 +153,11 @@ public class ControllerPayment {
 	}
 
 	@PostMapping(path = "/BilldeskResponse.htm", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
-	public String paymentResponse(HttpServletRequest request, @RequestParam Map<String, String> params, Model model) {
+	public String paymentResponse(HttpServletRequest request, HttpServletResponse res,
+			@RequestParam Map<String, String> params, Model model) {
 
 		String message = null;
 		String response = params.get("msg");
-		// --------below is a test string response for success payment
-		// overwrite the 2nd pipe value to current transaction code..
-		// comment out the hash validation to see result
-//		String response = "SPSCSKM|13|VHMP9856639406|314858|1.00|HMP|459200|03|INR|VDDIRECT|05-NA|NA|00000005.00|24-03-2021+13:30:58|0300|NA|jk.jammu|DCR52021A50C20101011|2|4|5|3|NA|NA|PGS10001-Success|F3E1804EDFC2A60BF3DD135D4CC7C71DD38E6ECF67645A1CFD8AA7606151B0D0";
-		// ----------------------------------
 		response = response.replace("%7C", "|");
 		response = response.replace("%3A", ":");
 		String[] words = response.toString().split("\\|");
@@ -172,11 +170,10 @@ public class ControllerPayment {
 			String msg = response.substring(0, lastIndexOf);
 			String checksum = response.substring(lastIndexOf + 1, response.length());
 			Boolean validatehash = billdeskgateway.checkHmac(msg, checksum);
-//			System.out.println("validatehash:" + validatehash);
 			if (validatehash) {
 				switch (paymentstatuscode) {
 				case "0300":
-					int transactioncode=Integer.valueOf(words[1]);
+					int transactioncode = Integer.valueOf(words[1]);
 					List<Map<String, Object>> userdetails = serviceUtilInterface
 							.getLicensee(Integer.parseInt(usercode));
 					message = "Payment Successful. ";
@@ -184,21 +181,22 @@ public class ControllerPayment {
 					model.addAttribute("transactioncode", transactioncode);
 					model.addAttribute("billdeskreferenceNo", words[2]);
 					model.addAttribute("bankreferenceno", words[3]);
-					model.addAttribute("amount", words[4]);
+					model.addAttribute("amount", Float.valueOf(words[4]));
 					model.addAttribute("transactiondate", words[13]);
 					model.addAttribute("message", message);
 					// ----------------UpdateTransaction and insert into transactionreceipt
 					daoPaymentInterface.UpdatePayment("S", response, Integer.parseInt(words[1]),
 							Integer.parseInt(usercode));
-					
-					String receiptno=serviceUtilInterface.generateTransactionReceipt(1, "FEERECEIPT", "","",transactioncode+"");
-					 
-					daoPaymentInterface.saveTransactionReceipt(transactioncode, receiptno+"");
+					Integer officecode = Integer.valueOf(words[20]);
+					String receiptno = serviceUtilInterface.generateTransactionReceipt(officecode, "FEERECEIPT", "", "",
+							transactioncode + "");
+
+					daoPaymentInterface.saveTransactionReceipt(transactioncode, receiptno + "");
 					// ----------------InsertApplicationFlowRemark
 					String applicationcode = words[17];
 					String toprocesscode = words[19];
 					String modulecode = words[18];
-			 
+
 					serviceUtilInterface.updateApplicationflowremarks(applicationcode, Integer.parseInt(modulecode),
 							Integer.parseInt(toprocesscode), Integer.parseInt(usercode), null, "Payment Complete");
 					break;
@@ -235,8 +233,62 @@ public class ControllerPayment {
 		} catch (Exception e) {
 			System.out.println("Error at PaymentResponse---------" + e);
 		}
-
-		return "payment/BilldeskResponse";
+		return " payment/BilldeskResponse" ;
+//		return "redirect:payment/BilldeskResponse.htm?msg=" + response;
 	}
 
+	@GetMapping(value = "/BilldeskResponse.htm")
+	public String getBilldesk(Map<String, String> params, Model model) {
+		String message = null;
+		String response = params.get("msg");
+		response = response.replace("%7C", "|");
+		response = response.replace("%3A", ":");
+		String[] words = response.toString().split("\\|");
+		String paymentstatuscode = words[14];
+		String usercode = words[21];
+		model.addAttribute("status", words[14]);
+		try {
+			  switch (paymentstatuscode) {
+				case "0300":
+					int transactioncode = Integer.valueOf(words[1]);
+					List<Map<String, Object>> userdetails = serviceUtilInterface
+							.getLicensee(Integer.parseInt(usercode));
+					message = "Payment Successful. ";
+					model.addAttribute("payer", userdetails.get(0).get("applicantsname"));
+					model.addAttribute("transactioncode", transactioncode);
+					model.addAttribute("billdeskreferenceNo", words[2]);
+					model.addAttribute("bankreferenceno", words[3]);
+					model.addAttribute("amount", Float.valueOf(words[4]));
+					model.addAttribute("transactiondate", words[13]);
+					model.addAttribute("message", message);
+
+					break;
+				case "0399":
+					message = "Payment Unsucessful - Invalid Authentication in Bank / Cancelled By User.";
+
+					break;
+				case "NA":
+					message = "Invalid Input in Payment Request. Please Contact Admin.";
+
+					break;
+				case "0002":
+					message = "Billdesk Waiting Response From Bank.";
+
+					break;
+				case "0001":
+					message = "An Error has occured at billdesk";
+
+					break;
+				default:
+					message = "An error occured";
+
+					break;
+				}
+				model.addAttribute("message", message);
+			 
+		} catch (Exception e) {
+			System.out.println("Error at PaymentResponse---------" + e);
+		}
+		return "payment/BilldeskResponse";
+	}
 }

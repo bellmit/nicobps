@@ -65,7 +65,7 @@
 									</tr>
 									<tr>
 										<td class=" font-weight-bold">Amount</td>
-										<td class="col-md-5 ">: <core:out value="${amount}"
+										<td class="col-md-5 ">:&#8377;<core:out value="${amount}"
 												escapeXml="true" /></td>
 
 									</tr>
@@ -82,8 +82,7 @@
 
 
 						</core:if>
-
-
+ 
 					</div>
 				</div>
 

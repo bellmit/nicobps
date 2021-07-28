@@ -109,7 +109,7 @@ public class PaymentValidator {
 
 		if (applicationcode != null && feecode != null) {
 			int appCount = serviceCommon.getApplicationCount(applicationcode);
-			System.out.println(" app count : " + appCount);
+			 
 			if (appCount > 0) {
 				appExist = "EXIST";
 			} else {
@@ -141,8 +141,6 @@ public class PaymentValidator {
 				payStatus = "NOTPAID";
 			}
 			Map<String, Object> fee = serviceCommon.getAmount(feecode);
-			System.out.println("fee " + fee);
-
 			if (fee == null) {
 				feeAmount = "NOTAVAILABLE";
 			} else {
@@ -162,7 +160,7 @@ public class PaymentValidator {
 			statusMap.put("feeamount", feeAmount.trim());
 			statusMap.put("userdet", userDet.trim());
 
-			System.out.println("json obj ::" + statusMap.toString());
+			
 
 		} else {
 			statusMap.put("error", "NULL");
