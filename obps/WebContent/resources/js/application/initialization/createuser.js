@@ -65,7 +65,7 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
         
        
        	if(response.data=="Success"){
-       		MsgBox("Users inserted successfully.");
+       		MsgBox("The users has been created successfully. Please assign the necessary privilleges from the User Access Control link.");
        		$scope.reset();
        		$scope.listUsers();
        	}else if(response.data=="exist"){
@@ -121,16 +121,16 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
         
        
        	if(response.data=="Success"){
-       		MsgBox("Users updated successfully.");
+       		MsgBox("The user has been updated successfully.");
        		$scope.reset();
        		$scope.listUsers();
        	}else if(response.data=="exist"){
-       		MsgBox("User Already exists");
+       		MsgBox("Please choose a different username; The username  lready exists");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="Error"){
-       		MsgBox("Users already exist");
+       		MsgBox("Please choose a different username; The username  lready exists");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();

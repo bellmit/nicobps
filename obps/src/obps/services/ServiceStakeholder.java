@@ -155,6 +155,9 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		// -------------------------
 		// -------Valid
 		// -------------------------
+		
+		
+		
 		String sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
 				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
 				+ "CASE WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3 ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
@@ -168,10 +171,18 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "ORDER BY CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END DESC LIMIT 1";
 		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
+			System.out.println("1");
 			response.put("VALID_LICENCE", "You are already empanelled " + list.get(0).get("office")
 					+ " and its valid till " + list.get(0).get("validity"));
 			return response;
 		}
+		
+		
+		
+		
+		
+		
+			
 		// -------------------------
 		// -------Expired
 		// -------------------------
@@ -188,10 +199,43 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "ORDER BY CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END DESC LIMIT 1";
 		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
+			System.out.println("2");
 			response.put("EXPIRED_LICENCE", "Your emnpanelment with " + list.get(0).get("office") + " has expired on "
 					+ list.get(0).get("validity") + ".Please click on the button above to renew your empanelment.");
 //			return response; // Should it be returned from here?
 		}
+		
+		
+		// -------------------------
+				// -------Verified and awaiting Payment
+				// -------------------------
+				sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
+						+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
+						+ "         CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
+						+ "             "
+						+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
+						+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
+						+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
+						+ " LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+						+ " WHERE 1 = 1  AND TOPROCESSCODE = 5 " + " AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
+						+ " AND U.USERCODE  = ? " + " AND A.MODULECODE IN (1, 3) "
+						+ " ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+				list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+				if (!list.isEmpty()) {
+					System.out.println("3");
+					
+					
+					
+					response.put("VERIFIED",
+							"Your application for emnpanelment with " + list.get(0).get("office")
+									+ " office bearing application code " + list.get(0).get("applicationcode")
+									+ " has been verified. Please pay the Registration Fee. click on the Home Link > Payment of Registration Fees.");
+					
+					return response;
+				}
+		
+		
+		
 		// -------------------------
 		// -------Awaiting Verification
 		// -------------------------
@@ -202,12 +246,14 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
 				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
 				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
-				+ "LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+				+ " LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
 				+ "WHERE 1 = 1  " + "AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
 				+ "AND U.USERCODE  = ? " + "AND A.MODULECODE IN (1, 3) "
 				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+		
 		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
+			System.out.println("4");
 			response.put("VERIFICATION_PENDING",
 					"Your application for emnpanelment with " + list.get(0).get("office")
 							+ " office bearing application code " + list.get(0).get("applicationcode")
@@ -233,6 +279,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
 		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
+			System.out.println("5");
 			response.put("AWAITING_APPROVAL",
 					"Your application for emnpanelment with " + list.get(0).get("office")
 							+ " office bearing application code " + list.get(0).get("applicationcode")
@@ -257,6 +304,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
 		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
+			System.out.println("6");
 			response.put("PAYMENT_INITIATED", "Your application for emnpanelment with " + list.get(0).get("office")
 					+ " office bearing application code " + list.get(0).get("applicationcode")
 					+ " is under process. The payment status of the application cannot be ascertained at the moment.");

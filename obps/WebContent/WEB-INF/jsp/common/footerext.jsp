@@ -34,6 +34,10 @@
        			<div class="d-inline-block align-self-center">
          			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/niualogo.png" height="100"></p>         		
         		</div>
+            </div>  <div class="col-md-4 col-sm-4 footer-social d-flex">
+       			<div class="d-inline-block align-self-center">
+         			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/tcpologo.jpg" height="100"></p>         		
+        		</div>
             </div>            
         	
         	<div class="col-md-2 col-sm-4 footer-ns d-flex">

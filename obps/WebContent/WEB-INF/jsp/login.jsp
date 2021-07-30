@@ -34,7 +34,7 @@
 							</div>
 							<div class="form-group">
 								<label for="password" class="">Password:</label>
-								<input class="form-control" type="password" id="password" name="password" value=gulrez@123 autocomplete="off" required>
+								<input class="form-control" type="password" id="password" name="password" value="Nicnet@10" autocomplete="off" required>
 							</div>
 							<!-- <div class="form-group custom-control custom-checkbox">
 								<input class="custom-control-input" id="login-rem-1" type="checkbox" name="remember"> 

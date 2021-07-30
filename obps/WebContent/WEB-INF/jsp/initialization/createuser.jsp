@@ -96,7 +96,7 @@ input[type=number] {
 											<td class="col-xs-5 selectContainer"><input
 												type="number" class="form-control" id="mobileno"
 												name="mobileno" min="1000000000" max="9999999999"
-												pattern="^([1-9]){1}([0-9]){9}$" ng-model="user.mobileno"
+												pattern="^([1-9]){1}([0-9]){9}$" ng-model="user.mobileno" maxlength="10"
 												required autocomplete="off" /> <span id="mobilenoMsg"></span>
 												<!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
 											</td>

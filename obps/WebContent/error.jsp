@@ -11,8 +11,12 @@ msg.put("REPORT_VALIDATION_ERROR", "Validation Failed - Incorrect Parameters");
 </head>
 <body>
 	<center>
-		<h1>Due to technical problem request can't be process.Please try
-			again later...!</h1>
+		<h4>
+		
+		Sorry, there seems to be a problem while we are trying to process your request. 
+		<br/>Please try again later.
+		<br/>If the problem persists, please contact the Administrator.
+		</h4>
 	</center>
 	<span style="color: red;"><%=(request.getParameter("msg") != null) ? msg.get(request.getParameter("msg").toString()) : ""%></span>
 </body>

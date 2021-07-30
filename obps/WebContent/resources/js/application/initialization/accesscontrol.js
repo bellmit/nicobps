@@ -24,7 +24,7 @@ app.controller("accesscontrolCtrl", [
         }
       });
       if (mapuserpagespages.length === 0) {
-        alert("Select atleast one URL");
+        alert("Please assign at least 1 page to the user. ");
         return;
       }
       jQuery.ajax({
@@ -35,22 +35,22 @@ app.controller("accesscontrolCtrl", [
         contentType: "application/json; charset=utf-8",
         success: function (response) {
           if(response=='usercodenull'){
-          	alert("Please Select atleast 1 User from the correct office");
+          	alert("Please assign atleast 1 User from the correct office");
           	$scope.reset();
           	
           	}
           else if(response=='urlcodenull'){
-          	alert("Please Select atleast 1 URL");
+          	alert("Please assign atleast 1 User from the correct office");
           	$scope.reset();
            
           	}
           else if(response=='Mapped'){
-          	alert("Mapped");
+          	alert("The user has been succesfully assigned the selected page(s)");
           	$scope.reset();
          
           }
           else if(response=='Failed'){
-          	alert("Failed");
+          	alert("Sorry, ther was an error while trying to assign the privilleges to the user.");
           	$scope.reset();
         
        }
