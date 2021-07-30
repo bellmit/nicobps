@@ -113,7 +113,7 @@ public class Report extends HttpServlet {
 					HashMap plandet = planinfo.getPlanInfoDetails(permitnumber);
 					params.putAll(plandet);
 
-//					System.out.println("params for buildingpermit:: " + params.toString());
+					System.out.println("params for buildingpermit:: " + params.toString());
 				} else {
 					response.sendRedirect("error.jsp?msg=VALIDATION_ERROR");
 					return;
@@ -204,10 +204,11 @@ public class Report extends HttpServlet {
 
 		} catch (IOException | SQLException | JRException | BeansException e) {
 			out = response.getWriter();
-			response.sendRedirect("error.jsp");
 			System.out.println(
 					"Exception thrown by class " + this.getClass() + " at " + new java.util.Date() + " :: " + e);
 			// Logger.getLogger(Report.class.getName()).log(Level.SEVERE, null, e);
+			response.sendRedirect("error.jsp");
+
 		} finally {
 			try {
 				if (out != null) {
