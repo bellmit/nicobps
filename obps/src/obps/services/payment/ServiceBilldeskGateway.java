@@ -74,6 +74,9 @@ public class ServiceBilldeskGateway {
 			String modulecode, String toprocesscode) {
 //		System.out.println("Generate URI");
 		Integer transactioncode = serviceUtilInterface.getMax("nicobps", "transactions", "transactioncode");
+		if(transactioncode<1000) {
+			transactioncode+=1000;
+		}
 		transactioncode++;
 		 
 		String customerid = String.format("%06d", transactioncode);
