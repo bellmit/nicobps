@@ -115,7 +115,7 @@ app.controller("CommonCtrl", [
 									"data": "applicationcode"
 								},{
 									"title": "Application Date",
-									"data": "entrydate",
+									"data": "applicationdate",
 									"render":(data,type,row,meta)=>{
 										return (new Date(data)).getDay()+"/"+(new Date(data)).getMonth()+'/'+(new Date(data)).getFullYear()
 									}
