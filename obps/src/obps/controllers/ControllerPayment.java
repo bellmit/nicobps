@@ -233,7 +233,7 @@ public class ControllerPayment {
 		} catch (Exception e) {
 			System.out.println("Error at PaymentResponse---------" + e);
 		}
-		return " payment/BilldeskResponse" ;
+		return "payment/BilldeskResponse" ;
 //		return "redirect:payment/BilldeskResponse.htm?msg=" + response;
 	}
 
