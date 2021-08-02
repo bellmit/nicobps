@@ -125,12 +125,12 @@ app.controller('createuserCtrl', ['$scope', '$sce', '$compile','$timeout','commo
        		$scope.reset();
        		$scope.listUsers();
        	}else if(response.data=="exist"){
-       		MsgBox("Please choose a different username; The username  lready exists");
+       		MsgBox("Please choose a different username; The username  already exists");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
        	}else if(response.data=="Error"){
-       		MsgBox("Please choose a different username; The username  lready exists");
+       		MsgBox("Please choose a different username; The username  already exists");
        		$scope.user.userpassword="";
     	$scope.user.repassword="";
        		$scope.listUsers();
