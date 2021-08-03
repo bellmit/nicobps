@@ -245,7 +245,7 @@ function validateDetails(signupDetails)
 		showMsg("mobileno","This field is required");
 		return false;
 	}else if(!signupDetails.mobileno.match(PATTERN_MOBILE)){
-		showMsg("mobileno","Invalid email id");
+		showMsg("mobileno","Invalid Mobile Number");
 		return false;
 	}else{
 		showMsg("mobileno","");
