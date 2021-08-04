@@ -36,8 +36,7 @@ jQuery(document).ready(function () {
     jQuery(".error").click(function(){
         jQuery(this).text("");
     });
-    */
-    
+    */    
 }); 
 
 function onbeforeSubmit()
@@ -45,11 +44,11 @@ function onbeforeSubmit()
     var count=0;
     var status=0; 
 
-	//if(jQuery('.chk_Y').length>0)
-    if(jQuery('.chkbox').length>0)
+	if(jQuery('.chkbox').length>0)
+	//if(jQuery('.chk_Y').length>0)    
     {
-        //jQuery('.chkbox').each(function(){
-        jQuery('.chk_Y').each(function(){
+        jQuery('.chkbox').each(function(){
+        //jQuery('.chk_Y').each(function(){
             var id="file_"+jQuery(this).attr("id").split("_")[1];
             if(jQuery(this).prop("checked")==true)
             {
@@ -94,7 +93,7 @@ function onbeforeSubmit()
         if(status>0){
             return false;        
         }        
-    }    
+    }   
   
 	if(jQuery.trim(jQuery("#userresponsecaptcha").val())===""){
     	showMsg("UploadEnc", "Please enter captcha"); 
