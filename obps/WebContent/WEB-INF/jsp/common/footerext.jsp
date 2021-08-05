@@ -19,28 +19,29 @@
 <!--                     </ul> -->
 <!--                 </div> -->
 <!--             </div> -->
-        	<div class="col-md-4 col-sm-4 footer-social d-flex">
+        	<div class="col-md-3 col-sm-3 footer-social d-flex">
        			<div class="d-inline-block align-self-center">
          			<p class="bg-light"><img src="resources/js/vendor/bootstrap/images/NIC.png" alt="NIC logo"  height="70"></p> 
         		</div>
             </div>
-        	<div class="col-md-4 col-sm-4 footer-social d-flex">
+        	<div class="col-md-2 col-sm-2 footer-social d-flex">
        			<div class="d-inline-block align-self-center">
          			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/egovlogo.jpg" height="100"></p>         		
         		</div>
             </div>            
         	
-        	<div class="col-md-4 col-sm-4 footer-social d-flex">
+        	<div class="col-md-3 col-sm-3 footer-social d-flex">
        			<div class="d-inline-block align-self-center">
          			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/niualogo.png" height="100"></p>         		
         		</div>
-            </div>  <div class="col-md-4 col-sm-4 footer-social d-flex">
+            </div>  
+            <div class="col-md-3 col-sm-3 footer-social d-flex">
        			<div class="d-inline-block align-self-center">
          			<p class="bg-light mb-0"><img src="resources/js/vendor/bootstrap/images/tcpologo.jpg" height="100"></p>         		
         		</div>
             </div>            
         	
-        	<div class="col-md-2 col-sm-4 footer-ns d-flex">
+        	<div class="col-md-1 col-sm-1 footer-ns d-flex">
        			<a class="backtotop align-self-center d-flex text-center text-decoration-none text-white" title="Back to top" href="#b-accessibility">
        				<span style="display:none;">Back to top</span>
             		<span style="font-size: 24px;" class="fas fa-angle-up align-self-center mx-auto"></span>
