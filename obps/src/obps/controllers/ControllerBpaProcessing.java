@@ -386,7 +386,10 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaApproval bpa,
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
+		if (usercode == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
+		bpa.getProcessflow().setFromusercode(usercode);
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
 		Bvalid.ValidateapproveApplication(bpa, response);
 		if (!response.isEmpty()) {
@@ -395,10 +398,6 @@ public class ControllerBpaProcessing {
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
-		if (usercode == null)
-			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-
-		bpa.getProcessflow().setFromusercode(usercode);
 		if (SBI.approveBPApplication(bpa, response))
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		else
@@ -411,6 +410,10 @@ public class ControllerBpaProcessing {
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
+		if (usercode == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+		data.setFromusercode(usercode);
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------		
 		Bvalid.Validateprocessbpapplication(data, response);
 		if (!response.isEmpty()) {
@@ -418,11 +421,6 @@ public class ControllerBpaProcessing {
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
-
-		if (usercode == null)
-			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-
-		data.setFromusercode(usercode);
 		if (SBI.processBPApplication(data, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
@@ -435,6 +433,10 @@ public class ControllerBpaProcessing {
 			BindingResult bindingResult) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
+		if (usercode == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+		data.setFromusercode(usercode);
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
 		Bvalid.ValidaterejectBPApplication(data, response);
 		if (!response.isEmpty()) {
@@ -442,10 +444,7 @@ public class ControllerBpaProcessing {
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
-		if (usercode == null)
-			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
-		data.setFromusercode(usercode);
 		if (SBI.rejectBPApplication(data, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else

@@ -19,13 +19,12 @@ import obps.util.common.Patterns;
 public class BpaValidator {
 
 //	-------------------------------------------------ControllerBuildingPermit validator-----------------------------
-	public void BpaValidateSaveBpa(BpaApplication bpaApplication, Map<String,Object> response) {
+	public void BpaValidateSaveBpa(BpaApplication bpaApplication, Map<String, Object> response) {
 		BpaApplication bpa = bpaApplication;
 
 		if (bpa.getApplicationcode() != null) {
-			if (bpa.getApplicationcode().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_START_ZERO, bpa.getApplicationcode())
-					|| bpa.getApplicationcode().length() > 20) {
+			System.out.println("application code=="+ bpa.getApplicationcode());
+			if (bpa.getApplicationcode().trim().isEmpty()|| bpa.getApplicationcode().length() > 20) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", " THE ENTERED APPLICATION CODE IS INVALID,ENTER A VALID APPLICATION CODE");
 			}
@@ -82,98 +81,82 @@ public class BpaValidator {
 		}
 
 		if (bpa.getPlotaddressline2() != null) {
-			if (bpa.getPlotaddressline2().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotaddressline2())
-					|| bpa.getPlotaddressline2().length() > 30) {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", " THE ENTERED PLOT_ADDRESS_LINE_2 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_2");
+			if (!bpa.getPlotaddressline2().trim().isEmpty()) {
+				if (!Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotaddressline2())
+						|| bpa.getPlotaddressline2().length() > 30) {
+					response.put("code", HttpStatus.BAD_REQUEST.value());
+					response.put("msg", "THE ENTERED PLOT_ADDRESS_LINE_2 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_2");
+				}
 			}
 		}
 
 		if (bpa.getPlotvillagetown() != null) {
 			if (bpa.getPlotvillagetown().trim().isEmpty()
 					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotvillagetown())
-					|| bpa.getPlotvillagetown().length() > 30) {				
+					|| bpa.getPlotvillagetown().length() > 30) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "PLOT_VILLAGE_TOWN IS INVALID,ENTER A VALID PLOT_VILLAGE_TOWN");
 			}
-		} else {			
+		} else {
 			response.put("code", HttpStatus.BAD_REQUEST.value());
 			response.put("msg", " VALUE IN PLOT_VILLAGE_TOWN IS NULL, ENTER A VALID PLOT_VILLAGE_TOWN");
 		}
 
 		if (bpa.getPlotpincode() != null) {
 			if (!Patterns.PatternMatche(Patterns.PATTERN_PINCODE, bpa.getPlotpincode().toString())
-					|| bpa.getPlotpincode().toString().length() != 6) {				
+					|| bpa.getPlotpincode().toString().length() != 6) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "PLOT_PINCODE IS INVALID,ENTER A VALID OFFICE_LOCATION_CODE");
 			}
-		} else {			
+		} else {
 			response.put("code", HttpStatus.BAD_REQUEST.value());
 			response.put("msg", " VALUE IN PLOT_PINCODE IS NULL, ENTER A VALID PLOT_PINCODE");
 		}
 
 		if (bpa.getOfficelocationcode() != null) {
 			if (!Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_INTEGER, bpa.getOfficelocationcode().toString())
-					|| bpa.getOfficelocationcode().toString().length() > 5) {				
+					|| bpa.getOfficelocationcode().toString().length() > 5) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "OFFICE_LOCATION_CODE IS INVALID,ENTER A VALID OFFICE_LOCATION_CODE");
 			}
-		} else {			
+		} else {
 			response.put("code", HttpStatus.BAD_REQUEST.value());
 			response.put("msg", " VALUE IN OFFICE_LOCATION_CODE IS NULL, ENTER A VALID OFFICE_LOCATION_CODE");
 		}
 
 		if (bpa.getLandregistrationdetails() != null) {
-			if (bpa.getLandregistrationdetails().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getLandregistrationdetails())
-					|| bpa.getLandregistrationdetails().length() > 99) {				
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", "LAND_REGISTRATION_DETAILS IS INVALID,ENTER A VALID LAND_REGISTRATION_DETAILS");
-			}
+			if (!bpa.getLandregistrationdetails().trim().isEmpty()) {
+				if (bpa.getLandregistrationdetails().trim().isEmpty()
+						|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getLandregistrationdetails())
+						|| bpa.getLandregistrationdetails().length() > 99) {
+					response.put("code", HttpStatus.BAD_REQUEST.value());
+					response.put("msg", "LAND_REGISTRATION_DETAILS IS INVALID,ENTER A VALID LAND_REGISTRATION_DETAILS");
+				}
+			} 
 		}
 
 		if (bpa.getLandregistrationno() != null) {
-			if (bpa.getLandregistrationno().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getLandregistrationno())
-					|| bpa.getLandregistrationno().length() > 20) {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg",
-						" LAND_REGISTRATION_DETAILS_NUMBER IS INVALID,ENTER A VALID LAND_REGISTRATION_DETAILS_NUMBER");
-
-			}
-		}
-		if (bpa.getPlotidentifier1() != null) {
-			if (bpa.getPlotidentifier1().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotidentifier1())
-					|| bpa.getPlotidentifier1().length() > 10) {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", " PLOT_IDENTIFIER_1 IS INVALID,ENTER A VALID PLOT_IDENTIFIER_1");
-			}
-		}
-		if (bpa.getPlotidentifier2() != null) {
-			if (bpa.getPlotidentifier2().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotidentifier2())
-					|| bpa.getPlotidentifier2().length() > 10) {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", " PLOT_IDENTIFIER_2 IS INVALID,ENTER A VALID PLOT_IDENTIFIER_2");
-			}
-		}
-		if (bpa.getPlotidentifier3() != null) {
-			if (bpa.getPlotidentifier3().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotidentifier3())
-					|| bpa.getPlotidentifier3().length() > 10) {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", " PLOT_IDENTIFIER_3 IS INVALID,ENTER A VALID PLOT_IDENTIFIER_3");
+			if (!bpa.getLandregistrationno().trim().isEmpty()) {
+				if (bpa.getLandregistrationno().trim().isEmpty()
+						|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getLandregistrationno())
+						|| bpa.getLandregistrationno().length() > 20) {
+					response.put("code", HttpStatus.BAD_REQUEST.value());
+					response.put("msg",
+							"LAND_REGISTRATION_DETAILS_NUMBER IS INVALID,ENTER A VALID LAND_REGISTRATION_DETAILS_NUMBER");
+				}
 			}
 		}
 
 		if (bpa.getHoldingno() != null) {
-			if (bpa.getHoldingno() == null || bpa.getHoldingno().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getHoldingno())
-					|| bpa.getHoldingno().length() > 30) {
-				response.put("code", HttpStatus.BAD_REQUEST.value());
-				response.put("msg", " HOLDING_NUMBER IS INVALID,ENTER A VALID HOLDING_NUMBER");
+			System.out.println("inside null");
+			if (!bpa.getHoldingno().trim().isEmpty()) {
+				System.out.println("inside isEmty");
+				if (bpa.getHoldingno() == null || bpa.getHoldingno().trim().isEmpty()
+						|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getHoldingno())
+						|| bpa.getHoldingno().length() > 30) {
+					response.put("code", HttpStatus.BAD_REQUEST.value());
+					response.put("msg", " HOLDING_NUMBER IS INVALID,ENTER A VALID HOLDING_NUMBER");
+				}
 			}
 		}
 
@@ -310,7 +293,8 @@ public class BpaValidator {
 		}
 
 		if (bpaPf.getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks()) || bpaPf.getRemarks().length() > 255) {
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks())
+					|| bpaPf.getRemarks().length() > 255) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER VALID REMARKS ");
 			}
@@ -345,7 +329,8 @@ public class BpaValidator {
 		}
 
 		if (bpaPf.getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks()) || bpaPf.getRemarks().length() > 255) {
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks())
+					|| bpaPf.getRemarks().length() > 255) {
 //				errorMap.put("INVALID REMARKS SIZE", "ENTER REMARKS NOT MORE THEN 255 IN LENGTH");
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER  VALID REMARKS");
