@@ -42,10 +42,14 @@ public class DaoPayment implements DaoPaymentInterface {
 			Date date = sd.parse(((String) param.get("entrydate")).trim());
 			sql = "INSERT INTO nicobps.transactions(transactioncode,usercode,feecode,amount,paymentmodecode,paymentstatus,sentparameters,entrydate) "
 					+ "VALUES (?,?,?,?,?,?,?,?) ";
-			Object[] values = { Integer.valueOf((String) param.get("transactioncode")), usercode,
-					Integer.valueOf((String) param.get("feecode")), param.get("amount"), param.get("paymentmodecode"),
+//			System.out.println(" Integer.valueOf((String) param.get(\"transactioncode\")) " + Integer.valueOf( param.get("transactioncode").toString()));
+//			System.out.println(" Integer.valueOf((String) param.get(\"feecode\")) "+ Integer.valueOf((String) param.get("feecode")));
+			
+			Object[] values = { Integer.valueOf( param.get("transactioncode").toString()), usercode,
+					Integer.valueOf(param.get("feecode").toString()), param.get("amount"), param.get("paymentmodecode"),
 					param.get("paymentstatus"), param.get("sentparameters"), date };
 			response = jdbcTemplate.update(sql, values) > 0;
+			
 		} catch (Exception e) {
 			response = false;
 			e.getStackTrace();
@@ -67,7 +71,7 @@ public class DaoPayment implements DaoPaymentInterface {
 			sql = "INSERT INTO nicobps.applicationstransactionmap(applicationcode,transactioncode,entrydate) "
 					+ "VALUES (?,?,?) ";
 			Object[] values = { ((String) param.get("applicationcode")).trim(),
-					Integer.valueOf((String) param.get("transactioncode")), date };
+					Integer.valueOf( param.get("transactioncode").toString()), date };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;

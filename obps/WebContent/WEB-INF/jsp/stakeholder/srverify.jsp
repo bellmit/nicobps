@@ -244,7 +244,7 @@
 							<td>
 								<div class="form-group">
 									<label for="prepincode" class="">Pin Code</label> <input
-										id="prepincode" type="text" ng-value="applicant.prepincodex"
+										id="prepincode" type="text" ng-value="applicant.prepincode"
 										class="form-control" readonly="readonly">
 								</div>
 							</td>

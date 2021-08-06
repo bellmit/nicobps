@@ -13,6 +13,7 @@ import obps.util.common.Patterns;
 
 @Component
 public class PaymentValidator {
+	 public static final String PATTERN_AMOUNT = "[0-9]+(\\.[0-9][0-9]?)?";
 
 	@Autowired
 	private ServicePaymentCommon serviceCommon;
@@ -64,7 +65,7 @@ public class PaymentValidator {
 		}
 
 		if (feeamount != null) { // fee amount
-			if (!Patterns.PatternCompileMatche(Patterns.PATTERN_NUMERIC, feeamount.trim())) {
+			if (!Patterns.PatternCompileMatche(PATTERN_AMOUNT, feeamount.trim())) {
 				return "fee  amount is invalid";
 			}
 		} else {
