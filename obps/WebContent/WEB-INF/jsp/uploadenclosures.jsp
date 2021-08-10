@@ -7,7 +7,7 @@
 			<table id="entrytable">						  										
                  <core:forEach items="${enclosuresList}" var="enclosur" varStatus="loop">
                  <tr>                       
-                     <td>
+                     <td class="col-md-10">
 	                     <core:if  test="${empty enclosur.value2}">	
 	                         <form:checkbox path="appenclosures[${loop.index}].enclosurecode" value="${enclosur.key}" id="chk_${enclosur.key}" cssClass="chkbox chk_${enclosur.value1}"/>
 	                     </core:if> 
@@ -21,12 +21,12 @@
                          	</core:if>                    
                        	 </label>                        	 
                      </td>                        
-                     <td>
+                     <td class="col-md-1">
                          <form:input path="appenclosures[${loop.index}].fileContent" type="file" cssClass="file" id="file_${enclosur.key}" disabled="true"/>
                          <span style="color:red"><form:errors path="appenclosures[${loop.index}].fileContent" cssClass="error"/></span>                                                  
                          <span id="file_<core:out value="${enclosur.key}" escapeXml="true"></core:out>Msg" class="error" style="color:red"></span>  
                      </td>  
-                      <td>					   
+                      <td class="col-md-1">					   
 						<core:if  test="${not empty enclosur.value2}">						
 							<a  href="output.htm?usercode=${enclosur.value2}&enclosurecode=${enclosur.key}" target="_blank">View Enclosures</a>
 						</core:if>      										
@@ -55,7 +55,7 @@
                         </div>
                      
                         <div id="UploadEncMsg" class="formErrorContent" ></div>
-                        <span style="color:red"> <core:out value="${successMsg}" escapeXml="true" /></span>  
+                        <span style="color:red"> <core:out value="${successMsg}" escapeXml="false" /></span>  
                         
                         <core:if  test="${empty successMsg}">			
                         	<div style="color:red"> <core:out value="${successNotUploadedMsg}" escapeXml="true" /></div>   

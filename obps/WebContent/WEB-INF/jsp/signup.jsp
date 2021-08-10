@@ -32,7 +32,7 @@
 				  <form class="ng-scope" ng-app="applicationApp" ng-controller="applicationController" id="applicationForm" name="applicationForm" autocomplete="off">
 				      <div class="row">	        				     	
 				     	<div class="col-md-12 py-12 px-12">
-				     		<h5 style="border-bottom:3px solid #005776">License Details</h5>								
+				     		<h5 style="border-bottom:3px solid #005776">Licensee Details</h5>								
 				     		<table id="entrytable">				     		
 				     			<tr>	
 				     				<td>			     				
@@ -178,7 +178,7 @@
 				     	<div class="col-md-12 py-12 px-12">
 				     		<h5 style="border-bottom:3px solid #005776">Permanent Address</h5>	
 				     		<input type="checkbox" id="copyAddress" onclick="copyAddr(this)"> <span class="tinytext">Same as Present Address</span>
-				     		<table id="entrytable">				     			
+				     		<table id="entrytable" class="peradd">				     			
 				     			<tr>
 				     				<td>
 					     				<div class="form-group">
@@ -299,7 +299,7 @@
 												<input type="button" value="Reset" ng-click="resetDetails();" class="btn btn-primary b-btn">
 											</div>	
 											<br/>											
-											<div id="successMsg" class="formErrorContent" style="width:100%"></div>	
+											<div id="successMsg" class="formErrorContent" style="width:100%"></div>
 										</div>					     				
 				     				</td>
 				     				<td></td>	

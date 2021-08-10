@@ -25,7 +25,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 
 	@Override
 	public List<Map<String, Object>> listLicensees(Integer usercode, Integer officecode) {
-		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,app.entrydate as applicationdate,off.officecode,off.officename1,"
+		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,to_char(app.entrydate, 'DD-MM-YYYY')  as applicationdate,off.officecode,off.officename1,"
 				+ "u.mobileno,u.username as email,"
 				+ "(SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures"
 				+ " FROM nicobps.licensees l "
@@ -40,7 +40,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
 				+ "INNER JOIN masters.states s on s.statecode=d.statecode "
 				+ "WHERE case when ?=1 then 1=1 else off.officecode=? end " + "ORDER BY l.entrydate DESC ";
-		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { usercode, usercode });
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { usercode, officecode });
 		for (Map<String, Object> m : list) {
 			m.put("transactions", daoPaymentInterface.getTransaction(m.get("applicationcode").toString()));
 		}

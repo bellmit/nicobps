@@ -3,10 +3,11 @@ package obps.controllers;
 import java.util.Map;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -282,7 +283,7 @@ public class ControllerUserManagement {
 	@RequestMapping(value = "submitLicenseesenclosures.htm", params = "_submit", method = RequestMethod.POST)
 	public String submitLicenseesenclosures(ModelMap model,
 			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
-			HttpServletRequest request) {
+			HttpServletRequest request)  {
 		Userlogin user = (Userlogin) request.getSession().getAttribute("user");
 		String successurl = user != null ? "uploadenclosuresint" : "uploadenclosuresext";
 
@@ -312,7 +313,7 @@ public class ControllerUserManagement {
 						}
 					} else {
 						if (listEnclosuresNotUploades.size() == 0) {
-							successMsg = "Documents uploaded successfully, please login and register with UBLs";
+							successMsg = "Documents uploaded successfully, please <a href=\"login.htm\"><b><u>login</u></b></a> and register with UBLs";
 						} else {
 							successMsg = "Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
 						}
