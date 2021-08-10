@@ -27,6 +27,7 @@
 										ng-model='registeringofficecode'
 										ng-value='registeringofficecode' style="max-width: 100%;"
 										ng-change="getOffices(registeringofficecode)">
+										<option value="0">Select Office</option>
 										<core:forEach items="${registeringoffices}" var="item">
 											<option value="${item.officecode}">${item.officename1}</option>
 										</core:forEach>

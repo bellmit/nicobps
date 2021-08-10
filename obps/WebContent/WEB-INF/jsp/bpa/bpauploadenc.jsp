@@ -32,8 +32,8 @@
 									<table id="entrytable">
 										<core:forEach items="${enclosuresList}" var="enclosur"
 											varStatus="loop">
-											<tr>
-												<td><core:if test="${empty enclosur.value2}">
+											<tr class="row">
+												<td class="col-md-9"><core:if test="${empty enclosur.value2}">
 														<form:checkbox
 															path="appenclosures[${loop.index}].enclosurecode"
 															value="${enclosur.key}" id="chk_${enclosur.key}"
@@ -49,7 +49,7 @@
 															<span style="color: red">*</span>
 														</core:if>
 												</label></td>
-												<td><form:input
+												<td class="col-md-3"><form:input
 														path="appenclosures[${loop.index}].fileContent"
 														type="file" cssClass="file" id="file_${enclosur.key}"
 														disabled="true" /> <span style="color: red"><form:errors
@@ -57,11 +57,11 @@
 															cssClass="error" /></span> <span
 													id="file_<core:out value="${enclosur.key}" escapeXml="true"></core:out>Msg"
 													class="error" style="color: red"></span></td>
-												<td><core:if test="${not empty enclosur.value2}">
-														<a
-															href="outputbpa.htm?applicationcode=${enclosur.value2}&enclosurecode=${enclosur.key}"
-															target="_blank">View Enclosures</a>
-													</core:if></td>
+<%-- 												<td class="col-md-1"><core:if test="${not empty enclosur.value2}"> --%>
+<!-- 														<a -->
+<%-- 															href="outputbpa.htm?applicationcode=${enclosur.value2}&enclosurecode=${enclosur.key}" --%>
+<!-- 															target="_blank">View Enclosures</a> -->
+<%-- 													</core:if></td> --%>
 
 											</tr>
 										</core:forEach>
