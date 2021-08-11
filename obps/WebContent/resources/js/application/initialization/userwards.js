@@ -10,7 +10,7 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 	$scope.userwards = [];
 	$scope.wards = [];
 	$scope.user = new OfficeLocations();
-
+	$scope.officecode = 0;
 	$scope.listUsers = function() {
 
 		var param = {
@@ -45,27 +45,29 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 			"officecode": $scope.officecode,
 
 		};
+		if ($scope.officecode != 0) {
+			jQuery.ajax({
+				type: "GET",
+				url: "./listWards.htm",
+				// dataType: "json",
+				data: param,
+				contentType: "application/json; charset=utf-8",
+				success: function(response) {
+					console.log(response)
+					$scope.wards = response;
+
+				},
+				error: function(xhr) {
+					alert(xhr.status + " = " + xhr);
+					alert(
+						"Sorry, there was an error while trying to process the request."
+					);
+				},
+			});
+			$scope.listUsers();
+		}
 
 
-		jQuery.ajax({
-			type: "GET",
-			url: "./listWards.htm",
-			// dataType: "json",
-			data: param,
-			contentType: "application/json; charset=utf-8",
-			success: function(response) {
-				console.log(response)
-				$scope.wards = response;
-
-			},
-			error: function(xhr) {
-				alert(xhr.status + " = " + xhr);
-				alert(
-					"Sorry, there was an error while trying to process the request."
-				);
-			},
-		});
-		$scope.listUsers();
 	};
 
 
@@ -120,7 +122,7 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 			success: function(response) {
 				var scope = angular.element($("#userwardsCtrl")).scope();
 				scope.$apply(function() {
-//					console.log(response)
+					//					console.log(response)
 					scope.userwards = response;
 				});
 			},
@@ -136,9 +138,9 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 
 	//map wards
 	$scope.save = function() {
-		//console.log("map wards::", $scope.wards)
+//		console.log("map wards::", $scope.wards)
 		//console.log($scope.officecode)
-		if (jQuery('#officecode').val() === "") {
+		if (jQuery('#officecode').val() === "0") {
 			alert("Select Office");
 			return;
 		}
@@ -150,7 +152,7 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 		jQuery.each($scope.wards, function(i, v) {
 			if (v.checked) {
 				mapuserwards.push({
-					usercode: $scope.user.usercode,
+					usercode: $scope.usercode,
 					ward: v,
 				});
 			}
@@ -168,32 +170,32 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 			// dataType: "json",
 			contentType: "application/json; charset=utf-8",
 			success: function(response) {
-			if(response=='nodata'){
+				if (response == 'nodata') {
 					alert("Failed! No data");
-						location.reload();
-					}else
-				if (response == 'usercodenull') {
-					alert("Please Select atleast 1 User from the correct office");
-					return;
-
-				}
-				else if (response == 'locationcodenull') {
-					alert("Please Select atleast 1 Ward");
-					return;
-
-				}
-				else
-					if (response == 'Mapped') {
-						alert("Mapped");
-						location.reload();
-						/*$scope.reset();*/
+					location.reload();
+				} else
+					if (response == 'usercodenull') {
+						alert("Please Select atleast 1 User from the correct office");
+						return;
 
 					}
-					else if (response == 'Failed') {
-						alert("Failed");
-						location.reload();
+					else if (response == 'locationcodenull') {
+						alert("Please Select atleast 1 Ward");
+						return;
 
-					} 
+					}
+					else
+						if (response == 'Mapped') {
+							alert("Mapped");
+							location.reload();
+							/*$scope.reset();*/
+
+						}
+						else if (response == 'Failed') {
+							alert("Failed");
+							location.reload();
+
+						}
 
 			},
 			error: function(xhr) {

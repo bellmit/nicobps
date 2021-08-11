@@ -43,7 +43,7 @@
 										<td><b>Select Office* :</b><select id='officecode'
 											style='width: 300px' class="form-control"
 											ng-model="officecode" ng-change='listWards()'>
-											<option value="" >---Select office---</option>
+											<option value="0" >---Select office---</option>
 												<core:forEach items="${officeList}" var='i'>
 													<option value='${i.key}' selected='selected'>${i.value}</option>
 												</core:forEach>
