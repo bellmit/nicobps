@@ -45,7 +45,7 @@
 														<div class="col-4 ">
 															<input type="text" id="applicationcode"
 																name="applicationcode" ng-model="applicationcode"
-																class="form-control text-uppercase" />
+																class="form-control text-uppercase"  maxlength="20"/>
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyapplicationcode"
@@ -77,7 +77,7 @@
 														<div class="col-4 ">
 															<input type="text" id="permitnumber" name="permitnumber"
 																ng-model="permitnumber"
-																class="form-control text-uppercase" />
+																class="form-control text-uppercase"  maxlength="30" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbypermitnumber"
@@ -109,7 +109,7 @@
 														<div class="col-4 ">
 															<input type="text" id="edcrnumber" name="edcrnumber"
 																ng-model="edcrnumber"
-																class="form-control text-uppercase" />
+																class="form-control text-uppercase"  maxlength="30" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyedcrnumber"
@@ -140,7 +140,7 @@
 														<label class="col-2 control-label">Owner Name : </label>
 														<div class="col-4 ">
 															<input type="text" id="ownername" name="ownername"
-																ng-model="ownername" class="form-control" />
+																ng-model="ownername" class="form-control"  maxlength="50"/>
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyownername"

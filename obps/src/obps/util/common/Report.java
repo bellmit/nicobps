@@ -100,6 +100,7 @@ public class Report extends HttpServlet {
 			} else if (status != null && status.equals("2")) {
 
 				String validate = PPV.validate_permitnumber(request.getParameter("permitnumber"));
+				System.out.println(validate);
 
 				if (validate.equals("1")) {
 					String permitnumber = request.getParameter("permitnumber").trim();
@@ -115,7 +116,7 @@ public class Report extends HttpServlet {
 
 					System.out.println("params for buildingpermit:: " + params.toString());
 				} else {
-					response.sendRedirect("error.jsp?msg=VALIDATION_ERROR");
+					response.sendRedirect("error.jsp?msg=REPORT_VALIDATION_ERROR");
 					return;
 				}
 

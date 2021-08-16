@@ -48,12 +48,13 @@ public class ControllerPrintPermit {
 						params.get("toentrydate"), params.get("criteria"));
 
 			} else {
-				resp.put("error", validateparams);
+//				resp.put("error", validateparams);
+				resp.put("error", "Please check your inputs!!");
 				response.add(resp);
 			}
 		} catch (Exception e) {
 
-			resp.put("error", "Exception Occur while getting list");
+			resp.put("error", "Exception encountered while getting list");
 			response.add(resp);
 		}
 
