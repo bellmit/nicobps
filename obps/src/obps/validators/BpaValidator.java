@@ -23,8 +23,7 @@ public class BpaValidator {
 		BpaApplication bpa = bpaApplication;
 
 		if (bpa.getApplicationcode() != null) {
-			System.out.println("application code=="+ bpa.getApplicationcode());
-			if (bpa.getApplicationcode().trim().isEmpty()|| bpa.getApplicationcode().length() > 20) {
+			if (bpa.getApplicationcode().trim().isEmpty() || bpa.getApplicationcode().length() > 20) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", " THE ENTERED APPLICATION CODE IS INVALID,ENTER A VALID APPLICATION CODE");
 			}
@@ -126,19 +125,16 @@ public class BpaValidator {
 
 		if (bpa.getLandregistrationdetails() != null) {
 			if (!bpa.getLandregistrationdetails().trim().isEmpty()) {
-				if (bpa.getLandregistrationdetails().trim().isEmpty()
-						|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getLandregistrationdetails())
-						|| bpa.getLandregistrationdetails().length() > 99) {
+				if ( bpa.getLandregistrationdetails().length() > 99) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", "LAND_REGISTRATION_DETAILS IS INVALID,ENTER A VALID LAND_REGISTRATION_DETAILS");
 				}
-			} 
+			}
 		}
 
 		if (bpa.getLandregistrationno() != null) {
 			if (!bpa.getLandregistrationno().trim().isEmpty()) {
-				if (bpa.getLandregistrationno().trim().isEmpty()
-						|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getLandregistrationno())
+				if (!Patterns.PatternMatche(Patterns.PATTERN_ALPHA_NUMERIC, bpa.getLandregistrationno())
 						|| bpa.getLandregistrationno().length() > 20) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg",
@@ -148,12 +144,9 @@ public class BpaValidator {
 		}
 
 		if (bpa.getHoldingno() != null) {
-			System.out.println("inside null");
 			if (!bpa.getHoldingno().trim().isEmpty()) {
-				System.out.println("inside isEmty");
-				if (bpa.getHoldingno() == null || bpa.getHoldingno().trim().isEmpty()
-						|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getHoldingno())
-						|| bpa.getHoldingno().length() > 30) {
+				if (!Patterns.PatternMatche(Patterns.PATTERN_ALPHA_NUMERIC, bpa.getHoldingno())
+						|| bpa.getHoldingno().length() > 5) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", " HOLDING_NUMBER IS INVALID,ENTER A VALID HOLDING_NUMBER");
 				}

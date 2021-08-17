@@ -300,7 +300,6 @@ public class ControllerBuildingPermit {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		LOG.info(bpa.toString());
 
-		System.out.println("application code ============="+bpa.getApplicationcode());
 //-------------------------------------------VALIDATION STARTS---------------------------------------------------------------------				
 		Bvalid.BpaValidateSaveBpa(bpa, response);
 		if (!response.isEmpty()) {
