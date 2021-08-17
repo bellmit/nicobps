@@ -331,6 +331,7 @@ public class ControllerBuildingPermit {
 		}
 //-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
 
+		
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 

@@ -152,6 +152,7 @@ public class BpaValidator {
 				}
 			}
 		}
+		
 
 		if (bpa.getEntrydate() != null) {
 			if (!Patterns.PatternMatche(Patterns.PATTERN_DATE, bpa.getEntrydate())
