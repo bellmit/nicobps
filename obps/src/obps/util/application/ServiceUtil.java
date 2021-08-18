@@ -313,6 +313,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "WHERE usercode=? ORDER BY T.officename1 ";
 		return this.listCommonMap(sql, new Object[] { usercode });
 	}
+	@Override
+	public List<CommonMap> listLicenseeType() {
+	
+		
+		String sql = "SELECT T.licenseetypecode AS key, T.licenseetypename AS value\r\n"
+				+ "				FROM masters.licenseetypes T \r\n"
+				+ "				 ORDER BY T.licenseetypename ";
+		return this.listCommonMap(sql);
+	}
 
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {

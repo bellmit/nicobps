@@ -95,6 +95,7 @@ public interface ServiceUtilInterface {
 	public List<CommonMap> listOffices(Integer officecode);
 
 	public List<CommonMap> listUserOffices();
+	public List<CommonMap> listLicenseeType();
 
 	public List<Map<String, Object>> listRegisteringOffices();
 

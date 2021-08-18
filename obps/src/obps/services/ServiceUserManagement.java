@@ -16,6 +16,7 @@ import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.OfficeLocations;
 import obps.models.Pageurls;
+import obps.models.Processes;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.models.UserDetails;
@@ -141,6 +142,11 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
 	public List<OfficeLocations> listWards(Integer officecode) {
 		
 		return 		DaoUserManagementInterface.listWards(officecode);
+	}
+	@Override
+	public List<Map<String, Object>> listProcesses(Integer modulecode) {
+		
+		return 		DaoUserManagementInterface.listProcesses(modulecode);
 	}
 
 	@Override

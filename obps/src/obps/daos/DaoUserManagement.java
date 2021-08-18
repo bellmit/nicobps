@@ -31,6 +31,7 @@ import obps.models.Occupancies;
 import obps.models.OfficeLocations;
 import obps.models.Offices;
 import obps.models.Pageurls;
+import obps.models.Processes;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.models.UserDetails;
@@ -47,6 +48,7 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
 
 	@Autowired private ServiceUtilInterface serviceUtilInterface;
 
@@ -562,6 +564,17 @@ public class DaoUserManagement implements DaoUserManagementInterface {
 			System.out.println("Error in DaoUserManagement.getWards() : " + e);
 		}
 		return wards;
+	}
+	@Override
+	public List<Map<String, Object>> listProcesses(Integer modulecode) {
+		System.out.println("list processes");
+	
+			String sql = " Select p.processcode as key, p.processname as value From masters.processes p\r\n"
+					+ "					inner join masters.modules m on m.modulecode=p.modulecode where m.modulecode=?\r\n"
+					+ "					 ORDER BY p.processname";
+			return serviceUtilInterface.listGeneric(sql, new Object[] { modulecode });
+		
+	
 	}
 
 	@Override

@@ -1,12 +1,16 @@
 
 app.controller("initmodulesenclosuresCtrl", [
   "$scope",
-  "$sce","$compile",
-  function ($scope, $sce,$compile) {
+  "$sce","$compile","$timeout",
+  function ($scope, $sce,$compile,$timeout) {
 
     $scope.module = new Modules();
     $scope.modules = [];
+     $scope.processesList = [];
     $scope.enclosures = [];
+    $scope.officecode="0";
+    $scope.licenseetypecode="0";
+    $scope.processcode="0";
     $scope.trustHTML = function (post) {
       return $sce.trustAsHtml(post);
     };
@@ -23,6 +27,9 @@ app.controller("initmodulesenclosuresCtrl", [
             
             modulecode: $scope.module.modulecode,
             enclosurecode: v,
+            officecode:$scope.officecode,
+            processcode:$scope.processcode,
+            licenseetypecode:$scope.licenseetypecode,
           });
         }
       });
@@ -59,6 +66,8 @@ app.controller("initmodulesenclosuresCtrl", [
     };
   
     $scope.mappedEnclosures = function (modulecode) {
+  console.log(modulecode)
+    $scope.listProcesses(modulecode);
   
     	jQuery.each($scope.enclosures, function (i, v) {
     		
@@ -174,7 +183,40 @@ app.controller("initmodulesenclosuresCtrl", [
         });
     };
     
+ $scope.listProcesses=function(modulecode){
 
+		
+		if ($scope.modulecode != 0) {
+			jQuery.ajax({
+				type: "GET",
+				url: "./listProcesses.htm",
+				// dataType: "json",
+				data: "modulecode="+modulecode,
+				contentType: "application/json; charset=utf-8",
+				success: function(data) {
+					$timeout(() => {
+					console.log(data)
+					$scope.processesList = data.processesList;
+
+				}, 0);
+
+
+				},
+				error: function(xhr) {
+					alert(xhr.status + " = " + xhr);
+					alert(
+						"Sorry, there was an error while trying to process the request."
+					);
+				},
+			});
+		
+		}
+
+
+	
+ 
+ };
+ 
    $scope.listModules();
     $scope.listEnclosures();
   },

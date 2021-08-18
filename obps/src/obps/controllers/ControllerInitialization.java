@@ -1,6 +1,7 @@
 package obps.controllers;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,16 +19,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.OfficeLocations;
+import obps.models.Processes;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.services.ServiceEnclosureManagementInterface;
 import obps.services.ServiceInitializationInterface;
+import obps.services.ServiceUserManagementInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.InitFeeMasterValidator;
 
@@ -56,6 +61,10 @@ public class ControllerInitialization {
 	@Autowired
 
 	private ServiceInitializationInterface serviceInitalizationInterface;
+	
+	@Autowired
+	private ServiceUserManagementInterface serviceUserManagementInterface;
+
 	@Resource
 	private Environment environment;
 
@@ -620,6 +629,18 @@ public class ControllerInitialization {
 		System.out.println("listSubOccupancyr");
 		return serviceInitalizationInterface.listSubOccupancy();
 	}
+	@GetMapping(value = "/listProcesses.htm")
+	public @ResponseBody Map<String, Object> listUsers(HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+		System.out.println("modulecode::::"+params.get("modulecode"));
+		
+		
+		Map<String, Object> data = new LinkedHashMap<>();
+		
+		data.put("processesList", serviceUserManagementInterface.listProcesses(Integer.parseInt(params.get("modulecode"))));
 	
+
+	return data;
+	}
 	
 }

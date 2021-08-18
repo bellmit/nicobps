@@ -11,6 +11,7 @@ import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.OfficeLocations;
 import obps.models.Pageurls;
+import obps.models.Processes;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.models.UserDetails;
@@ -54,6 +55,8 @@ public interface ServiceUserManagementInterface {
 	public String saveUserWards(List<Map<String, Object>> uwards);
 
 	public List<OfficeLocations> listWards(Integer officecode);
+	
+	public List<Map<String, Object>> listProcesses(Integer modulecode);
 
 	public List<UserOfficeLocations> listUserAndMappedWards(Integer officecode);
 

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,8 +59,9 @@ public class ControllerInitModulesEnclosures {
 
 	
 	@GetMapping("/initmodulesenclosures.htm")
-	public String initmodulesenclosures() {
-		
+	public String initmodulesenclosures(Model model) {
+		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
+		model.addAttribute("licenseeTypeList", serviceUtilInterface.listLicenseeType());
 		
 		return "initialization/initmodulesenclosures";
 	}
@@ -71,8 +73,6 @@ public class ControllerInitModulesEnclosures {
 	@PostMapping(value = "/saveModuleEnclosures.htm")
 	public @ResponseBody String saveModuleEnclosures(@RequestBody List<Map<String, Object>> modulesenclosures) {
 		String response="";
-		System.out.println("modules :: "+ modulesenclosures);
-
 		if(modulesenclosures!=null) {
 			String validate= initEnclosuresValidator.validateModulesEnclosure(modulesenclosures);
 			if(validate!="")
