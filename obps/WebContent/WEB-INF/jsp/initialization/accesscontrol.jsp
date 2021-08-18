@@ -179,6 +179,7 @@
 			</div>
 			<div class="row mt-3 justify-content-center"><input class="float-right" type="button"
 							value="Save" ng-click="save()" /></div>
+							
 		</div>
 	</div>
 </body>
