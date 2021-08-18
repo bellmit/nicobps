@@ -3,10 +3,57 @@ package obps.models;
 public class ModulesEnclosures {
 	private Integer modulecode;
 	private Integer enclosurecode;
+	private Integer officecode;
+	private Integer processcode;
+	private Integer licenseetypecode;
+	private Integer sequenceno;
+	
 	public ModulesEnclosures() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	public Integer getOfficecode() {
+		return officecode;
+	}
+
+
+	public void setOfficecode(Integer officecode) {
+		this.officecode = officecode;
+	}
+
+
+	public Integer getProcesscode() {
+		return processcode;
+	}
+
+
+	public void setProcesscode(Integer processcode) {
+		this.processcode = processcode;
+	}
+
+
+	public Integer getLicenseetypecode() {
+		return licenseetypecode;
+	}
+
+
+	public void setLicenseetypecode(Integer licenseetypecode) {
+		this.licenseetypecode = licenseetypecode;
+	}
+
+
+	public Integer getSequenceno() {
+		return sequenceno;
+	}
+
+
+	public void setSequenceno(Integer sequenceno) {
+		this.sequenceno = sequenceno;
+	}
+
+
 	public ModulesEnclosures(Integer modulecode, Integer enclosurecode) {
 		super();
 		this.modulecode = modulecode;
