@@ -68,9 +68,7 @@ public class BpaValidator {
 		}
 
 		if (bpa.getPlotaddressline1() != null) {
-			if (bpa.getPlotaddressline1().trim().isEmpty()
-					|| !Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotaddressline1())
-					|| bpa.getPlotaddressline1().length() > 99) {
+			if ( bpa.getPlotaddressline1().length() > 99) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", " THE ENTERED PLOT_ADDRESS_LINE_1 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_1");
 			}
@@ -81,8 +79,7 @@ public class BpaValidator {
 
 		if (bpa.getPlotaddressline2() != null) {
 			if (!bpa.getPlotaddressline2().trim().isEmpty()) {
-				if (!Patterns.PatternMatche(Patterns.XPATTERN_STRING_SPACE, bpa.getPlotaddressline2())
-						|| bpa.getPlotaddressline2().length() > 30) {
+				if ( bpa.getPlotaddressline2().length() > 30) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", "THE ENTERED PLOT_ADDRESS_LINE_2 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_2");
 				}
