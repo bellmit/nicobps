@@ -63,7 +63,8 @@ public class InitEnclosuresValidator {
 
 		for (Map<String, Object> up : param) {
 			if (up.get("modulecode") != null)
-				modulecode = (Integer) up.get("modulecode");
+				modulecode = Integer.parseInt(up.get("modulecode").toString());
+
 			if (up.get("modulecode") == null || modulecode == 0) {
 				response = "modulecodenull";
 				return response;
@@ -75,28 +76,31 @@ public class InitEnclosuresValidator {
 			}
 
 			if (up.get("officecode") != null)
-				officecode = (Integer) up.get("officecode");
+				officecode = Integer.parseInt(up.get("officecode").toString());
+
 			if (up.get("officecode") == null || officecode == 0) {
 				response = "officecodenull";
 				return response;
 			}
 
 			if (up.get("processcode") != null)
-				processcode = (Integer) up.get("processcode");
+				processcode = Integer.parseInt(up.get("processcode").toString());
+
 			if (up.get("processcode") == null || processcode == 0) {
 				response = "processcodenull";
 				return response;
 			}
 
 			if (up.get("licenseetypecode") != null)
-				licenseetypecode = (Integer) up.get("licenseetypecode");
+				licenseetypecode = Integer.parseInt(up.get("licenseetypecode").toString());
+
 			if (up.get("licenseetypecode") == null || licenseetypecode == 0) {
 				response = "licenseetypecodenull";
 				return response;
 			}
 
 //			System.out.println(up.get("modulecode"));
-//			System.out.println("response=" + response);
+			System.out.println("response=" + response);
 //			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
 		}
 		return response;

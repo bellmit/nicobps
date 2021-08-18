@@ -1,7 +1,5 @@
 package obps.controllers;
 
-
-
 import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -44,48 +42,47 @@ import obps.services.ServiceUserManagementInterface;
 //@RestController
 @Controller
 @Configuration
-@PropertySource("classpath:application.properties") 
+@PropertySource("classpath:application.properties")
 public class ControllerInitModulesEnclosures {
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
-	
+
 	@Autowired
-	private  InitEnclosuresValidator  initEnclosuresValidator; 
+	private InitEnclosuresValidator initEnclosuresValidator;
 	@Autowired
 
 	private ServiceEnclosureManagementInterface serviceUserManagementInterface;
 	@Resource
 	private Environment environment;
 
-	
 	@GetMapping("/initmodulesenclosures.htm")
 	public String initmodulesenclosures(Model model) {
 		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
 		model.addAttribute("licenseeTypeList", serviceUtilInterface.listLicenseeType());
-		
+
 		return "initialization/initmodulesenclosures";
 	}
+
 	@GetMapping(value = "/listModulesAndEnclosures.htm")
 	public @ResponseBody List<Modules> listModulesAndEnclosures() {
 
 		return serviceUserManagementInterface.listModulesAndEnclosures();
 	}
+
 	@PostMapping(value = "/saveModuleEnclosures.htm")
 	public @ResponseBody String saveModuleEnclosures(@RequestBody List<Map<String, Object>> modulesenclosures) {
-		String response="";
-		if(modulesenclosures!=null) {
-			String validate= initEnclosuresValidator.validateModulesEnclosure(modulesenclosures);
-			if(validate!="")
-				response=validate;
+		String response = "";
+		System.out.println("modulesenclosures :" + modulesenclosures);
+		if (modulesenclosures != null) {
+			String validate = initEnclosuresValidator.validateModulesEnclosure(modulesenclosures);
+			System.out.println("validate :" + validate);
+			if (validate != "")
+				response = validate;
 			else
 				response = serviceUserManagementInterface.saveUserpages(modulesenclosures);
 		}
-		
+
 		return response;
 	}
 
-
-
-	
 }
-

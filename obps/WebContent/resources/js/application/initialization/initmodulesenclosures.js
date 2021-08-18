@@ -1,4 +1,5 @@
 
+
 app.controller("initmodulesenclosuresCtrl", [
   "$scope",
   "$sce","$compile","$timeout",
@@ -19,6 +20,7 @@ app.controller("initmodulesenclosuresCtrl", [
     };
 
     $scope.save = function () {
+
       var mapuserpagespages = [];
       jQuery.each($scope.enclosures, function (i, v) {
         if (v.checked) {
@@ -48,6 +50,12 @@ app.controller("initmodulesenclosuresCtrl", [
           	alert("Please Select atleast 1 enclosure");
           else if(response=="modulecodenull")
           	alert("Please Select atleast 1 module");
+          else if  (response ==  "officecodenull")
+				alert("Please Select Office ");
+		  else if (response ==  "processcodenull")
+				alert("Please Select Process ");
+		  else if  (response == "licenseetypecodenull")
+				alert("Please Select License ");
           else if(response=='Mapped')
           	alert("Mapped");
           else if(response=='Failed')
@@ -66,7 +74,7 @@ app.controller("initmodulesenclosuresCtrl", [
     };
   
     $scope.mappedEnclosures = function (modulecode) {
-  console.log(modulecode)
+  console.log(modulecode);
     $scope.listProcesses(modulecode);
   
     	jQuery.each($scope.enclosures, function (i, v) {
@@ -85,6 +93,7 @@ app.controller("initmodulesenclosuresCtrl", [
     };
     $scope.listModules = function () {
    
+
       jQuery.ajax({
         type: "GET",
         url: "./listModulesAndEnclosures.htm",
@@ -95,7 +104,9 @@ app.controller("initmodulesenclosuresCtrl", [
           var scope = angular.element($("#initmodulesenclosuresCtrl")).scope();
          
           scope.$apply(function () {
+
        
+
             scope.modules = response;
             
             scope.setDataTable(response);
@@ -122,7 +133,7 @@ app.controller("initmodulesenclosuresCtrl", [
             scope.enclosures = response;
            
           });
-        $scope.checks()
+        $scope.checks();
         },
         error: function (xhr) {
           alert(xhr.status + " = " + xhr);
@@ -195,7 +206,7 @@ app.controller("initmodulesenclosuresCtrl", [
 				contentType: "application/json; charset=utf-8",
 				success: function(data) {
 					$timeout(() => {
-					console.log(data)
+					console.log(data);
 					$scope.processesList = data.processesList;
 
 				}, 0);
