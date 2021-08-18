@@ -71,6 +71,8 @@ public class ControllerInitModulesEnclosures {
 	@PostMapping(value = "/saveModuleEnclosures.htm")
 	public @ResponseBody String saveModuleEnclosures(@RequestBody List<Map<String, Object>> modulesenclosures) {
 		String response="";
+		System.out.println("modules :: "+ modulesenclosures);
+
 		if(modulesenclosures!=null) {
 			String validate= initEnclosuresValidator.validateModulesEnclosure(modulesenclosures);
 			if(validate!="")
