@@ -33,8 +33,12 @@ app.service("commonInitService", function($http) {
             },
             error: function (xhr) {
                 console.log("Error: ", xhr)
-                alert("Sorry, there was an error while trying to process the request.");
-                errorCallback(xhr.responseJSON);
+                let response = xhr.responseJSON;
+                
+                if(response.code >= 500 && response.code <=599)
+                	alert("Sorry, there was an error while trying to process the request.");
+                
+                errorCallback(response);
             }            
         });
 	}

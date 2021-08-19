@@ -93,7 +93,7 @@ app.controller("CommonCtrl", [
 						"data": "appdate",
 					}
 				],
-				"bSearch": false,
+				"searching": false,
 				"createdRow": function (row, data, dataIndex) {
 					$compile(angular.element(row).contents())($scope);
 				}

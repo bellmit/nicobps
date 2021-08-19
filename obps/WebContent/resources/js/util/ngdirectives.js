@@ -105,7 +105,9 @@ app.directive("patternEmail", function () {
 
       let oldVal = "";
       ngModelCtrl.$validators.validate = (modelValue, viewValue) => {
-        if (!modelValue) return true;
+    	  console.log("modelValue: ",modelValue);
+    	  console.log("modelValue == '': ",(modelValue == ''));
+        if (!modelValue || modelValue == '') {ngModelCtrl.$error.invalid = false; return true;}
         if (!PATTERN_EMAIL.test(modelValue)) {
           ngModelCtrl.$error.invalid = true;
           return false;

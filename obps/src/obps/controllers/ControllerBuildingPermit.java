@@ -288,7 +288,7 @@ public class ControllerBuildingPermit {
 		Bvalid.BpaValidatebpaMakePayment(bpa, response);
 		if (!response.isEmpty()) {
 			LOG.info("ErrorMap: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
@@ -324,7 +324,7 @@ public class ControllerBuildingPermit {
 		Bvalid.BpaValidateSaveBpa(bpa, response);
 		if (!response.isEmpty()) {
 			LOG.info("ErrorMap: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 //-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
 
@@ -347,7 +347,7 @@ public class ControllerBuildingPermit {
 		Bvalid.BpaValidatesaveBPAStepTwo(bpa, response);
 		if (!response.isEmpty()) {
 			LOG.info("ErrorMap: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 //-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
 

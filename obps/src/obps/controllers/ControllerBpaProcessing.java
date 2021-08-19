@@ -418,7 +418,7 @@ public class ControllerBpaProcessing {
 		Bvalid.ValidateapproveApplication(bpa, response);
 		if (!response.isEmpty()) {
 			LOG.info("ErrorMap: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
@@ -442,7 +442,7 @@ public class ControllerBpaProcessing {
 		Bvalid.Validateprocessbpapplication(data, response);
 		if (!response.isEmpty()) {
 			LOG.info("ErrorMap: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 		if (SBI.processBPApplication(data, response)) {
@@ -465,7 +465,7 @@ public class ControllerBpaProcessing {
 		Bvalid.ValidaterejectBPApplication(data, response);
 		if (!response.isEmpty()) {
 			LOG.info("response: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
@@ -492,7 +492,7 @@ public class ControllerBpaProcessing {
 		Bvalid.ValidatesaveBPASiteInspection(bpa, response);
 		if (!response.isEmpty()) {
 			LOG.info("ErrorMap: " + response.toString());
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
