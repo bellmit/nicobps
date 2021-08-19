@@ -28,6 +28,13 @@
 						<div class="element-center" ng-if="${isactionallowed} != 1">
 							Click<a ng-href="bpatrackstatus.htm">&nbsp;here&nbsp;</a> to check status of your application.
 						</div>
+						<div class="col" ng-if="serverMsg">
+				   			<br/>
+				   			<span class="alert alert-danger" style="display: block" ng-if="serverResponseError">{{serverMsg}}</span>
+				   			<span class="alert alert-danger" style="display: block" ng-if="serverResponseFail">{{serverMsg}}</span>
+				   			<span class="alert alert-info" style="display: block" ng-if="serverResponseInfo">{{serverMsg}}</span>
+				   			<span class="alert alert-success" style="display: block" ng-if="serverResponseSuccess">{{serverMsg}}</span>
+				   		</div>
 					</form>
 				</div>
 			</div>

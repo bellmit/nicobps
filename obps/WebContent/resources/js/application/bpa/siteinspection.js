@@ -14,6 +14,7 @@ app.controller("CommonCtrl", [
 		console.log("BPA: Site Inspection");
 
 		let data = "";
+		$scope.serverMsg = "";
 		$scope.serverResponseError = false;
 		$scope.serverResponseFail = false;
 		$scope.serverResponseInfo = false;
@@ -106,6 +107,7 @@ app.controller("CommonCtrl", [
 					$scope.SiteEnclosures[index].error = false;
 			}	
 		}
+		
 		$scope.validateQuestionnairesResponse = (opt = 0, code) => {
 			let valid = true;
 			try{

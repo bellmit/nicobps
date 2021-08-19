@@ -27,6 +27,7 @@
 						<owner-details></owner-details>
 						<document-details></document-details>
 						<site-inspection-details></site-inspection-details>
+						<common-processing-document-details></common-processing-document-details>
 						<file-view-modal></file-view-modal>
 						<common-processing-action></common-processing-action>
 					</form>

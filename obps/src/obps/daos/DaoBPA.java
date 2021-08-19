@@ -72,7 +72,7 @@ public class DaoBPA implements DaoBPAInterface {
 			if (!status)
 				throw new Exception("Failed to update application status");
 
-			status = commonProcessingFunction(applicationcode, bpa.getProcessflow().getFromusercode(), null,
+			status = commonProcessingFunction(applicationcode, bpa.getProcessflow().getFromusercode(), null, null,
 					bpa.getProcessflow().getRemarks(), bpa.getProcessflow().getTousercode(), response);
 			if (!status)
 				throw new Exception("Failed to update application flow");
@@ -129,7 +129,24 @@ public class DaoBPA implements DaoBPAInterface {
 	public boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
 		boolean status = false;
 		try {
-			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null,
+			String sql = "INSERT INTO nicobps.bpaenclosures(   "
+					+ "            appenclosurecode, applicationcode, enclosurecode, enclosureimage,    "
+					+ "            entrydate)   " + "VALUES (   "
+					+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
+					+ "	?, ?, ?, now()   " + ")   ";
+
+
+			if (data.getEnclosures() != null && !data.getEnclosures().isEmpty()) {
+				List<Object[]> params = new ArrayList<>();
+				data.getEnclosures().forEach(report -> {
+					params.add(new Object[] { data.getApplicationcode(), report.getCode(), report.getFileImage() });
+				});
+				status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
+				if (!status)
+					throw new Exception("Failed to update bpa enclosures details");
+			}
+			
+			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null, null,
 					data.getRemarks(), data.getTousercode(), response);
 			if (!status)
 				throw new Exception("Failed to update application flow");
@@ -164,6 +181,45 @@ public class DaoBPA implements DaoBPAInterface {
 		} catch (Exception e) {
 			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.put("msg", "Error: Failed to process building permit application - app fee payment.");
+			status = false;
+			e.printStackTrace();
+			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+		return status;
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+	public boolean returnFromCitizenBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		boolean status = false;
+		try {
+			Integer fromprocesscode = null;
+			Integer toprocesscode = null;
+			Integer tousercode = null;
+
+			String sql = "SELECT AF.toprocesscode AS fromprocesscode, AF.fromprocesscode AS toprocesscode,   "
+					+ "       AF.fromusercode AS tousercode, AF.remarks  " + "FROM nicobps.applicationflowremarks AF  "
+					+ "INNER JOIN (  "
+					+ "		SELECT applicationcode, MAX(afrcode) afrcode FROM nicobps.applicationflowremarks  "
+					+ "		GROUP BY applicationcode  "
+					+ ")iAF ON  (iAF.applicationcode, iAF.afrcode) = (AF.applicationcode, AF.afrcode)  "
+					+ "WHERE AF.applicationcode = ?";
+			Map<String, Object> map = SUI.listGeneric(sql, new Object[] { data.getApplicationcode() }).get(0);
+			if (map != null && !map.entrySet().isEmpty()) {
+				fromprocesscode = (Integer) map.get("fromprocesscode");
+				toprocesscode = (Integer) map.get("toprocesscode");
+				tousercode = (Integer) map.get("tousercode");
+				status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), fromprocesscode,
+						toprocesscode, data.getRemarks(), tousercode, response);
+
+				if (!status)
+					throw new Exception("Failed to update application flow");
+			}
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application send successfully.");
+		} catch (Exception e) {
+			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.put("msg", "Error: Failed to process building permit application - return from citizen.");
 			status = false;
 			e.printStackTrace();
 			LOG.log(Level.SEVERE, e.getLocalizedMessage());
@@ -277,7 +333,7 @@ public class DaoBPA implements DaoBPAInterface {
 		boolean status = false;
 		try {
 			String sql = "";
-			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode,
+			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode, null,
 					"Building Permit Application Step 2 complete", null, response);
 			if (!status)
 				throw new Exception("Failed to update application flow");
@@ -315,13 +371,6 @@ public class DaoBPA implements DaoBPAInterface {
 				throw new Exception("Failed to update siteinspection details");
 
 			if (bpa.getQuestionnaires() != null && !bpa.getQuestionnaires().isEmpty()) {
-				/*
-				 * sql = "INSERT INTO nicobps.applicationsquestionaires(  " +
-				 * "    aqcode, modulecode, processcode, questioncode, response, remarks,   " +
-				 * "    entrydate)  " +
-				 * "VALUES ((SELECT COALESCE(MAX(aqcode), 0)+1 FROM nicobps.applicationsquestionaires), ?, ?, ?, ?, ?, now())"
-				 * ;
-				 */
 				List<Map<String, Object>> tlist = new ArrayList<Map<String, Object>>();
 				Map<String, Object> tmap = new HashMap<String, Object>();
 				tlist = SUI.getCurrentProcessStatus(BPAConstants.MODULE_CODE, bpa.getApplicationcode());
@@ -330,21 +379,15 @@ public class DaoBPA implements DaoBPAInterface {
 				if (tlist != null && !tlist.isEmpty()) {
 					tmap = tlist.get(0);
 					Integer processcode = (Integer) tmap.get("fromprocesscode");
-					/*
-					 * bpa.getQuestionnaires().forEach(q -> { params.add(new Object[] {
-					 * BPAConstants.MODULE_CODE, processcode, q.getQuestioncode(), q.getResponse(),
-					 * q.getRemarks() }); });
-					 */
 					status = saveApplicationQuestionnaires(BPAConstants.MODULE_CODE, bpa.getApplicationcode(),
 							processcode, bpa.getQuestionnaires(), response);
 					if (!status)
 						throw new Exception("Failed to update siteinspection questionnaires");
 				}
-				/* status = jdbcTemplate.batchUpdate(sql, params).length == params.size(); */
 			}
 
-			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode, bpa.getRemarks(),
-					bpa.getTousercode(), response);
+			status = commonProcessingFunction(bpa.getApplicationcode(), USERCODE, fromprocesscode, null,
+					bpa.getRemarks(), bpa.getTousercode(), response);
 			if (!status)
 				throw new Exception("Failed to update application flow");
 
@@ -360,16 +403,50 @@ public class DaoBPA implements DaoBPAInterface {
 		return status;
 	}
 
+	@Override
+	public boolean sendToCitizenBPApplication(BpaProcessFlow data, HashMap<String, Object> response) {
+		boolean status = false;
+		try {
+			/*
+			 * String sql = ""; status = jdbcTemplate.update(sql, new Object[] {
+			 * data.getApplicationcode(), data.getRemarks(), data.getFromusercode() }) > 0;
+			 * 
+			 * if (!status) throw new Exception("Failed to update application flow");
+			 */
+			Integer fromprocesscode = null;
+			Integer toprocesscode = null;
+
+			Map<String, Object> map = getPrevProcess(data.getApplicationcode());
+			fromprocesscode = (Integer) map.get("fromprocesscode");
+			toprocesscode = (Integer) map.get("toprocesscode");
+
+			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), fromprocesscode,
+					toprocesscode, data.getRemarks(), data.getTousercode(), response);
+			if (!status)
+				throw new Exception("Failed to update application flow");
+
+			response.put("code", HttpStatus.CREATED.value());
+			response.put("msg", "Success: Application send to citizen successfully.");
+		} catch (Exception e) {
+			response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.put("msg", "Error: Failed to process building permit application - send to citizen.");
+			status = false;
+			e.printStackTrace();
+			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+		}
+		return status;
+	}
+
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
-	boolean commonProcessingFunction(String applicationcode, Integer USERCODE, Integer fromprocesscode, String remarks,
-			Integer tousercode, HashMap<String, Object> response) {
+	boolean commonProcessingFunction(String applicationcode, Integer USERCODE, Integer fromprocesscode,
+			Integer toprocesscode, String remarks, Integer tousercode, HashMap<String, Object> response) {
 		boolean status = false;
 		try {
 			List<Map<String, Object>> tlist = new ArrayList<Map<String, Object>>();
 			Map<String, Object> tmap = new HashMap<String, Object>();
-			Integer toprocesscode = 0;
+			/* Integer toprocesscode = 0; */
 
-			if (fromprocesscode == null) {
+			if (fromprocesscode == null && toprocesscode == null) {
 				tlist = SUI.getCurrentProcessStatus(BPAConstants.MODULE_CODE, applicationcode);
 				if (tlist != null && !tlist.isEmpty()) {
 					tmap = tlist.get(0);
@@ -382,24 +459,9 @@ public class DaoBPA implements DaoBPAInterface {
 					toprocesscode, USERCODE, tousercode, remarks);
 			if (!status)
 				throw new Exception("Error: Failed to update applicationflow");
-
-			String sql = "";
-			/* CommonMap map = new CommonMap(); */
+			LOG.info("tousercode: "+tousercode);
 			if (tousercode == null || tousercode.compareTo(0) < 0 || tousercode == USERCODE) {
-				/*
-				 * try { sql = "SELECT pageurl as key, processname as value      " +
-				 * "FROM masters.processflow PF        " +
-				 * "INNER JOIN masters.processes PR ON PR.processcode = PF.toprocesscode AND PR.modulecode = PF.modulecode   "
-				 * + "INNER JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       " +
-				 * "INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode       " +
-				 * "WHERE UP.usercode = ? AND PF.modulecode = ? AND PF.fromprocesscode = ?   " +
-				 * "AND PF.processflowstatus = 'N'"; List<CommonMap> list =
-				 * SUI.listCommonMap(sql, new Object[] { USERCODE, BPAConstants.MODULE_CODE,
-				 * fromprocesscode }); if (list != null && !list.isEmpty()) { map = list.get(0);
-				 * map.setValue1(applicationcode); } response.put("nextProcess", map); } catch
-				 * (Exception e) { response.put("nextProcess", map); }
-				 */
-				setNextProcessingUrl(applicationcode, tousercode, fromprocesscode, "N", response);
+				setNextProcessingUrl(applicationcode, USERCODE, fromprocesscode, "N", response);
 			} else {
 				response.put("nextProcess", new CommonMap());
 			}
@@ -408,6 +470,20 @@ public class DaoBPA implements DaoBPAInterface {
 			status = false;
 		}
 		return status;
+	}
+
+	@SuppressWarnings("unchecked")
+	Map<String, Object> getPrevProcess(String applicationcode) {
+		try {
+			String sql = "SELECT PF.fromprocesscode, PF.toprocesscode FROM nicobps.applications APP    "
+					+ "INNER JOIN nicobps.applicationflowremarks AF ON AF.afrcode = (SELECT MAX(afrcode) FROM nicobps.applicationflowremarks WHERE applicationcode = APP.applicationcode)   "
+					+ "AND AF.applicationcode = APP.applicationcode   "
+					+ "INNER JOIN masters.processflow PF ON PF.fromprocesscode = AF.toprocesscode AND PF.officecode = APP.officecode AND PF.modulecode = AF.modulecode   "
+					+ "WHERE PF.processflowstatus = 'P' AND APP.applicationcode = ?";
+			return SUI.listGeneric(sql, new Object[] { applicationcode }).get(0);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	String generateBuildingPermitNumber(String applicationcode) {

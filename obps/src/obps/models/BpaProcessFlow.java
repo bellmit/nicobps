@@ -1,6 +1,7 @@
 package obps.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,6 +15,7 @@ public class BpaProcessFlow implements Serializable {
 	private Integer fromprocesscode;
 	private Integer toprocesscode;
 	private String remarks;
+	private List<AppEnclosure> enclosures;
 
 	public String getApplicationcode() {
 		return applicationcode;
@@ -61,6 +63,14 @@ public class BpaProcessFlow implements Serializable {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public List<AppEnclosure> getEnclosures() {
+		return enclosures;
+	}
+
+	public void setEnclosures(List<AppEnclosure> enclosures) {
+		this.enclosures = enclosures;
 	}
 
 	@Override

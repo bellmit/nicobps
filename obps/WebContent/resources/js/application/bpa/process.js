@@ -28,14 +28,58 @@ app.controller("CommonCtrl", [
 		$scope.taskStatus = new TaskStatus();
 
 		$scope.DocumentDetails = [];
+		$scope.Enclosures = [];
+		$scope.BPAEnclosures = new Array({code:null, name:'', file:null, error:false, errormsg: null});
 		$scope.OwnerDetails = [];
 		$scope.Questionnaires = [];
 
 		$scope.bpa.applicationcode = APPCODE;
 		
+		/* GET */
+		BS.listBPAEnclosures((response) => {
+			$scope.Enclosures = response;
+			$scope.Enclosures.forEach((o, x) => {
+				o.selected = false;
+			});
+		}, APPCODE);
+		
 		/*ACTION*/
+		$scope.validateForm = () => {
+			let status = true;
+			try{
+				if($scope.Enclosures.length > 0){
+					if($scope.BPAEnclosures.find( e => e.file == null || e.file == ''))
+						$scope.BPAEnclosures.find( e => e.file == null || e.file == '').error = true;
+					
+					if($scope.BPAEnclosures.find( e => e.file == null || e.file == '') 
+							&& $scope.BPAEnclosures.find( e => e.file == null || e.file == '').name != null 
+							&& $scope.BPAEnclosures.find( e => e.file == null || e.file == '').name != '')
+						$scope.BPAEnclosures.find( e => e.file == null || e.file == '').errormsg 
+						= `Please upload ${$scope.BPAEnclosures.find( e => e.file == null || e.file == '').name} first`;
+					else if($scope.BPAEnclosures.find( e => e.file == null || e.file == ''))
+							$scope.BPAEnclosures.find( e => e.file == null || e.file == '').errormsg = `Please select enclosure first`;
+					
+					if($scope.BPAEnclosures.find( e => e.file == null || e.file == '') 
+							&& $scope.BPAEnclosures.find( e => e.file == null || e.file == '').error)
+						status = false;
+
+					if(status){
+						$scope.bpa.enclosures = $scope.BPAEnclosures;
+					}
+				}
+			} catch (e) {console.log(e)}
+			return status;
+		};
+		
 		$scope.forward  = () => {
 			let data = {}, valid = false;
+			valid = $scope.validateForm();
+			
+			if(!valid){
+				$('#commonModal').modal('hide');				
+				return false;
+			}
+			
 			if ($scope.modal.usercode == null || $scope.modal.usercode == "") {
 				alert("Please select user");
 				return false;
@@ -46,8 +90,10 @@ app.controller("CommonCtrl", [
 			}
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
+			console.log("$scope.bpa: ", $scope.bpa);
 			data = $scope.bpa.init($scope.bpa);
-
+			
+			console.log("data: ", data);
 			valid = $window.confirm("Are you sure you want to forward?");
 			if (!valid) return;
 

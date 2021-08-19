@@ -18,6 +18,8 @@ public interface DaoBPAInterface {
 
 	boolean rejectBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 
+	boolean returnFromCitizenBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
+
 	boolean saveBPA(BpaApplication bpa, Integer USERCODE, HashMap<String, Object> response);
 
 	boolean saveBPAStepTwo(BpaApplication bpa, Integer USERCODE, Integer fromprocesscode,
@@ -25,5 +27,7 @@ public interface DaoBPAInterface {
 
 	boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer uSERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response);
+
+	boolean sendToCitizenBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
 
 }

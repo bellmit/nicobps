@@ -17,7 +17,7 @@ app.controller("CommonCtrl", [
     /*GET_DATA*/
 
     $scope.listAppScrutinyDetailsForBPA = () => {
-      BS.listAppScrutinyDetailsForBPA((response) => {
+      BS.listAppScrutinyDetailsForBPAV2((response) => {
         $scope.ScrutinzedApp = response;
         $scope.setAppEdcrDetailsTable($scope.ScrutinzedApp);
       }, (data = ""));

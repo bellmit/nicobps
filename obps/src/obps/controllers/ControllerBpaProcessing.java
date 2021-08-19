@@ -1,7 +1,6 @@
 /*@author Decent Khongstia*/
 package obps.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,6 +206,18 @@ public class ControllerBpaProcessing {
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
 
+	@GetMapping(value = "/bpasearch.htm")
+	public String bpaSearch(ModelMap model, @ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: bpasearch.htm");
+		usercode = getSessionUsercode(model);
+		if (usercode != null && usercode > -1) {
+			model.addAttribute("applicationcode", applicationcode);
+			return BPAConstants.PARENT_URL_MAPPING.concat("/search");
+		}
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
+	}
+
 	@GetMapping(value = "/bpasiteinspection.htm")
 	public String bpaSiteInspection(HttpServletRequest req, Model model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode,
@@ -286,6 +297,12 @@ public class ControllerBpaProcessing {
 		return BPAConstants.COMPONENT_URL_MAPPING.concat("/commonprocessingdetails");
 	}
 
+	@GetMapping(value = "/commonprocessingdocumentdetails.htm")
+	public String commonProcessingDocumentDetails() {
+		LOG.info("URL: commonprocessingdocumentdetails.htm");
+		return BPAConstants.COMPONENT_URL_MAPPING.concat("/processingdocumentdetails");
+	}
+
 	@GetMapping(value = "/documentdetails.htm")
 	public String documentDetails() {
 		LOG.info("URL: documentdetails.htm");
@@ -353,6 +370,13 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
 		usercode = getSessionUsercode(model);
 		return SBI.listBPApplications(usercode);
+	};
+
+	@GetMapping(value = "/listBPApplicationsStatus.htm")
+	public @ResponseBody List<Map<String, Object>> listBPApplicationsStatus(ModelMap model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestParam(name = "param") String param) {
+		usercode = getSessionUsercode(model);
+		return SBI.listBPApplicationsStatus(usercode, param);
 	};
 
 	@GetMapping(value = "/listbpaconditions.htm")
@@ -476,6 +500,20 @@ public class ControllerBpaProcessing {
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
 		if (SBI.saveBPASiteInspection(bpa, usercode, fromprocesscode, response)) {
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		} else
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@PostMapping(value = "/sendtocitizenbpapplication.htm")
+	public ResponseEntity<HashMap<String, Object>> sendToCitizenBPApplication(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		if (usercode == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+		data.setFromusercode(usercode);
+		if (SBI.sendToCitizenBPApplication(data, response)) {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

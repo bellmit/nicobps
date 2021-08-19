@@ -65,8 +65,14 @@ app.service("bpaService", [
       listAppScrutinyDetailsForBPA: async function (callback, data = "") {
         CUS.getData("./listAppScrutinyDetailsForBPA.htm", data, callback);
       },
+      listAppScrutinyDetailsForBPAV2: async function (callback, data = "") {
+    	  CUS.getData("./listAppScrutinyDetailsForBPAV2.htm", data, callback);
+      },
       listBPApplications: async function (callback, data = "") {
         CUS.getData("./listbpapplications.htm", data, callback);
+      },
+      listBPApplicationsStatus: async function (callback, data = "") {
+    	  CUS.getData("./listBPApplicationsStatus.htm", data, callback);
       },
       listBPAConditions: async function (callback, data = "") {
     	  CUS.getData("./listbpaconditions.htm", data, callback);

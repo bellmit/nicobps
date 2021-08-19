@@ -4,33 +4,9 @@
 	<head>
 		<title>OBPS</title>
 		<%@include file="../common/headerfiles.jsp"%>
-		<style type="text/css">
-/* 			.custom-modal-dialog{ */
-/* 				display: flex;  */
-/* 				align-items: center; */
-/* 				max-width: 550px; */
-/*                 max-height: 650px; */
-/*             } */
-/*             .custom-modal-content{ */
-/*                 margin: auto; */
-/*                 width: 550px; */
-/*                 height: 650px; */
-/*                 max-width: 700px; */
-/*                 max-height: 800px; */
-/*             } */
-/*             .custom-modal-body{ */
-/*             	padding: 0px; */
-/*             } */
-/*             .element-center{ */
-/* 				display: flex; */
-/* 				justify-content: center; */
-/* 				align-items: center; */
-/* 			} */
-		</style>
 		<link href="resources/css/bpa-style.css" rel="stylesheet"/>
 	</head>
 	<body ng-app="CommonApp" ng-controller="CommonCtrl" id="appId">
-<!-- 	<body> -->
 		<div class="d-flex" id="wrapper">
 			<%@include file="../common/menuside.jsp"%>
 			<div id="page-content-wrapper">

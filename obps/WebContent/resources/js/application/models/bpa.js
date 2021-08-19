@@ -20,11 +20,13 @@ const FeeType = {
 }
 
 const ProcessingUrl = {
-  bpaReject: "rejectbpapplication.htm",
-  bpaProcess: "processbpapplication.htm",
-  bpaSiteInspection: "savebpasiteinspection.htm",
   bpaApprove: "approvebpapplication.htm",
   bpaMakePayment: "bpamakepayment.htm",
+  bpaProcess: "processbpapplication.htm",
+  bpaReject: "rejectbpapplication.htm",
+  bpaReturnFromCitizen: "returnfromcitizenbpapplication.htm",
+  bpaSendToCitizen: "sendtocitizenbpapplication.htm",
+  bpaSiteInspection: "savebpasiteinspection.htm",
 };
 
 const Timeout = {
@@ -320,6 +322,7 @@ var ProcessFlow = function () {
     fromprocesscode: null,
     toprocesscode: null,
     remarks: '',
+    enclosures: [],
     init: (obj) => {
       this.applicationcode = obj.applicationcode;
       this.fromusercode = obj.fromusercode;
@@ -327,6 +330,7 @@ var ProcessFlow = function () {
       this.fromprocesscode = obj.fromprocesscode;
       this.toprocesscode = obj.toprocesscode;
       this.remarks = obj.remarks;
+      this.enclosures = obj.enclosures;
       return this;
     }
   }

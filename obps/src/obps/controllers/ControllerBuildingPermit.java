@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
+import obps.models.BpaProcessFlow;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
@@ -91,6 +92,24 @@ public class ControllerBuildingPermit {
 			model.addAttribute("isactionallowed",
 					SBI.checkPageAccessGrantStatus(usercode, applicationcode, pathurl) ? 1 : 0);
 			return BPAConstants.PARENT_URL_MAPPING.concat("/buildingpermitsteptwo");
+		}
+		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
+	}
+
+	@GetMapping(value = "/bpacitizentask.htm")
+	public String bpaCitizenTask(HttpServletRequest req, Model model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String applicationcode) {
+		LOG.info("URL: bpacitizentask.htm");
+		if (usercode != null && usercode > -1) {
+			if (applicationcode == null || applicationcode.isEmpty())
+				return BPAConstants.REDIRECT_MAPPING.concat("buildingpermit.htm");
+
+			pathurl = req.getServletPath();
+			model.addAttribute("applicationcode", applicationcode);
+			model.addAttribute("isactionallowed",
+					SBI.checkPageAccessGrantStatus(usercode, applicationcode, pathurl) ? 1 : 0);
+			return BPAConstants.PARENT_URL_MAPPING.concat("/citizentask");
 		}
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
@@ -217,6 +236,13 @@ public class ControllerBuildingPermit {
 		return SBI.listAppScrutinyDetailsForBPA(usercode);
 	};
 
+	@GetMapping(value = "/listAppScrutinyDetailsForBPAV2.htm")
+	public @ResponseBody List<Map<String, Object>> listApplicationsScrutinyDetailsV2(ModelMap model,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		usercode = getSessionUsercode(model);
+		return SBI.listAppScrutinyDetailsForBPAV2(usercode);
+	};
+
 	@GetMapping(value = "/listApplictionsCurrentProcessStatus.htm")
 	public @ResponseBody List<Map<String, Object>> listApplictionsCurrentProcessStatus(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
@@ -253,26 +279,6 @@ public class ControllerBuildingPermit {
 	}
 
 	/* CREATE */
-	/*
-	 * @PostMapping("/bpapayappfee.htm") public ResponseEntity<HashMap<String,
-	 * Object>> bpaPayAppFee(@RequestBody BpaApplicationFee bpa) { HashMap<String,
-	 * Object> response = new HashMap<String, Object>(); LOG.info(bpa.toString());
-	 * bpa.setFeetypecode(BPA_APPLICATIONFEE_CODE); if (USERCODE == null) return new
-	 * ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-	 * if(SBI.processAppPayment(USERCODE, bpa, response)) return new
-	 * ResponseEntity<>(response, HttpStatus.CREATED); else return new
-	 * ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR); }
-	 * 
-	 * @PostMapping("/bpapaypermfee.htm") public ResponseEntity<HashMap<String,
-	 * Object>> bpaPayPermFee(@RequestBody BpaApplicationFee bpa) { HashMap<String,
-	 * Object> response = new HashMap<String, Object>(); LOG.info(bpa.toString());
-	 * bpa.setFeetypecode(BPA_PERMITFEE_CODE); if (USERCODE == null) return new
-	 * ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-	 * if(SBI.processAppPayment(USERCODE, bpa, response)) return new
-	 * ResponseEntity<>(response, HttpStatus.CREATED); else return new
-	 * ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR); }
-	 */
-
 	@PostMapping("/bpamakepayment.htm")
 	public ResponseEntity<HashMap<String, Object>> bpaMakePayment(@ModelAttribute("SESSION_USERCODE") Integer usercode,
 			@RequestBody BpaApplicationFee bpa) {
@@ -291,6 +297,20 @@ public class ControllerBuildingPermit {
 		if (SBI.processAppPayment(usercode, bpa, response))
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		else
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@PostMapping(value = "/returnfromcitizenbpapplication.htm")
+	public ResponseEntity<HashMap<String, Object>> returnFromCitizenBPApplication(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestBody BpaProcessFlow data) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		if (usercode == null)
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+		data.setFromusercode(usercode);
+		if (SBI.returnFromCitizenBPApplication(data, response)) {
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -331,7 +351,6 @@ public class ControllerBuildingPermit {
 		}
 //-------------------------------------------VALIDATION ENDS---------------------------------------------------------------------		
 
-		
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 

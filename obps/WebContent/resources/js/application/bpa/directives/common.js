@@ -46,6 +46,26 @@ app.directive("rejectButton", function rejectButton($compile) {
 	};
 });
 
+app.directive("returnFromCitizenButton", function rejectButton($compile) {
+	return {
+		template: '<button class="dropdown-item btn-outline-primary" type="button" data-toggle="modal"' 
+			+ 'data-target="#commonModal" ng-click="setModalTitle(4)">Send</button>',
+			link: action
+	}
+	function action (scope, elem, attr) {
+	};
+});
+
+app.directive("sendToCitizenButton", function rejectButton($compile) {
+	return {
+		template: '<button class="dropdown-item btn-outline-warning" type="button" data-toggle="modal"' 
+			+ 'data-target="#commonModal" ng-click="setModalTitle(3)">Send To Citizen</button>',
+			link: action
+	}
+	function action (scope, elem, attr) {
+	};
+});
+
 app.directive("modalButton", ["$compile", "$timeout", "$window", "commonInitService", function modalButton($compile, $timeout, $window, CIS) {
 	return {
 		template: '<button type="button" class="btn btn-outline-primary" ng-click="modalAction(modal.remarks)">{{modal.actionname}}</button>',
@@ -57,8 +77,15 @@ app.directive("modalButton", ["$compile", "$timeout", "$window", "commonInitServ
 				case 1:
 					scope.forward();
 					break;
-				default:
+				case 2:
 					scope.reject();
+					break;
+				case 3:
+					scope.sendToCitizen();
+					break;
+				case 4:
+					scope.returnFromCitizen();
+					break;
 			}
 		}
 		
@@ -103,7 +130,41 @@ app.directive("modalButton", ["$compile", "$timeout", "$window", "commonInitServ
 			});
 
 			scope.clearAfterCreateProcess();
-		};
+		};//End reject
+		
+		scope.sendToCitizen = () => {
+			let data = {}, valid = false;
+
+			if (scope.modal.remarks == null || scope.modal.remarks == "") {
+				alert("Please enter remarks");
+				return false;
+			}
+			data.applicationcode = scope.bpa.applicationcode;
+			data.remarks = scope.modal.remarks;
+			valid = $window.confirm("Are you sure you want to Send to Citizen?");
+			if (!valid) return;
+
+			$('#commonModal').modal('hide');
+			CIS.save("POST", ProcessingUrl.bpaSendToCitizen, data, (success) => {
+				scope.serverMsg = success.msg;
+				if (success.code == '201') {
+					scope.serverResponseSuccess = true;
+					$timeout(() => { $window.location.reload(); }, Timeout.Reload);
+				} else {
+					scope.serverResponseFail = true;
+				}
+			}, (error) => {
+				try {
+					scope.serverMsg = error.msg;
+				} catch (e) {
+					scope.serverMsg = "Internal server error";
+				}
+				scope.serverResponseError = true;
+			});
+			
+			scope.clearAfterCreateProcess();
+		};//End sendToCitizen 
+		
 	};
 }]);
 
@@ -132,6 +193,61 @@ app.directive("basicDetails",["$compile", "bpaService", function($compile, BS) {
 	};
 }]);
 
+app.directive("commonProcessingDocumentDetails",["$compile", "bpaService", function($compile, BS) {
+	return {
+		template: '<ng-include src="\'commonprocessingdocumentdetails.htm\'"></ng-include>',
+		link: action
+	}
+	function action(scope, elem, attr) {
+		scope.addRemoveMoreFile = (opt) => {
+			switch(opt){
+				case 1:
+					scope.BPAEnclosures.push({code:null, name:'', file:null, error:false, errormsg: null});
+					break;
+				default:
+					scope.BPAEnclosures.pop();
+			}
+			
+		};
+
+		scope.filterEnclosure = (opt, code) => {
+			if(opt == 1){
+				scope.BPAEnclosures.find( l => l.code == code).error = false;
+				if(scope.BPAEnclosures.find( l => l.code == code).name == null || scope.BPAEnclosures.find( l => l.code == code).name == ""){
+					scope.BPAEnclosures.find( l => l.code == code).error = true;
+					scope.BPAEnclosures.find( l => l.code == code).errormsg = `Please select enclosure first`;
+					return;
+				}
+				if(scope.BPAEnclosures.find( l => l.code == code).file == null || scope.BPAEnclosures.find( l => l.code == code).file == ""){
+					scope.BPAEnclosures.find( l => l.code == code).error = true;
+					scope.BPAEnclosures.find( l => l.code == code).errormsg = `Please upload ${scope.BPAEnclosures.find( l => l.code == code).name} first`;
+					return;
+				}
+				scope.addRemoveMoreFile(opt);
+				scope.Enclosures.find( e => e.enclosurecode == code).selected = true;
+				scope.BPAEnclosures.find( l => l.code == code).flag = true;
+				
+			}else{
+				scope.addRemoveMoreFile(opt);
+				scope.BPAEnclosures[scope.BPAEnclosures.length-1].flag = false;
+				scope.Enclosures.find( e => e.enclosurecode == scope.BPAEnclosures[scope.BPAEnclosures.length-1].code).selected = false;
+				
+			}
+		};
+		
+		scope.setLabel = (index, code) => {
+			if(index != null && code!= null){
+				scope.BPAEnclosures[index].name = scope.Enclosures.find( e => e.enclosurecode == code).enclosurename;
+				scope.BPAEnclosures[index].code = code;
+				scope.BPAEnclosures[index].error = false;
+			}else{
+				if(scope.BPAEnclosures[index].file != null && scope.BPAEnclosures[index].file != '')
+					scope.BPAEnclosures[index].error = false;
+			}	
+		}
+	};
+}]);
+
 app.directive("commonProcessingAction",["$compile", "bpaService", function($compile, BS) {
 	return {
 		template: '',
@@ -144,16 +260,28 @@ app.directive("commonProcessingAction",["$compile", "bpaService", function($comp
 		elem.append(compiledTempl);
 		scope.setModalTitle = (opt) => {
 			scope.modal = new Modal();
+			console.log("opt: ", opt);
 			switch(opt){
 				case 1:
 					scope.modal.action = 1;
 					scope.modal.actionname = "Forward";
 					scope.modal.title = 'Forward Application';
 					break;
-				default:
+				case 2:
 					scope.modal.action = 2;
 					scope.modal.actionname = "Reject";
 					scope.modal.title = 'Reject Application';
+					break;
+				case 3:
+					scope.modal.action = 3;
+					scope.modal.actionname = "Send";
+					scope.modal.title = 'Send To Citizen';
+					break;
+				case 4:
+					scope.modal.action = 4;
+					scope.modal.actionname = "Send";
+					scope.modal.title = 'Return From Citizen';
+					break;
 			}
 		}
 	};
@@ -235,7 +363,6 @@ app.directive("taskStatus",["$compile", "bpaService", function ($compile, BS) {
 		link: action
 	}
 	function action(scope, elem, attr) {
-		scope.url = 'processtrackstatus.htm';
 		scope.taskStatus = new TaskStatus();
 		
 		BS.getCurrentProcessTaskStatus((response) => {

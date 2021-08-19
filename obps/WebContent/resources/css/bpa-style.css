@@ -66,7 +66,7 @@ hr {
 	border-bottom: 1px solid rgba(0, 87, 118, 0.8);
 }
 
-.minus i, .plus i{
+.minus i, .plus i, .search i{
 	color: rgba(0, 0, 0, 0.45);
     width: 1.5em;
     height: 1.5em;
@@ -84,4 +84,7 @@ hr {
 }
 .plus i{
 	background-color: rgba(0, 128, 128, 0.7);
+}
+.search i{
+	background-color: rgba(220, 20, 60, 0);
 }
