@@ -165,7 +165,7 @@
 						<th style="position: sticky;top: 0;background-color:#e2e2e2">URL</th>
 						<th style="position: sticky;top: 0;background-color:#e2e2e2">Sub Sub Menu</th>
 						<th style="position: sticky;top: 0;background-color:#e2e2e2">Sub Menu
-						<th style="position: sticky;top: 0;background-color:#e2e2e2">Menu Header</th>
+						<th style="position: sticky;top: 0;background-color:#e2e2e2">Menu Header </th>
 					</tr>
 					<tr ng-repeat='item in URLs | filter:search' style="width: 100%;">
 						<td><input style="margin: 8px" type='checkbox'
