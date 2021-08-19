@@ -72,8 +72,10 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		Integer usercode = Integer.valueOf((String) usercd);
 		List<EdcrScrutiny> list = null;
 		try {
-			String sql = "SELECT a.usercode,a.officecode,a.edcrnumber,a.status,a.entrydate,b.officename1 as officename FROM nicobps.edcrscrutiny a\r\n"
-					+ "inner join masters.offices b on a.officecode=b.officecode\r\n" + "\r\n" + "WHERE a.usercode=? order by a.entrydate desc";
+			String sql = "SELECT a.usercode,a.officecode,a.edcrnumber,a.status,a.entrydate,b.officename1 as officename ,c.applicationcode FROM nicobps.edcrscrutiny a\r\n"
+					+ "inner join masters.offices b on a.officecode=b.officecode\r\n"
+					+ "left join nicobps.bpaapplications c on a.edcrnumber=c.edcrnumber\r\n"
+					+ "WHERE a.usercode=? order by a.entrydate desc";
 			Object[] criteria = { usercode };
 			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
 		} catch (Exception e) {

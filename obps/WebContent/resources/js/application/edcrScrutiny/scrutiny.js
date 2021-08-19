@@ -7,6 +7,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
+			 
 				$timeout(function() {
 					$scope.edcrscrutinylist = response;
 					$scope.setEdcrListTable($scope.edcrscrutinylist);
@@ -15,7 +16,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 		});
 	};
 	$scope.setEdcrListTable = (tData) => {
-	  	$("#displayRecords").html("");
+		$("#displayRecords").html("");
 		$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;' border='1' class='table table table-bordered  table-hover'></table>");
 		var table = jQuery('#displayRecordsTable').DataTable({
 			"data": tData,
@@ -43,7 +44,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 					render: (data, type, row, meta) => {
 						let entrydate = data;
 						return entrydate.substring(0, 19);
-						}
+					}
 
 				}, {
 					"title": "Status",
@@ -99,6 +100,17 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 				$compile(angular.element(row).contents())($scope);
 			}
 		});
+		table.on('click', 'tr td:nth-of-type(2),td:nth-of-type(3),td:nth-of-type(4),td:nth-of-type(5)', function() {
+			var data = table.row(this).data();
+			 
+			if ((data.applicationcode == null || data.applicationcode == '') && data.status == "Accepted")
+				$window.location.href = "applybuildingpermit.htm?edcrnumber=" + data.edcrnumber;
+			else if ((data.applicationcode != null || data.applicationcode != '') && data.status == "Accepted")
+				alert("eDCR Number status : utilized");
+//				$window.location.href = data.pageurl + "?applicationcode=" + data.applicationcode;
+			else
+				alert("Building Permit locked: Not-Accepted Plan");
+		});
 	}
 	$scope.listLicensees();
 	$scope.listOffices = function() {
@@ -108,12 +120,14 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
-				console.log(JSON.stringify(response));
+				 
 				$timeout(function() {
 					$scope.userofficelist = response;
 				}, 0);
 			}
 		});
+		 
+			
 	};
 	$scope.listOffices();
 	$scope.generateReport = (planreport) => {
@@ -127,7 +141,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			jQuery.each(jQuery('#dxffile')[0].files, function(i, file) {
 				data.append('planFile', file);
 			});
-			 
+
 			data.append('OfficeCode', (JSON.parse($scope.validoffice)).officecode);
 			data.append('stateid', (JSON.parse($scope.validoffice)).stateid);
 			data.append('tenantid', (JSON.parse($scope.validoffice)).tenantid);
@@ -144,7 +158,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 						$scope.edcrscrutiny = response;
 
 					}, 0);
-				 
+					 
 					if (response.status != '') {
 						if (response.status == 'error') {
 							jQuery('.edcrResp').css("visibility", "hidden");
@@ -161,7 +175,9 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 							jQuery('#genReport').css("visibility", "visible");
 							if (response.status == "Accepted") {
 								jQuery('#edcrstatus').css("color", "green")
+								jQuery('#applybpa').html('<img src="resources/images/hand.png" alt="hand" height="40px" width="40px"/><a href="applybuildingpermit.htm?edcrnumber='+response.edcrnumber+'">-->Apply for Building Permit <a/>');
 							} else {
+								 
 								jQuery('#edcrstatus').css("color", "red")
 							}
 							jQuery('#edcrnumber').css("color", "blue")

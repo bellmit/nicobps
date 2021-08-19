@@ -47,7 +47,7 @@
 									<td style="height: 20px" colspan="3"></td>
 								</tr>
 								<tr>
-									<td colspan="3" ><input type="button" value="SCRUTINIZE"
+									<td colspan="3"><input type="button" value="SCRUTINIZE"
 										ng-click="submitDetails();" class="btn btn-primary b-btn"></td>
 								</tr>
 								<tr>
@@ -57,16 +57,18 @@
 									<td style="font-size: 20px; font-weight: bold;"><label
 										for="edcrstatus">EDCR Status :</label><label id="edcrstatus"
 										name="edcrstatus">{{edcrscrutiny.status}}</label></td>
-									<td style="font-size: 20px; font-weight: bold;"><label
+									<td style="font-size: 20px; "><label
 										for="edcrnumber">EDCR Number :</label><label id="edcrnumber"
-										name="edcrnumber">{{edcrscrutiny.edcrnumber}}</label></td>
+										name="edcrnumber" style="font-weight: bold;">{{edcrscrutiny.edcrnumber}}</label><br><div id="applybpa"></div></td>
 									<td><input type="button" value="Generate Scrutiny Report"
 										id="genReport" name="genReport"
 										ng-click="generateReport(edcrscrutiny.planReport);"
 										formtarget="_blank" class="btn btn-info btn-sm"
 										style="margin-left: 70px"></td>
 								</tr>
-
+								 <tr>
+									<td style="height: 20px" colspan="3" id=" "></td>
+								</tr>
 								<tr class="edcrResp" style="visibility: hidden;">
 									<td><p>
 											Click on <span
@@ -82,7 +84,8 @@
 						<div class="col-md-12 py-12 px-12"
 							style="border-top: 3px solid #005776; border-bottom: 3px solid #005776; padding-top: 20px; align-content: center;">
 
-							<h4 style="padding-left: 30%; font-style: oblique;">--------------eDCR Scrutiny List --------------</h4>
+							<h4 style="padding-left: 30%; font-style: oblique;">--------------eDCR
+								Scrutiny List --------------</h4>
 							<div class="table-responsive" id="displayRecordsDiv">
 								<div id="displayRecords"
 									style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px'></div>
@@ -95,7 +98,7 @@
 			</div>
 		</div>
 	</div>
-<%@include file="../common/footer.jsp" %> 
+	<%@include file="../common/footer.jsp"%>
 </body>
 
 <script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
