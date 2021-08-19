@@ -211,7 +211,7 @@ var Offices={
 "smsusername":"",
 "smspassword":"",
 "smssenderid":"",
-"isregisteringoffice":"",
+"isregisteringoffice":"Y", 
 "registeringofficecode":0,
 "enabled":"",
 "stateid":"",
