@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import obps.daos.DaoEnclosureManagementInterface;
+import obps.util.common.Patterns;
 
 @Component
 public class InitEnclosuresValidator {
@@ -62,11 +63,16 @@ public class InitEnclosuresValidator {
 		Integer licenseetypecode = 0;
 
 		for (Map<String, Object> up : param) {
-			if (up.get("modulecode") != null)
-				modulecode = Integer.parseInt(up.get("modulecode").toString());
+			if (up.get("modulecode") != null) {
+				if (up.get("modulecode").toString().trim() != "" && Patterns.PatternCompileMatche(
+						Patterns.PATTERN_POSITIVEINTEGER, up.get("modulecode").toString().trim())) {
+					modulecode = Integer.parseInt(up.get("modulecode").toString().trim());
+				}
+
+			}
 
 			if (up.get("modulecode") == null || modulecode == 0) {
-				response = "modulecodenull";
+				response = "modulecodenull"; // null or invalid pattern
 				return response;
 			}
 
@@ -75,29 +81,44 @@ public class InitEnclosuresValidator {
 				return response;
 			}
 
-			if (up.get("officecode") != null)
-				officecode = Integer.parseInt(up.get("officecode").toString());
+			if (up.get("officecode") != null) {
+				if (up.get("officecode").toString().trim() != "") {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
+							up.get("officecode").toString().trim())) {
+					
+						response = "officecodeinvalid";
+						return response;
+					}
+				}
 
-			if (up.get("officecode") == null || officecode == 0) {
-				response = "officecodenull";
-				return response;
 			}
 
-			if (up.get("processcode") != null)
-				processcode = Integer.parseInt(up.get("processcode").toString());
+
+
+			if (up.get("processcode") != null) {
+				if (up.get("processcode").toString().trim() != "" && Patterns.PatternCompileMatche(
+						Patterns.PATTERN_POSITIVEINTEGER, up.get("processcode").toString().trim())) {
+					processcode = Integer.parseInt(up.get("processcode").toString());
+				}
+			}
 
 			if (up.get("processcode") == null || processcode == 0) {
-				response = "processcodenull";
+				response = "processcodenull"; // null or invalid pattern
 				return response;
 			}
 
-			if (up.get("licenseetypecode") != null)
-				licenseetypecode = Integer.parseInt(up.get("licenseetypecode").toString());
+			if (up.get("licenseetypecode") != null) {
+				if (up.get("licenseetypecode").toString().trim() != "") {
+					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
+							up.get("licenseetypecode").toString().trim())) {
+					
+						response = "licenseetypecodeinvalid";
+						return response;
+					}
+				}
 
-			if (up.get("licenseetypecode") == null || licenseetypecode == 0) {
-				response = "licenseetypecodenull";
-				return response;
 			}
+
 
 //			System.out.println(up.get("modulecode"));
 			System.out.println("response=" + response);

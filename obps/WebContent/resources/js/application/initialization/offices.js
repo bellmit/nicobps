@@ -61,31 +61,30 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
 	/*------------------------*/
 	$scope.offices = new Offices();
 	$scope.officereg=[];
-	
-	
-	   
     $scope.trustHTML = function (post) {
 		
        return $sce.trustAsHtml(post);
  };
  $scope.edit = function (officecode) {
+		
 		 jQuery('#enclosureWindow').html("");
  		jQuery('#viewlogo').show()
  		logocode=officecode;
 		
     	$scope.actionButton = 2;
     	$scope.offices = new Offices();
-    	
  
         $scope.officereg.forEach((o, x) => {
+			
         	if (o.officecode == officecode){
         		$scope.offices = o;
-        		
+				
         	}
         	
         }); 
         $scope.offices.smspassword="";
         $scope.offices.emailidpassword="";
+		
    jQuery('html, body').animate({
             scrollTop: 0
         }, 2000);
@@ -317,6 +316,8 @@ if($scope.offices.emailidpassword)  {
         				}
         			});
             		$scope.setDataTable($scope.officereg);
+
+					
             	}, officecode);
         	}
         	
