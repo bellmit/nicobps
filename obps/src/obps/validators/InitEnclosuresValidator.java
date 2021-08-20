@@ -83,7 +83,7 @@ public class InitEnclosuresValidator {
 
 			if (up.get("officecode") != null) {
 				
-				if (up.get("officecode").toString().trim() != "" && !up.get("officecode").toString().trim().equals("0")) {
+				if (up.get("officecode").toString().trim() != "" && Integer.parseInt(up.get("officecode").toString())!=0) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
 							up.get("officecode").toString().trim())) {
 
@@ -108,7 +108,7 @@ public class InitEnclosuresValidator {
 
 			if (up.get("licenseetypecode") != null) {
 				if (up.get("licenseetypecode").toString().trim() != ""
-						&& !up.get("licenseetypecode").toString().trim().equals("0")) {
+						&& Integer.parseInt(up.get("licenseetypecode").toString())!=0) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
 							up.get("licenseetypecode").toString().trim())) {
 
