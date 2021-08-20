@@ -32,6 +32,7 @@
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
 				<h3 class="mt-4" style="font-size: 32px;">Map Enclosures</h3>
+				<br /> <br />
 
 				<div class="row" ng-app="CommonApp">
 					<div class="col-md-12 py-12 px-12">
@@ -74,16 +75,17 @@
 													</core:forEach>
 											</select></td>
 										</tr>
-<!-- 										<tr> -->
-<!-- 											<td class="title" style="width: 15%"><b>Module Name -->
-<!-- 													:</b></br> </br>{{module.modulename}}</br> </br></td> -->
-<!-- 																					<td><span>{{module.modulename}}</span></br></br></br></br></td> -->
-<!-- 										</tr> -->
+										<!-- 										<tr> -->
+										<!-- 											<td class="title" style="width: 15%"><b>Module Name -->
+										<!-- 													:</b></br> </br>{{module.modulename}}</br> </br></td> -->
+										<!-- 																					<td><span>{{module.modulename}}</span></br></br></br></br></td> -->
+										<!-- 										</tr> -->
 										<tr>
 											<td><b> Process* :</b><select id='processcode'
 												ng-options="T.key as T.value for T in processesList"
 												style='width: 300px' class="form-control"
-												ng-model="processcode" ng-change='getMappedEnclosures(processcode)'>
+												ng-model="processcode"
+												ng-change='getMappedEnclosures(processcode)'>
 													<option value="">---Select Process---</option>
 													<!-- 												<option value="{{item.processcode}}">{{item.processname}}</option> -->
 
@@ -122,8 +124,8 @@
 									</table>
 								</form>
 							</div>
-							<div class="col-md-8">
-								<div style="width: 100%; max-height: 230px; overflow-y: auto">
+							<div class="col-md-7">
+								<div style="width: 100%; overflow-y: auto">
 									<table border="1" cellspacing="0" width="100%">
 										<tr>
 											<th></th>

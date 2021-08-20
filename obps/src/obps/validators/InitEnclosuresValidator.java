@@ -82,18 +82,17 @@ public class InitEnclosuresValidator {
 			}
 
 			if (up.get("officecode") != null) {
-				if (up.get("officecode").toString().trim() != "") {
+				
+				if (up.get("officecode").toString().trim() != "" && !up.get("officecode").toString().trim().equals("0")) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
 							up.get("officecode").toString().trim())) {
-					
+
 						response = "officecodeinvalid";
 						return response;
 					}
 				}
 
 			}
-
-
 
 			if (up.get("processcode") != null) {
 				if (up.get("processcode").toString().trim() != "" && Patterns.PatternCompileMatche(
@@ -108,17 +107,17 @@ public class InitEnclosuresValidator {
 			}
 
 			if (up.get("licenseetypecode") != null) {
-				if (up.get("licenseetypecode").toString().trim() != "") {
+				if (up.get("licenseetypecode").toString().trim() != ""
+						&& !up.get("licenseetypecode").toString().trim().equals("0")) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
 							up.get("licenseetypecode").toString().trim())) {
-					
+
 						response = "licenseetypecodeinvalid";
 						return response;
 					}
 				}
 
 			}
-
 
 //			System.out.println(up.get("modulecode"));
 			System.out.println("response=" + response);

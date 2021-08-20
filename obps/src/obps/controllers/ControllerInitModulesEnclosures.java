@@ -65,15 +65,15 @@ public class ControllerInitModulesEnclosures {
 		return "initialization/initmodulesenclosures";
 	}
 
-	
-	
-	
 	@GetMapping(value = "/listModulesAndEnclosures.htm")
 	public @ResponseBody List<ModulesEnclosures> listModulesAndEnclosures(HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
-		Integer officecode = params.get("officecode") == null ? null
-				: params.get("officecode").toString().trim() == "" ? null : Integer.parseInt(params.get("officecode"));
-		Integer licenseetypecode = params.get("licenseetypecode") == null ? null
+		Integer officecode = params.get("officecode") == null
+				|| Integer.parseInt(params.get("officecode").toString()) == 0 ? null
+						: params.get("officecode").toString().trim() == "" ? null
+								: Integer.parseInt(params.get("officecode"));
+		Integer licenseetypecode = params.get("licenseetypecode") == null 
+				|| Integer.parseInt(params.get("licenseetypecode").toString()) == 0 ? null
 				: params.get("licenseetypecode").toString().trim() == "" ? null
 						: Integer.parseInt(params.get("licenseetypecode"));
 		return serviceUserManagementInterface.listModulesAndEnclosures(Integer.parseInt(params.get("modulecode")),

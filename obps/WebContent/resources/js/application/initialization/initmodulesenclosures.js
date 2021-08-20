@@ -60,10 +60,14 @@ app.controller("initmodulesenclosuresCtrl", [
 				alert("Please Select Process ");
 		  else if  (response == "licenseetypecodenull")
 				alert("Please Select License ");
-          else if(response=='Mapped')
-          	alert("Mapped");
-          else if(response=='Failed')
-          	alert("Failed");
+          else if(response=='Mapped'){
+					alert("Mapped");
+					location.reload();
+		   } else if(response=='Failed'){
+				alert("Failed");
+				location.reload();
+			}
+          	
           	
           $scope.reset();
 //          $scope.listModules();

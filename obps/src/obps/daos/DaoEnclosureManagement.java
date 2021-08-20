@@ -322,8 +322,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			String sql = "DELETE From masters.modulesenclosures WHERE modulecode=? and processcode=? and officecode=? and licenseetypecode=? ; ";
 			if (jdbcTemplate.update(sql, Integer.parseInt(modulesenclosures.get(0).get("modulecode").toString()),
 					Integer.parseInt(modulesenclosures.get(0).get("processcode").toString()),
-					Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()),
-					Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString())) < 0) {
+					Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()) == 0 ? null
+							: Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()),
+					Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString()) == 0 ? null
+							: Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString())) < 0) {
 				return false;
 			}
 			/////////////////////////////////////
@@ -337,8 +339,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 				int res = jdbcTemplate.update(sql, slno, Integer.parseInt(up.get("modulecode").toString()),
 						((Map<String, Object>) up.get("enclosurecode")).get("enclosurecode"),
 						Integer.parseInt(up.get("processcode").toString()),
-						Integer.parseInt(up.get("officecode").toString()),
-						Integer.parseInt(up.get("licenseetypecode").toString()));
+						Integer.parseInt(up.get("officecode").toString()) == 0 ? null
+								: Integer.parseInt(up.get("officecode").toString()),
+						Integer.parseInt(up.get("licenseetypecode").toString()) == 0 ? null
+								: Integer.parseInt(up.get("licenseetypecode").toString()));
 				slno = slno + 1;
 				System.out.println("result query :" + res);
 			}
