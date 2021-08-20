@@ -13,7 +13,6 @@ import org.json.simple.parser.JSONParser;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.jayway.jsonpath.DocumentContext;
@@ -67,7 +66,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "INNER JOIN(  " + "	SELECT applicationcode, MAX(entrydate) entrydate  	  "
 				+ "	FROM nicobps.applicationflowremarks    " + "	GROUP BY applicationcode  "
 				+ ")T ON (T.applicationcode, T.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
-				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode)= (AFR.modulecode, AFR.toprocesscode)  "
+				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.processflowstatus) = (AFR.modulecode, AFR.toprocesscode, 'N')  "
 				+ "INNER JOIN (  " + "	SELECT PU.urlcode, PU.pageurl,   "
 				+ "	       UP.usercode, UL.username, UL.fullname  " + "	FROM masters.pageurls PU  "
 				+ "	INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode  "

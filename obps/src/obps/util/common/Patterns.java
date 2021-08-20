@@ -60,6 +60,7 @@ public class Patterns {
     public static final String XPATTERN_NO_SPECIAL_CHAR ="^[a-zA-Z0-9]{1,255}$";
     public static final String XPATTERN_POSITIVE_START_ZERO="^[0-9]*$";
     public static final String XPATTERN_STRING_SPACE ="^(?![ .]+$)[a-zA-Z .]*$";
+    public static final String XPATTERN_WITH_PERIOD_COMMA_AND_INVERTED_COMMA ="^[a-zA-Z0-9 .,']{1,255}$";
     public static boolean PatternMatche(String pattern, String inputStr) {
         return Pattern.matches(pattern, inputStr);
     }

@@ -239,7 +239,7 @@ public class BpaValidator {
 		}
 
 		if (bpaAl.getProcessflow().getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaAl.getProcessflow().getRemarks())
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_WITH_PERIOD_COMMA_AND_INVERTED_COMMA, bpaAl.getProcessflow().getRemarks())
 					|| bpaAl.getProcessflow().getRemarks().length() > 255) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER VALID REMARKS ");
@@ -252,10 +252,7 @@ public class BpaValidator {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", " INVALID VALUE IN TO_USERCODE , ENTER A VALID TO_USERCODE");
 			}
-		} else {
-			response.put("code", HttpStatus.BAD_REQUEST.value());
-			response.put("msg", " VALUE IN TO_USERCODE IS NULL, ENTER A VALID FROM_USERCODE");
-		}
+		} 
 	}
 
 	public void Validateprocessbpapplication(BpaProcessFlow bpaPf, Map<String, Object> response) {
@@ -284,7 +281,7 @@ public class BpaValidator {
 		}
 
 		if (bpaPf.getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks())
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_WITH_PERIOD_COMMA_AND_INVERTED_COMMA, bpaPf.getRemarks())
 					|| bpaPf.getRemarks().length() > 255) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER VALID REMARKS ");
@@ -320,7 +317,7 @@ public class BpaValidator {
 		}
 
 		if (bpaPf.getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.XPATTERN_NO_SPECIAL_CHAR, bpaPf.getRemarks())
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_WITH_PERIOD_COMMA_AND_INVERTED_COMMA, bpaPf.getRemarks())
 					|| bpaPf.getRemarks().length() > 255) {
 //				errorMap.put("INVALID REMARKS SIZE", "ENTER REMARKS NOT MORE THEN 255 IN LENGTH");
 				response.put("code", HttpStatus.BAD_REQUEST.value());

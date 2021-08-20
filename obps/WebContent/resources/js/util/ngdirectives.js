@@ -26,7 +26,7 @@ app.directive("patternAddress", function () {
           e.keyCode !== PASTE_CMD
         ) {
           e.preventDefault();
-          ngModelCtrl.$setViewValue("");
+          ngModelCtrl.$setViewValue(oldVal);
           ngModelCtrl.$render();
         } else {
           oldVal = element.val();
