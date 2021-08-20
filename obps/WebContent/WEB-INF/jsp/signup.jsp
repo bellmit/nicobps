@@ -296,7 +296,7 @@
 											<span id="jcaptchaMsg" class="formErrorContent"></span>
 											<div style="text-align: center;padding-top:10px ">
 												<input type="button" value="Submit" ng-click="submitDetails();" class="btn btn-primary b-btn">
-												<input type="button" value="Reset" ng-click="resetDetails();" class="btn btn-primary b-btn">
+												<input type="button" value="Reset" ng-click="resetDetails();" class="btn btn-secondary">
 											</div>	
 											<br/>											
 											<div id="successMsg" class="formErrorContent" style="width:100%"></div>

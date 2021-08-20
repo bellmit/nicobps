@@ -307,7 +307,7 @@
 							style="width: 350px; height: 200px;"></textarea></td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><button class="btn btn-primary"
+					<td colspan="2" align="center"><button class="btn btn-primary b-btn" 
 							ng-click="updateStakeholder(applicant,process)">Submit</button></td>
 				</tr>
 			</table>

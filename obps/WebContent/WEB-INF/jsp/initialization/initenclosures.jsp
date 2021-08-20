@@ -39,9 +39,9 @@
 			                        </tr>
 			                        <tr class="form-group has-feedback">
 			                            <td colspan="2" align="center">
-			                                <button type="submit" id="add" ng-click="save()" class="button-primary" ng-if="actionButton === 1" ng-disabled="enclosureForm.$invalid">Save</button>
-			                              <button name="submit" id="add" ng-click="update()" class="button-primary" ng-if="actionButton === 2" ng-disabled="enclosureForm.$invalid">Update</button> 
-			                                <input type="reset" value="Reset" ng-click="reset()" class="button-default"/>
+			                                <button type="submit" id="add" ng-click="save()" class="btn btn-primary b-btn"  ng-if="actionButton === 1" ng-disabled="enclosureForm.$invalid">Save</button>
+			                              <button name="submit" id="add" ng-click="update()" class="btn btn-primary b-btn"  ng-if="actionButton === 2" ng-disabled="enclosureForm.$invalid">Update</button> 
+			                                <input type="reset" value="Reset" ng-click="reset()" class="btn btn-secondary"/>
 			                            </td>
 			                        </tr>
 			                        

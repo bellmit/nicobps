@@ -51,7 +51,7 @@
                             <div><form:errors path="userresponsecaptcha" cssClass="error" style="color:red"/></div>    
                         </div> 
                         <div style="text-align: center;padding-top:10px ">                                               
-                        	<input type="submit" name="_submit" id="_submit" value="Upload" class="btn btn-primary"/>
+                        	<input type="submit" name="_submit" id="_submit" value="Upload" class="btn btn-primary b-btn"/>
                         </div>
                      
                         <div id="UploadEncMsg" class="formErrorContent" ></div>

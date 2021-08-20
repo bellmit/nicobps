@@ -111,13 +111,13 @@
 							<tr>
 											<td></td>
 											<td align="left">
-												<button style="padding: 5px"
+												<button style="padding: 5px" class="btn btn-primary b-btn"
 													ng-click="getMappedEnclosures(processcode);mapView()">Map
 													Enclosures</button>
 													
 													
-											<button style="padding: 5px"
-													ng-click="reset()">Reset
+											<button style="padding: 5px" class="btn btn-secondary"
+													ng-click="reset()">Reset 
 													</button></td>
 										</tr>
 									</table>
@@ -179,7 +179,7 @@
 										</div>
 									</div>
 									<div class="row mt-3 justify-content-center">
-										<input class="float-right" type="button" value="Save"
+										<input class="float-right btn btn-primary b-btn" type="button" value="Save" 
 											ng-click="save()" />
 									</div>
 

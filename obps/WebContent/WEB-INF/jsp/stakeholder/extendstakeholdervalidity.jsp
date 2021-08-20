@@ -82,7 +82,7 @@ input {
 									
 								</td>
 								<td colspan="2" align="center"><button
-										class="btn btn-primary"
+										class="btn btn-primary b-btn" 
 										ng-click="updateStakeholderValidity()">Submit</button></td>
 							</tr>
 						</table>

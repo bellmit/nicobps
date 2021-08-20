@@ -104,13 +104,13 @@ input[type=number] {
 										<tr class="form-group has-feedback">
 											<td colspan="2" align="center">
 												<button type="submit" id="add" ng-click="save()"
-													class="button-primary" ng-if="actionButton === 1"
+													class="btn btn-primary b-btn"  ng-if="actionButton === 1"
 													ng-disabled="userForm.$invalid">Save</button>
 												<button name="submit" id="add" ng-click="update()"
-													class="button-primary" ng-if="actionButton === 2"
+													class="btn btn-primary b-btn"  ng-if="actionButton === 2"
 													ng-disabled="userForm.$invalid">Update</button> <input
 												type="reset" value="Reset" ng-click="reset()"
-												class="button-default" />
+												class="btn btn-secondary"  />
 											</td>
 										</tr>
 									</table>

@@ -39,8 +39,9 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 	}
 
 
-	$scope.listWards = function(officecode) {
 
+	$scope.listWards = function(officecode) {
+	
 		var param = {
 			"officecode": $scope.officecode,
 
@@ -54,7 +55,11 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 				contentType: "application/json; charset=utf-8",
 				success: function(response) {
 					console.log(response)
-					$scope.wards = response;
+
+					$timeout(() => {
+						$scope.wards = response;
+
+					}, 0);
 
 				},
 				error: function(xhr) {
@@ -138,7 +143,7 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 
 	//map wards
 	$scope.save = function() {
-//		console.log("map wards::", $scope.wards)
+		//		console.log("map wards::", $scope.wards)
 		//console.log($scope.officecode)
 		if (jQuery('#officecode').val() === "0") {
 			alert("Select Office");
@@ -205,7 +210,16 @@ app.controller('userwardsCtrl', function($scope, $compile, $timeout) {
 	};
 
 	$scope.reset = function() {
-		$scope.user = new OfficeLocations();
+			$scope.officecode = 0;
+			$scope.usercode = "";
+		jQuery("#officecode").val(0);
+		jQuery("#usercode").val('');
+	
+		jQuery.each($scope.wards, function(i, v) {
+			v.checked = false;
+		});
+			$scope.wards = [];
+
 	};
 
 

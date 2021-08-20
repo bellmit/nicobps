@@ -167,7 +167,7 @@
 										<td style='width: 10%'>{{url.submenu}}</td>
 										<td style='width: 10%'>{{url.subsubmenu}}</td>
 										<td style='width: 10%'>{{url.pageurl}}</td>
-										<td style='width: 10%'><button style="padding: 5px"
+										<td style='width: 10%'><button style="padding: 5px" class="btn btn-primary b-btn" 
 												value="Edit" ng-click="edit($index)">Edit</button></td>
 									</tr>
 								</tbody>

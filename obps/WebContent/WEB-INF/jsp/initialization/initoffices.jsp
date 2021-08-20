@@ -190,13 +190,13 @@
 										<tr class="form-group has-feedback">
 											<td colspan="2" align="center">
 												<button type="submit" id="add" ng-click="save()"
-													class="button-primary" ng-if="actionButton === 1"
+													class="btn btn-primary b-btn"  ng-if="actionButton === 1"
 													ng-disabled="officeForm.$invalid">Save</button>
 												<button name="submit" id="add" ng-click="update()"
-													class="button-primary" ng-if="actionButton === 2"
+													class="btn btn-primary b-btn"  ng-if="actionButton === 2"
 													ng-disabled="officeForm.$invalid">Update</button> <input
 												type="reset" value="Reset" ng-click="reset()"
-												class="button-default" />
+												class="btn btn-secondary"  />
 											</td>
 										</tr>
 
@@ -206,7 +206,7 @@
 								</form>
 							</div>
 							<div id="displayRecords"
-								style='width: 80%; margin: 15px auto 50px auto;'></div>
+								style='width: 90%; margin: 10px 10px 10px 20px;'></div>
 						</div>
 					</div>
 				</div>

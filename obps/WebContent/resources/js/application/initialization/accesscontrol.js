@@ -152,7 +152,7 @@ app.controller("accesscontrolCtrl", [
 						"title": "Action",
 						"sortable": false,
 						"render": function(data, type, row, meta) {
-							let div = '<button style="padding:5px" ng-click="mappedPages(' + row.usercode + ');mapView()">Map Pages</button>';
+							let div = '<button style="padding:5px" class="btn btn-primary b-btn"  ng-click="mappedPages(' + row.usercode + ');mapView()">Map Pages</button>';
 							return div;
 						}
 					}

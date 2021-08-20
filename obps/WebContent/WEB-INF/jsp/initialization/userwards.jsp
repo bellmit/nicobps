@@ -35,59 +35,61 @@
 
 				<div class="row" ng-app="CommonApp">
 					<div class="col-md-12 py-12 px-12">
-						<div class="containerBody" id="userwardsCtrl"
+						<div class="containerBody row" id="userwardsCtrl"
 							ng-controller="userwardsCtrl">
-							<form>
-								<table class="" style="width: 100%; margin: 50px auto 0">
-									<tr class="form-group has-feedback">
-										<td><b>Select Office* :</b><select id='officecode'
-											style='width: 300px' class="form-control"
-											ng-model="officecode" ng-change='listWards()'>
-											<option value="0" >---Select office---</option>
-												<core:forEach items="${officeList}" var='i'>
-													<option value='${i.key}' selected='selected'>${i.value}</option>
-												</core:forEach>
-										</select></td>
-										<td rowspan="15" style="width: 60%; border: 1px solid blue;">
-											<div id='wardrow'
-												style="width: 100%; max-height: 230px; overflow-y: auto">
-												<table border="1" cellspacing="0" width="100%">
-													<tr>
-														<th></th>
+							<div class="col-md-4">
+								<form>
+									<table class="" style="width: 100%; margin: 50px auto 0">
+										<tr class="form-group has-feedback">
+											<td><b>Select Office* :</b><select id='officecode'
+												style='width: 300px' class="form-control"
+												ng-model="officecode" ng-change='listWards()'>
+													<option value="0">---Select office---</option>
+													<core:forEach items="${officeList}" var='i'>
+														<option value='${i.key}' selected='selected'>${i.value}</option>
+													</core:forEach>
+											</select></td>
 
+										</tr>
+										<tr>
+											<td><b>Select User* :</b><select id='usercode'
+												style='width: 300px' class="form-control"
+												ng-model="usercode"
+												ng-options="T.key as T.value for T in usersList"
+												ng-change='mappedWards(usercode)'>
+													<option value="">--Select--</option>
+											</select><br> <br></td>
+										</tr>
 
-														<th>Ward Location</th>
+										<tr>
+											<td colspan="3" align="center"><input type="button"
+												value="Save" ng-click="save()" class="btn btn-primary b-btn" />
+												<input type="button" value="Reset" ng-click="reset()"
+												class="btn btn-secondary " /></td>
+										</tr>
 
-													</tr>
-													<tr ng-repeat='item in wards track by $index'
-														style="width: 100%;">
-														<td><input style="margin: 8px" type='checkbox'
-															ng-model="item.checked" /></td>
-
-														<td>&nbsp;{{item.locationname}}</td>
-													</tr>
-												</table>
-											</div>
-										</td>
-									</tr>
+									</table>
+								</form>
+							</div>
+							<div id='wardrow' class="col-md-7" ng-hide="wards.length == 0"
+								style="width: 100%; overflow-y: auto">
+								<table border="1" cellspacing="0" width="100%">
 									<tr>
-										<td><b>Select User* :</b><select id='usercode'
-											style='width: 300px' class="form-control" ng-model="usercode"
-											ng-options="T.key as T.value for T in usersList"
-											ng-change='mappedWards(usercode)'>
-												<option value="">--Select--</option>
-										</select><br>
-										<br></td>
-									</tr>
-								
-	<tr>
-										<td colspan="3" align="left"><input type="button"
-											value="Save" ng-click="save()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										</td>
-									</tr>
+										<th></th>
 
+
+										<th>Ward Location</th>
+
+									</tr>
+									<tr ng-repeat='item in wards track by $index'
+										style="width: 100%;">
+										<td><input style="margin: 8px" type='checkbox'
+											ng-model="item.checked" /></td>
+
+										<td>&nbsp;{{item.locationname}}</td>
+									</tr>
 								</table>
-							</form>
+							</div>
 						</div>
 						<div id="displayRecords"
 							style='width: 80%; margin: 15px auto 50px auto;'></div>
