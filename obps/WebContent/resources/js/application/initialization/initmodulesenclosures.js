@@ -6,9 +6,13 @@ app.controller("initmodulesenclosuresCtrl", [
   function ($scope, $sce,$compile,$timeout) {
 
     $scope.module = new Modules();
+
     $scope.modules = [];
+    $scope.processes = [];
      $scope.processesList = [];
-    $scope.enclosures = [];
+     $scope.modulesList = [];
+       $scope.enclosure = [];
+    $scope.mappedenclosures = [];
     $scope.officecode="0";
     $scope.licenseetypecode="0";
     $scope.processcode="0";
@@ -27,7 +31,7 @@ app.controller("initmodulesenclosuresCtrl", [
         
           mapuserpagespages.push({
             
-            modulecode: $scope.module.modulecode,
+            modulecode: $scope.modulecode,
             enclosurecode: v,
             officecode:$scope.officecode,
             processcode:$scope.processcode,
@@ -62,7 +66,7 @@ app.controller("initmodulesenclosuresCtrl", [
           	alert("Failed");
           	
           $scope.reset();
-          $scope.listModules();
+//          $scope.listModules();
         },
         error: function (xhr) {
           alert(xhr.status + " = " + xhr);
@@ -73,24 +77,34 @@ app.controller("initmodulesenclosuresCtrl", [
       });
     };
   
-    $scope.mappedEnclosures = function (modulecode) {
-  console.log(modulecode);
-    $scope.listProcesses(modulecode);
+    $scope.mappedEnclosures = function (processcode) {
+ 
+  
+ 
   
     	jQuery.each($scope.enclosures, function (i, v) {
     		
     		v.checked = false;
     	});
+    	console.log(	$scope.enclosure =$scope.enclosures.filter(obj=>{
+    		return obj.enclosurecode==$scope.enclosures.enclosurecode;
+    	})[0])
     	
-    	$scope.module =$scope.modules.filter(obj=>{
-    		return obj.modulecode==modulecode;
-    	})[0];
+    	
+//    	$scope.module =$scope.modules.filter(obj=>{
+//    		return obj.modulecode==modulecode;
+//    	})[0];
     	
     	$scope.checks();
     	jQuery("html, body").animate({
 	    	scrollTop: 0,
 	    },1000);
     };
+    
+    
+ 
+ 
+ 
     $scope.listModules = function () {
    
 
@@ -104,6 +118,7 @@ app.controller("initmodulesenclosuresCtrl", [
           var scope = angular.element($("#initmodulesenclosuresCtrl")).scope();
          
           scope.$apply(function () {
+
 
        
 
@@ -120,6 +135,8 @@ app.controller("initmodulesenclosuresCtrl", [
         },
       });
     };
+    
+    
     $scope.listEnclosures = function () {
   
       jQuery.ajax({
@@ -133,7 +150,7 @@ app.controller("initmodulesenclosuresCtrl", [
             scope.enclosures = response;
            
           });
-        $scope.checks();
+//        $scope.checks();
         },
         error: function (xhr) {
           alert(xhr.status + " = " + xhr);
@@ -143,15 +160,18 @@ app.controller("initmodulesenclosuresCtrl", [
         },
       });
     };
+    
+    
     $scope.checks = function () {
- 
+console.log('checks 1'+ $scope.enclosures[0].enclosurecode);
+console.log('checks 2'+ $scope.mappedenclosures[0].enclosurecode);
       var response;
-      
+     
       jQuery.each($scope.enclosures, function (i0, v0) {
   
        response = false;
-       jQuery.each($scope.module.mappedenclosures, function (i, v) {
-       
+       jQuery.each($scope.mappedenclosures, function (i, v) {
+       console.log('enclosurecode'+v.enclosurecode)
           if (v0.enclosurecode === v.enclosurecode) {
             response = true;
             return false;
@@ -174,6 +194,7 @@ app.controller("initmodulesenclosuresCtrl", [
                     "title": "Module Name",
                     "data": "modulename"
                 }, 
+
                 {
                     "title": "Action",
                     "sortable": false,
@@ -223,12 +244,56 @@ app.controller("initmodulesenclosuresCtrl", [
 		
 		}
 
+	
 
 	
  
  };
  
-   $scope.listModules();
+  
     $scope.listEnclosures();
+    
+    $scope.getMappedEnclosures=function(processcode){
+
+	var params  = {
+		"processcode":  processcode,
+		"officecode": $scope.officecode,
+		"modulecode": $scope.modulecode,
+		  "licenseetypecode": $scope.licenseetypecode
+	};
+	console.log(params)
+	
+
+		jQuery.ajax({
+			type: "GET",
+			url:"./listModulesAndEnclosures.htm",
+	//	dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			data:  params,
+			success: function (response) {
+		$scope.mappedenclosures=response;
+//				console.log("response:" + $scope.mappedenclosures[0].enclosurecode);
+				console.log("length"+response.length)
+				if(response.length!=0){
+				$timeout(() => {
+				$scope.checks();
+			}, 0);
+				}
+     		
+				
+			},
+			
+		});
+		
+		
+	
+//		    $scope.checks();
+// $scope.mappedEnclosures();
+};
+    
+    
+    
   },
+  
+  
 ]);

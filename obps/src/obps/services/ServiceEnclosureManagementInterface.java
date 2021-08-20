@@ -5,6 +5,7 @@ import java.util.Map;
 
 import obps.models.Enclosures;
 import obps.models.Modules;
+import obps.models.ModulesEnclosures;
 import obps.models.Offices;
 import obps.models.PaymentModes;
 
@@ -22,7 +23,7 @@ public interface ServiceEnclosureManagementInterface {
 
 	List<Offices> listOffices();
 
-	List<Modules> listModulesAndEnclosures();
+	List<ModulesEnclosures> listModulesAndEnclosures(Integer modulecode,Integer processcode,Integer officecode,Integer licenseetypecode);
 
 	String saveUserpages(List<Map<String, Object>> modulesenclosures);
 

@@ -64,18 +64,27 @@
 											</select></td>
 										</tr>
 
-
 										<tr>
-											<td class="title" style="width: 15%"><b>Module Name
-													:</b></br> </br>{{module.modulename}}</br> </br></td>
-											<!-- 										<td><span>{{module.modulename}}</span></br></br></br></br></td> -->
+											<td><b>Module Name* :</b><select id='modulecode'
+												style='width: 300px' class="form-control"
+												ng-model="modulecode" ng-change='listProcesses(modulecode)'>
+													<option value="">---Select Module---</option>
+													<core:forEach items="${modulesList}" var='i'>
+														<option value='${i.key}' selected='selected'>${i.value}</option>
+													</core:forEach>
+											</select></td>
 										</tr>
+<!-- 										<tr> -->
+<!-- 											<td class="title" style="width: 15%"><b>Module Name -->
+<!-- 													:</b></br> </br>{{module.modulename}}</br> </br></td> -->
+<!-- 																					<td><span>{{module.modulename}}</span></br></br></br></br></td> -->
+<!-- 										</tr> -->
 										<tr>
 											<td><b> Process* :</b><select id='processcode'
 												ng-options="T.key as T.value for T in processesList"
 												style='width: 300px' class="form-control"
-												ng-model="processcode">
-													<option value="0">---Select Process---</option>
+												ng-model="processcode" ng-change='getMappedEnclosures(processcode)'>
+													<option value="">---Select Process---</option>
 													<!-- 												<option value="{{item.processcode}}">{{item.processname}}</option> -->
 
 

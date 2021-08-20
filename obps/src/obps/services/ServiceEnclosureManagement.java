@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.daos.DaoUserManagementInterface;
@@ -13,6 +14,7 @@ import obps.daos.DaoEnclosureManagementInterface;
 import obps.domains.DomainUserManagementInterface;
 import obps.models.Enclosures;
 import obps.models.Modules;
+import obps.models.ModulesEnclosures;
 import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.PaymentModes;
@@ -58,16 +60,17 @@ public class ServiceEnclosureManagement implements ServiceEnclosureManagementInt
 		return DaoEnclosureManagementInterface.listEnclosures();	
 	} 
 	@Override
-    public List<Modules> listModulesAndEnclosures() {
+    public List<ModulesEnclosures> listModulesAndEnclosures(Integer modulecode,Integer processcode,Integer officecode, Integer licenseetypecode) {
 
-		List<Modules> list = listModules();
-		for (Modules module : list) {
-			System.out.println("DAO"+module.getModulecode());
-			module.setMappedenclosures(DaoEnclosureManagementInterface.getMappedEnclosures(module.getModulecode()));
-		}
-		return list;
+		return DaoEnclosureManagementInterface.listModulesEnc(modulecode,processcode,officecode,licenseetypecode);
+//		for (ModulesEnclosures process : list) {
+//			System.out.println("DAO"+process.getModulecode());
+//			process.setMappedenclosures(DaoEnclosureManagementInterface.getMappedEnclosures(process.getProcesscode()));
+//		}
+	
 	}
    
+	
 	private List<Modules> listModules() {
 		return DaoEnclosureManagementInterface.listModules();
 	}

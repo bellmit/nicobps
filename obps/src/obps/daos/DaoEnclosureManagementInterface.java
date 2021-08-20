@@ -5,6 +5,7 @@ import java.util.Map;
 
 import obps.models.Enclosures;
 import obps.models.Modules;
+import obps.models.ModulesEnclosures;
 import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.PaymentModes;
@@ -24,9 +25,11 @@ public interface DaoEnclosureManagementInterface{
 	public List <Offices> listOffices();
 	public boolean updateInitOffices(Map<String, Object> offices);
 
-	public List<Enclosures> getMappedEnclosures(Integer modulecode);
+	public List<Enclosures> getMappedEnclosures(Integer processcode);
 
 	public List<Modules> listModules();
+	
+	public List<ModulesEnclosures> listModulesEnc(Integer modulecode,Integer processcode,Integer officecode,Integer licenseetypecode);
 
 	
 

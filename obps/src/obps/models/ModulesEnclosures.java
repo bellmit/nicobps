@@ -1,5 +1,7 @@
 package obps.models;
 
+import java.util.List;
+
 public class ModulesEnclosures {
 	private Integer modulecode;
 	private Integer enclosurecode;
@@ -7,7 +9,19 @@ public class ModulesEnclosures {
 	private Integer processcode;
 	private Integer licenseetypecode;
 	private Integer sequenceno;
+	private List<Enclosures> mappedenclosures;
 	
+	
+	public List<Enclosures> getMappedenclosures() {
+		return mappedenclosures;
+	}
+
+
+	public void setMappedenclosures(List<Enclosures> mappedenclosures) {
+		this.mappedenclosures = mappedenclosures;
+	}
+
+
 	public ModulesEnclosures() {
 		super();
 		// TODO Auto-generated constructor stub

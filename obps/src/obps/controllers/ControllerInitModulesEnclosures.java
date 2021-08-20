@@ -33,6 +33,7 @@ import obps.validators.InitEnclosuresValidator;
 
 import obps.models.Enclosures;
 import obps.models.Modules;
+import obps.models.ModulesEnclosures;
 import obps.models.Offices;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
@@ -59,14 +60,24 @@ public class ControllerInitModulesEnclosures {
 	public String initmodulesenclosures(Model model) {
 		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
 		model.addAttribute("licenseeTypeList", serviceUtilInterface.listLicenseeType());
+		model.addAttribute("modulesList", serviceUtilInterface.listModules());
 
 		return "initialization/initmodulesenclosures";
 	}
 
+	
+	
+	
 	@GetMapping(value = "/listModulesAndEnclosures.htm")
-	public @ResponseBody List<Modules> listModulesAndEnclosures() {
-
-		return serviceUserManagementInterface.listModulesAndEnclosures();
+	public @ResponseBody List<ModulesEnclosures> listModulesAndEnclosures(HttpServletRequest req,
+			@RequestParam Map<String, String> params) {
+		Integer officecode = params.get("officecode") == null ? null
+				: params.get("officecode").toString().trim() == "" ? null : Integer.parseInt(params.get("officecode"));
+		Integer licenseetypecode = params.get("licenseetypecode") == null ? null
+				: params.get("licenseetypecode").toString().trim() == "" ? null
+						: Integer.parseInt(params.get("licenseetypecode"));
+		return serviceUserManagementInterface.listModulesAndEnclosures(Integer.parseInt(params.get("modulecode")),
+				Integer.parseInt(params.get("processcode")), officecode, licenseetypecode);
 	}
 
 	@PostMapping(value = "/saveModuleEnclosures.htm")
