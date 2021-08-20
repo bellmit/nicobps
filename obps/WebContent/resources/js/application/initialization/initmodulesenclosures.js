@@ -20,11 +20,18 @@ app.controller("initmodulesenclosuresCtrl", [
 			return $sce.trustAsHtml(post);
 		};
 		$scope.reset = function() {
-			$scope.module = new Modules();
-			
+			//			$scope.module = new Modules();
+
+			jQuery("#modulecode").val('');
+			jQuery("#processcode").val('');
+			jQuery("#officecode").val(0);
+			jQuery("#licenseetypecode").val(0);
+
 		};
 
 		$scope.save = function() {
+
+
 
 			var mapuserpagespages = [];
 			jQuery.each($scope.enclosures, function(i, v) {
@@ -55,12 +62,12 @@ app.controller("initmodulesenclosuresCtrl", [
 						alert("Please Select atleast 1 enclosure");
 					else if (response == "modulecodenull")
 						alert("Please Select atleast 1 module");
-					else if (response == "officecodenull")
-						alert("Please Select Office ");
+					else if (response == "officecodeinvalid")
+						alert("Invalid Office ");
 					else if (response == "processcodenull")
 						alert("Please Select Process ");
-					else if (response == "licenseetypecodenull")
-						alert("Please Select License ");
+					else if (response == "licenseetypecodeinvalid")
+						alert("Invalid  Licensee Type ");
 					else if (response == 'Mapped') {
 						alert("Mapped");
 						location.reload();
@@ -260,6 +267,13 @@ app.controller("initmodulesenclosuresCtrl", [
 
 		$scope.getMappedEnclosures = function(processcode) {
 
+
+			if (jQuery("#modulecode").val() == 0)
+				jQuery('#office').text(jQuery("#officecode").val() == 0 ? '' : jQuery("#officecode option:selected").text());
+			jQuery('#licensee').text(jQuery("#licenseetypecode").val() == 0 ? '' : jQuery("#licenseetypecode option:selected").text());
+			jQuery('#module').text(jQuery("#modulecode option:selected").text());
+			jQuery('#process').text(jQuery("#processcode option:selected").text());
+
 			jQuery.each($scope.enclosures, function(i, v) {
 
 				v.checked = false;
@@ -300,6 +314,40 @@ app.controller("initmodulesenclosuresCtrl", [
 			// $scope.mappedEnclosures();
 		};
 
+
+		$scope.mapView = function() {
+
+			if (jQuery("#modulecode").val() == '') {
+
+				showMsg("module", "This field is required");
+				jQuery('#moduleMsg').fadeOut(5000);
+				return false;
+			} else {
+				showMsg("module", "");
+			}
+			if (jQuery("#processcode").val() == '') {
+
+				showMsg("process", "This field is required");
+				jQuery('#processMsg').fadeOut(5000);
+				return false;
+			} else {
+				showMsg("process", "");
+			}
+
+
+			jQuery.fancybox.close();
+			jQuery.fancybox({
+				href: '#mapView',
+				'autoSize': false,
+				'transitionIn': 'elastic',
+				'transitionOut': 'elastic',
+				'speedIn': 600,
+				'speedOut': 200,
+				'overlayShow': false,
+				'modal': false,
+				'width': '100%'
+			});
+		};
 
 
 	},
