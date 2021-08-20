@@ -7,7 +7,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
-			 
+			 	console.log(JSON.stringify(response));
 				$timeout(function() {
 					$scope.edcrscrutinylist = response;
 					$scope.setEdcrListTable($scope.edcrscrutinylist);
@@ -106,8 +106,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			if ((data.applicationcode == null || data.applicationcode == '') && data.status == "Accepted")
 				$window.location.href = "applybuildingpermit.htm?edcrnumber=" + data.edcrnumber;
 			else if ((data.applicationcode != null || data.applicationcode != '') && data.status == "Accepted")
-				alert("eDCR Number status : utilized");
-//				$window.location.href = data.pageurl + "?applicationcode=" + data.applicationcode;
+				$window.location.href = data.pageurl + "?applicationcode=" + data.applicationcode;
 			else
 				alert("Building Permit locked: Not-Accepted Plan");
 		});

@@ -14,14 +14,21 @@ public class EdcrScrutiny {
 	private String dxffile;
 	private String officename;
 	private String applicationcode;
-	
+	private String pageurl;
+
 	public EdcrScrutiny() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	
+	public String getPageurl() {
+		return pageurl;
+	}
+
+	public void setPageurl(String pageurl) {
+		this.pageurl = pageurl;
+	}
+
 	public Integer getUsercode() {
 		return usercode;
 	}
@@ -98,17 +105,13 @@ public class EdcrScrutiny {
 		return applicationcode;
 	}
 
-
-
 	public void setApplicationcode(String applicationcode) {
 		this.applicationcode = applicationcode;
 	}
 
-
-
 	public EdcrScrutiny(Integer usercode, Integer officecode, String edcrnumber, String planinfoobject,
 			String entrydate, String status, String scrutinyreport, String dxffile, String officename,
-			String applicationcode) {
+			String applicationcode,String pageurl) {
 		super();
 		this.usercode = usercode;
 		this.officecode = officecode;
@@ -120,24 +123,17 @@ public class EdcrScrutiny {
 		this.dxffile = dxffile;
 		this.officename = officename;
 		this.applicationcode = applicationcode;
+		this.pageurl = pageurl;
 	}
-
-
 
 	@Override
 	public String toString() {
 		return "EdcrScrutiny [usercode=" + usercode + ", officecode=" + officecode + ", edcrnumber=" + edcrnumber
 				+ ", planinfoobject=" + planinfoobject + ", entrydate=" + entrydate + ", status=" + status
 				+ ", scrutinyreport=" + scrutinyreport + ", dxffile=" + dxffile + ", officename=" + officename
-				+ ", applicationcode=" + applicationcode + "]";
+				+ ", applicationcode=" + applicationcode + ", pageurl=" + pageurl + "]";
 	}
 
+	 
 
-
- 
-
-
-	
-	
-	
 }
