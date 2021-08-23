@@ -12,7 +12,7 @@ public class Offices {
 	private String officelgdcode;
 	private String signatoryname;
 	private String signatorydesignation;
-	private String emailid;
+	private String senderemailid;
 	private String emailidpassword;
 	private String smsusername;
 	private String smspassword;
@@ -32,7 +32,7 @@ public class Offices {
 	
 	public Offices(Integer officecode, String officename1, String officename2, String officename3,
 			String officeshortname, String officelgdcode, String signatoryname, String signatorydesignation,
-			String emailid, String emailidpassword, String smsusername, String smspassword, String smssenderid,
+			String senderemailid, String emailidpassword, String smsusername, String smspassword, String smssenderid,
 			String isregisteringoffice, Integer registeringofficecode, String enabled, String stateid, String tenantid,
 			byte[] logo, List<PaymentModes> mappedpaymentmodes) {
 		super();
@@ -44,7 +44,7 @@ public class Offices {
 		this.officelgdcode = officelgdcode;
 		this.signatoryname = signatoryname;
 		this.signatorydesignation = signatorydesignation;
-		this.emailid = emailid;
+		this.senderemailid = senderemailid;
 		this.emailidpassword = emailidpassword;
 		this.smsusername = smsusername;
 		this.smspassword = smspassword;
@@ -154,18 +154,20 @@ public class Offices {
 	public void setSignatorydesignation(String signatorydesignation) {
 		this.signatorydesignation = signatorydesignation;
 	}
+	
 	/**
 	 * @return the emailid
 	 */
-	public String getEmailid() {
-		return emailid;
+	public String getSenderemailid() {
+		return senderemailid;
 	}
 	/**
 	 * @param emailid the emailid to set
 	 */
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
+	public void setSenderemailid(String senderemailid) {
+		this.senderemailid = senderemailid;
 	}
+
 	/**
 	 * @return the emailidpassword
 	 */
@@ -295,7 +297,7 @@ public class Offices {
 		return "Offices [officecode=" + officecode + ", officename1=" + officename1 + ", officename2=" + officename2
 				+ ", officename3=" + officename3 + ", officeshortname=" + officeshortname + ", officelgdcode="
 				+ officelgdcode + ", signatoryname=" + signatoryname + ", signatorydesignation=" + signatorydesignation
-				+ ", emailid=" + emailid + ", emailidpassword=" + emailidpassword + ", smsusername=" + smsusername
+				+ ", emailid=" + senderemailid + ", emailidpassword=" + emailidpassword + ", smsusername=" + smsusername
 				+ ", smspassword=" + smspassword + ", smssenderid=" + smssenderid + ", isregisteringoffice="
 				+ isregisteringoffice + ", registeringofficecode=" + registeringofficecode + ", enabled=" + enabled
 				+ ", stateid=" + stateid + ", tenantid=" + tenantid + ", logo=" + Arrays.toString(logo)

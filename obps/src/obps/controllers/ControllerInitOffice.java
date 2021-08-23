@@ -74,7 +74,7 @@ public class ControllerInitOffice {
 	public ResponseEntity<HashMap<String, Object>> initoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if (offices != null) {
-			System.out.println(offices);
+			System.out.println("officesin init == "+offices);
 			String validate = initOfficesValidator.validateInitOffices(offices);
 			System.out.println("validate" + validate);
 			if (validate != "") {
@@ -117,10 +117,10 @@ public class ControllerInitOffice {
 	@PostMapping(value = "/updateinitoffices.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateinitoffices(@RequestBody Map<String, Object> offices) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		System.out.println(offices);
+		System.out.println("officesin update == "+offices);
 		if (offices != null) {
 			String validate = initOfficesValidator.validateInitOffices(offices);
-			System.out.println("validate" + validate);
+			System.out.println("validate " + validate);
 			if (validate != "") {
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);

@@ -77,8 +77,8 @@
 										<tr class="form-group has-feedback">
 											<td class="title">Email ID:</td>
 											<td class="col-xs-5 selectContainer"><input type="text"
-												class="form-control" id="emailid" name="emailid"
-												maxlength="99" ng-model="offices.emailid" autocomplete="off" />
+												class="form-control" id="senderemailid" name="senderemailid"
+												maxlength="99" ng-model="offices.senderemailid" autocomplete="off" />
 												<span id="emailidMsg"></span> <!-- 											<span class="alert alert-danger" ng-show="!userForm.username.$pristine && userForm.username.$invalid"> Required</span> -->
 											</td>
 										</tr>
@@ -190,13 +190,13 @@
 										<tr class="form-group has-feedback">
 											<td colspan="2" align="center">
 												<button type="submit" id="add" ng-click="save()"
-													class="btn btn-primary b-btn"  ng-if="actionButton === 1"
+													class="button-primary" ng-if="actionButton === 1"
 													ng-disabled="officeForm.$invalid">Save</button>
 												<button name="submit" id="add" ng-click="update()"
-													class="btn btn-primary b-btn"  ng-if="actionButton === 2"
+													class="button-primary" ng-if="actionButton === 2"
 													ng-disabled="officeForm.$invalid">Update</button> <input
 												type="reset" value="Reset" ng-click="reset()"
-												class="btn btn-secondary"  />
+												class="button-default" />
 											</td>
 										</tr>
 
@@ -206,7 +206,7 @@
 								</form>
 							</div>
 							<div id="displayRecords"
-								style='width: 90%; margin: 10px 10px 10px 20px;'></div>
+								style='width: 80%; margin: 15px auto 50px auto;'></div>
 						</div>
 					</div>
 				</div>

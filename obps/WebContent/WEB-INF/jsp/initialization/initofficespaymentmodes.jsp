@@ -76,7 +76,7 @@
 <!-- 		                        </tr><tr><td>&nbsp;</td></tr> -->
 <!-- 		                        <tr > -->
 		                            <td colspan="2" align="center">
-		                                <input type="button" value="Save" ng-click="save()"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                                <input class="btn btn-primary b-btn" type="button" value="Save" ng-click="save()"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		                                
 		                            </td>
 		                        </tr><tr><td>&nbsp;</td></tr>

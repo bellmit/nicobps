@@ -22,13 +22,13 @@ public class InitOfficesValidator {
 		String pattern = "[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
 		String pattern1 = "[^A-Za-z_ 0-9\\-]";
 		String XPATTERN_STRING_SPACE = "^(?![ .]+$)[a-zA-Z .]*$";
-		String XPATTERN_POSITIVE_INTEGER = "^[1-9]{2}";
-		
+		String XPATTERN_POSITIVE_INTEGER = "[1-9]";
+
 		Pattern p = Pattern.compile(pattern);
 		Pattern p1 = Pattern.compile(pattern1);
 		Pattern p3 = Pattern.compile(XPATTERN_STRING_SPACE);
 		Pattern p4 = Pattern.compile(XPATTERN_POSITIVE_INTEGER);
-		
+
 		String officename1 = "", officename2 = "", officename3 = "", officeshortname = "", signatoryname = "",
 				signatorydesignation = "", smsusername = "", emailidpassword = "", smspassword = "", smssenderid = "",
 				isregisteringoffice = "", registeringofficecode = "", stateid = "", tenantid = "";
@@ -96,10 +96,10 @@ public class InitOfficesValidator {
 			}
 		}
 
-		if (param.get("emailid") == "")
+		if (param.get("senderemailid") == "")
 			System.out.println("");
-		else if (param.get("emailid") != null) {
-			String emailid = ((String) param.get("emailid")).trim();
+		else if (param.get("senderemailid") != null) {
+			String emailid = ((String) param.get("senderemailid")).trim();
 			String regex = "^(.+)@(.+)$";
 			final Pattern p2 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 			Matcher matcher = p2.matcher(emailid);
@@ -123,36 +123,34 @@ public class InitOfficesValidator {
 		if (param.get("smssenderid") != null) {
 			smssenderid = ((String) param.get("smssenderid")).trim();
 			if (smssenderid.length() > 10) {
-				response = " is registering office Cannot exceed more than 2 characters";
+				response = " smssenderid exceed more than 10 characters";
 				return response;
 			}
 		}
-		
+
 		if (param.get("isregisteringoffice") != null) {
-			isregisteringoffice = ((String) param.get("isregisteringoffice")).trim();
-			if (isregisteringoffice.length() > 1) {
-				response = " is registering office Cannot exceed more than 2 characters";
-				return response;
-			}
-		}
-		
-		if (param.get("registeringofficecode") != null && param.get("registeringofficecode") != "0") {
-			registeringofficecode = ((String) param.get("registeringofficecode")).trim();
-			Matcher m = p4.matcher(registeringofficecode);
-			b1 = m.find();
-			if (b1) {
-				response = "Only positive integer are  allowed in is registering office code";
-				return response;
-			}
-
-			if (registeringofficecode.length() > 2) {
-				response = " registering office code Cannot exceed more than 2 characters";
-				return response;
+			if (!((String) param.get("isregisteringoffice")).trim().isEmpty()) {
+				isregisteringoffice = ((String) param.get("isregisteringoffice")).trim();
+				System.out.println("isregisteringoffice in validation ==" + isregisteringoffice);
+				if (isregisteringoffice.length() > 1) {
+					response = " is registering office Cannot exceed more than 2 characters";
+					return response;
+				}
 			}
 		}
 
+		if (((String) param.get("isregisteringoffice")).trim() != "Y") {
+			if (param.get("registeringofficecode") != null) {
+				registeringofficecode = param.get("registeringofficecode").toString().trim();
+				System.out.println("registeringofficecode in validation ==" + registeringofficecode);
+				if (registeringofficecode.length() > 2) {
+					response = " registering office code Cannot exceed more than 2 characters";
+					return response;
+				}
+			}
+		}
 		if (param.get("stateid") != null) {
-			stateid = ((String) param.get("stateid")).trim();
+			stateid = param.get("stateid").toString().trim();
 			Matcher m = p1.matcher(stateid);
 			b1 = m.find();
 			if (b1) {
@@ -165,7 +163,7 @@ public class InitOfficesValidator {
 			}
 		}
 		if (param.get("tenantid") != null) {
-			tenantid = ((String) param.get("tenantid")).trim();
+			tenantid =  param.get("tenantid").toString().trim();
 			Matcher m = p1.matcher(tenantid);
 			b1 = m.find();
 			if (b1) {
@@ -229,7 +227,7 @@ public class InitOfficesValidator {
 
 	public String validateOfficesPaymentModes(List<Map<String, Object>> param) {
 		String response = "";
-
+ 
 		Integer officecode = 0;
 		for (Map<String, Object> up : param) {
 			if (up.get("officecode") != null)

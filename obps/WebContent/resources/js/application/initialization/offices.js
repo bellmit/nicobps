@@ -82,8 +82,7 @@ app.controller('officesCtrl', ['$scope', '$sce', '$compile','$timeout','commonIn
         	}
         	
         }); 
-        $scope.offices.smspassword="";
-        $scope.offices.emailidpassword="";
+       
 		
    jQuery('html, body').animate({
             scrollTop: 0
@@ -243,7 +242,7 @@ if($scope.offices.emailidpassword)  {
              //   },
                 {
                     "title": "Email id",
-                    "data": "emailid"
+                    "data": "senderemailid"
                 },
               //  {
               //      "title": "Email id Password",
@@ -265,7 +264,7 @@ if($scope.offices.emailidpassword)  {
                     "data": "officecode",
                     "render": function (data, type, row, meta) {
                     	let status = row.enabled == 'Y'?'Disable':'Enable';
-                    	let div = '<div style="text-align:center"><button  style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="btn btn-primary b-btn" >Edit</button>';
+                    	let div = '<div style="text-align:center"><button  style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="button-primary">Edit</button>';
 //                    		div += '<button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="toggleUserStatus(' + data + ')" class="button-primary">'+status+'</button></div>';
                         return div;
                     }
