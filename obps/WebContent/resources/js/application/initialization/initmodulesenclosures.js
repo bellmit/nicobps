@@ -268,8 +268,8 @@ app.controller("initmodulesenclosuresCtrl", [
 		$scope.getMappedEnclosures = function(processcode) {
 
 
-			if (jQuery("#modulecode").val() == 0)
-				jQuery('#office').text(jQuery("#officecode").val() == 0 ? '' : jQuery("#officecode option:selected").text());
+		if (jQuery("#modulecode").val() != '' && jQuery("#processcode").val() != '' ) {
+			jQuery('#office').text(jQuery("#officecode").val() == 0 ? '' : jQuery("#officecode option:selected").text());
 			jQuery('#licensee').text(jQuery("#licenseetypecode").val() == 0 ? '' : jQuery("#licenseetypecode option:selected").text());
 			jQuery('#module').text(jQuery("#modulecode option:selected").text());
 			jQuery('#process').text(jQuery("#processcode option:selected").text());
@@ -308,6 +308,9 @@ app.controller("initmodulesenclosuresCtrl", [
 
 			});
 
+			
+			}
+			
 
 
 			//		    $scope.checks();

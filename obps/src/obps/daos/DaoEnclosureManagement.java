@@ -319,13 +319,24 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		boolean response = false;
 		try {
 
-			String sql = "DELETE From masters.modulesenclosures WHERE modulecode=? and processcode=? and officecode=? and licenseetypecode=? ; ";
+			String sql = "DELETE From masters.modulesenclosures WHERE modulecode=? and processcode=?  ";
+
+			if (Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()) == 0
+					|| modulesenclosures.get(0).get("officecode").toString().trim().equals("")) {
+				sql += " and officecode ISNULL ";
+			} else {
+				sql += " and officecode=" + Integer.parseInt(modulesenclosures.get(0).get("officecode").toString());
+			}
+
+			if (Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString()) == 0
+					|| modulesenclosures.get(0).get("licenseetypecode").toString().trim().equals("")) {
+				sql += " and licenseetypecode ISNULL ";
+			} else {
+				sql += " and licenseetypecode="+ Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString());
+			}
+
 			if (jdbcTemplate.update(sql, Integer.parseInt(modulesenclosures.get(0).get("modulecode").toString()),
-					Integer.parseInt(modulesenclosures.get(0).get("processcode").toString()),
-					Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()) == 0 ? null
-							: Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()),
-					Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString()) == 0 ? null
-							: Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString())) < 0) {
+					Integer.parseInt(modulesenclosures.get(0).get("processcode").toString())) < 0) {
 				return false;
 			}
 			/////////////////////////////////////
