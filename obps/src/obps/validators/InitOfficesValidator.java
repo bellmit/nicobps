@@ -93,10 +93,10 @@ public class InitOfficesValidator {
 			if (b1) {
 				response = "Special Characters allowed in SMS Username are , . / ( ) - _";
 				return response;
-			}
+			} 
 		}
 
-		if (param.get("senderemailid") == "")
+		if (param.get("senderemailid") == "") 
 			System.out.println("");
 		else if (param.get("senderemailid") != null) {
 			String emailid = ((String) param.get("senderemailid")).trim();

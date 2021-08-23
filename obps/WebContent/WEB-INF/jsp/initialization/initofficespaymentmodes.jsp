@@ -64,7 +64,7 @@
 		                        <tr>
 		                            <td class="title">Office ShortHand Name :</td>
 		                            <td >
-		                                <span >{{office.officeshortname}}</span>
+		                                <span >{{office.officeshortname}}</span> 
 		                            </td>
 		                        </tr><tr><td>&nbsp;</td></tr>
 <!-- 		                        <tr > -->

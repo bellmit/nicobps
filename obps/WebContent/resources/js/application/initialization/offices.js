@@ -300,11 +300,11 @@ if($scope.offices.emailidpassword)  {
        
         /* READ DATA */
      $scope.listOffices = (officecode = 0) => {
-        	
+        	 
         	if(officecode == 0){
         		commonInitFactory.listOffices((response)=>{
             		$scope.officereg=response;
-            		$scope.setDataTable($scope.officereg);
+            		$scope.setDataTable($scope.officereg); 
             	});
         	}else{
         		commonInitFactory.listOffices((response)=>{

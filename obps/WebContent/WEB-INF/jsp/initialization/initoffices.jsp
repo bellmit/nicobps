@@ -187,7 +187,7 @@
 										</tr>
 
 
-										<tr class="form-group has-feedback">
+										<tr class="form-group has-feedback">  
 											<td colspan="2" align="center">
 												<button type="submit" id="add" ng-click="save()"
 													class="button-primary" ng-if="actionButton === 1"
