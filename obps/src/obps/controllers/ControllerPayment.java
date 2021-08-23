@@ -211,7 +211,7 @@ public class ControllerPayment {
 							Integer.parseInt(usercode));
 					break;
 				case "0002":
-					message = "Billdesk Waiting Response From Bank.";
+					message = "Payment Unsucessful.";
 					daoPaymentInterface.UpdatePayment("F", response, Integer.parseInt(words[1]),
 							Integer.parseInt(usercode));
 					break;
@@ -272,7 +272,7 @@ public class ControllerPayment {
 
 					break;
 				case "0002":
-					message = "Billdesk Waiting Response From Bank.";
+					message = "Payment Unsucessful.";
 
 					break;
 				case "0001":
