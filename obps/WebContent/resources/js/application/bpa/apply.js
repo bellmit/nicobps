@@ -33,6 +33,7 @@ app.controller("CommonCtrl", [
     $scope.Ownertypes = [];
     $scope.Relationshiptypes = [];
     $scope.Salutations = [];
+    $scope.States = [];
 
     /* GET */
     BS.getEdcrDetails((response) => {
@@ -72,6 +73,24 @@ app.controller("CommonCtrl", [
     };
     $scope.listSalutations();
 
+    BS.listStates((response) => {
+    	$scope.States = response;
+    }, (data = ""));
+    
+    $scope.listDistricts = (opt, statecode) => {
+    	BS.listDistricts((response) => {
+    		switch(opt){
+    			case 1:
+    				$scope.PreDistricts = response;
+    				break;
+    			case 2:
+    				$scope.PerDistricts = response;
+    				break;
+    				
+    		}
+        }, (data = statecode));
+    };
+
     /* ACTION */
     $scope.addOwner = () => {
       if($scope.BPA.ownershipsubtype == "Multiple Owner")
@@ -83,7 +102,19 @@ app.controller("CommonCtrl", [
     $scope.removeOwner = () => {
         $scope.BPA.ownerdetails.pop();
     };
-
+    
+    $scope.sameAddr = (index) => {
+    	let isSameAddress = $scope.bpaform['isSameAddress'+index].$modelValue;
+    	if(isSameAddress && $scope.BPA.ownerdetails != null && $scope.BPA.ownerdetails[index] != null){
+    		$scope.BPA.ownerdetails[index].peraddressline1 = $scope.BPA.ownerdetails[index].preaddressline1;
+    		$scope.BPA.ownerdetails[index].peraddressline2 = $scope.BPA.ownerdetails[index].preaddressline2;
+    		$scope.BPA.ownerdetails[index].pertownvillage= $scope.BPA.ownerdetails[index].pretownvillage;
+    		$scope.BPA.ownerdetails[index].perstatecode = $scope.BPA.ownerdetails[index].prestatecode;
+    		$scope.BPA.ownerdetails[index].perdistrictcode = $scope.BPA.ownerdetails[index].predistrictcode ;
+    		$scope.BPA.ownerdetails[index].perpincode = $scope.BPA.ownerdetails[index].prepincode  ;
+    	}
+    }
+    
     $scope.setGoogleMapLocation = (location) => {
       $scope.BPA.plotgiscoordinates = location.lat + "," + location.lng;
     };
@@ -97,7 +128,6 @@ app.controller("CommonCtrl", [
     $scope.validateForm = () => {
       let flag = true;
       let bpa = $scope.bpaform;
-      
       bpa.edcrnumber.$touched = true;
       bpa.plotarea.$touched = true;
       bpa.occupancy.$touched = true;
@@ -247,15 +277,107 @@ app.controller("CommonCtrl", [
           flag = false;
         }
 
-        bpa["address" + i].$touched = true;
+        bpa["preaddressline1" + i].$touched = true;
         if (
-          bpa["address" + i].$modelValue == null ||
-          bpa["address" + i].$modelValue == "" ||
-          bpa["address" + i].$modelValue == "-1"
+          bpa["preaddressline1" + i].$modelValue == null ||
+          bpa["preaddressline1" + i].$modelValue == "" ||
+          bpa["preaddressline1" + i].$modelValue == "-1"
         ) {
-          bpa["address" + i].$error.invalid = true;
+          bpa["preaddressline1" + i].$error.invalid = true;
           flag = false;
         }
+        
+        bpa["pretownvillage" + i].$touched = true;
+        if (
+        		bpa["pretownvillage" + i].$modelValue == null ||
+        		bpa["pretownvillage" + i].$modelValue == "" ||
+        		bpa["pretownvillage" + i].$modelValue == "-1"
+        ) {
+        	bpa["pretownvillage" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["prestatecode" + i].$touched = true;
+        if (
+        		bpa["prestatecode" + i].$modelValue == null ||
+        		bpa["prestatecode" + i].$modelValue == "" ||
+        		bpa["prestatecode" + i].$modelValue == "-1"
+        ) {
+        	bpa["prestatecode" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["predistrictcode" + i].$touched = true;
+        if (
+        		bpa["predistrictcode" + i].$modelValue == null ||
+        		bpa["predistrictcode" + i].$modelValue == "" ||
+        		bpa["predistrictcode" + i].$modelValue == "-1"
+        ) {
+        	bpa["predistrictcode" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["prepincode" + i].$touched = true;
+        if (
+        		bpa["prepincode" + i].$modelValue == null ||
+        		bpa["prepincode" + i].$modelValue == "" ||
+        		bpa["prepincode" + i].$modelValue == "-1"
+        ) {
+        	bpa["prepincode" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        
+        bpa["peraddressline1" + i].$touched = true;
+        if (
+        		bpa["peraddressline1" + i].$modelValue == null ||
+        		bpa["peraddressline1" + i].$modelValue == "" ||
+        		bpa["peraddressline1" + i].$modelValue == "-1"
+        ) {
+        	bpa["peraddressline1" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["pertownvillage" + i].$touched = true;
+        if (
+        		bpa["pertownvillage" + i].$modelValue == null ||
+        		bpa["pertownvillage" + i].$modelValue == "" ||
+        		bpa["pertownvillage" + i].$modelValue == "-1"
+        ) {
+        	bpa["pertownvillage" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["perstatecode" + i].$touched = true;
+        if (
+        		bpa["perstatecode" + i].$modelValue == null ||
+        		bpa["perstatecode" + i].$modelValue == "" ||
+        		bpa["perstatecode" + i].$modelValue == "-1"
+        ) {
+        	bpa["perstatecode" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["perdistrictcode" + i].$touched = true;
+        if (
+        		bpa["perdistrictcode" + i].$modelValue == null ||
+        		bpa["perdistrictcode" + i].$modelValue == "" ||
+        		bpa["perdistrictcode" + i].$modelValue == "-1"
+        ) {
+        	bpa["perdistrictcode" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
+        bpa["perpincode" + i].$touched = true;
+        if (
+        		bpa["perpincode" + i].$modelValue == null ||
+        		bpa["perpincode" + i].$modelValue == "" ||
+        		bpa["perpincode" + i].$modelValue == "-1"
+        ) {
+        	bpa["perpincode" + i].$error.invalid = true;
+        	flag = false;
+        }
+        
       }
 
       bpa.plotpincode.$touched = true;
@@ -274,6 +396,7 @@ app.controller("CommonCtrl", [
     /* CREATE */
     $scope.save = () => {
       let BPA = {}, valid = false;
+      $scope.BPA.additionalinfo.extrafield = "Testing";
       BPA = $scope.BPA.init($scope.BPA);
       valid = $scope.validateForm();
       if(!valid) return;
@@ -301,8 +424,9 @@ app.controller("CommonCtrl", [
           $scope.serverResponseFail = true;
         }
       }, (error) => {
-        $scope.serverMsg = error.msg;
-        $scope.serverResponseError = true;
+    	  if(error != null && error.msg != null)
+    		  $scope.serverMsg = error.msg;
+    	  $scope.serverResponseError = true;
       });
 
       $timeout(() => {

@@ -255,6 +255,11 @@ public class ControllerBuildingPermit {
 		return SBI.listNextProcess(applicationcode);
 	}
 
+	@GetMapping(value = "/listDistricts.htm")
+	public @ResponseBody List<CommonMap> listDistricts(@RequestParam(name = "param") Integer statecode) {
+		return SBI.listDistricts(statecode);
+	}
+
 	@GetMapping(value = "/listOfficelocations.htm")
 	public @ResponseBody List<CommonMap> listOfficelocations(
 			@RequestParam(name = "param", required = false) Integer officecode) {
@@ -276,6 +281,11 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/listSalutations.htm")
 	public @ResponseBody List<CommonMap> listSalutations() {
 		return SBI.listSalutations();
+	}
+
+	@GetMapping(value = "/listStates.htm")
+	public @ResponseBody List<CommonMap> listStates() {
+		return SBI.listStates();
 	}
 
 	/* CREATE */

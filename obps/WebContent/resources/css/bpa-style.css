@@ -7,6 +7,10 @@
 	flex-direction: row;
 }
 
+.custom-card-border-less {
+	border: none;	
+}
+
 .custom-form-control {
 	background-color: inherit;
 	border: none;

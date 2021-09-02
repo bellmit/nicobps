@@ -15,6 +15,8 @@ public interface ServiceBPAInterface {
 
 	Integer getApplicationOfficecode(String applicationcode);
 
+	List<CommonMap> listDistricts(Integer statecode);
+
 	List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode);
 
 	List<CommonMap> listOfficelocations();
@@ -26,6 +28,8 @@ public interface ServiceBPAInterface {
 	List<CommonMap> listRelationshiptypes();
 
 	List<CommonMap> listSalutations();
+	
+	List<CommonMap> listStates();
 
 	List<Map<String, Object>> listApplictionsCurrentProcessStatus(Integer USERCODE);
 
@@ -41,11 +45,12 @@ public interface ServiceBPAInterface {
 
 	List<Map<String, Object>> listBPAEnclosures(String applicationcode);
 
-	List<Map<String, Object>> listRejectedApplications(Integer USERCODE);
 
 	List<Map<String, Object>> listNextProcess(String applicationcode);
 
 	List<Map<String, Object>> listOfficePaymentMode(String applicationcode);
+
+	List<Map<String, Object>> listRejectedApplications(Integer USERCODE);
 
 	List<Map<String, Object>> listSiteInspectionQuestionnaires(String applicationcode);
 
@@ -89,8 +94,5 @@ public interface ServiceBPAInterface {
 			HashMap<String, Object> response);
 
 	boolean sendToCitizenBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
-
-
-
 
 }

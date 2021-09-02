@@ -80,6 +80,9 @@ app.service("bpaService", [
       listBPAEnclosures: async function (callback, data = "") {
     	  CUS.getData("./listBpaEnclosures.htm", data, callback);
       },
+      listDistricts: async function (callback, data = "") {
+    	  CUS.getData('./listDistricts.htm', data, callback);
+      },
       listNextProcessingUsers: async function (callback, data = "") {
         CUS.getData("./listNextProcessingUsers.htm", data, callback);
       },
@@ -100,6 +103,9 @@ app.service("bpaService", [
       },
       listSiteInspectionQuestionnaires: async function (callback, data = "") {
         CUS.getData('./listSiteInspectionQuestionnaires.htm', data, callback);
+      },
+      listStates: async function (callback, data = "") {
+    	  CUS.getData('./listStates.htm', data, callback);
       },
       /*listSiteReportDetails: async function (callback, data = "") {
     	  CUS.getData('./listSiteReportDetails.htm', data, callback);

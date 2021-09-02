@@ -35,7 +35,7 @@ app.service("commonInitService", function($http) {
                 console.log("Error: ", xhr)
                 let response = xhr.responseJSON;
                 
-                if(response.code >= 500 && response.code <=599)
+                if(response == null || response.code == null || (response.code >= 500 && response.code <=599))
                 	alert("Sorry, there was an error while trying to process the request.");
                 
                 errorCallback(response);

@@ -26,6 +26,7 @@ public class BpaApplication implements Serializable {
 	private String plotidentifier3;
 	private String holdingno;
 	private String entrydate;
+	private String additionalinfo;
 	private List<BpaOwnerDetail> ownerdetails;
 
 	public String getApplicationcode() {
@@ -170,6 +171,14 @@ public class BpaApplication implements Serializable {
 
 	public void setOwnerdetails(List<BpaOwnerDetail> ownerdetails) {
 		this.ownerdetails = ownerdetails;
+	}
+
+	public String getAdditionalinfo() {
+		return additionalinfo;
+	}
+
+	public void setAdditionalinfo(String additionalinfo) {
+		this.additionalinfo = additionalinfo;
 	}
 
 	@Override

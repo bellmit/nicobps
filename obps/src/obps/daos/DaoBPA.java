@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -249,38 +250,60 @@ public class DaoBPA implements DaoBPAInterface {
 			status = jdbcTemplate.update(sql, param) > 0;
 			if (!status)
 				throw new Exception("Error: Failed to insert into applications");
-
-			sql = "INSERT INTO nicobps.bpaapplications(   "
-					+ "            applicationcode, edcrnumber, ownershiptypecode,    "
-					+ "            ownershipsubtype, plotaddressline1, plotaddressline2,    "
-					+ "            plotvillagetown, plotpincode,    "
-					+ "            plotgiscoordinates, officelocationcode, landregistrationdetails,    "
-					+ "            landregistrationno, plotidentifier1, plotidentifier2,    "
-					+ "            plotidentifier3, holdingno, entrydate)   " + "VALUES (   " + "	?, ?, ?,    "
-					+ "	?, ?, ?,    " + "	?, ?,    	" + "	?, ?, ?,    " + "	?, ?, ?,    " + "	?, ?, now()   "
-					+ ")";
+			
+			sql = "INSERT INTO nicobps.bpaapplications(    " + 
+					"    applicationcode, edcrnumber, ownershiptypecode, ownershipsubtype,     " + 
+					"    plotaddressline1, plotaddressline2, plotvillagetown, plotpincode,     " + 
+					"    plotgiscoordinates, officelocationcode, landregistrationdetails,     " + 
+					"    landregistrationno, plotidentifier1, plotidentifier2, plotidentifier3,     " + 
+					"    holdingno, additionalinfo, entrydate)    " + 
+					"VALUES (?, ?, ?, ?,     " + 
+					"    ?, ?, ?, ?,     " + 
+					"    ?, ?, ?,     " + 
+					"    ?, ?, ?, ?,     " + 
+					"    ?, ?::json, now())    " + 
+					"";
+			
 			param = new Object[] { bpa.getApplicationcode(), bpa.getEdcrnumber(), bpa.getOwnershiptypecode(),
 					bpa.getOwnershipsubtype(), bpa.getPlotaddressline1(), bpa.getPlotaddressline2(),
 					bpa.getPlotvillagetown(), bpa.getPlotpincode(), bpa.getPlotgiscoordinates(),
 					bpa.getOfficelocationcode(), bpa.getLandregistrationdetails(), bpa.getLandregistrationno(),
-					bpa.getPlotidentifier1(), bpa.getPlotidentifier2(), bpa.getPlotidentifier3(), bpa.getHoldingno() };
+					bpa.getPlotidentifier1(), bpa.getPlotidentifier2(), bpa.getPlotidentifier3(), bpa.getHoldingno(), 
+					bpa.getAdditionalinfo()};
 
 			status = jdbcTemplate.update(sql, param) > 0;
 			if (!status)
 				throw new Exception("Error: Failed to insert into bpaapplications");
 
-			sql = "INSERT INTO nicobps.bpaownerdetails(   " + "            ownerdetailcode, "
-					+ "			   applicationcode, salutationcode,    "
+			sql = "INSERT INTO nicobps.bpaownerdetails(   " 
+					+ "            ownerdetailcode, applicationcode, salutationcode,    "
 					+ "            ownername, relationshiptypecode, relationname,    "
-					+ "            mobileno, emailid, address,    " + "            entrydate)   " + " VALUES (	"
-					+ "		(SELECT COALESCE(MAX(ownerdetailcode), 0) +1 FROM nicobps.bpaownerdetails), "
-					+ "		?, ?,    " + "		?, ?, ?,    " + "		?, ?, ?,    " + "     now()" + "	)";
+					+ "            mobileno, emailid, preaddressline1, "
+					+ "			   preaddressline2, pretownvillage, predistrictcode, "
+					+ "			   prepincode, peraddressline1, peraddressline2,   " 
+					+ "            pertownvillage, perdistrictcode, perpincode, "
+					+ "			   additionalinfo, entrydate)   " 
+					+ " VALUES (	"
+					+ "		(SELECT COALESCE(MAX(ownerdetailcode), 0) +1 FROM nicobps.bpaownerdetails),  ?, ?,    " 
+					+ "		?, ?, ?,    " 
+					+ "		?, ?, ?,    " 
+					+ "		?, ?, ?,    " 
+					+ "		?, ?, ?,    " 
+					+ "		?, ?, ?,    " 
+					+ "     ?::json, now()    " 
+					+ "	)";
 			List<Object[]> params = new ArrayList<>();
 			if (bpa.getOwnerdetails() != null && !bpa.getOwnerdetails().isEmpty()) {
 				for (BpaOwnerDetail od : bpa.getOwnerdetails()) {
-					param = new Object[] { bpa.getApplicationcode(), od.getSalutationcode(), od.getOwnername(),
-							od.getRelationshiptypecode(), od.getRelationname(), od.getMobileno(), od.getEmailid(),
-							od.getAddress() };
+					param = new Object[] { 
+							bpa.getApplicationcode(), od.getSalutationcode(), 
+							od.getOwnername(), od.getRelationshiptypecode(), od.getRelationname(), 
+							od.getMobileno(), od.getEmailid(), od.getPreaddressline1(), 
+							od.getPreaddressline2(), od.getPretownvillage(), od.getPredistrictcode(),
+							od.getPrepincode(), od.getPeraddressline1(), od.getPeraddressline2(),
+							od.getPertownvillage(), od.getPerdistrictcode(), od.getPerpincode(),
+							od.getAdditionalinfo()
+					};
 					params.add(param);
 				}
 

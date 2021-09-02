@@ -82,6 +82,7 @@ var BPA = function () {
     // ownerdetail: new OwnerDetail(),
     ownerdetails: [new OwnerDetail()],
     enclosures: [],
+    additionalinfo: {},
     init: (bpa) => {
       this.applicationcode = bpa.applicationcode;
       this.edcrnumber = bpa.edcrnumber;
@@ -100,8 +101,13 @@ var BPA = function () {
       this.plotidentifier2 = bpa.plotidentifier2;
       this.plotidentifier3 = bpa.plotidentifier3;
       this.holdingno = bpa.holdingno;
-      //   this.ownerdetail = bpa.ownerdetail;
-      this.ownerdetails = bpa.ownerdetails;
+      let ods = [];
+      if(bpa.ownerdetails != null && bpa.ownerdetails.length > 0){
+    	  bpa.ownerdetails.forEach((o,x) => ods.push(o.init(o)));
+    	  bpa.ownerdetails = ods;
+    	  this.ownerdetails = bpa.ownerdetails;
+      }
+      this.additionalinfo = angular.toJson(bpa.additionalinfo, true);
       return this;
     },
     extractFromEdcrObject: (edcr) => {
@@ -204,6 +210,19 @@ var OwnerDetail = function () {
     mobileno: "",
     emailid: "",
     address: "",
+    preaddressline1: "",
+    preaddressline2: "",
+    pretownvillage: "",
+    prestatecode: "",
+    predistrictcode: "",
+    prepincode: "",
+    peraddressline1: "",
+    peraddressline2: "",
+    pertownvillage: "",
+    perstatecode: "",
+    perdistrictcode: "",
+    perpincode: "",
+    additionalinfo: {},
     entrydate: todaysDate,
     init: (od) => {
       this.ownerdetailcode = od.ownerdetailcode;
@@ -215,7 +234,20 @@ var OwnerDetail = function () {
       this.mobileno = od.mobileno;
       this.emailid = od.emailid;
       this.address = od.address;
-
+      this.preaddressline1 = od.preaddressline1;
+      this.preaddressline2 = od.preaddressline2;
+      this.pretownvillage = od.pretownvillage;
+      this.prestatecode = od.prestatecode;
+      this.predistrictcode = od.predistrictcode;
+      this.prepincode = od.prepincode;
+      this.peraddressline1 = od.peraddressline1;
+      this.peraddressline2 = od.peraddressline2;
+      this.pertownvillage = od.pertownvillage;
+      this.perstatecode = od.perstatecode;
+      this.perdistrictcode = od.perdistrictcode;
+      this.perpincode = od.perpincode;
+      this.additionalinfo = angular.toJson(od.additionalinfo, true);
+      this.init = od.init;
       return this;
     },
   };

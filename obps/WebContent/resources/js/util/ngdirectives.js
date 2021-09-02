@@ -105,8 +105,6 @@ app.directive("patternEmail", function () {
 
       let oldVal = "";
       ngModelCtrl.$validators.validate = (modelValue, viewValue) => {
-    	  console.log("modelValue: ",modelValue);
-    	  console.log("modelValue == '': ",(modelValue == ''));
         if (!modelValue || modelValue == '') {ngModelCtrl.$error.invalid = false; return true;}
         if (!PATTERN_EMAIL.test(modelValue)) {
           ngModelCtrl.$error.invalid = true;
@@ -153,7 +151,6 @@ app.directive("patternMobile", function () {
         return;
       }
 
-      // console.log("ngModelCtrl : ", ngModelCtrl);
       ngModelCtrl.$validators.validate = (modelValue = "", viewValue = "") => {
         if (!modelValue) return true;
         if (!PATTERN_MOBILE.test(modelValue)) {
@@ -205,7 +202,6 @@ app.directive("patternPincode", function () {
         return;
       }
 
-      // console.log("ngModelCtrl : ", ngModelCtrl);
       ngModelCtrl.$validators.validate = (modelValue = "", viewValue = "") => {
         if (!modelValue) return true;
         if (!PATTERN_PINCODE.test(modelValue)) {

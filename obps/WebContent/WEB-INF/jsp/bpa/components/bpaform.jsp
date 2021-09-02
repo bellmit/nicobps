@@ -1,4 +1,9 @@
 <!-- @author Decent Khongstia -->
+<style type="text/css">
+	hr{
+		margin: 0;
+	}
+</style>
 <div class="card">
 	<div class="card-body">
 		<h5 class="card-title">Basic Details</h5>
@@ -56,7 +61,7 @@
 <br />
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title">Location Details</h5>
+		<h5 class="card-title">Site Location Details</h5>
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
@@ -350,15 +355,197 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label class="col-sm-12">Residential Address<span class="fa fa-asterisk"></span></label>
-							<div class="col-sm-12">
-								<input type="text" class="form-control custom-form-control"  name="address{{$index}}"
-									ng-model="OD.address" maxlength="99" pattern-address required>
-								<div class="col" ng-if="bpaform['address'+($index)].$touched" style="color:red">
-									<span ng-show="bpaform['address'+($index)].$error.required">Required</span>
+					<div class="col">
+						<label class="col-sm-12">Present Address<span class="fa fa-asterisk"></span><hr></label>
+						<div class="card custom-card-border-less">
+							<div class="card-body">
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">Addressline1<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control"  name="preaddressline1{{$index}}"
+													ng-model="OD.preaddressline1" maxlength="99" pattern-address required>
+												<div class="col" ng-if="bpaform['preaddressline1'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['preaddressline1'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">Addressline2</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control"  name="preaddressline2{{$index}}"
+													ng-model="OD.preaddressline2" maxlength="99" pattern-address>
+											</div>
+										</div>
+									</div>
 								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">Town/Village<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control" name="pretownvillage{{$index}}"
+													ng-model="OD.pretownvillage" maxlength="99" pattern-alpha required/>
+												<div class="col" ng-if="bpaform['pretownvillage'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['pretownvillage'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">State<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<select class="form-control custom-form-control" name="prestatecode{{$index}}"
+													ng-model="OD.prestatecode"
+													ng-options="O.key as (O.value) for O in States"
+													ng-change="listDistricts(1, OD.prestatecode)"
+													required>
+													<option selected="selected" disabled="disabled" value="">Select State</option>
+												</select>
+												<div class="col" ng-if="bpaform['prestatecode'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['prestatecode'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">District<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<select class="form-control custom-form-control" name="predistrictcode{{$index}}"
+													ng-model="OD.predistrictcode"
+													ng-options="O.key as (O.value) for O in PreDistricts"
+													required>
+													<option selected="selected" disabled="disabled" value="">Select District</option>
+												</select>
+												<div class="col" ng-if="bpaform['predistrictcode'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['predistrictcode'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label class="col">Pincode<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control" name="prepincode{{$index}}"
+													ng-model="OD.prepincode" maxlength="6" pattern-number pattern-pincode required>
+												<div class="col" ng-if="bpaform['prepincode'+($index)].$touched || bpaform['prepincode'+($index)].$dirty" style="color:red">
+													<span ng-show="bpaform['prepincode'+($index)].$error.required">Required</span>
+													<span ng-show="bpaform['prepincode'+($index)].$error.invalid">Invalid Pincode<br/></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col">
+						<label class="col-sm-12">Permanent Address<span class="fa fa-asterisk"></span><hr></label>
+						<span class="col-sm-12 text-right"><input type="checkbox" id="sameAsPresent" name="isSameAddress{{$index}}" ng-model="isSameAddress_$index" ng-click="sameAddr($index)")> <label for="sameAsPresent"> <small>same as present address</small></label></span>
+						<div class="card custom-card-border-less">
+							<div class="card-body">
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">Addressline1<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control"  name="peraddressline1{{$index}}"
+													ng-disabled="isSameAddress_$index"
+													ng-model="OD.peraddressline1" maxlength="99" pattern-address required>
+												<div class="col" ng-if="bpaform['peraddressline1'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['peraddressline1'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">Addressline2</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control"  name="peraddressline2{{$index}}"
+													ng-disabled="isSameAddress_$index"
+													ng-model="OD.peraddressline2" maxlength="99" pattern-address>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">Town/Village<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control" name="pertownvillage{{$index}}"
+													ng-disabled="isSameAddress_$index"
+													ng-model="OD.pertownvillage" maxlength="99" pattern-alpha required/>
+												<div class="col" ng-if="bpaform['pertownvillage'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['pertownvillage'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">State<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<select class="form-control custom-form-control" name="perstatecode{{$index}}"
+													ng-model="OD.perstatecode"
+													ng-options="O.key as (O.value) for O in States"
+													ng-change="listDistricts(2, OD.perstatecode)"
+													ng-disabled="isSameAddress_$index"
+													required>
+													<option selected="selected" disabled="disabled" value="">Select State</option>
+												</select>
+												<div class="col" ng-if="bpaform['perstatecode'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['perstatecode'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label class="col-sm-12">District<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<select class="form-control custom-form-control" name="perdistrictcode{{$index}}"
+													ng-model="OD.perdistrictcode"
+													ng-options="O.key as (O.value) for O in PerDistricts"
+													ng-disabled="isSameAddress_$index"
+													required>
+													<option selected="selected" disabled="disabled" value="">Select District</option>
+												</select>
+												<div class="col" ng-if="bpaform['perdistrictcode'+($index)].$touched" style="color:red">
+													<span ng-show="bpaform['perdistrictcode'+($index)].$error.required">Required</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label class="col">Pincode<span class="fa fa-asterisk"></span></label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control custom-form-control" name="perpincode{{$index}}"
+													ng-disabled="isSameAddress_$index"
+													ng-model="OD.perpincode" maxlength="6" pattern-number pattern-pincode required>
+												<div class="col" ng-if="bpaform['perpincode'+($index)].$touched || bpaform['perpincode'+($index)].$dirty" style="color:red">
+													<span ng-show="bpaform['perpincode'+($index)].$error.required">Required</span>
+													<span ng-show="bpaform['perpincode'+($index)].$error.invalid">Invalid Pincode<br/></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>	
 							</div>
 						</div>
 					</div>

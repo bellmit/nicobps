@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import obps.util.application.ServiceUtilInterface;
 
-@Service
+@Service("ServicePrintPermit")
 public class ServicePrintPermit implements ServicePrintPermitInterface {
 
 	@Autowired

@@ -61,6 +61,15 @@ class ServiceBPA implements ServiceBPAInterface {
 	}
 
 	@Override
+	public List<CommonMap> listDistricts(Integer statecode) {
+		String sql = "SELECT districtcode AS key, statecode AS value1, districtname AS value  " + 
+				"FROM masters.districts  " + 
+				"WHERE statecode = ?  " + 
+				"ORDER by districtname";
+		return SUI.listCommonMap(sql, new Object[] { statecode });
+	}
+
+	@Override
 	public List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode) {
 		String sql = "SELECT U.usercode AS key, U.fullname AS value  " + "FROM nicobps.applicationflowremarks AFR   "
 				+ "INNER JOIN(  " + "	SELECT applicationcode, MAX(entrydate) entrydate  	  "
@@ -109,6 +118,14 @@ class ServiceBPA implements ServiceBPAInterface {
 	public List<CommonMap> listSalutations() {
 		String sql = "SELECT SL.salutationcode AS key, SL.salutationdescription AS value "
 				+ "FROM masters.salutations SL " + "WHERE SL.enabled='Y' " + "ORDER BY SL.salutationdescription";
+		return SUI.listCommonMap(sql);
+	}
+
+	@Override
+	public List<CommonMap> listStates() {
+		String sql = "SELECT statecode AS key, statename AS value  " + 
+				"FROM masters.states  " + 
+				"ORDER BY statename";
 		return SUI.listCommonMap(sql);
 	}
 
@@ -232,7 +249,7 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public List<Map<String, Object>> listBPApplicationsStatus(Integer usercode, String param) {
-		LOG.info("usercode: "+usercode+ " param: "+param);
+		LOG.info("usercode: " + usercode + " param: " + param);
 		String sql = "SELECT AFR.applicationcode, BPA.edcrnumber, PF.flowname AS status,   "
 				+ "      UL.fullname AS updatedby , TUL.fullname AS assignee,   "
 				+ "      TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks,   "
@@ -250,32 +267,20 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode    "
 				+ "INNER JOIN masters.processes NPR ON NPR.processcode = PF.toprocesscode AND AFR.modulecode = NPR.modulecode    "
 				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode    " + "INNER JOIN ( "
-				+ "	SELECT BPA.applicationcode, " 
-				+ "	ARRAY_TO_STRING( "
-				+ "	  ARRAY( " 
-				+ "	   WITH data AS( "
-				+ "		SELECT OD.applicationcode, OD.ownername, "
-				+ "		COUNT(1)                     " 
-				+ "		FROM nicobps.bpaownerdetails OD  "
-				+ "		WHERE OD.applicationcode = BPA.applicationcode"
-				+ "		GROUP BY 1, ownername  " 
-				+ "		ORDER BY applicationcode, ownername "
-				+ "	   ) " 
-				+ "		SELECT ownername AS businessitems "
-				+ "		FROM data" 
-				+ "	  ),', ') AS ownersname" 
-				+ "	FROM nicobps.bpaapplications BPA "
-				+ ") OD ON OD.applicationcode = AFR.applicationcode  "
+				+ "	SELECT BPA.applicationcode, " + "	ARRAY_TO_STRING( " + "	  ARRAY( " + "	   WITH data AS( "
+				+ "		SELECT OD.applicationcode, OD.ownername, " + "		COUNT(1)                     "
+				+ "		FROM nicobps.bpaownerdetails OD  " + "		WHERE OD.applicationcode = BPA.applicationcode"
+				+ "		GROUP BY 1, ownername  " + "		ORDER BY applicationcode, ownername " + "	   ) "
+				+ "		SELECT ownername AS businessitems " + "		FROM data" + "	  ),', ') AS ownersname"
+				+ "	FROM nicobps.bpaapplications BPA " + ") OD ON OD.applicationcode = AFR.applicationcode  "
 				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AFR.tousercode    "
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AFR.applicationcode  "
 				+ "LEFT JOIN nicobps.bpaapproveapplications AA ON AA.applicationcode = AFR.applicationcode  "
-				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode     " 
-				+ "WHERE   "
+				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode     " + "WHERE   "
 				+ "	AFR.modulecode = ?  AND  APP.officecode = ("
-				+ "		SELECT officecode FROM nicobps.useroffices WHERE usercode = ?" 
-				+ "	)"
+				+ "		SELECT officecode FROM nicobps.useroffices WHERE usercode = ?" + "	)"
 				+ "	AND (BPA.applicationcode = ? OR BPA.edcrnumber = ? 	"
-				+ "		OR AA.permitnumber = ? OR LOWER(OD.ownersname) LIKE LOWER('%'||?||'%'))  " 
+				+ "		OR AA.permitnumber = ? OR LOWER(OD.ownersname) LIKE LOWER('%'||?||'%'))  "
 				+ "ORDER BY APP.entrydate";
 		return SUI.listGeneric(sql, new Object[] { BPAConstants.MODULE_CODE, usercode, param, param, param, param });
 	}
