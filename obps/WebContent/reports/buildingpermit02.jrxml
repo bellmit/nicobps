@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit02" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="48"/>
 	<parameter name="permitnumber" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -29,7 +29,6 @@ BA.APPLICATIONCODE,BA.EDCRNUMBER, BAP.PERMITNUMBER,
 TO_CHAR(BAP.ENTRYDATE, 'DD-MM-YYYY') AS APPROVALDATE , ES.PLANINFOOBJECT ,
 TO_CHAR(BA.ENTRYDATE, 'DD-MM-YYYY') AS APPLYDATE,
 salutationdescription || ' ' || OWNERNAME AS OWNERSNAME,
-BO.ADDRESS,
 CASE WHEN PLOTADDRESSLINE1 IS NULL OR LENGTH(TRIM(PLOTADDRESSLINE1)) = 0   THEN '' ELSE PLOTADDRESSLINE1 || ','  END ||
 CASE WHEN PLOTADDRESSLINE2 IS NULL OR LENGTH(TRIM(PLOTADDRESSLINE2)) = 0  THEN '' ELSE PLOTADDRESSLINE2 || ','  END ||
 CASE WHEN PLOTVILLAGETOWN  IS NULL THEN '' ELSE PLOTVILLAGETOWN  || '  - '  END  ||
@@ -57,7 +56,6 @@ and bap.permitnumber=$P{permitnumber}]]>
 	<field name="planinfoobject" class="java.lang.String"/>
 	<field name="applydate" class="java.lang.String"/>
 	<field name="ownersname" class="java.lang.String"/>
-	<field name="address" class="java.lang.String"/>
 	<field name="plotaddress" class="java.lang.String"/>
 	<field name="locationname" class="java.lang.String"/>
 	<field name="plotidentifier1" class="java.lang.String"/>
@@ -135,16 +133,14 @@ Form of Sanction.]]></text>
 				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="styled">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed "+" _________________________"+"storied  R.C.C. residential  /  commercial  /  residential  cum commercial / institutional building measuring "+"___________________"+" located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."
-
-]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed "+" _________________________"+"storied  R.C.C. residential  /  commercial  /  residential  cum commercial / institutional building measuring "+"___________________"+" located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="33" y="41" width="337" height="69"/>
 				<textElement>
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{ownersname} + "\n"+$F{address}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ownersname}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="200">
@@ -153,9 +149,7 @@ Form of Sanction.]]></text>
 				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="styled">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed "+" _________________________"+"storied  R.C.C. residential  /  commercial  /  residential  cum commercial / institutional building measuring "+"___________________"+" located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."
-
-]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed "+" _________________________"+"storied  R.C.C. residential  /  commercial  /  residential  cum commercial / institutional building measuring "+"___________________"+" located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="130" width="169" height="20"/>
