@@ -207,6 +207,8 @@ public class Report extends HttpServlet {
 			out = response.getWriter();
 			System.out.println(
 					"Exception thrown by class " + this.getClass() + " at " + new java.util.Date() + " :: " + e);
+			System.out.println("HERE----------");
+			e.printStackTrace();
 			// Logger.getLogger(Report.class.getName()).log(Level.SEVERE, null, e);
 			response.sendRedirect("error.jsp");
 

@@ -313,13 +313,12 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "WHERE usercode=? ORDER BY T.officename1 ";
 		return this.listCommonMap(sql, new Object[] { usercode });
 	}
+
 	@Override
 	public List<CommonMap> listLicenseeType() {
-	
-		
+
 		String sql = "SELECT T.licenseetypecode AS key, T.licenseetypename AS value\r\n"
-				+ "				FROM masters.licenseetypes T \r\n"
-				+ "				 ORDER BY T.licenseetypename ";
+				+ "				FROM masters.licenseetypes T \r\n" + "				 ORDER BY T.licenseetypename ";
 		return this.listCommonMap(sql);
 	}
 
@@ -433,7 +432,9 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> getNextProcessflow(Integer modulecode, Integer fromprocesscode) {
-		String sql = "select * from masters.processflow where modulecode=? and fromprocesscode=? and processflowstatus='N'";
+		String sql = "SELECT PF.*, NP.processname " + "FROM masters.processflow PF "
+				+ "INNER JOIN masters.processes NP ON NP.processcode = PF.toprocesscode AND NP.modulecode = PF.modulecode  "
+				+ "WHERE PF.modulecode=? AND PF.fromprocesscode=? AND PF.processflowstatus='N'";
 		return this.listGeneric(sql, new Object[] { modulecode, fromprocesscode });
 	}
 

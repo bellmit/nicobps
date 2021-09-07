@@ -417,6 +417,32 @@ app.directive("modalAction",["$compile", "bpaService", function taskStatus($comp
 		BS.listNextProcessingUsers((response) => {
 			scope.Users = response;
 		}, APPCODE);
+		BS.listNextProcess((response) => {
+			scope.NextProcesses = response;
+		}, APPCODE);
+		scope.listUsers = (flag, index, processcode) => {
+			try{
+				if(flag){
+					scope.modal.process[index] = new ProcessFlow();
+					scope.modal.process[index].toprocesscode = processcode;
+				} else
+					scope.modal.process.splice(index, 1);
+				
+				console.log("modal.process: ",scope.modal.process);
+			}catch (e) {
+				scope.modal.process.push(new ProcessFlow());
+			}
+			 
+			BS.listNextProcessingUsersByProcesscode((response) => {
+				scope.Users[processcode] = response;
+				console.log("scope.modal: ",scope.modal);
+			}, APPCODE, processcode);
+		}
+		
+		scope.onc = (index) => {
+			console.log("scope.modal.process[index]:: ",scope.modal.process[index]);
+		}
+		
 	};
 }]);
 

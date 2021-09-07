@@ -452,7 +452,8 @@
 				<div class="row">
 					<div class="col">
 						<label class="col-sm-12">Permanent Address<span class="fa fa-asterisk"></span><hr></label>
-						<span class="col-sm-12 text-right"><input type="checkbox" id="sameAsPresent" name="isSameAddress{{$index}}" ng-model="isSameAddress_$index" ng-click="sameAddr($index)")> <label for="sameAsPresent"> <small>same as present address</small></label></span>
+						<span class="col-sm-12 text-right"><input type="checkbox" id="sameAsPresent" name="isSameAddress{{$index}}" 
+							ng-model="isSameAddress_$index" ng-click="sameAddr($index)")> <label for="sameAsPresent"> <small>same as present address</small></label></span>
 						<div class="card custom-card-border-less">
 							<div class="card-body">
 								<div class="row">

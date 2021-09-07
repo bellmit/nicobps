@@ -365,6 +365,14 @@ public class ControllerBpaProcessing {
 		return SBI.listNextProcessingUsers(usercode, applicationcode);
 	};
 
+	@GetMapping(value = "/listNextProcessingUsersByProcesscode.htm")
+	public @ResponseBody List<CommonMap> listNextProcessingUsersByProcesscode(
+			@ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(name = "param", required = false) String applicationcode,
+			@RequestParam(name = "param1", required = false) Integer processcode) {
+		return SBI.listNextProcessingUsers(applicationcode, processcode);
+	};
+
 	@GetMapping(value = "/listbpapplications.htm")
 	public @ResponseBody List<Map<String, Object>> listBPApplications(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {

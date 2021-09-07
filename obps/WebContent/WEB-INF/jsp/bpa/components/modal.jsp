@@ -21,7 +21,29 @@
         </button>
       </div>
       <div class="modal-body">
-      	<div class="col" ng-if="Users != null && Users.length > 0 && modal.action == 1">
+      	<div class="col" ng-if="NextProcesses != null && NextProcesses.length > 1 && modal.action == 1">
+   			<div class="col row">
+      			<small class="col-sm-6">Next Process</small>
+      			<small class="col-sm-6">Assigned To</small>
+      			<hr>
+   			</div>
+      		<div ng-repeat="N in NextProcesses">
+      			<div class="col row">
+	      			<label class="col-sm-6">
+	      				<input type="checkbox" ng-model="nextuser_N.toprocesscode" ng-click="listUsers(nextuser_N.toprocesscode, $index, N.toprocesscode)">
+	      				{{N.processname}}
+      				</label>
+	      			<select class="col-sm-6 form-control custom-form-control" ng-model="modal.process[$index].tousercode"
+      					ng-options="U.key as U.value for U in Users[N.toprocesscode]" ng-change="onc($index)" 
+      					ng-disabled="!nextuser_N.toprocesscode">
+						<option value="" selected disabled>Select User</option>
+	      			</select>
+      			</div>
+      		</div>
+      		<div class="col row"><br></div>
+      	</div>
+      	<div class="col" ng-if="Users != null && Users.length > 0 
+      		&& (NextProcesses == null || NextProcesses.length <= 1) && modal.action == 1">
       		<label class="col">
       			Assignee Name<span class="fa fa-asterisk"></span>
       		</label>
@@ -49,4 +71,4 @@
       </div>
     </div>
   </div>
-</div>
+ </div>

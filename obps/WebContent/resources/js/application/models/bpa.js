@@ -319,6 +319,7 @@ var Modal = function () {
     actionname: "Forward",
     title: 'Forward Application',
     usercode: null,
+    process: [new ProcessFlow()],
     remarks: '',
   }
 

@@ -62,11 +62,25 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public List<CommonMap> listDistricts(Integer statecode) {
-		String sql = "SELECT districtcode AS key, statecode AS value1, districtname AS value  " + 
-				"FROM masters.districts  " + 
-				"WHERE statecode = ?  " + 
-				"ORDER by districtname";
+		String sql = "SELECT districtcode AS key, statecode AS value1, districtname AS value  "
+				+ "FROM masters.districts  " + "WHERE statecode = ?  " + "ORDER by districtname";
 		return SUI.listCommonMap(sql, new Object[] { statecode });
+	}
+
+	@Override
+	public List<CommonMap> listNextProcessingUsers(String applicationcode, Integer processcode) {
+		Integer fromprocesscode = null, officecode = null;
+		String sql = "SELECT UL.usercode AS key, UL.username  AS value " 
+				+ "FROM nicobps.userlogins UL  "
+				+ "INNER JOIN nicobps.userpages UP ON UP.usercode = UL.usercode  "
+				+ "INNER JOIN masters.pageurls PU ON PU.urlcode = UP.urlcode  "
+				+ "INNER JOIN masters.processflow PF ON PF.urlcode = UP.urlcode  "
+				+ "WHERE (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.toprocesscode, PF.processflowstatus ) "
+				+ "	= (?,?,?,?,'N') " + "ORDER BY UL.username";
+		officecode = getApplicationOfficecode(applicationcode);
+		fromprocesscode = getApplicationCurrentProcesscode(applicationcode);
+		return SUI.listCommonMap(sql,
+				new Object[] { officecode, BPAConstants.MODULE_CODE, fromprocesscode, processcode });
 	}
 
 	@Override
@@ -123,9 +137,7 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public List<CommonMap> listStates() {
-		String sql = "SELECT statecode AS key, statename AS value  " + 
-				"FROM masters.states  " + 
-				"ORDER BY statename";
+		String sql = "SELECT statecode AS key, statename AS value  " + "FROM masters.states  " + "ORDER BY statename";
 		return SUI.listCommonMap(sql);
 	}
 
@@ -319,8 +331,12 @@ class ServiceBPA implements ServiceBPAInterface {
 		if (list != null) {
 			Map<String, Object> map = list.get(0);
 			if (map != null) {
-				return SUI.getAllNextProcessflows(BPAConstants.MODULE_CODE,
+				return SUI.getNextProcessflow(BPAConstants.MODULE_CODE,
 						Integer.valueOf(map.get("fromprocesscode").toString()));
+				/*
+				 * return SUI.getAllNextProcessflows(BPAConstants.MODULE_CODE,
+				 * Integer.valueOf(map.get("fromprocesscode").toString()));
+				 */
 			}
 		}
 		return null;

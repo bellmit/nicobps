@@ -251,7 +251,8 @@ public class ControllerBuildingPermit {
 	};
 
 	@GetMapping(value = "/listNextProcess.htm")
-	public @ResponseBody List<Map<String, Object>> listNextProcess(@RequestParam String applicationcode) {
+	public @ResponseBody List<Map<String, Object>> listNextProcess(
+			@RequestParam(name = "param") String applicationcode) {
 		return SBI.listNextProcess(applicationcode);
 	}
 

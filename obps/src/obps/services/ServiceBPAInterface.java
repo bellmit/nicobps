@@ -19,6 +19,8 @@ public interface ServiceBPAInterface {
 
 	List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode);
 
+	List<CommonMap> listNextProcessingUsers(String applicationcode, Integer processcode);
+
 	List<CommonMap> listOfficelocations();
 
 	List<CommonMap> listOfficelocations(Integer officecode);
@@ -94,5 +96,6 @@ public interface ServiceBPAInterface {
 			HashMap<String, Object> response);
 
 	boolean sendToCitizenBPApplication(BpaProcessFlow data, HashMap<String, Object> response);
+
 
 }

@@ -12,6 +12,26 @@ app.service("commonUtilService", [
           callback(response);
         });
       },
+      getDataV2: async (endpoint, callback, ...data) => {
+          var url = endpoint;
+          let param = '?1=1'; 
+          data = data[0];
+          if(data.length > 0){
+        	  data.forEach((d, x) => {
+        		  if(x == 0){
+        			  param = param.concat(`&param=${d}`);
+        		  }else{
+        			  param = param.concat(`&param${x}=${d}`);
+        		  }
+        	  })
+          } 
+          console.log(param);
+          url = endpoint.concat(param);
+          
+          $http.get(url).success(function (response, status, headers, config) {
+            callback(response);
+          });
+        },
       /* 
       postData: async (endpoint, data, successCallback, errorCallback) => {
         var url = endpoint;
@@ -83,8 +103,14 @@ app.service("bpaService", [
       listDistricts: async function (callback, data = "") {
     	  CUS.getData('./listDistricts.htm', data, callback);
       },
+      listNextProcess: async function (callback, data = "") {
+        CUS.getData("./listNextProcess.htm", data, callback);
+      },
       listNextProcessingUsers: async function (callback, data = "") {
-        CUS.getData("./listNextProcessingUsers.htm", data, callback);
+    	  CUS.getData("./listNextProcessingUsers.htm", data, callback);
+      },
+      listNextProcessingUsersByProcesscode: async function (callback, ...data) {
+    	  CUS.getDataV2("./listNextProcessingUsersByProcesscode.htm", callback, data);
       },
       listOfficelocations: async function (callback, data = "") {
         CUS.getData("./listOfficelocations.htm", data, callback);

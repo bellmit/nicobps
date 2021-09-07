@@ -43,7 +43,7 @@
 															path="appenclosures[${loop.index}].enclosurecode"
 															value="${enclosur.key}" id="chk_${enclosur.key}"
 															cssClass="chkbox" />
-													</core:if> <label> <core:out value="${enclosur.value}"
+													</core:if> <label for="chk_${enclosur.key}"> <core:out value="${enclosur.value}"
 															escapeXml="enccode" /> <core:if
 															test="${fn:contains(enclosur.value1, 'Y') && empty enclosur.value2}">
 															<span style="color: red">*</span>
