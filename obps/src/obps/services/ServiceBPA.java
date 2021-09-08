@@ -86,12 +86,16 @@ class ServiceBPA implements ServiceBPAInterface {
 	@Override
 	public List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode) {
 		String sql = "SELECT U.usercode AS key, U.fullname AS value  " + "FROM nicobps.applicationflowremarks AFR   "
-				+ "INNER JOIN(  " + "	SELECT applicationcode, MAX(entrydate) entrydate  	  "
-				+ "	FROM nicobps.applicationflowremarks    " + "	GROUP BY applicationcode  "
-				+ ")T ON (T.applicationcode, T.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
-				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.processflowstatus) = (AFR.modulecode, AFR.toprocesscode, 'N')  "
-				+ "INNER JOIN (  " + "	SELECT PU.urlcode, PU.pageurl,   "
-				+ "	       UP.usercode, UL.username, UL.fullname  " + "	FROM masters.pageurls PU  "
+				+ "INNER JOIN(  " 
+				+ "		SELECT applicationcode, MAX(afrcode) afrcode "
+				+ "		FROM nicobps.applicationflowremarks    " 
+				+ "		GROUP BY applicationcode  "
+				+ ")T ON (T.applicationcode, T.afrcode) = (AFR.applicationcode, AFR.afrcode)  "
+				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = T.applicationcode  "
+				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.processflowstatus) = (APP.officecode, AFR.modulecode, AFR.toprocesscode, 'N')  "
+				+ "INNER JOIN (  " 
+				+ "			SELECT PU.urlcode, PU.pageurl,   "
+				+ "	       	UP.usercode, UL.username, UL.fullname  " + "	FROM masters.pageurls PU  "
 				+ "	INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode  "
 				+ "	INNER JOIN nicobps.userlogins UL ON UL.usercode = UP.usercode  "
 				+ "	ORDER BY UP.usercode, UP.urlcode  " + ")U ON U.urlcode = PF.urlcode  " + "LEFT JOIN (	"
@@ -391,11 +395,20 @@ class ServiceBPA implements ServiceBPAInterface {
 
 		if (applications != null && !applications.isEmpty()) {
 			application = applications.get(0);
-			sql = "SELECT O.ownerdetailcode, O.applicationcode, O.salutationcode, O.ownername,     "
-					+ "       O.relationshiptypecode, O.relationname, O.mobileno, O.emailid, O.address,     "
-					+ "       TO_CHAR(O.entrydate, 'DD/MM/YYYY') entrydate,  " + "       R.relationshiptypename  "
-					+ "FROM nicobps.bpaownerdetails O    "
-					+ "INNER JOIN masters.relationshiptypes R ON R.relationshiptypecode = O.relationshiptypecode  "
+			sql = "SELECT O.ownerdetailcode, O.applicationcode, O.salutationcode, O.ownername,    "
+					+ "       R.relationshiptypename, O.relationname, O.mobileno, O.emailid,    "
+					+ "       O.preaddressline1, O.preaddressline2, O.pretownvillage, O.predistrictcode,    "
+					+ "       O.prepincode, O.peraddressline1, O.peraddressline2, O.pertownvillage,    "
+					+ "       O.perdistrictcode, O.perpincode,   "
+					+ "       O.preaddressline1||' '||O.preaddressline2||' '||O.pretownvillage||' '|| D.districtname|| ' ' ||S.statename|| ' '||o.prepincode AS address,    "
+					+ "       O.peraddressline1||' '||O.peraddressline2||' '||O.pertownvillage||' '|| PD.districtname|| ' ' ||PS.statename|| ' '||o.perpincode AS peraddress,    "
+					+ "       TO_CHAR(O.entrydate, 'DD/MM/YYYY') entrydate   " 
+					+ "FROM nicobps.bpaownerdetails O   "
+					+ "INNER JOIN masters.relationshiptypes R ON R.relationshiptypecode = O.relationshiptypecode    "
+					+ "INNER JOIN masters.districts D ON D.districtcode = predistrictcode   "
+					+ "INNER JOIN masters.districts PD ON PD.districtcode = perdistrictcode   "
+					+ "INNER JOIN masters.states S ON S.statecode = D.statecode   "
+					+ "INNER JOIN masters.states PS ON PS.statecode = PD.statecode  "
 					+ "WHERE applicationcode = ?";
 			details = SUI.listGeneric(sql, new Object[] { applicationcode });
 			if (details != null && !details.isEmpty())
@@ -588,11 +601,12 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "	FROM nicobps.applicationflowremarks AFR     " + "	WHERE modulecode = AFR.modulecode  "
 				+ "	GROUP BY applicationcode  "
 				+ ")AF ON (AF.applicationcode, AF.entrydate) = (AFR.applicationcode, AFR.entrydate)  "
+				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = AF.applicationcode   "
 				/*
 				 * +
 				 * "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode) AND PF.processflowstatus = 'N'      "
 				 */
-				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode)   "
+				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (APP.officecode, AFR.modulecode, AFR.fromprocesscode, AFR.toprocesscode)   "
 				+ "INNER JOIN masters.processes PR ON PR.processcode = PF.fromprocesscode AND AFR.modulecode = PR.modulecode    "
 				+ "INNER JOIN masters.processes NPR ON NPR.processcode = PF.toprocesscode AND AFR.modulecode = NPR.modulecode    "
 				+ "INNER JOIN nicobps.userlogins UL ON UL.usercode = AFR.fromusercode    "
@@ -670,10 +684,13 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public boolean checkPageAccessGrantStatus(Integer USERCODE, String appcode, String pathurl) {
-		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag     " + "FROM nicobps.applications APP      "
+		String sql = "SELECT COALESCE(MAX(1), 0) AS accessflag     " 
+				+ "FROM nicobps.applications APP      "
 				+ "INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (     	  "
-				+ "SELECT applicationcode, MAX(entrydate)   	  " + "FROM nicobps.applicationflowremarks     	  "
-				+ "WHERE applicationcode = APP.applicationcode    " + "AND modulecode = APP.modulecode       	  "
+				+ "SELECT applicationcode, MAX(entrydate)   	  " 
+				+ "FROM nicobps.applicationflowremarks     	  "
+				+ "WHERE applicationcode = APP.applicationcode    " 
+				+ "AND modulecode = APP.modulecode       	  "
 				+ "GROUP BY applicationcode)       "
 				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode        "
 				/*
@@ -681,7 +698,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				 * "INNER JOIN masters.processflow PF ON PF.toprocesscode = PR.processcode  AND PF.modulecode = PR.modulecode   "
 				 * + "AND PF.processflowstatus = 'N'       "
 				 */
-				+ "INNER JOIN masters.processflow PF ON (PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (PR.modulecode, AF.fromprocesscode, PR.processcode)  "
+				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.toprocesscode) = (APP.officecode, PR.modulecode, AF.fromprocesscode, PR.processcode)  "
 				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode       "
 				+ "INNER JOIN nicobps.userpages UP ON UP.urlcode =  PU.urlcode AND UP.usercode = ?     "
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode   "

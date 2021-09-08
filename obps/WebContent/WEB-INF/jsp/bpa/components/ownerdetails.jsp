@@ -37,12 +37,16 @@
 					<label class="col-sm-12">{{O.relationname}}</label>
 				</div>
 				<div class="col-sm-3">
-					<label class="col-sm-12"><small>Relationship</small></label> 
+					<label class="col-sm-12"><small>Relationship</small></l	abel> 
 					<label class="col-sm-12">{{O.relationshiptypename}}</label>
 				</div>
 				<div class="col-sm-3">
 					<label class="col-sm-12"><small>Correspondence Address</small></label> 
 					<label class="col-sm-12">{{O.address}}</label>
+				</div>
+				<div class="col-sm-3">
+					<label class="col-sm-12"><small>Permanent Address</small></label> 
+					<label class="col-sm-12">{{O.peraddress}}</label>
 				</div>
 			</div>
 		</div>
