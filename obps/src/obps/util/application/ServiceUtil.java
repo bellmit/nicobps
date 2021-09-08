@@ -231,17 +231,13 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {
 		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
-				+ "WHERE E.enabled='Y' AND mandatory='Y' AND M.modulecode=? "
-				+ " AND  case when ? != -1 then licenseetypecode=? else licenseetypecode ISNULL end   "
+				+ "WHERE E.enabled='Y' AND mandatory='Y' AND M.modulecode=? AND licenseetypecode=? "
 				+ "AND E.enclosurecode NOT IN (SELECT enclosurecode FROM  nicobps.licenseesenclosures WHERE usercode=?) "
 				+ "ORDER BY mandatory DESC,E.enclosurecode";
-		if (licenseetypecode == null) {
-			licenseetypecode = -1;
-		}
-	
-		Object[] criteria = { modulecode, licenseetypecode,licenseetypecode, usercode };
+		Object[] criteria = { modulecode, licenseetypecode, usercode };
 		return this.listCommonMap(sql, criteria);
 	}
+
 	/////////////////////
 	@Override
 	public List<CommonMap> listBpaEnclosures(final Short modulecode, String aplicationcode) {

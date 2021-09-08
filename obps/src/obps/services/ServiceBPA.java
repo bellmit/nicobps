@@ -395,20 +395,19 @@ class ServiceBPA implements ServiceBPAInterface {
 
 		if (applications != null && !applications.isEmpty()) {
 			application = applications.get(0);
-			sql = "SELECT O.ownerdetailcode, O.applicationcode, O.salutationcode, O.ownername,    "
-					+ "       R.relationshiptypename, O.relationname, O.mobileno, O.emailid,    "
-					+ "       O.preaddressline1, O.preaddressline2, O.pretownvillage, O.predistrictcode,    "
-					+ "       O.prepincode, O.peraddressline1, O.peraddressline2, O.pertownvillage,    "
-					+ "       O.perdistrictcode, O.perpincode,   "
-					+ "       O.preaddressline1||' '||O.preaddressline2||' '||O.pretownvillage||' '|| D.districtname|| ' ' ||S.statename|| ' '||o.prepincode AS address,    "
-					+ "       O.peraddressline1||' '||O.peraddressline2||' '||O.pertownvillage||' '|| PD.districtname|| ' ' ||PS.statename|| ' '||o.perpincode AS peraddress,    "
-					+ "       TO_CHAR(O.entrydate, 'DD/MM/YYYY') entrydate   " 
-					+ "FROM nicobps.bpaownerdetails O   "
-					+ "INNER JOIN masters.relationshiptypes R ON R.relationshiptypecode = O.relationshiptypecode    "
-					+ "INNER JOIN masters.districts D ON D.districtcode = predistrictcode   "
-					+ "INNER JOIN masters.districts PD ON PD.districtcode = perdistrictcode   "
-					+ "INNER JOIN masters.states S ON S.statecode = D.statecode   "
-					+ "INNER JOIN masters.states PS ON PS.statecode = PD.statecode  "
+			sql = "SELECT O.ownerdetailcode, O.applicationcode, O.salutationcode, O.ownername,   "
+					+ "       R.relationshiptypename, O.relationname, O.mobileno, O.emailid,   "
+					+ "       O.preaddressline1, O.preaddressline2, O.pretownvillage, O.predistrictcode,   "
+					+ "       O.prepincode, O.peraddressline1, O.peraddressline2, O.pertownvillage,   "
+					+ "       O.perdistrictcode, O.perpincode,  "
+					+ "       O.preaddressline1||' '||O.preaddressline2||' '||O.pretownvillage||' '|| D.districtname|| ' ' ||S.statename|| ' '||o.prepincode AS address,   "
+					+ "       O.peraddressline1||' '||O.peraddressline2||' '||O.pertownvillage||' '|| PD.districtname|| ' ' ||PS.statename|| ' '||o.perpincode AS peraddress,   "
+					+ "       TO_CHAR(O.entrydate, 'DD/MM/YYYY') entrydate  " + "FROM nicobps.bpaownerdetails O  "
+					+ "INNER JOIN masters.relationshiptypes R ON R.relationshiptypecode = O.relationshiptypecode   "
+					+ "INNER JOIN masters.districts D ON D.districtcode = predistrictcode  "
+					+ "INNER JOIN masters.districts PD ON PD.districtcode = perdistrictcode  "
+					+ "INNER JOIN masters.states S ON S.statecode = D.statecode  "
+					+ "INNER JOIN masters.states PS ON PS.statecode = PD.statecode   "
 					+ "WHERE applicationcode = ?";
 			details = SUI.listGeneric(sql, new Object[] { applicationcode });
 			if (details != null && !details.isEmpty())

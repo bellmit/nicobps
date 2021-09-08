@@ -73,7 +73,11 @@ public class ControllerBpaProcessing {
 				return BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
 
 			model.addAttribute("applicationcode", applicationcode);
-			String pageurl = BPAConstants.getProcessPage(model.getAttribute(BPAConstants.SESSION_PATHURL).toString());
+			String pageurl = BPAConstants.getProcessPage(model.getAttribute(BPAConstants.SESSION_PATHURL) != null
+					? model.getAttribute(BPAConstants.SESSION_PATHURL).toString()
+					: "");
+			pathurl = req.getServletPath();
+			model.addAttribute(BPAConstants.SESSION_PATHURL, pathurl);
 			return BPAConstants.PARENT_URL_MAPPING.concat(pageurl);
 
 		}
@@ -160,6 +164,24 @@ public class ControllerBpaProcessing {
 		}
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
+
+	/*
+	 * @GetMapping(value = "/bpaprocess.htm") public String
+	 * bpaProcess(HttpServletRequest req, Model model,
+	 * 
+	 * @ModelAttribute("SESSION_USERCODE") Integer usercode,
+	 * 
+	 * @RequestParam(required = false) String applicationcode) { LOG.info("URL: " +
+	 * req.getServletPath()); if (usercode != null && usercode > -1) { if
+	 * (applicationcode == null || applicationcode.isEmpty()) return
+	 * BPAConstants.REDIRECT_MAPPING.concat("bpainbox.htm");
+	 * 
+	 * model.addAttribute("applicationcode", applicationcode); pathurl =
+	 * req.getServletPath(); model.addAttribute(BPAConstants.SESSION_PATHURL,
+	 * pathurl); String pageurl = BPAConstants.getProcessPage(pathurl); return
+	 * BPAConstants.PARENT_URL_MAPPING.concat(pageurl); } return
+	 * BPAConstants.REDIRECT_MAPPING.concat("login.htm"); }
+	 */
 
 	@GetMapping(value = "/bpascrutinyofbpp.htm")
 	public String bpaScrutinyOfBpp(HttpServletRequest req, Model model,

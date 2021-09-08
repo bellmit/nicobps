@@ -22,7 +22,7 @@
 		</div>
 	</div>
 </div> -->
-<div class="card mb-4">
+<div class="card mb-4" ng-if="Questionnaires != null && Questionnaires.length > 0">
 	<div class="card-body">
 		<div class="card-title h5">Site Inspection Questionnaires</div>
 		<div class="card-body">

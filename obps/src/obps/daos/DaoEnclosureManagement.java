@@ -343,66 +343,58 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			Integer licenseetypecode) {
 		System.out.println("list mapped enc");
 		List<ModulesEnclosures> list = null;
-
 		try {
 
 			String sql = "Select distinct enclosure.enclosurecode,enclosure.processcode From masters.enclosures up,masters.modulesenclosures enclosure "
-					+ "	WHERE up.enclosurecode=enclosure.enclosurecode " + "" + " and enclosure.modulecode=?"
-					+ "  and enclosure.processcode=?"
-					+ " and case when ? != -1 then enclosure.officecode=? else enclosure.officecode ISNULL end "
-					+ " and case when ? != -1 then enclosure.licenseetypecode=? else enclosure.licenseetypecode ISNULL end ";
+					+ "	WHERE up.enclosurecode=enclosure.enclosurecode " + " and enclosure.modulecode=" + modulecode
+					+ "  and enclosure.processcode=" + processcode;
 
-			System.out.println(modulecode + "  " + processcode + " " + officecode + " " + licenseetypecode);
-
-			if (officecode == null) {
-				officecode = -1;
+			if (officecode != null) {
+				sql += " and enclosure.officecode=  " + officecode;
+			} else {
+				sql += " and enclosure.officecode ISNULL ";
 			}
 
-			if (licenseetypecode == null) {
-				licenseetypecode = -1;
+			if (licenseetypecode != null) {
+				sql += " and enclosure.licenseetypecode = " + licenseetypecode;
+			} else {
+				sql += " and enclosure.licenseetypecode ISNULL ";
 			}
 
-			Object[] param = new Object[] { modulecode, processcode, officecode, officecode, licenseetypecode,
-					licenseetypecode };
-			list = jdbcTemplate.query(sql, param,
-					new BeanPropertyRowMapper<ModulesEnclosures>(ModulesEnclosures.class));
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<ModulesEnclosures>(ModulesEnclosures.class));
 		} catch (Exception e) {
 			e.getStackTrace();
 			System.out.println("Error in DaoUserManagement.listModules()  : " + e);
 		}
 		return (list != null) ? list : new LinkedList();
 	}
+
 	@Override
 	public boolean mapModuleEnclosures(List<Map<String, Object>> modulesenclosures) {
 
 		Long slno = (long) 0;
 
 		boolean response = false;
-		Integer officecode = null;
-		Integer licenseetypecode = null;
 		try {
 
-			String sql = "DELETE From masters.modulesenclosures WHERE modulecode=? and processcode=?  "
-					+ " and case when ? != -1 then officecode=? else officecode ISNULL end "
-					+ " and case when ? != -1 then licenseetypecode=? else licenseetypecode ISNULL end ";
+			String sql = "DELETE From masters.modulesenclosures WHERE modulecode=? and processcode=?  ";
 
 			if (Integer.parseInt(modulesenclosures.get(0).get("officecode").toString()) == 0
 					|| modulesenclosures.get(0).get("officecode").toString().trim().equals("")) {
-				officecode = -1;
+				sql += " and officecode ISNULL ";
 			} else {
-				officecode = Integer.parseInt(modulesenclosures.get(0).get("officecode").toString());
+				sql += " and officecode=" + Integer.parseInt(modulesenclosures.get(0).get("officecode").toString());
 			}
 
 			if (Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString()) == 0
 					|| modulesenclosures.get(0).get("licenseetypecode").toString().trim().equals("")) {
-				licenseetypecode = -1;
+				sql += " and licenseetypecode ISNULL ";
 			} else {
-				licenseetypecode = Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString());
+				sql += " and licenseetypecode="+ Integer.parseInt(modulesenclosures.get(0).get("licenseetypecode").toString());
 			}
 
 			if (jdbcTemplate.update(sql, Integer.parseInt(modulesenclosures.get(0).get("modulecode").toString()),
-					Integer.parseInt(modulesenclosures.get(0).get("processcode").toString()), officecode, officecode,
-					licenseetypecode, licenseetypecode) < 0) {
+					Integer.parseInt(modulesenclosures.get(0).get("processcode").toString())) < 0) {
 				return false;
 			}
 			/////////////////////////////////////
