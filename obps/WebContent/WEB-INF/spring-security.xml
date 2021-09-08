@@ -16,7 +16,7 @@
         <intercept-url pattern="/home.htm" access="isAuthenticated()" />
         <intercept-url pattern="/initSignupForm.htm" access="permitAll" />   
         <intercept-url pattern="/submitSignupDetails.htm" access="permitAll" />
-        <intercept-url pattern="/payment/BilldeskResponse.htm" access="permitAll" />   	 
+        <intercept-url pattern="/BilldeskResponse.htm" access="permitAll" />   	 
         
 <!--         
 		<intercept-url pattern="/*" access="isAuthenticated()" />

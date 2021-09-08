@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -32,6 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +43,7 @@ import com.fasterxml.jackson.databind.ext.Java7Handlers;
 
 import obps.daos.DaoEdcrScrutinyInterface;
 import obps.models.EdcrScrutiny;
+import obps.models.Userlogin;
 import obps.util.application.ServiceUtilInterface;
 
 @Service("ServiceEdcrScrutiny")
@@ -53,6 +58,11 @@ public class ServiceEdcrScrutiny {
 	@Autowired
 	private Environment env;
 
+	public static HttpSession session() {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		return attr.getRequest().getSession(true); // true == allow create
+	}
+	
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
@@ -76,13 +86,17 @@ public class ServiceEdcrScrutiny {
 		JSONObject userInfo = new JSONObject();
 		userInfo.put("uuid", "1c79f77e-e847-4663-98a7-5aee31f185c5");
 		userInfo.put("tenantId", "0003");
+		userInfo.put("id", "12345");
 		JSONObject RequestInfo = new JSONObject();
 		RequestInfo.put("userInfo", userInfo);
 		JSONObject edcrRequest = new JSONObject();
 		edcrRequest.put("transactionNumber", uuid);
 		edcrRequest.put("applicationSubType", "NEW_CONSTRUCTION");
 		edcrRequest.put("appliactionType", "BUILDING_PLAN_SCRUTINY");
-		edcrRequest.put("applicantName", "Suraj");
+		
+		Userlogin user=(Userlogin)session().getAttribute("user");
+		edcrRequest.put("applicantName", user.getFullname());
+		
 		edcrRequest.put("tenantId", stateid + "." + tenantid);
 		edcrRequest.put("RequestInfo", RequestInfo);
 		try {

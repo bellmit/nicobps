@@ -27,9 +27,6 @@ public class CsrfSecurityRequestMatcher implements RequestMatcher {
 
 	@Override
 	public boolean matches(HttpServletRequest request) {
-		if (allowedMethods.matcher(request.getMethod()).matches()) {
-			return false;
-		}
 		try {
 			csrfUnprotectedList=(new ObjectMapper()).readValue(env.getProperty("csrfUnprotected"),new TypeReference<ArrayList<String>>(){});
 		} catch (Exception e) {
@@ -39,6 +36,9 @@ public class CsrfSecurityRequestMatcher implements RequestMatcher {
 			if ((new RegexRequestMatcher(url, null)).matches(request)) {
 				return false;
 			}
+		}
+		if (allowedMethods.matcher(request.getMethod()).matches()) {
+			return false;
 		}
 		return true;
 	}
