@@ -132,6 +132,9 @@ public class ServiceEdcrScrutiny {
 			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
 			if (planReport != null || planReport != "") {
 				URL url = new URL(planReport);
+				planReport = planReport.replace(url.getProtocol(), (new URL(serverUrl)).getProtocol());
+				
+				url = new URL(planReport);
 				binaryPlanReport=readfile(url);
 			 
 			}
@@ -139,6 +142,9 @@ public class ServiceEdcrScrutiny {
 			System.out.println(dxfFile);
 			if (dxfFile != null || dxfFile != "") {
 				URL url = new URL(dxfFile);
+				dxfFile = dxfFile.replace(url.getProtocol(), (new URL(serverUrl)).getProtocol());
+				
+				url =  new URL(dxfFile);
 				binaryDxfFile=readfile(url);
 			 
 			}
