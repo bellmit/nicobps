@@ -56,6 +56,23 @@
 				</div>
 			</div>
 		</div>
+		
+		
+		<div class="row">
+			<div class="col">
+				<div class="form-group">
+					<label class="col-sm-12">Name of Engineer on Record </label>
+					<div class="col-sm-12">
+						<input type="text" class="form-control custom-form-control" name="nameofengineer"
+							ng-model="BPA.additionalinfo.nameofengineer" value="VALUE" required/>						
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				
+			</div>
+		</div>		
+		
 	</div>
 </div>
 <br />

@@ -385,7 +385,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "       BPA.plotaddressline1, BPA.plotaddressline2, BPA.plotvillagetown, BPA.plotpincode,   "
 				+ "       BPA.plotgiscoordinates, BPA.officelocationcode, BPA.landregistrationdetails,   "
 				+ "       BPA.landregistrationno, BPA.plotidentifier1, BPA.plotidentifier2, BPA.plotidentifier3,   "
-				+ "       BPA.holdingno, BPA.entrydate," + "		  OL.locationname, OW.ownershiptypename    "
+				+ "       BPA.holdingno, BPA.entrydate," + "		  OL.locationname, OW.ownershiptypename,additionalinfo    "
 				+ "FROM nicobps.bpaapplications  BPA "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode  "
 				+ "INNER JOIN masters.officelocations OL ON OL.locationcode = BPA.officelocationcode  "

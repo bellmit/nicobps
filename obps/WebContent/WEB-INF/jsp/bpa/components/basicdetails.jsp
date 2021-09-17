@@ -17,6 +17,10 @@
 					<label class="col-sm-12"><small>Occupancy</small></label>
 					<label class="col-sm-12">{{basicDetail.occupancy}}</label>
 				</div>
+				<div class="col">
+					<label class="col-sm-12"><small>Name of Engineer on Record</small></label>
+					<label class="col-sm-12">{{basicDetail.additionalinfo}}</label>
+				</div>				
 			</div>	
 		</div>
 		<label class="col-sm-12">Location Details<hr></label>
