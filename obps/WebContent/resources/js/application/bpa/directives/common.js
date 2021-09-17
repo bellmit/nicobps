@@ -189,6 +189,7 @@ app.directive("basicDetails",["$compile", "bpaService", function($compile, BS) {
 			scope.basicDetail.ownershipsubtype = response.ownershipsubtype;
 			scope.OwnerDetails = response.ownerdetails;
 			scope.DocumentDetails = response.documentdetails;
+			scope.basicDetail.additionalinfo=JSON.parse(response.additionalinfo.value).nameofengineer;
 		}, APPCODE);
 	};
 }]);
