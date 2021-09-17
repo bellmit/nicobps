@@ -9,15 +9,20 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Offices;
+import obps.models.PaymentModes;
 import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
@@ -26,7 +31,7 @@ import obps.util.application.DaoUtilInterface;
 @Transactional
 @Repository("daoInitialization")
 public class DaoInitialization implements DaoInitializationInterface {
-	
+
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -38,7 +43,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
-	
+
 	@Override
 	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee) {
 		String sql = "";
@@ -74,6 +79,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
+
 	@Override
 	public boolean updatequestionaires(Questionnaire questionaire) {
 		String sql = "";
@@ -117,12 +123,13 @@ public class DaoInitialization implements DaoInitializationInterface {
 		String sql = "";
 		boolean response = false;
 		try {
-			System.out.println("DAO feemaster::" + suboccupancies.getOccupancycode() + "::" + suboccupancies.getSuboccupancycode()
-					+ "::" + suboccupancies.getSuboccupancyname() + "::" + suboccupancies.getDescription() + "::"
-					);
+			System.out.println("DAO feemaster::" + suboccupancies.getOccupancycode() + "::"
+					+ suboccupancies.getSuboccupancycode() + "::" + suboccupancies.getSuboccupancyname() + "::"
+					+ suboccupancies.getDescription() + "::");
 			sql = "UPDATE masters.suboccupancies SET occupancycode = ?,suboccupancycode=?,suboccupancyname=?,description=? WHERE suboccupancycode = ?";
 			Object[] param = new Object[] { suboccupancies.getOccupancycode(), suboccupancies.getSuboccupancycode(),
-					suboccupancies.getSuboccupancyname(), suboccupancies.getDescription(),suboccupancies.getSuboccupancycode()};
+					suboccupancies.getSuboccupancyname(), suboccupancies.getDescription(),
+					suboccupancies.getSuboccupancycode() };
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -132,18 +139,17 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	public boolean updateusages(Usages usages) {
 		String sql = "";
 		boolean response = false;
 		try {
-			System.out.println("DAO updateusages::" + usages.getSuboccupancycode() + "::" + usages.getUsagecode()
-					+ "::" + usages.getUsagename() + "::" + usages.getDescription() + "::"
-					);
+			System.out.println("DAO updateusages::" + usages.getSuboccupancycode() + "::" + usages.getUsagecode() + "::"
+					+ usages.getUsagename() + "::" + usages.getDescription() + "::");
 			sql = "UPDATE masters.usages SET suboccupancycode=?,usagecode = ?,usagename=?,description=? WHERE usagecode = ?";
-			Object[] param = new Object[] { usages.getSuboccupancycode(), usages.getUsagecode(),
-					usages.getUsagename(), usages.getDescription(),usages.getUsagecode()};
+			Object[] param = new Object[] { usages.getSuboccupancycode(), usages.getUsagecode(), usages.getUsagename(),
+					usages.getDescription(), usages.getUsagecode() };
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -153,8 +159,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
-	
-	
+
 	@Override
 	public boolean updateoccupancy(Occupancies occupancies) {
 		String sql = "";
@@ -226,7 +231,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		System.out.println("inside dao listSubOccupancy end");
 		return (list != null) ? list : new LinkedList();
 	}
-	
+
 	@Override
 	public List<Usages> listUsages() {
 		System.out.println("inside listUsages dao begin");
@@ -245,7 +250,6 @@ public class DaoInitialization implements DaoInitializationInterface {
 		return (list != null) ? list : new LinkedList();
 	}
 
-	
 	@Override
 	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms() {
 		List<LicenseesRegistrationsm> list = null;
@@ -274,6 +278,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return (list != null) ? list : new LinkedList();
 	}
+
 	@Override
 	public List<Questionnaire> listQuestionaires() {
 		List<Questionnaire> list = null;
@@ -305,6 +310,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
+
 	@Override
 	public boolean initQuestionaires(Map<String, Object> param) {
 		boolean response = false;
@@ -314,7 +320,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 			sql = "INSERT INTO masters.questionaires(questioncode,questiondescription) " + "VALUES (?,?) ";
 			Object[] values = { questioncode, ((String) param.get("questiondescription")).trim() };
 			response = jdbcTemplate.update(sql, values) > 0;
-			
+
 		} catch (Exception e) {
 			e.getStackTrace();
 			response = false;
@@ -369,7 +375,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	public boolean initsuboccupancies(Map<String, Object> param) {
 		boolean response = false;
@@ -380,15 +386,11 @@ public class DaoInitialization implements DaoInitializationInterface {
 		System.out.println("dao description::::" + param.get("description"));
 //		Integer feecode = Integer.valueOf((String) param.get("description"));
 		try {
-			
-			
+
 			sql = "INSERT INTO masters.suboccupancies(occupancycode,suboccupancycode,suboccupancyname,description) "
 					+ " VALUES (?,?,?,?) ";
-			Object[] values = { 
-				param.get("occupancycode").toString() ,
-					param.get("suboccupancycode").toString(),
-					param.get("suboccupancyname").toString(),
-					param.get("description").toString() };
+			Object[] values = { param.get("occupancycode").toString(), param.get("suboccupancycode").toString(),
+					param.get("suboccupancyname").toString(), param.get("description").toString() };
 			response = jdbcTemplate.update(sql, values) > 0;
 
 		} catch (Exception e) {
@@ -398,7 +400,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	public boolean initusages(Map<String, Object> param) {
 		boolean response = false;
@@ -409,15 +411,11 @@ public class DaoInitialization implements DaoInitializationInterface {
 		System.out.println("dao description::::" + param.get("description"));
 //		Integer feecode = Integer.valueOf((String) param.get("description"));
 		try {
-			
-			
+
 			sql = "INSERT INTO masters.usages(suboccupancycode,usagecode,usagename,description) "
 					+ " VALUES (?,?,?,?) ";
-			Object[] values = { 
-				param.get("suboccupancycode").toString() ,
-					param.get("usagecode").toString(),
-					param.get("usagename").toString(),
-					param.get("description").toString() };
+			Object[] values = { param.get("suboccupancycode").toString(), param.get("usagecode").toString(),
+					param.get("usagename").toString(), param.get("description").toString() };
 			response = jdbcTemplate.update(sql, values) > 0;
 
 		} catch (Exception e) {
@@ -427,8 +425,7 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
-	
-	
+
 	@Override
 	public boolean createLicenseeRegistration(Map<String, Object> param) {
 		boolean response = false;
@@ -447,14 +444,74 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
-	
+
 	@Override
 	public boolean checkExistance(String sql, Object[] values) {
 		System.out.println("Check Exist!!!");
-		 SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, values);
+		SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, values);
 //		 System.out.println("rowset"+rowSet.next());
-	        return rowSet.next();
+		return rowSet.next();
 	}
-	
 
+	@Override
+	public List<Offices> listOffices() {
+		List<Offices> list = null;
+		try {
+			String sql = "Select * From masters.offices";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Offices>(Offices.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoInitialization.listOffices()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
+
+	@Override
+	public List<Questionnaire> getMappedQuestionaires(Integer officecode) {
+		System.out.println("officecode" + officecode);
+		ObjectMapper mapper = new ObjectMapper();
+		List<Questionnaire> questionlist = null;
+		List<Map<String, Object>> rowList = null;
+		try {
+			String sql = " Select officequestionaires.questioncode From masters.questionaires up,masters.officequestionaires officequestionaires "
+					+ "	WHERE up.questioncode=officequestionaires.questioncode and officecode=:officecode";
+			MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("officecode", officecode);
+			rowList = (List<Map<String, Object>>) namedParameterJdbcTemplate.queryForList(sql, parameters);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.out.println("\n\nError in getMappedQuestionaires(Integer officecode) " + ex);
+		}
+		if (rowList != null) {
+			questionlist = new LinkedList<Questionnaire>();
+			for (Map<String, Object> row : rowList) {
+				questionlist.add(mapper.convertValue(row, Questionnaire.class));
+			}
+		}
+		return (questionlist != null) ? questionlist : new LinkedList();
+	}
+
+	@Override
+	public boolean mapOfficesQuestioniares(List<Map<String, Object>> officesquestions) {
+
+		boolean response = false;
+		try {
+			String sql = "DELETE From masters.officequestionaires WHERE officecode=? ";
+			if (jdbcTemplate.update(sql, officesquestions.get(0).get("officecode")) < 0) {
+				return false;
+			}
+			/////////////////////////////////////
+			sql = "INSERT INTO masters.officequestionaires(officecode, questioncode) VALUES (?, ?)";
+			for (Map<String, Object> up : officesquestions) {
+
+				jdbcTemplate.update(sql, up.get("officecode"),
+						((Map<String, Object>) up.get("questioncode")).get("questioncode"));
+			}
+			response = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.out
+					.println("\n\nError in mapOfficesQuestioniares (List<Map<String,Object>> officesquestions) " + ex);
+		}
+		return response;
+	}
 }

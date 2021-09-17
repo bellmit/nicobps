@@ -12,6 +12,7 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Offices;
 import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
@@ -151,5 +152,26 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	@Override
 	public boolean checkExistance(String sql, Object[] values) {
 		return DaoInitializationInterface.checkExistance(sql, values);
+	}
+	
+	@Override
+	public List<Offices> listOffices() {
+    	return DaoInitializationInterface.listOffices();
+	}
+	
+	@Override
+	public  List<Offices> listOfficesAndQuestionaires(){
+		List<Offices> list = listOffices();
+		for (Offices office : list) {
+			System.out.println("DAO"+office.getOfficecode());
+			office.setMappedquestionaires(DaoInitializationInterface.getMappedQuestionaires(office.getOfficecode()));
+		}
+		return list;
+		
+	}
+	
+	@Override
+	public String saveOfficeQuestioniares(List<Map<String, Object>> officesquestions) {
+		return (DaoInitializationInterface.mapOfficesQuestioniares(officesquestions)) ? "Mapped" : "Failed";
 	}
 }

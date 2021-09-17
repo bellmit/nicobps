@@ -7,6 +7,8 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Offices;
+import obps.models.PaymentModes;
 import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
@@ -57,5 +59,9 @@ public interface DaoInitializationInterface {
 	public boolean initusages(Map<String, Object> param);
 	
 	public boolean checkExistance(String sql, Object[] values);
+	public List <Offices> listOffices();
+	
+	public List<Questionnaire> getMappedQuestionaires(Integer officecode);
+	public boolean mapOfficesQuestioniares(List<Map<String, Object>> officesquestions);
 	
 }

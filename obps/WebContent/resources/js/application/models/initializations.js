@@ -66,6 +66,15 @@ function Questionaire() {
 	return Questionaire;
 }
 
+function OfficeQuestionaires() {
+	var OfficeQuestionaires = {
+		"officecode": 0,
+		"questioncode": 0,
+		};
+	return OfficeQuestionaires;
+}
+
+
 function Occupancy() {
 	var Occupancy = {
 		"occupancycode": "",

@@ -7,6 +7,7 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Offices;
 import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
@@ -62,5 +63,11 @@ public interface ServiceInitializationInterface {
 	public List<FeeTypes> listFeeTypes();
 
 	public List<Questionnaire> listQuestionaires();
+	
+	public List<Offices> listOfficesAndQuestionaires();
+	
+	public List<Offices> listOffices();
+	
+	public String saveOfficeQuestioniares(List<Map<String, Object>> officesquestions);
 
 }

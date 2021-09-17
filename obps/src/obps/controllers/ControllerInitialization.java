@@ -27,6 +27,8 @@ import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.OfficeLocations;
+import obps.models.Offices;
+import obps.models.PaymentModes;
 import obps.models.Processes;
 import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
@@ -39,6 +41,7 @@ import obps.validators.InitFeeMasterValidator;
 
 import obps.validators.InitLicenseesRegistrationValidator;
 import obps.validators.InitOccupanciesValidator;
+import obps.validators.InitOfficesValidator;
 import obps.validators.InitSubOccupanciesValidator;
 import obps.validators.InitUsagesValidator;
 
@@ -69,6 +72,9 @@ public class ControllerInitialization {
 	@Resource
 	private Environment environment;
 
+	@Autowired
+
+	private InitOfficesValidator initOfficesValidator;
 	
 	@GetMapping("/initlicenseesregistrationsm.htm")
 	public String initlicenseesregistrationsm() {
@@ -731,6 +737,35 @@ public class ControllerInitialization {
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
+	}
+	
+	
+	@GetMapping(value="/initofficequestionaires.htm")
+	public String initOfficeQuestionaires() {
+		System.out.println("initOfficeQuestionaires");
+		
+		return "initialization/initofficequestionaires";
+	}	
+	
+	@GetMapping(value = "/listOfficesAndQuestionaires.htm")
+	public @ResponseBody List<Offices> listOfficesAndQuestionaires() {
+
+		return serviceInitalizationInterface.listOfficesAndQuestionaires();
+	}
+	
+	@PostMapping(value = "/saveOfficeQuestioniares.htm")
+	public @ResponseBody String saveOfficeQuestioniares(@RequestBody List<Map<String, Object>> officesquestions) {
+		String response="";
+		if(officesquestions!=null) {
+			String validate= initOfficesValidator.validateOfficesQuestionaires(officesquestions);
+			if(validate!="")
+				response=validate;
+			else
+				response = serviceInitalizationInterface.saveOfficeQuestioniares(officesquestions);
+		}
+		
+		return response;
+		 
 	}
 
 }

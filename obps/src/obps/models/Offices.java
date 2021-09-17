@@ -24,6 +24,7 @@ public class Offices {
 	private String tenantid;
 	private byte[] logo;
 	private List<PaymentModes> mappedpaymentmodes;
+	private List<Questionnaire> mappedquestionaires;
 	
 	public Offices() {
 		super();
@@ -34,7 +35,7 @@ public class Offices {
 			String officeshortname, String officelgdcode, String signatoryname, String signatorydesignation,
 			String senderemailid, String emailidpassword, String smsusername, String smspassword, String smssenderid,
 			String isregisteringoffice, Integer registeringofficecode, String enabled, String stateid, String tenantid,
-			byte[] logo, List<PaymentModes> mappedpaymentmodes) {
+			byte[] logo, List<PaymentModes> mappedpaymentmodes,List<Questionnaire> mappedquestionaires) {
 		super();
 		this.officecode = officecode;
 		this.officename1 = officename1;
@@ -56,6 +57,7 @@ public class Offices {
 		this.tenantid = tenantid;
 		this.logo = logo;
 		this.mappedpaymentmodes = mappedpaymentmodes;
+		this.mappedquestionaires=mappedquestionaires;
 	}
 
 	/**
@@ -292,17 +294,27 @@ public class Offices {
 		this.mappedpaymentmodes = mappedpaymentmodes;
 	}
 
+	public List<Questionnaire> getMappedquestionaires() {
+		return mappedquestionaires;
+	}
+
+	public void setMappedquestionaires(List<Questionnaire> mappedquestionaires) {
+		this.mappedquestionaires = mappedquestionaires;
+	}
+
 	@Override
 	public String toString() {
 		return "Offices [officecode=" + officecode + ", officename1=" + officename1 + ", officename2=" + officename2
 				+ ", officename3=" + officename3 + ", officeshortname=" + officeshortname + ", officelgdcode="
 				+ officelgdcode + ", signatoryname=" + signatoryname + ", signatorydesignation=" + signatorydesignation
-				+ ", emailid=" + senderemailid + ", emailidpassword=" + emailidpassword + ", smsusername=" + smsusername
-				+ ", smspassword=" + smspassword + ", smssenderid=" + smssenderid + ", isregisteringoffice="
-				+ isregisteringoffice + ", registeringofficecode=" + registeringofficecode + ", enabled=" + enabled
-				+ ", stateid=" + stateid + ", tenantid=" + tenantid + ", logo=" + Arrays.toString(logo)
-				+ ", mappedpaymentmodes=" + mappedpaymentmodes + "]";
+				+ ", senderemailid=" + senderemailid + ", emailidpassword=" + emailidpassword + ", smsusername="
+				+ smsusername + ", smspassword=" + smspassword + ", smssenderid=" + smssenderid
+				+ ", isregisteringoffice=" + isregisteringoffice + ", registeringofficecode=" + registeringofficecode
+				+ ", enabled=" + enabled + ", stateid=" + stateid + ", tenantid=" + tenantid + ", logo="
+				+ Arrays.toString(logo) + ", mappedpaymentmodes=" + mappedpaymentmodes + ", mappedquestionaires="
+				+ mappedquestionaires + "]";
 	}
+
 	
 	
 	

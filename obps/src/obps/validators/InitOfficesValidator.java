@@ -247,5 +247,29 @@ public class InitOfficesValidator {
 		}
 		return response;
 	}
+	
+	
+	public String validateOfficesQuestionaires(List<Map<String, Object>> param) {
+		String response = "";
+ 
+		Integer officecode = 0;
+		for (Map<String, Object> up : param) {
+			if (up.get("officecode") != null)
+				officecode = (Integer) up.get("officecode");
+			if (up.get("officecode") == null || officecode == 0) {
+				response = "officecodenull";
+				return response;
+			}
+
+			if (((Map<String, Object>) up.get("questioncode")).get("questioncode") == null) {
+				response = "questionsnull";
+				return response;
+			}
+			System.out.println(up.get("officecode"));
+			System.out.println("response=" + response);
+//			System.out.println(((Map<String, Object>) up.get("url")).get("urlcode"));
+		}
+		return response;
+	}
 
 }
