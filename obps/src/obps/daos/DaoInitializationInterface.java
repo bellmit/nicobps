@@ -7,6 +7,7 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 
@@ -26,10 +27,12 @@ public interface DaoInitializationInterface {
 	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms();
 
 	public List<FeeTypes> listFeeTypes();
+	public List<Questionnaire> listQuestionaires();
 	
 	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee);
 
 	public boolean updatefeetypes(FeeTypes feetype);
+	public boolean updatequestionaires(Questionnaire questionaire);
 
 	public boolean updatefeemaster(FeeMaster feemaster);
 
@@ -43,6 +46,7 @@ public interface DaoInitializationInterface {
 	public boolean createLicenseeRegistration(Map<String, Object> param);
 
 	public boolean initfeetypes(Map<String, Object> param);
+	public boolean initQuestionaires(Map<String, Object> param);
 	
 	public boolean initoccupancy(Map<String, Object> param);
 	
