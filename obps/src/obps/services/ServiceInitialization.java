@@ -12,6 +12,7 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.util.application.ServiceUtilInterface;
@@ -53,6 +54,10 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	@Override
 	public boolean updatefeetypes(FeeTypes feeTypes) {
 		return DaoInitializationInterface.updatefeetypes(feeTypes);
+	}
+	@Override
+	public boolean updatequestionaires(Questionnaire questionaire) {
+		return DaoInitializationInterface.updatequestionaires(questionaire);
 	}
 
 	@Override
@@ -104,6 +109,10 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	public List<FeeTypes> listFeeTypes() {
 		return DaoInitializationInterface.listFeeTypes();
 	}
+	@Override
+	public List<Questionnaire> listQuestionaires() {
+		return DaoInitializationInterface.listQuestionaires();
+	}
 
 	@Override
 	public boolean createLicenseeRegistration(Map<String, Object> param) {
@@ -113,6 +122,10 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	@Override
 	public boolean initfeetypes(Map<String, Object> param) {
 		return DaoInitializationInterface.initfeetypes(param);
+	}
+	@Override
+	public boolean initQuestionaires(Map<String, Object> param) {
+		return DaoInitializationInterface.initQuestionaires(param);
 	}
 
 	@Override

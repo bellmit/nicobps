@@ -18,6 +18,7 @@ import obps.models.FeeMaster;
 import obps.models.FeeTypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
+import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.util.application.DaoUtilInterface;
@@ -70,6 +71,22 @@ public class DaoInitialization implements DaoInitializationInterface {
 			e.getStackTrace();
 			response = false;
 			System.out.println("Error in DaoUserManagement.updatefeetypes(updatefeetypes )  : " + e);
+		}
+		return response;
+	}
+	@Override
+	public boolean updatequestionaires(Questionnaire questionaire) {
+		String sql = "";
+		boolean response = false;
+		try {
+			sql = "UPDATE masters.questionaires SET questiondescription = ? WHERE questioncode = ?";
+			Object[] param = new Object[] { questionaire.getQuestiondescription(), questionaire.getQuestioncode() };
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updatequestionaires(updatequestionaires )  : " + e);
 		}
 		return response;
 	}
@@ -257,6 +274,19 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return (list != null) ? list : new LinkedList();
 	}
+	@Override
+	public List<Questionnaire> listQuestionaires() {
+		List<Questionnaire> list = null;
+		try {
+			String sql = "Select questioncode, questiondescription, enabled from"
+					+ " masters.questionaires Order by questiondescription";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Questionnaire>(Questionnaire.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listQuestionaires()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
 
 	@Override
 	public boolean initfeetypes(Map<String, Object> param) {
@@ -272,6 +302,23 @@ public class DaoInitialization implements DaoInitializationInterface {
 			e.getStackTrace();
 			response = false;
 			System.out.println("Error in DaoUserManagement.createUser(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	@Override
+	public boolean initQuestionaires(Map<String, Object> param) {
+		boolean response = false;
+		String sql = null;
+		Integer questioncode = Integer.valueOf((String) param.get("questioncode"));
+		try {
+			sql = "INSERT INTO masters.questionaires(questioncode,questiondescription) " + "VALUES (?,?) ";
+			Object[] values = { questioncode, ((String) param.get("questiondescription")).trim() };
+			response = jdbcTemplate.update(sql, values) > 0;
+			
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.initQuestionaires(Map<String,String> param) : " + e);
 		}
 		return response;
 	}

@@ -28,6 +28,7 @@ import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.OfficeLocations;
 import obps.models.Processes;
+import obps.models.Questionnaire;
 import obps.models.SubOccupancies;
 import obps.models.Usages;
 import obps.services.ServiceEnclosureManagementInterface;
@@ -643,4 +644,93 @@ public class ControllerInitialization {
 	return data;
 	}
 	
+	@GetMapping("/initquestionaires.htm")
+	public String initquestionaires() {
+		return "initialization/initquestionaires";
+	}
+	
+	@GetMapping("/listQuestionaires.htm")
+	public @ResponseBody List<Questionnaire> listQuestionaires() {
+
+		return serviceInitalizationInterface.listQuestionaires();
+	}
+	
+	
+	@PostMapping(value = "/initquestionaires.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initquestionaires(@RequestBody Map<String, Object> questionaires) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		String questioncode ="";
+		if(serviceInitalizationInterface.getMaxFeeTypecode()!=null) {
+			questioncode = serviceInitalizationInterface.getMaxFeeTypecode() + "";
+			questionaires.put("questioncode", questioncode);
+		}
+		String validate="";
+		validate=initFeeMasterValidator.validateQuestionaires(questionaires);
+		System.out.println(validate);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+			
+//		user.put("usertype", "F");
+		// check existance
+		String sql = "";
+		Object[] values = { questionaires.get("questiondescription") };
+		sql = "SELECT * FROM masters.questionaires WHERE  LOWER(questiondescription)=LOWER(?) ";
+
+		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		if(!exist) {
+			if (serviceInitalizationInterface.initQuestionaires(questionaires)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+		}
+		else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
+		
+		response.put("code", HttpStatus.OK);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping(value = "/updatequestionaires.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updatequestionaires(@RequestBody Questionnaire questionaire) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		String validate="";
+		validate=initFeeMasterValidator.validateQuestionaires(questionaire);
+		System.out.println(validate);
+		if(validate!="") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+				String sql = "";
+				Object[] values = { questionaire.getQuestiondescription() };
+				sql = "SELECT * FROM masters.questionaires WHERE  LOWER(questiondescription)=LOWER(?) ";
+
+				boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+				if(!exist) {
+					if (serviceInitalizationInterface.updatequestionaires(questionaire)) {
+						response.put("code", 200);
+						response.put("data", "Success");
+						return ResponseEntity.ok().body(response);
+					}
+				}
+				else {
+					response.put("code", 200);
+					response.put("data", "exist");
+					return ResponseEntity.ok().body(response);
+				}
+					
+		
+		response.put("code", HttpStatus.OK);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+	}
+
 }

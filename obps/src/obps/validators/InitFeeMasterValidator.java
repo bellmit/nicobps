@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.Questionnaire;
 @Component
 public class InitFeeMasterValidator{
 
@@ -228,6 +229,25 @@ public class InitFeeMasterValidator{
 		}
 		return response;
 	}
+	public String validateQuestionaires(Map<String, Object> param) {
+		String response = "";
+		System.out.println(param);
+		
+		String questiondescription="";
+		if(param.get("questiondescription")!=null) {
+			questiondescription=param.get("questiondescription").toString();
+			if(questiondescription.length()>255) {
+				System.out.println(questiondescription.length()>255);
+				response= "Question Description Cannot Exceed More Than 255 Characters";
+				return response;
+			}
+		}
+		else {
+			response= "Question Description Cannot be Null";
+			return response;
+		}
+		return response;
+	}
 
 	
 	public String validateInitFeeTypes(FeeTypes param) { 
@@ -246,6 +266,26 @@ public class InitFeeMasterValidator{
 		}
 		else {
 			response= "Fee Type Description Cannot be Null";
+			return response;
+		}
+		return response;
+	}
+	public String validateQuestionaires(Questionnaire param) { 
+		String response = "";
+		System.out.println(param);
+		
+		
+		String questiondescription="";
+		if(param.getQuestiondescription()!=null) {
+			questiondescription=param.getQuestiondescription().toString();
+			if(questiondescription.length()>255) {
+				System.out.println(questiondescription.length()>255);
+				response= "Question Description Cannot Exceed More Than 255 Characters";
+				return response;
+			}
+		}
+		else {
+			response= "Question Description Cannot be Null";
 			return response;
 		}
 		return response;

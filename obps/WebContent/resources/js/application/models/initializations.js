@@ -57,6 +57,15 @@ function FeeType() {
 	return FeeType;
 }
 
+function Questionaire() {
+	var Questionaire = {
+		"questioncode": 0,
+		"questiondescription": "",
+		"enabled": "Y"
+	};
+	return Questionaire;
+}
+
 function Occupancy() {
 	var Occupancy = {
 		"occupancycode": "",
