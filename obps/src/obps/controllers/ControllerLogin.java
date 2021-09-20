@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import obps.models.DashboardData;
 import obps.util.application.ServiceUtilInterface;
 
 @Controller
@@ -41,6 +42,9 @@ public class ControllerLogin {
 			model.addAttribute("msg", "You've been logged out successfully.");
 		}
 
+		List<DashboardData> listDashboardData = SUI.listDashboardData();
+		model.addAttribute("listDashboardData",listDashboardData);
+		
 		return "login";
 	}
 	

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+import obps.models.DashboardData;
+
 public interface ServiceUtilInterface {
 	public List<CommonMap> listCommonMap(final String sql);
 
@@ -139,4 +141,6 @@ public interface ServiceUtilInterface {
 	public Map<String, Object> getPlanInfo(String permitnumber);
 
 	public List<Map<String, Object>> listUsers(Integer officecode);
+	
+	public List<DashboardData> listDashboardData();
 }

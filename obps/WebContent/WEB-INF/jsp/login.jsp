@@ -17,7 +17,30 @@
 			<div class="row">
 				<div class="col-lg-8 d-flex">
 					<div class="align-self-center pr-5">
-						<h1 class="text-right mt-5 b-left-head">Online Building Permission System</h1>
+						<h1 class="text-left mt-5 b-left-head">Online Building Permission System</h1>
+						<hr/>
+						<h5 class="text-left mt-5 b-left-head">Dashboard For Building Permission Applications Till Date</h5>
+						<table class="datatable">
+							<thead >
+								<tr>
+									<th>Office Name</th>
+									<th>No. of Applications Received</th>
+									<th>No. of Applications Approved</th>
+									<th>No. of Applications Under Processing</th>
+								</tr>
+							</thead>
+							<tbody>
+								<core:forEach items="${listDashboardData}" var="I">
+								<tr>
+									<td><core:out value="${I.officename}" escapeXml="true"></core:out></td>
+									<td><core:out value="${I.totalac}" escapeXml="true"></core:out></td>
+									<td><core:out value="${I.approvedac}" escapeXml="true"></core:out></td>
+									<td><core:out value="${I.pendingac}" escapeXml="true"></core:out></td>
+								</tr>
+								
+								</core:forEach>
+							</tbody>							
+						</table>
 					</div>
 				</div>
 				

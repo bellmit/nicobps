@@ -39,3 +39,48 @@
     -o-border-radius: 6px; 
     cursor: pointer;   
 }
+
+.datatable {
+    font-family:arial;
+    margin:10px 0pt 15px;
+    margin-top:0px;			
+    font-size: 8pt;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #ddd;			
+    border-collapse: collapse;
+}
+.datatable thead tr th, .datatable tfoot tr td {
+    border:1px solid #ddd;
+    font-size: 9pt;
+    padding: 10px;
+}
+.datatable thead tr:first-child{
+    background-color: #eee;			
+} 				
+.datatable tbody td {
+    color:#3D3D3D;
+    padding: 8px;
+    background-color: #f9f9f9;
+    vertical-align: top;
+    border:1px solid #ddd;
+}
+.datatable tbody tr.odd td {
+    background-color:#FFF;
+}
+.datatable tbody tr:hover td {
+    color: #9e0303; 
+    /*font-weight:bold;*/
+    background-color:#eee;
+}
+.datatable thead tr th.sorting_asc,.datatable thead tr th.sorting_desc{
+    background-color: #CCC;			
+} 		
+.datatable tbody tr td.sorting_1{
+    background-color: #CCC;			
+} 
+.datatable td:first-child{
+    width: auto;
+    vertical-align: top;		
+}
+

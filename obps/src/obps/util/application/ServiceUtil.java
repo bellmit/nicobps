@@ -11,6 +11,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import obps.models.DashboardData;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -511,5 +514,15 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "where uo.officecode=?   ORDER BY u.fullname DESC ";
 
 		return this.listGeneric(sql, new Object[] { officecode });
+	}
+	
+	
+	public List<DashboardData> listDashboardData() 
+	{		
+		String sql = "SELECT officename1 AS officename,COUNT(applicationcode) AS totalac,0 AS approvedac,COUNT(applicationcode) AS pendingac "
+				+ "FROM nicobps.applications A "
+				+ "INNER JOIN masters.offices O ON O.officecode = A.officecode "
+				+ "GROUP BY officename1 ";
+		return this.listGeneric(DashboardData.class, sql, new Object[] { });
 	}
 }
