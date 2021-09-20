@@ -157,12 +157,12 @@ public class Report extends HttpServlet {
 					return;
 				}
 
-				params.put("officecode", officecode);
+				params.put("officecode", Integer.valueOf(officecode));
 				params.put("fromdate", fromdate);
 				params.put("todate", todate);
 
 				reportName = "reports/dayendstatement.jrxml";
-				filename = "Dayendstatement.pdf";
+				filename = "dayendstatement.pdf";
 			} else if (status != null && status.equals("4")) {
 				System.out.println("applicationcode=" + request.getParameter("applicationcode"));
 				String applicationcode = (request.getParameter("applicationcode") == null

@@ -1,21 +1,276 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dayendstatement" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4afba843-605f-4b5a-960c-6d45fda6cf68">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dayendcashstatement" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NO_DATA_ADAPTER"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="officecode" class="java.lang.Integer"/>
+	<parameter name="fromdate" class="java.lang.String"/>
+	<parameter name="todate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END ||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, ' RECEIPTNO ' AS RECEIPTNO,
+T.TRANSACTIONCODE || '' AS TRANSACTIONCODE, A.APPLICATIONCODE, FEETYPEDESCRIPTION, FULLNAME, T.AMOUNT || '' AS AMOUNT, PAYMENTMODEDESCRIPTION , TO_CHAR(T.ENTRYDATE, 'DD-MM-YYYY') AS PAYMENTDATE
+FROM
+TRANSACTIONS T INNER JOIN APPLICATIONSTRANSACTIONMAP M ON T.TRANSACTIONCODE = M.TRANSACTIONCODE
+INNER JOIN APPLICATIONS A ON A.APPLICATIONCODE = M.APPLICATIONCODE
+INNER JOIN MASTERS.FEEMASTER FM ON FM.FEECODE = T.FEECODE
+INNER JOIN MASTERS.FEETYPES FT ON FT.FEETYPECODE = FM.FEETYPECODE
+INNER JOIN USERLOGINS U ON U.USERCODE = T.USERCODE
+INNER JOIN MASTERS.PAYMENTMODES PM ON PM.PAYMENTMODECODE = T.PAYMENTMODECODE
+INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE
+WHERE PAYMENTSTATUS = 'S'
+AND O.OFFICECODE = $P{officecode}
+AND TO_CHAR(T.ENTRYDATE, 'dd-mm-yyyy') >= $P{fromdate}
+AND TO_CHAR(T.ENTRYDATE, 'dd-mm-yyyy') <= $P{todate}
+ORDER BY T.TRANSACTIONCODE]]>
+	</queryString>
+	<field name="office" class="java.lang.String"/>
+	<field name="receiptno" class="java.lang.String"/>
+	<field name="transactioncode" class="java.lang.String"/>
+	<field name="applicationcode" class="java.lang.String"/>
+	<field name="feetypedescription" class="java.lang.String"/>
+	<field name="fullname" class="java.lang.String"/>
+	<field name="amount" class="java.lang.String"/>
+	<field name="paymentmodedescription" class="java.lang.String"/>
+	<field name="paymentdate" class="java.lang.String"/>
+	<variable name="qrdata" class="java.lang.String">
+		<variableExpression><![CDATA["Office  :"+$F{office}+"\n"+
+"Payment Description :"+$F{feetypedescription}+"\n"+
+"Name : "+$F{fullname}+"\n"+
+"Application Code :"+$F{applicationcode}+"\n"+
+"Transaction Code :"+$F{transactioncode}+"\n"+
+"Amount :"+$F{amount}]]></variableExpression>
+	</variable>
 	<title>
-		<band height="79" splitType="Stretch"/>
+		<band height="86" splitType="Stretch">
+			<textField>
+				<reportElement x="57" y="1" width="694" height="39"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{office}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="802" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DAY END CASH STATEMENT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="66" width="802" height="19" forecolor="#000000" backcolor="#3399FF"/>
+				<textElement textAlignment="Center" markup="none">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["FROM " + $P{fromdate} + " TO " + $P{todate}]]></textFieldExpression>
+			</textField>
+		</band>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch"/>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="15" width="46" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SL NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="46" y="15" width="105" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECEIPT NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="15" width="55" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="207" y="15" width="114" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TRANSACTION
+CODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="321" y="15" width="112" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APPLICATION CODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="15" width="138" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAYEE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="571" y="15" width="154" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAYMENT DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="725" y="15" width="77" height="26" forecolor="#000000" backcolor="#3399FF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AMOUNT]]></text>
+			</staticText>
+		</band>
 	</pageHeader>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="207" y="0" width="114" height="20"/>
+				<box topPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transactioncode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="571" y="0" width="154" height="20"/>
+				<box topPadding="1" leftPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font size="9" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{feetypedescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="725" y="0" width="77" height="20"/>
+				<box topPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="0" width="56" height="20"/>
+				<box topPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{paymentdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="321" y="0" width="112" height="20"/>
+				<box topPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{applicationcode}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="433" y="0" width="138" height="20"/>
+				<box topPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fullname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="46" y="0" width="105" height="20"/>
+				<box topPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transactioncode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="0" width="46" height="20"/>
+				<box topPadding="1" leftPadding="1">
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font size="9" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
 </jasperReport>

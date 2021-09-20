@@ -519,10 +519,28 @@ public class ServiceUtil implements ServiceUtilInterface {
 	
 	public List<DashboardData> listDashboardData() 
 	{		
-		String sql = "SELECT officename1 AS officename,COUNT(applicationcode) AS totalac,0 AS approvedac,COUNT(applicationcode) AS pendingac "
-				+ "FROM nicobps.applications A "
-				+ "INNER JOIN masters.offices O ON O.officecode = A.officecode "
-				+ "GROUP BY officename1 ";
+		String sql = " SELECT OFFICE AS officename, SUM(totalac) as totalac, sum(approvedac) AS approvedac, SUM(totalac) - sum(approvedac)  AS pendingac \r\n" + 
+				"FROM(SELECT\r\n" + 
+				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE,\r\n" + 
+				"COUNT(A.APPLICATIONCODE) AS totalac,  0 AS approvedac, 0 AS pendingac \r\n" + 
+				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode \r\n" + 
+				"WHERE MODULECODE = 2 \r\n" + 
+				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END \r\n" + 
+				"UNION ALL \r\n" + 
+				"SELECT\r\n" + 
+				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE,\r\n" + 
+				"0 AS totalac,  COUNT(A.APPLICATIONCODE)  AS approvedac, 0  AS pendingac \r\n" + 
+				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode \r\n" + 
+				"INNER JOIN BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE\r\n" + 
+				"WHERE MODULECODE = 2 \r\n" + 
+				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END \r\n" + 
+				") S\r\n" + 
+				"GROUP BY OFFICE\r\n" + 
+				"ORDER BY OFFICE";
 		return this.listGeneric(DashboardData.class, sql, new Object[] { });
 	}
 }

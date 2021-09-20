@@ -19,7 +19,7 @@
 					<div class="align-self-center pr-5">
 						<h1 class="text-left mt-5 b-left-head">Online Building Permission System</h1>
 						<hr/>
-						<h5 class="text-left mt-5 b-left-head">Dashboard For Building Permission Applications Till Date</h5>
+						<h5 class="text-left mt-5 b-left-head"></h5>
 						<table class="datatable">
 							<thead >
 								<tr>
