@@ -324,20 +324,25 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public List<CommonMap> listLicenseeType() {
 
-		String sql = "SELECT T.licenseetypecode AS key, T.licenseetypename AS value\r\n"
-				+ "				FROM masters.licenseetypes T \r\n" + "				 ORDER BY T.licenseetypename ";
+		String sql = "SELECT T.licenseetypecode AS key, T.licenseetypename AS value "
+				+ "				FROM masters.licenseetypes T  " + "				 ORDER BY T.licenseetypename ";
 		return this.listCommonMap(sql);
 	}
 
 	@Override
 	public List<Map<String, Object>> listUserValidOffices(Integer usercode) {
 
-		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,O1.OFFICECODE,  O1.STATEID, O1.TENANTID,\r\n"
-				+ "Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS NEWVALIDTO \r\n"
-				+ "FROM MASTERS.OFFICES O1, \r\n" + "nicobps.licenseeofficesvalidities  B, \r\n"
-				+ "nicobps.USERLOGINS U \r\n" + "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE \r\n"
-				+ "AND U.USERCODE = B.USERCODE\r\n" + "AND    U.USERCODE = ?  \r\n" + "ORDER BY O1.OFFICENAME1";
+		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,O1.OFFICECODE,  O1.STATEID, O1.TENANTID, "
+				+ "Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS NEWVALIDTO  "
+				+ "FROM MASTERS.OFFICES O1,  " + "nicobps.licenseeofficesvalidities  B,  "
+				+ "nicobps.USERLOGINS U  " + "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE  "
+				+ "AND U.USERCODE = B.USERCODE " 
+				+ " AND    Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END >= current_date "
+				+ " AND    U.USERCODE = ?   " + "ORDER BY O1.OFFICENAME1";
 
+			
+		
+		
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql, criteria);
 	}
@@ -478,19 +483,26 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<Map<String, Object>> listStakeholders(Integer officecode) {
-		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l \r\n"
-				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \r\n"
-				+ "								where li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='N' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC \r\n";
-
+		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l  "
+				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode  "
+				+ "								where "
+				+ " CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END <=current_date "
+				+ " AND li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='Y' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC  ";
+		System.out.println("Query 1 "+ sql + "  Ofice code"+ officecode);
+		
 		return this.listGeneric(sql, new Object[] { officecode });
 	}
 
 	@Override
 	public List<Map<String, Object>> listStakeholdersMain(Integer officecode) {
-		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l \r\n"
-				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode \r\n"
-				+ "								where li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y'  and registeringofficecode=? ORDER BY officename1) OR officecode=? ORDER BY l.applicantsname DESC \r\n";
+		String sql = "SELECT distinct l.usercode as key,l.applicantsname as value FROM nicobps.licensees l  "
+				+ "								INNER JOIN nicobps.licenseeofficesvalidities li on li.usercode=l.usercode  "
+				+ "								where "
+				+ " CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END <=current_date "
+				+ " li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y'  and registeringofficecode=? ORDER BY officename1) OR officecode=? ORDER BY l.applicantsname DESC  ";
 
+		System.out.println("Query 2 "+ sql + "  Ofice code"+ officecode);
+		
 		return this.listGeneric(sql, new Object[] { officecode, officecode });
 	}
 
@@ -508,9 +520,9 @@ public class ServiceUtil implements ServiceUtilInterface {
 	@Override
 	public List<Map<String, Object>> listUsers(Integer officecode) {
 		System.out.println("officecode:::" + officecode);
-		String sql = "SELECT distinct u.usercode as key,u.fullname as value FROM nicobps.userlogins u\r\n"
-				+ "INNER JOIN nicobps.useroffices uo on uo.usercode=u.usercode \r\n"
-				+ "INNER JOIN masters.offices o on o.officecode=uo.officecode\r\n"
+		String sql = "SELECT distinct u.usercode as key,u.fullname as value FROM nicobps.userlogins u "
+				+ "INNER JOIN nicobps.useroffices uo on uo.usercode=u.usercode  "
+				+ "INNER JOIN masters.offices o on o.officecode=uo.officecode "
 				+ "where uo.officecode=?   ORDER BY u.fullname DESC ";
 
 		return this.listGeneric(sql, new Object[] { officecode });
@@ -519,27 +531,27 @@ public class ServiceUtil implements ServiceUtilInterface {
 	
 	public List<DashboardData> listDashboardData() 
 	{		
-		String sql = " SELECT OFFICE AS officename, SUM(totalac) as totalac, sum(approvedac) AS approvedac, SUM(totalac) - sum(approvedac)  AS pendingac \r\n" + 
-				"FROM(SELECT\r\n" + 
-				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE,\r\n" + 
-				"COUNT(A.APPLICATIONCODE) AS totalac,  0 AS approvedac, 0 AS pendingac \r\n" + 
-				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode \r\n" + 
-				"WHERE MODULECODE = 2 \r\n" + 
-				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END \r\n" + 
-				"UNION ALL \r\n" + 
-				"SELECT\r\n" + 
-				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE,\r\n" + 
-				"0 AS totalac,  COUNT(A.APPLICATIONCODE)  AS approvedac, 0  AS pendingac \r\n" + 
-				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode \r\n" + 
-				"INNER JOIN BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE\r\n" + 
-				"WHERE MODULECODE = 2 \r\n" + 
-				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END \r\n" + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END \r\n" + 
-				") S\r\n" + 
-				"GROUP BY OFFICE\r\n" + 
+		String sql = " SELECT OFFICE AS officename, SUM(totalac) as totalac, sum(approvedac) AS approvedac, SUM(totalac) - sum(approvedac)  AS pendingac  " + 
+				"FROM(SELECT " + 
+				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, " + 
+				"COUNT(A.APPLICATIONCODE) AS totalac,  0 AS approvedac, 0 AS pendingac  " + 
+				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  " + 
+				"WHERE MODULECODE = 2  " + 
+				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  " + 
+				"UNION ALL  " + 
+				"SELECT " + 
+				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, " + 
+				"0 AS totalac,  COUNT(A.APPLICATIONCODE)  AS approvedac, 0  AS pendingac  " + 
+				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  " + 
+				"INNER JOIN BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE " + 
+				"WHERE MODULECODE = 2  " + 
+				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
+				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  " + 
+				") S " + 
+				"GROUP BY OFFICE " + 
 				"ORDER BY OFFICE";
 		return this.listGeneric(DashboardData.class, sql, new Object[] { });
 	}
