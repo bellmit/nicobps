@@ -3,8 +3,11 @@ package obps.util.application;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
+import obps.models.Audittrail;
 import obps.models.DashboardData;
 import obps.models.UserApplications;
 
@@ -146,4 +149,8 @@ public interface ServiceUtilInterface {
 	public List<DashboardData> listDashboardData();
 	
 	public List<UserApplications> listUserApplications(Integer officecode);
+	
+	public List<Audittrail> listAuditrail();
+	
+	public void initAuditrail(HttpServletRequest request);
 }

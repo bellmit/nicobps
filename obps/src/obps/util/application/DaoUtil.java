@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 
 import javax.sql.DataSource;
 import org.springframework.stereotype.Repository;
@@ -355,4 +356,22 @@ public class DaoUtil implements DaoUtilInterface {
 
 	};
 
+	
+	@Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+    public void initAuditrail(HashMap<String, String> map)            
+    {  
+        try
+        {
+            String sql = "INSERT INTO nicobps.audittrail(userid,actiontaken,pageurl,browser,os,ipaddress) "
+                       + "VALUES(?,?,?,?,?,?) "; 
+            Object[] values={map.get("userid"),map.get("actiontaken"),map.get("pageurl"),map.get("browser"),map.get("os"),map.get("ipaddress")};
+            jdbcTemplate.update(sql, values);                        
+        }catch(Exception e){
+            System.out.println("Error in DaoUtil.initAuditrail(final HashMap<String, String> map) : "+e);
+        }finally{
+            map=null;
+        }
+    }    	
+	
 }

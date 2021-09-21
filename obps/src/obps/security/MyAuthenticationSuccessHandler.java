@@ -27,7 +27,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 	    @Override
 	    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {        	
 	    	HttpSession session = request.getSession();
-	    	serviceUserManagementInterface.settUserSesson(session, SecurityContextHolder.getContext().getAuthentication().getName());	        
+	    	serviceUserManagementInterface.settUserSesson(request,session, SecurityContextHolder.getContext().getAuthentication().getName());	        
 	    	//Userlogin user = (Userlogin)session.getAttribute("user");
 	        //System.out.println(user.toString());	    	
 	        setDefaultTargetUrl("/home.htm");

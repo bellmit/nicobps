@@ -1,5 +1,6 @@
 package obps.util.application;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,4 +54,6 @@ public interface DaoUtilInterface {
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
 
 	public Map<String, Object> getPlanInfo(String permitnumber);
+	
+	public void initAuditrail(HashMap<String, String> map);
 }

@@ -4,6 +4,7 @@ package obps.util.application;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.util.HashMap;
@@ -12,8 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import obps.models.Audittrail;
 import obps.models.DashboardData;
 import obps.models.UserApplications;
+import obps.models.Userlogin;
+import obps.util.common.Utilty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -572,5 +576,62 @@ public class ServiceUtil implements ServiceUtilInterface {
 				   +"GROUP BY PR.processcode,PR.processname ";
 		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode});
 	}	
+	
+    @Override
+    public List<Audittrail> listAuditrail() 
+    {
+        Object[] criteria = new Object[]{};  
+        String sql = "SELECT username,A.userid,actiontaken,pageurl,browser,os,ipaddress,TO_CHAR(A.entrydate,'YYYY-MM-DD HH:MI:SS AM') AS entrydate FROM nicobps.audittrail A "
+                   + "LEFT OUTER JOIN nicobps.userlogins UL ON UL.username=A.userid "
+                   + "ORDER BY A.entrydate DESC ";     
+        return this.listGeneric(Audittrail.class, sql, criteria);
+    }   	
+	
+    @Override
+    public void initAuditrail(HttpServletRequest request) 
+    {
+        String userid,actiontaken;
+        Userlogin user=(Userlogin)request.getSession().getAttribute("user");
+        if (user.getUsername()!= null) {
+            userid = user.getUsername();
+        } else if (request.getParameter("userid")!= null && !request.getParameter("userid").equals("")) {
+            userid = request.getParameter("userid");
+        }else if (request.getAttribute("userid")!= null && !request.getAttribute("userid").equals("")) {
+            userid = (String)request.getAttribute("userid");
+        }else{
+            userid = "";
+        }
+        
+        if (request.getParameter("actiontaken")!= null && !request.getParameter("actiontaken").equals("")) {
+            actiontaken = request.getParameter("actiontaken");
+        }else if (request.getAttribute("actiontaken")!= null && !request.getAttribute("actiontaken").equals("")) {
+            actiontaken = (String)request.getAttribute("actiontaken");
+        }else{
+            actiontaken = "";
+        }        
+        
+        HashMap<String, String> map=Utilty.getClientDetails(request);
+        map.put("userid",userid);
+        map.put("actiontaken",actiontaken);
+        
+        if(actiontaken.equals("Login")){ 
+            map.put("pageurl","/obps/login.htm");        
+            map.put("actiontaken","Login Success");        
+        }
+        if(actiontaken.equals("Logout")){
+            map.put("pageurl","/obps/logout.htm");
+            map.put("actiontaken","Logout Success");        
+        }
+        daoUtilInterface.initAuditrail(map);
+ 
+//        System.out.print("\n================Auditrail Log Starts===============\n");
+//        System.out.print("userid : "+map.get("userid"));
+//        System.out.print("\nactiontaken : "+map.get("actiontaken"));
+//        System.out.print("\nos : "+map.get("os"));
+//        System.out.print("\nbrowser : "+map.get("browser"));
+//        System.out.print("\nipaddress : "+map.get("ipaddress"));
+//        System.out.print("\npageurl : "+map.get("pageurl"));    
+//        System.out.print("\n================Auditrail Log Ends=================\n");
+    }	
 	
 }

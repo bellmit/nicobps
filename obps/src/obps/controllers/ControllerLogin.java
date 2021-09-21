@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import obps.models.Audittrail;
 import obps.models.DashboardData;
 import obps.models.UserApplications;
 import obps.util.application.ServiceUtilInterface;
@@ -53,11 +54,22 @@ public class ControllerLogin {
     public String loginerror(ModelMap model, HttpServletRequest request,HttpSession session) {
 		List<DashboardData> listDashboardData = SUI.listDashboardData();
 		model.addAttribute("listDashboardData",listDashboardData);
+		
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        request.setAttribute("userid",userid);
+        request.setAttribute("actiontaken","Loginfailed");        
+		SUI.initAuditrail(request);
         return "login";
     }	
 	
     @RequestMapping(value = "/logout.htm", method = RequestMethod.GET)
-    public String logout(HttpServletRequest request, HttpServletResponse response) {    	
+    public String logout(HttpServletRequest request, HttpServletResponse response) {  
+
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        request.setAttribute("userid",userid);
+        request.setAttribute("actiontaken","Logout");        
+		SUI.initAuditrail(request);	
+    	
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		if (auth != null) {			
 			new SecurityContextLogoutHandler().logout(request, response, auth);
@@ -76,6 +88,13 @@ public class ControllerLogin {
 		model.addAttribute("listUserApplications",listUserApplications);				
 		return "home";
 	}
+		
+	@RequestMapping("/audittrail.htm")
+	public String audittrail(Model model) {
+		List<Audittrail> listAuditrail = SUI.listAuditrail();
+		model.addAttribute("listAuditrail",listAuditrail);			
+		return "audittrail";
+	}	  	
 	
 	@RequestMapping("/contactus.htm")
 	public String contactus() {

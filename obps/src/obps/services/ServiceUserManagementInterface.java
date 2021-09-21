@@ -2,6 +2,8 @@ package obps.services;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import obps.models.FeeMaster;
@@ -31,7 +33,7 @@ public interface ServiceUserManagementInterface {
 
 	public boolean submitLicenseesenclosures(LicenseesEnclosures licenseesenclosures);
 
-	public void settUserSesson(HttpSession session, final String username);
+	public void settUserSesson(HttpServletRequest request,HttpSession session, final String username);
 
 	public boolean updatePassword(Map<String, Object> param);
 

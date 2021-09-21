@@ -3,6 +3,7 @@ package obps.services;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
@@ -69,12 +70,16 @@ public class ServiceUserManagement implements ServiceUserManagementInterface
     }
     
     @Override
-    public void settUserSesson(HttpSession session,final String username) {
+    public void settUserSesson(HttpServletRequest request,HttpSession session,final String username) {
     	Userlogin user= DaoUserManagementInterface.getUserlogin(username);
     	session.setAttribute("usercode", user.getUsercode().toString());    	
     	session.setAttribute("licenseetypecode", user.getLicenseetypecode()!=null?user.getLicenseetypecode().toString():null); 
     	session.setAttribute("user", user);
     	session.setAttribute("menu",DomainUserManagementInterface.processUrls(DaoUserManagementInterface.getPageUrls(user.getUsercode())));
+    	
+        request.setAttribute("userid",user.getUsername());
+        request.setAttribute("actiontaken","Login");
+        serviceUtilInterface.initAuditrail(request);      	
     }
     
     @Override
