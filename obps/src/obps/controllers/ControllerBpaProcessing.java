@@ -386,7 +386,6 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {		
 		usercode = getSessionUsercode(model);
 		if(processcode!=null && processcode.trim().length()>0) {
-			System.out.println("======processcode===== : "+processcode);
 			return SBI.listBPApplications(usercode,Integer.valueOf(processcode));
 		}else {
 			return SBI.listBPApplications(usercode);			
