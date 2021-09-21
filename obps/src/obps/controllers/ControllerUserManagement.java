@@ -307,13 +307,13 @@ public class ControllerUserManagement {
 					String successMsg = "";
 					if (user != null) {
 						if (listEnclosuresNotUploades.size() == 0) {
-							successMsg = "Documents uploaded successfully, please <a href=\"ulbregistration.htm\"><b><u>REGISTER</u></b></a>  with UBLs, if not Registered.";
+							successMsg = "Documents uploaded successfully, please <a href=\"ulbregistration.htm\"><b><u>REGISTER</u></b></a>  with ULBs, if not Registered.";
 						} else {
 							successMsg = "Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
 						}
 					} else {
 						if (listEnclosuresNotUploades.size() == 0) {
-							successMsg = "Documents uploaded successfully, please <a href=\"login.htm\"><b><u>login</u></b></a> and register with UBLs";
+							successMsg = "Documents uploaded successfully, please <a href=\"login.htm\"><b><u>login</u></b></a> and register with ULBs";
 						} else {
 							successMsg = "Documents uploaded successfully, please upload the remaining documents indicated as mandatory before being allowed to empanel with ULBs";
 						}

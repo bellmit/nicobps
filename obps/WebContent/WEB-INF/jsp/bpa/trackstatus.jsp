@@ -17,7 +17,7 @@
 				<%@include file="../common/menutop.jsp"%>
 				<div class="container-fluid">
 					<h3 class="mt-4" style="font-size: 32px; border-bottom: 3px solid #005776">
-						My Applications Track Status
+						Track Status
 					</h3>
 					<div class="table-responsive" id="displayRecordsDiv">
                           <div id="displayRecords" style='width:100%;margin: 0px auto 50px auto; padding: 0px 20px'></div>

@@ -18,7 +18,7 @@
 				<%@include file="../common/menutop.jsp"%>
 				<div class="container-fluid">
 					<h3 class="mt-4" style="font-size: 32px; border-bottom: 3px solid #005776">
-						My Applications
+						Applications
 						<span id="pcode" style="display:none">${processcode}</span>
 					</h3>
 					<div class="table-responsive" id="displayRecordsDiv">
