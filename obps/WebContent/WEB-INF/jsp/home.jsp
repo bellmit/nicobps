@@ -47,8 +47,11 @@
 								</core:forEach>
 							</div>
 						</core:if>
-
- 						<div class="row text-center pl-4" id="sortable-cards"> 
+						
+						<core:if test="${listUserApplications.size()>0}">
+						<h5>Click to perform an action</h5>
+ 						<div class="row text-center pl-4" id="sortable-cards">
+ 						 
  							<core:forEach items="${listUserApplications}" var="app">
  						    <div class="col-lg-3 col-sm-12 p-3 b-customize"> 
  						        <div class="bg-light p-4 b-dbcard"> 
@@ -69,7 +72,7 @@
  						    </div> 
 							</core:forEach>
  						</div> 
- 						
+ 						</core:if>
 						
 						
 						<!-- 					<div class="pl-4 text-right" style="font-size: 24px"> -->
