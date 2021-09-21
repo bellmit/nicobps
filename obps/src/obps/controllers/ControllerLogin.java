@@ -21,6 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.models.DashboardData;
+import obps.models.UserApplications;
 import obps.util.application.ServiceUtilInterface;
 
 @Controller
@@ -49,7 +50,9 @@ public class ControllerLogin {
 	}
 	
     @RequestMapping(value = "/loginfailed.htm", method = RequestMethod.GET)
-    public String loginerror(ModelMap model, HttpServletRequest request,HttpSession session) {           
+    public String loginerror(ModelMap model, HttpServletRequest request,HttpSession session) {
+		List<DashboardData> listDashboardData = SUI.listDashboardData();
+		model.addAttribute("listDashboardData",listDashboardData);
         return "login";
     }	
 	
@@ -64,10 +67,13 @@ public class ControllerLogin {
 
 	@RequestMapping("/home.htm")
 	public String index(Model model) {
-		List<Map<String,Object>> list=SUI.getCurrentProcessStatus(1, Integer.valueOf(session().getAttribute("usercode").toString()));
+		Integer usercode = Integer.valueOf(session().getAttribute("usercode").toString());
+		List<Map<String,Object>> list=SUI.getCurrentProcessStatus(1, usercode);
 		if(!list.isEmpty()) {
 			model.addAttribute("processess",list);
-		}
+		}		
+		List<UserApplications> listUserApplications = SUI.listUserApplications(usercode);
+		model.addAttribute("listUserApplications",listUserApplications);				
 		return "home";
 	}
 	

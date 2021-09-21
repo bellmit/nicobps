@@ -47,23 +47,28 @@
     font-size: 8pt;
     width: 100%;
     text-align: left;
-    border: 1px solid #ddd;			
+    border: 1px solid #c8d5dd;			
     border-collapse: collapse;
 }
 .datatable thead tr th, .datatable tfoot tr td {
-    border:1px solid #ddd;
+    border:1px solid #c8d5dd;
     font-size: 9pt;
     padding: 10px;
 }
+/*
 .datatable thead tr:first-child{
    background-color: #b7c8ce;			
+} 
+*/
+.datatable thead tr th{
+   background-color: #96bfd1;			
 } 				
 .datatable tbody td {
     color:#3D3D3D;
     padding: 8px;
     background-color: #f9f9f9;
     vertical-align: top;
-    border:1px solid #ddd;
+    border:1px solid #c8d5dd;
 }
 .datatable tbody tr.odd td {
     background-color:#FFF;

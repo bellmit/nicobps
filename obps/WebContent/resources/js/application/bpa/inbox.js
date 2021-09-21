@@ -15,12 +15,13 @@ app.controller("CommonCtrl", [
 
 		$scope.BPA = [];
 		/*GET_DATA*/
-
+	    var processcode="";	    
+	    processcode=document.getElementById("pcode").innerText;	    
 		$scope.listBPApplications = () => {
 			BS.listBPApplications((response) => {
 				$scope.BPA = response;
 				$scope.setBPAsTable($scope.BPA);
-			}, (data = ""));
+			}, (data = processcode));
 		};
 		$scope.listBPApplications();
 

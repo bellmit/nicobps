@@ -13,6 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import obps.models.DashboardData;
+import obps.models.UserApplications;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -555,4 +556,21 @@ public class ServiceUtil implements ServiceUtilInterface {
 				"ORDER BY OFFICE";
 		return this.listGeneric(DashboardData.class, sql, new Object[] { });
 	}
+	
+	public List<UserApplications> listUserApplications(Integer usercode) 
+	{		
+		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP " 
+				   + "INNER JOIN nicobps.applicationflowremarks AF "
+				   + "ON (AF.applicationcode, AF.entrydate) = "
+				   + "( " 
+				   + "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks " 
+				   + "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
+				   + "   GROUP BY applicationcode " 
+				   + ") " 
+				   + "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode " 
+				   + "WHERE AF.modulecode=2 AND AF.tousercode = ? " 
+				   +"GROUP BY PR.processcode,PR.processname ";
+		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode});
+	}	
+	
 }

@@ -40,6 +40,8 @@ public interface ServiceBPAInterface {
 	List<Map<String, Object>> listAppScrutinyDetailsForBPAV2(Integer usercode);
 
 	List<Map<String, Object>> listBPApplications(Integer USERCODE);
+	
+	public List<Map<String, Object>> listBPApplications(Integer USERCODE,Integer processcode);
 
 	List<Map<String, Object>> listBPApplicationsStatus(Integer usercode, String param);
 

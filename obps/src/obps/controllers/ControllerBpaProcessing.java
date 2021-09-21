@@ -144,11 +144,18 @@ public class ControllerBpaProcessing {
 	}
 
 	@GetMapping(value = "/bpainbox.htm")
-	public String bpaInbox(ModelMap model, @ModelAttribute("SESSION_USERCODE") Integer usercode) {
+	public String bpaInbox(ModelMap model, @ModelAttribute("SESSION_USERCODE") Integer usercode,
+			@RequestParam(required = false) String processcode
+			) {
 		usercode = getSessionUsercode(model);
-		if (usercode != null) {
+		if (usercode != null) 
+		{
+			if(processcode!=null) {
+				model.addAttribute("processcode",processcode);				
+			}			
 			return BPAConstants.PARENT_URL_MAPPING.concat("/inbox");
 		}
+
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
 
@@ -375,9 +382,15 @@ public class ControllerBpaProcessing {
 
 	@GetMapping(value = "/listbpapplications.htm")
 	public @ResponseBody List<Map<String, Object>> listBPApplications(ModelMap model,
-			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+			@RequestParam(value="param",required = false) String processcode,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode) {		
 		usercode = getSessionUsercode(model);
-		return SBI.listBPApplications(usercode);
+		if(processcode!=null && processcode.trim().length()>0) {
+			System.out.println("======processcode===== : "+processcode);
+			return SBI.listBPApplications(usercode,Integer.valueOf(processcode));
+		}else {
+			return SBI.listBPApplications(usercode);			
+		}
 	};
 
 	@GetMapping(value = "/listBPApplicationsStatus.htm")

@@ -264,6 +264,36 @@ class ServiceBPA implements ServiceBPAInterface {
 	}
 
 	@Override
+	public List<Map<String, Object>> listBPApplications(Integer USERCODE,Integer processcode) {
+		String sql = "SELECT EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,       "
+				+ "      APP.applicationcode, APP.officecode, APP.modulecode, APP.usercode, APP.applicationslno, APP.servicetypecode, TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate ,    "
+				+ "      AF.toprocesscode, PR.processname, AF.fromusercode, AF.tousercode, FUL.fullname AS fromusername, TUL.fullname AS tousername,  "
+				+ "      PU.pageurl, PU.urlcode    " + "FROM nicobps.edcrscrutiny EDCR       "
+				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber       "
+				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode     "
+				+ "INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (    "
+				+ "	SELECT applicationcode, MAX(entrydate)   	FROM nicobps.applicationflowremarks    "
+				+ "	WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode      "
+				+ "	GROUP BY applicationcode)    "
+				+ "INNER JOIN nicobps.userlogins FUL ON FUL.usercode = AF.fromusercode  "
+				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AF.tousercode  "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode     "
+				/*
+				 * +
+				 * "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.toprocesscode,  PF.processflowstatus) = (APP.officecode, PR.modulecode, PR.processcode, 'N')    "
+				 */
+				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.toprocesscode,  PF.processflowstatus) = (APP.officecode, PR.modulecode, AF.fromprocesscode, PR.processcode, 'N')        "
+				+ "LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode    " + "INNER JOIN (  "
+				+ "	SELECT UP.usercode, UP.urlcode, PU.pageurl, PU.submenu  " + "	FROM nicobps.userpages UP  "
+				+ "	INNER JOIN masters.pageurls PU ON PU.urlcode = UP.urlcode  " + "	ORDER BY PU.urlcode  "
+				+ ")UP ON CASE WHEN AF.tousercode IS NOT NULL THEN UP.usercode = AF.tousercode AND UP.urlcode = PU.urlcode   "
+				+ "	ELSE UP.urlcode = PU.urlcode   " + "       END  "
+				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode  "
+				+ "WHERE UP.usercode = ?  " + "AND RA.applicationcode IS NULL AND AF.toprocesscode=? ";
+		return SUI.listGeneric(sql, new Object[] { USERCODE,processcode });
+	}	
+	
+	@Override
 	public List<Map<String, Object>> listBPApplicationsStatus(Integer usercode, String param) {
 		LOG.info("usercode: " + usercode + " param: " + param);
 		String sql = "SELECT AFR.applicationcode, BPA.edcrnumber, PF.flowname AS status,   "
