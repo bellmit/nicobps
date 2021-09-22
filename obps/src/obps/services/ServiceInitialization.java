@@ -174,4 +174,9 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	public String saveOfficeQuestioniares(List<Map<String, Object>> officesquestions) {
 		return (DaoInitializationInterface.mapOfficesQuestioniares(officesquestions)) ? "Mapped" : "Failed";
 	}
+	
+	@Override
+	public boolean enableDisableStakeholder(String enable_disable,Integer usercode,String remarks,Integer usercode2,Long slno) {
+		return DaoInitializationInterface.enableDisableStakeholder(enable_disable,usercode,remarks,usercode2,slno);
+	}
 }

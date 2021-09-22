@@ -23,4 +23,6 @@ public interface ServiceStakeholderInterface {
 	public boolean extendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
 
 	public List<Map<String, Object>> getValidity(Integer usercode);
+	
+	public List<Map<String, Object>> getSuspendedRecords(Integer officecode);
 }

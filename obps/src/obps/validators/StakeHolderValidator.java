@@ -1,6 +1,8 @@
 package obps.validators;
 
 
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 
 
@@ -32,6 +34,43 @@ public class StakeHolderValidator{
 		
 		
 		return res;
+	}
+	
+	public boolean validateSuspendStakeholder(Map<String, String> params, String usercode2,Long slno) {
+		int size = 0;
+		if (params.get("usercode") == null || params.get("usercode") == "") {
+			return true;
+		} else if (validateUsercode((String) params.get("usercode"))) {
+			return true;
+
+		} else if (validateUsercode(usercode2)) {
+			return true;
+		} else if (validateUsercode(usercode2)) {
+			return true;
+
+		} else if (params.get("remarks") != null || params.get("remarks") != "") {
+			return false;
+		} else if (params.get("remarks").length() > 255) {
+			return true;
+		}else if (params.get("enabledisable") != null || params.get("enabledisable") != "") {
+			size = params.get("enabledisable").length();
+		} else if (size > 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+return false;
+	}
+
+	public boolean validateUsercode(String usercode) {
+
+		System.out.println("validate usercode");
+		if (!usercode.toString().matches("^[1-9]{1,10}$") || usercode.length() > 10) {
+           System.out.println("invalid format");
+			return true;
+		}
+		return false;
 	}
 
 }

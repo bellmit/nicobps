@@ -514,4 +514,32 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return response;
 	}
+	
+	@Override
+	public boolean enableDisableStakeholder(String enable_disable, Integer usercode, String remarks, Integer usercode2,
+			Long slno) {
+		String sql = "";
+		String sql2 = "";
+		System.out.println("enable disable:::" + slno+ usercode2+ remarks);
+		boolean response = false;
+		try {
+
+			sql2 = "INSERT INTO nicobps.suspendedaccounts(slno,usercode,remarks,usercode2) " + "VALUES (?,?,?,?) ";
+			Object[] values = { slno, usercode, remarks, usercode2 };
+			response = jdbcTemplate.update(sql2, values) > 0;
+			System.out.println("response::"+response);
+			if (response) {
+				sql = "UPDATE nicobps.userlogins SET enabled = ? WHERE usercode = ?";
+				Object[] param = new Object[] { enable_disable, usercode };
+				response = jdbcTemplate.update(sql, param) > 0;
+			}
+
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.enableDisableStakeholder: " + e);
+		}
+		return response;
+	}
 }

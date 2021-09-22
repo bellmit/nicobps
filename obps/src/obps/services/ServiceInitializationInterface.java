@@ -69,5 +69,7 @@ public interface ServiceInitializationInterface {
 	public List<Offices> listOffices();
 	
 	public String saveOfficeQuestioniares(List<Map<String, Object>> officesquestions);
+	
+	public boolean enableDisableStakeholder(String enable_disable, Integer usercode,String remarks,Integer usercode2,Long slno);
 
 }
