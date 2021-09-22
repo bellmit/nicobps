@@ -148,7 +148,9 @@ public interface ServiceUtilInterface {
 	
 	public List<DashboardData> listDashboardData();
 	
-	public List<UserApplications> listUserApplications(Integer officecode);
+	public List<UserApplications> listUserApplications(Integer usercode);
+	
+	public List<UserApplications> listStakeholderApplications(Integer usercode); 
 	
 	public List<Audittrail> listAuditrail();
 	

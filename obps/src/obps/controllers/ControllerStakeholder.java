@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import obps.services.ServiceInitializationInterface;
 import obps.services.ServiceStakeholderInterface;
-import obps.services.ServiceUserManagement;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.ExtendValidityValidator;
@@ -33,13 +31,6 @@ public class ControllerStakeholder {
 	private ServiceStakeholderInterface SSI;
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
-
-	@Autowired
-
-	private ServiceInitializationInterface serviceInitalizationInterface;
-	
-	@Autowired
-	private ServiceUserManagement serviceUserManagement;
 
 	@Autowired
 	private ExtendValidityValidator extendValidator;
@@ -55,7 +46,10 @@ public class ControllerStakeholder {
 	}
 
 	@GetMapping("/srverify.htm")
-	public String verification(Model model) {
+	public String verification(Model model,@RequestParam(required = false) String processcode) {
+		if(processcode!=null) {
+			model.addAttribute("processcode",processcode);				
+		}		
 		model.addAttribute("pageType", "Verification");
 		return "stakeholder/srverify";
 	}
@@ -134,11 +128,15 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/listLicensees.htm")
-	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req) {
+	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req,@RequestParam(required = false) String processcode) {		
 		List<CommonMap> offices = serviceUtilInterface.listUserOffices();
 		Integer officecode = Integer.valueOf((!offices.isEmpty()) ? offices.get(0).getKey() : "0");
-		return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),
-				officecode != null ? officecode : 0);
+		if(processcode!=null && processcode.trim().length()>0) {
+			return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),officecode != null ? officecode : 0,Integer.valueOf(processcode));
+		}else {
+			return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),officecode != null ? officecode : 0);	
+		}
+		
 	}
 
 	@PostMapping("/getLicensee.htm")
@@ -243,44 +241,5 @@ public class ControllerStakeholder {
 					"Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 
-	}
-
-	@GetMapping("/suspendstakeholder.htm")
-	public String suspendstakeholder(Model model, HttpServletRequest req) {
-
-		model.addAttribute("offices", serviceUtilInterface.listUserOffices());
-
-		return "stakeholder/suspendstakeholder";
-	}
-
-	@PostMapping("/enabledisablestakeholder.htm")
-	public ResponseEntity<?> enabledisablestakeholder(HttpServletRequest req,
-			@RequestParam Map<String, String> params) {
-		String res = "false";
-		String usercode2 = (String) req.getSession().getAttribute("usercode");
-		System.out.println("enable disable status:::" + params.get("enabledisable"));
-		Long slno = serviceUserManagement.getMaxSlno();
-		if (stakeHolderValidator.validateSuspendStakeholder(params, usercode2, slno)) {
-			return ResponseEntity.badRequest().body(new String("Check input details"));
-		}
-
-		if (serviceInitalizationInterface.enableDisableStakeholder(params.get("enabledisable"),
-				Integer.parseInt(params.get("usercode")), params.get("remarks"), Integer.parseInt(usercode2), slno)) {
-
-			return ResponseEntity.ok(new String("1"));
-		} else {
-			return ResponseEntity.badRequest().body(new String(
-					"Sorry, but we are unable to process the request at the moment. Please try again later."));
-		}
-
-	}
-	
-	@PostMapping(value = "/listSuspendStakeholders.htm")
-	public @ResponseBody List<Map<String, Object>> listSuspendStakeholders(HttpServletRequest req,
-			@RequestParam Map<String, String> params) {
-		
-		System.out.println("officecode::"+params.get("officecode"));
-		return	SSI.getSuspendedRecords(Integer.parseInt(params.get("officecode")));
-		
 	}
 }

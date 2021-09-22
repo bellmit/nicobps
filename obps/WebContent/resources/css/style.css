@@ -40,7 +40,7 @@
     cursor: pointer;   
 }
 
-.datatable {
+.datatable1 {
     font-family:arial;
     margin:10px 0pt 15px;
     margin-top:0px;			
@@ -50,41 +50,41 @@
     border: 1px solid #c8d5dd;			
     border-collapse: collapse;
 }
-.datatable thead tr th, .datatable tfoot tr td {
+.datatable1 thead tr th, .datatable tfoot tr td {
     border:1px solid #c8d5dd;
     font-size: 9pt;
     padding: 10px;
 }
 /*
-.datatable thead tr:first-child{
+.datatable1 thead tr:first-child{
    background-color: #b7c8ce;			
 } 
 */
-.datatable thead tr th{
+.datatable1 thead tr th{
    background-color: #96bfd1;			
 } 				
-.datatable tbody td {
+.datatable1 tbody td {
     color:#3D3D3D;
     padding: 8px;
     background-color: #f9f9f9;
     vertical-align: top;
     border:1px solid #c8d5dd;
 }
-.datatable tbody tr.odd td {
+.datatable1 tbody tr.odd td {
     background-color:#FFF;
 }
-.datatable tbody tr:hover td {
+.datatable1 tbody tr:hover td {
     color: #9e0303; 
     /*font-weight:bold;*/
     background-color:#eee;
 }
-.datatable thead tr th.sorting_asc,.datatable thead tr th.sorting_desc{
+.datatable1 thead tr th.sorting_asc,.datatable thead tr th.sorting_desc{
     background-color: #CCC;			
 } 		
-.datatable tbody tr td.sorting_1{
+.datatable1 tbody tr td.sorting_1{
     background-color: #CCC;			
 } 
-.datatable td:first-child{
+.datatable1 td:first-child{
     width: auto;
     vertical-align: top;		
 }

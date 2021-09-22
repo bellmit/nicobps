@@ -20,7 +20,7 @@
 						<h1 class="text-left mt-5 b-left-head">Online Building Permission System</h1>
 						<hr/>
 						<h5 class="text-left mt-5 b-left-head"></h5>
-						<table class="datatable">
+						<table class="datatable1">
 							<thead >
 								<tr>
 									<th>Office Name</th>
@@ -36,8 +36,7 @@
 									<td><core:out value="${I.totalac}" escapeXml="true"></core:out></td>
 									<td><core:out value="${I.approvedac}" escapeXml="true"></core:out></td>
 									<td><core:out value="${I.pendingac}" escapeXml="true"></core:out></td>
-								</tr>
-								
+								</tr>								
 								</core:forEach>
 							</tbody>							
 						</table>
@@ -53,7 +52,7 @@
 						<form class="form" id="loginForm" name='f' action='/obps/login' method='POST' autocomplete="off" onsubmit="return beforeSubmit()">
 							<div class="form-group ">
 								<label for="username" class="">Email :</label>
-								<input class="form-control" type="text" id="username" name="username" value="gulrez@gmail.com" autocomplete="off" required>
+								<input class="form-control" type="text" id="username" name="username" value="gmc@gmail.com" autocomplete="off" required>
 							</div>
 							<div class="form-group">
 								<label for="password" class="">Password:</label>

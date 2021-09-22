@@ -48,31 +48,51 @@
 							</div>
 						</core:if>
 						
-						<core:if test="${listUserApplications.size()>0}">
-						<h5>Click to perform an action</h5>
- 						<div class="row text-center pl-4" id="sortable-cards">
- 						 
+						
+ 						<core:if test="${listUserApplications.size()>0 || listStakeholderApplications.size()>0}">	
+ 							<h5>Click to perform an action</h5>		
+						</core:if>							
+						
+						<core:if test="${listStakeholderApplications.size()>0}">						
+	 						<div class="row text-center pl-4" id="sortable-cards"> 						 
+	 							<core:forEach items="${listStakeholderApplications}" var="app">
+	 						    <div class="col-lg-3 col-sm-12 p-3 b-customize"> 
+	 						        <div class="bg-light p-4 b-dbcard"> 
+	 						        	<!--<i class="fas fa-user-graduate position-absolute" style="font-size:35px; right: 40px; top: 40px;"></i>-->  
+	 						        	<div class="">  
+	 						        		<p class="text-left font-weight-bold" style="font-size: 14px;">
+	 						        			<a href="srverify.htm?processcode=${app.processcode}">${app.processname}</a>
+	 						        		</p> 
+	 						        		<h3 class="text-left font-weight-bold" style="margin-top: -5px">${app.totalac}</h3> 
+	 						        		<!--
+	 						        		 <div class="text-left" style="margin: 10px 0px 5px;"> 
+	 						        			<span class="badge badge-success">+4%</span>  
+	 						        			<span style="font-size:13px;"> From previous period</span> 
+	 						        		 </div> 
+	 						        		--> 						        		
+	 						        	</div> 
+	 						        </div> 
+	 						    </div> 
+								</core:forEach>
+	 						</div> 
+ 						</core:if>			
+	
+						<core:if test="${listUserApplications.size()>0}">									
+ 						<div class="row text-center pl-4" id="sortable-cards"> 						 
  							<core:forEach items="${listUserApplications}" var="app">
  						    <div class="col-lg-3 col-sm-12 p-3 b-customize"> 
- 						        <div class="bg-light p-4 b-dbcard"> 
- 						        	<!--<i class="fas fa-user-graduate position-absolute" style="font-size:35px; right: 40px; top: 40px;"></i>-->  
+ 						        <div class="bg-light p-4 b-dbcard">  						        	 
  						        	<div class="">  
  						        		<p class="text-left font-weight-bold" style="font-size: 14px;">
  						        			<a href="bpainbox.htm?processcode=${app.processcode}">${app.processname}</a>
  						        		</p> 
- 						        		<h3 class="text-left font-weight-bold" style="margin-top: -5px">${app.totalac}</h3> 
- 						        		<!--
- 						        		 <div class="text-left" style="margin: 10px 0px 5px;"> 
- 						        			<span class="badge badge-success">+4%</span>  
- 						        			<span style="font-size:13px;"> From previous period</span> 
- 						        		 </div> 
- 						        		--> 						        		
+ 						        		<h3 class="text-left font-weight-bold" style="margin-top: -5px">${app.totalac}</h3> 					        		
  						        	</div> 
  						        </div> 
  						    </div> 
 							</core:forEach>
  						</div> 
- 						</core:if>
+ 						</core:if> 						
 						
 						
 						<!-- 					<div class="pl-4 text-right" style="font-size: 24px"> -->

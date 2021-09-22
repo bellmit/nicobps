@@ -577,6 +577,24 @@ public class ServiceUtil implements ServiceUtilInterface {
 		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode});
 	}	
 	
+	
+	public List<UserApplications> listStakeholderApplications(Integer usercode) 
+	{		
+		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP " 
+				   + "INNER JOIN nicobps.applicationflowremarks AF "
+				   + "ON (AF.applicationcode, AF.entrydate) = "
+				   + "( " 
+				   + "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks " 
+				   + "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
+				   + "   GROUP BY applicationcode " 
+				   + ") " 
+				   + "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode " 
+				   + "WHERE AF.modulecode=1 AND AF.toprocesscode IN (4,6) AND "
+				   + "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=2) ELSE tousercode=? END " 
+				   + "GROUP BY PR.processcode,PR.processname ";		
+		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode});
+	}		
+	
     @Override
     public List<Audittrail> listAuditrail() 
     {

@@ -86,6 +86,10 @@ public class ControllerLogin {
 		}		
 		List<UserApplications> listUserApplications = SUI.listUserApplications(usercode);
 		model.addAttribute("listUserApplications",listUserApplications);				
+		
+		List<UserApplications> listStakeholderApplications = SUI.listStakeholderApplications(usercode);
+		model.addAttribute("listStakeholderApplications",listStakeholderApplications);		
+		
 		return "home";
 	}
 		

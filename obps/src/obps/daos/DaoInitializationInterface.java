@@ -15,24 +15,25 @@ import obps.models.Usages;
 
 public interface DaoInitializationInterface {
 
+	
 	public List<Occupancies> listOccupancies();
-
+	
 	public List<FeeMaster> listFeeMaster();
-
+	
 	public List<SubOccupancies> listSubOccupancy();
-
+	
 	public List<Usages> listUsages();
-
+	
+	
+	
 	public List<LicenseesRegistrationsm> listLicenseesRegistrationsms();
 
 	public List<FeeTypes> listFeeTypes();
-
 	public List<Questionnaire> listQuestionaires();
-
+	
 	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee);
 
 	public boolean updatefeetypes(FeeTypes feetype);
-
 	public boolean updatequestionaires(Questionnaire questionaire);
 
 	public boolean updatefeemaster(FeeMaster feemaster);
@@ -40,32 +41,27 @@ public interface DaoInitializationInterface {
 	public boolean updatesuboccupancy(SubOccupancies suboccupancies);
 
 	public boolean updateusages(Usages usages);
-
+	
+	
 	public boolean updateoccupancy(Occupancies occupancies);
-
+	
 	public boolean createLicenseeRegistration(Map<String, Object> param);
 
 	public boolean initfeetypes(Map<String, Object> param);
-
 	public boolean initQuestionaires(Map<String, Object> param);
-
+	
 	public boolean initoccupancy(Map<String, Object> param);
-
+	
 	public boolean initfeemaster(Map<String, Object> param);
-
+	
 	public boolean initsuboccupancies(Map<String, Object> param);
-
+	
 	public boolean initusages(Map<String, Object> param);
-
+	
 	public boolean checkExistance(String sql, Object[] values);
-
-	public List<Offices> listOffices();
-
+	public List <Offices> listOffices();
+	
 	public List<Questionnaire> getMappedQuestionaires(Integer officecode);
-
 	public boolean mapOfficesQuestioniares(List<Map<String, Object>> officesquestions);
-
-	public boolean enableDisableStakeholder(String enable_disable, Integer usercode, String remarks, Integer usercode2,
-			Long slno);
-
+	
 }

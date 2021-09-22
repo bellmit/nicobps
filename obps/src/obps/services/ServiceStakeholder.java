@@ -46,6 +46,29 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		}
 		return list;
 	}
+	@Override
+	public List<Map<String, Object>> listLicensees(Integer usercode, Integer officecode, Integer processcode) {
+		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,to_char(app.entrydate, 'DD-MM-YYYY')  as applicationdate,off.officecode,off.officename1,"
+				+ "u.mobileno,u.username as email,"
+				+ "(SELECT json_agg(enclosures)from(select e.enclosurecode,e.enclosurename from nicobps.licenseesenclosures le ,masters.enclosures e where e.enclosurecode=le.enclosurecode and le.usercode=l.usercode)as enclosures)as enclosures"
+				+ " FROM nicobps.licensees l "
+				+ "INNER JOIN masters.licenseetypes lt on lt.licenseetypecode=l.licenseetypecode "
+				+ "INNER JOIN masters.districts d on d.districtcode=l.predistrictcode "
+				+ "INNER JOIN nicobps.applications app on app.usercode=l.usercode "
+				+ "INNER JOIN nicobps.applicationflowremarks afr on  "
+				+ "		afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=app.applicationcode::text) "
+				+ "INNER JOIN masters.processflow pf on afr.toprocesscode=pf.fromprocesscode and pf.processflowstatus='N' and pf.modulecode=1 "
+				+ "INNER JOIN masters.processes p on p.processcode=pf.fromprocesscode and p.modulecode=pf.modulecode "
+				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
+				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
+				+ "INNER JOIN masters.states s on s.statecode=d.statecode "
+				+ "WHERE afr.toprocesscode=? AND case when ?=1 then 1=1 else off.officecode=? end " + "ORDER BY l.entrydate DESC ";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { processcode,usercode, officecode });
+		for (Map<String, Object> m : list) {
+			m.put("transactions", daoPaymentInterface.getTransaction(m.get("applicationcode").toString()));
+		}
+		return list;
+	}	
 
 	@Override
 	public byte[] getEnclosure(Integer usercode, Integer enclosurecode) {
@@ -148,7 +171,6 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			return "false";
 		}
 	}
-
 	@Override
 	public Map<String, Object> getLicenceeValidity(Integer usercode, Integer officecode) {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -156,7 +178,9 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		// -------------------------
 		// -------Valid
 		// -------------------------
-
+		
+		
+		
 		String sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
 				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
 				+ "CASE WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3 ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
@@ -175,7 +199,13 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 					+ " and its valid till " + list.get(0).get("validity"));
 			return response;
 		}
-
+		
+		
+		
+		
+		
+		
+			
 		// -------------------------
 		// -------Expired
 		// -------------------------
@@ -197,32 +227,38 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 					+ list.get(0).get("validity") + ".Please click on the button above to renew your empanelment.");
 //			return response; // Should it be returned from here?
 		}
-
+		
+		
 		// -------------------------
-		// -------Verified and awaiting Payment
-		// -------------------------
-		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
-				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
-				+ "         CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
-				+ "             "
-				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
-				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
-				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
-				+ " LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
-				+ " WHERE 1 = 1  AND TOPROCESSCODE = 5 " + " AND ATM.APPLICATIONCODE IS NULL  "
-				+ "AND O.OFFICECODE = ?  " + " AND U.USERCODE  = ? " + " AND A.MODULECODE IN (1, 3) "
-				+ " ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
-		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
-		if (!list.isEmpty()) {
-			System.out.println("3");
-
-			response.put("VERIFIED", "Your application for emnpanelment with " + list.get(0).get("office")
-					+ " office bearing application code " + list.get(0).get("applicationcode")
-					+ " has been verified. Please pay the Registration Fee. click on the Home Link > Payment of Registration Fees.");
-
-			return response;
-		}
-
+				// -------Verified and awaiting Payment
+				// -------------------------
+				sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
+						+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
+						+ "         CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
+						+ "             "
+						+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
+						+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
+						+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
+						+ " LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+						+ " WHERE 1 = 1  AND TOPROCESSCODE = 5 " + " AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
+						+ " AND U.USERCODE  = ? " + " AND A.MODULECODE IN (1, 3) "
+						+ " ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+				list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+				if (!list.isEmpty()) {
+					System.out.println("3");
+					
+					
+					
+					response.put("VERIFIED",
+							"Your application for emnpanelment with " + list.get(0).get("office")
+									+ " office bearing application code " + list.get(0).get("applicationcode")
+									+ " has been verified. Please pay the Registration Fee. click on the Home Link > Payment of Registration Fees.");
+					
+					return response;
+				}
+		
+		
+		
 		// -------------------------
 		// -------Awaiting Verification
 		// -------------------------
@@ -237,7 +273,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "WHERE 1 = 1  " + "AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
 				+ "AND U.USERCODE  = ? " + "AND A.MODULECODE IN (1, 3) "
 				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
-
+		
 		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
 			System.out.println("4");
@@ -316,16 +352,5 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "				INNER JOIN masters.offices o on o.officecode=li.officecode "
 				+ "				where li.usercode=?  ORDER BY o.officename1 DESC  ";
 		return SUI.listGeneric(sql, new Object[] { usercode });
-	}
-
-	@Override
-	public List<Map<String, Object>> getSuspendedRecords(Integer officecode) {
-		String sql = "Select distinct on (s.usercode)   s.usercode, username, fullname,s.remarks, u.enabled, u.entrydate, officename1 From nicobps.userlogins u\r\n"
-				+ "	INNER JOIN nicobps.licenseeofficesvalidities uo on u.usercode=uo.usercode \r\n"
-				+ "		LEFT OUTER JOIN nicobps.suspendedaccounts s on s.usercode=uo.usercode\r\n"
-				+ "	INNER JOIN masters.offices o on uo.officecode=o.officecode where o.officecode=?\r\n"
-				+ "	 group by s.usercode, username, fullname, s.remarks,s.entrydate, u.enabled, u.entrydate, officename1\r\n"
-				+ "	 Order by s.usercode,s.entrydate desc";
-		return SUI.listGeneric(sql, new Object[] { officecode });
 	}
 }

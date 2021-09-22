@@ -100,8 +100,11 @@ app.controller("CommonCtrl", [
 						$scope.nextProcesses = response
 					});
 			};
-		$scope.listLicensees = function() {
-			$http.post("./listLicensees.htm").success(
+		$scope.listLicensees = function() 
+		{			
+		    var processcode="";	    
+		    processcode=document.getElementById("pcode").innerText;			    	
+			$http.post("./listLicensees.htm?processcode="+processcode).success(
 				function(response, status, headers, config) {
 
 					console.log(response)

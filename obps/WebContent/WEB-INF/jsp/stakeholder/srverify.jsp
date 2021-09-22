@@ -68,6 +68,7 @@
 		<div id="page-content-wrapper">
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
+				<span id="pcode" style="display:block">${processcode}</span>
 				<h3 class="mt-4" style="font-size: 32px;">Verifications/Approvals of Stakeholder Registrations</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5" id='displayRecords'>
@@ -124,7 +125,6 @@
 									<input id="applicationcode" type="text"
 										ng-value="applicant.applicationcode" class="form-control"
 										readonly="readonly">
-
 								</div>
 							</td>
 							<td>
