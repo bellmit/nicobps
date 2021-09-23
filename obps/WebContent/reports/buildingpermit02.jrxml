@@ -1,23 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit02" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit02" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+	<property name="ireport.zoom" value="1.1269722013523664"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="additionalinfo" >
+		<field name="engineeron" class="java.lang.String">
+			<fieldDescription><![CDATA[engineeron]]></fieldDescription>
+		</field>
+		<variable name="subvar_engineeron" class="java.lang.String" resetType="None">
+			<variableExpression><![CDATA[$F{engineeron}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="planinfoobject" >
+		<field name="occupancy" class="java.lang.String">
+			<fieldDescription><![CDATA[planDetail.planInformation.occupancy]]></fieldDescription>
+		</field>
+		<field name="plotarea" class="java.lang.String">
+			<fieldDescription><![CDATA[planDetail.planInformation.plotArea]]></fieldDescription>
+		</field>
+		<field name="blocks" class="java.lang.String">
+			<fieldDescription><![CDATA[planDetail.blocks]]></fieldDescription>
+		</field>
+		<variable name="subvar_occupancy" class="java.lang.String" resetType="None">
+			<variableExpression><![CDATA[$F{occupancy}]]></variableExpression>
+		</variable>
+		<variable name="subvar_plotarea" class="java.lang.String" resetType="None">
+			<variableExpression><![CDATA[$F{plotarea} +" sqmtr "]]></variableExpression>
+		</variable>
+		<variable name="subvar_blocks" class="java.lang.String" resetType="None">
+			<variableExpression><![CDATA[$F{blocks}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="blocks" >
+		<field name="totalfloors" class="java.lang.Integer">
+			<fieldDescription><![CDATA[building.totalFloors]]></fieldDescription>
+		</field>
+		<field name="blocknumber" class="java.lang.Integer">
+			<fieldDescription><![CDATA[number]]></fieldDescription>
+		</field>
+		<variable name="subvar_totalfloors" class="java.lang.String" resetType="None">
+			<variableExpression><![CDATA[$F{blocknumber} > 1 ? $V{subvar_totalfloors}+ " : " + $F{totalfloors} : ($F{totalfloors}).toString()]]></variableExpression>
+		</variable>
+	</subDataset>
 	<parameter name="permitnumber" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="logopath" class="java.lang.String">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
-	</parameter>
-	<parameter name="blocktotalfloor" class="java.lang.String"/>
-	<parameter name="plotarea" class="java.lang.String"/>
-	<parameter name="occupancy" class="java.lang.String"/>
-	<parameter name="khasarano" class="java.lang.String"/>
-	<parameter name="khatianno" class="java.lang.String"/>
-	<parameter name="wardno" class="java.lang.String"/>
-	<parameter name="wardname" class="java.lang.String"/>
-	<parameter name="district" class="java.lang.String"/>
-	<parameter name="buildingheight" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
 O.OFFICECODE,
@@ -33,7 +60,7 @@ CASE WHEN PLOTADDRESSLINE1 IS NULL OR LENGTH(TRIM(PLOTADDRESSLINE1)) = 0   THEN 
 CASE WHEN PLOTADDRESSLINE2 IS NULL OR LENGTH(TRIM(PLOTADDRESSLINE2)) = 0  THEN '' ELSE PLOTADDRESSLINE2 || ','  END ||
 CASE WHEN PLOTVILLAGETOWN  IS NULL THEN '' ELSE PLOTVILLAGETOWN  || '  - '  END  ||
 PLOTPINCODE AS PLOTADDRESS, LOCATIONNAME, PLOTIDENTIFIER1, PLOTIDENTIFIER2,
-U.FULLNAME AS ARCHITECT
+U.FULLNAME AS ARCHITECT,BA.additionalinfo
 FROM  MASTERS.OFFICES O, APPLICATIONS AP, BPAAPPLICATIONS BA ,BPAOWNERDETAILS BO,BPAAPPROVEAPPLICATIONS BAP,EDCRSCRUTINY ES,
 MASTERS.SALUTATIONS S, MASTERS.OFFICELOCATIONS OL , USERLOGINS U
 WHERE AP.APPLICATIONCODE=BA.APPLICATIONCODE
@@ -46,7 +73,7 @@ AND U.USERCODE = AP.USERCODE
 AND O.OFFICECODE = AP.OFFICECODE
 and bap.permitnumber=$P{permitnumber}]]>
 	</queryString>
-	<field name="officecode" class="java.lang.Short"/>
+	<field name="officecode" class="java.lang.Integer"/>
 	<field name="office" class="java.lang.String"/>
 	<field name="logo" class="java.io.InputStream"/>
 	<field name="applicationcode" class="java.lang.String"/>
@@ -61,34 +88,40 @@ and bap.permitnumber=$P{permitnumber}]]>
 	<field name="plotidentifier1" class="java.lang.String"/>
 	<field name="plotidentifier2" class="java.lang.String"/>
 	<field name="architect" class="java.lang.String"/>
+	<field name="additionalinfo" class="java.lang.String"/>
+	<variable name="var_engineeron" class="java.lang.String" resetType="None"/>
+	<variable name="var_occupancy" class="java.lang.String" resetType="None"/>
+	<variable name="var_plotarea" class="java.lang.String" resetType="None"/>
+	<variable name="var_blocks" class="java.lang.String" resetType="None"/>
+	<variable name="var_totalfloors" class="java.lang.String" resetType="None"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="272" splitType="Stretch">
 			<textField>
-				<reportElement x="10" y="89" width="540" height="89"/>
+				<reportElement x="10" y="89" width="540" height="89" />
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{office}.toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{office}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="405" y="177" width="133" height="20"/>
+				<reportElement x="405" y="177" width="133" height="20" />
 				<textElement markup="none">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Date" + $F{approvaldate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Date" + $F{approvaldate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="177" width="328" height="20"/>
+				<reportElement x="10" y="177" width="328" height="20" />
 				<textElement markup="none">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Issue No" + $F{permitnumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Issue No   " + $F{permitnumber}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="219" width="540" height="52"/>
+				<reportElement x="10" y="219" width="540" height="52" />
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -96,9 +129,9 @@ and bap.permitnumber=$P{permitnumber}]]>
 (See regulation 09 of the Sikkim Building Construction Regulation, 1991)
 Form of Sanction.]]></text>
 			</staticText>
-			<image>
-				<reportElement x="227" y="3" width="132" height="86"/>
-				<imageExpression class="java.io.InputStream"><![CDATA[$F{logo}]]></imageExpression>
+			<image scaleImage="RetainShape" onErrorType="Blank">
+				<reportElement x="239" y="15" width="147" height="74" />
+				<imageExpression><![CDATA[$F{logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -106,84 +139,91 @@ Form of Sanction.]]></text>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
-		<band height="222" splitType="Prevent">
+		<band height="269" splitType="Prevent">
 			<staticText>
-				<reportElement x="10" y="15" width="19" height="20"/>
+				<reportElement x="10" y="15" width="19" height="20" />
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[To,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="143" width="540" height="20"/>
+				<reportElement x="10" y="123" width="540" height="20" />
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[THE VALIDITY OF THIS ORDER IS FOR THREE YEARS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="123" width="540" height="20"/>
+				<reportElement x="10" y="103" width="540" height="20" />
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Subject:- CONSTRUCTION ORDER. ]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="10" y="176" width="540" height="44"/>
-				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="styled">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement stretchType="RelativeToTallestObject" x="8" y="156" width="540" height="108" />
+				<textElement textAlignment="Justified" markup="styled">
 					<font size="10"/>
+					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed "+" _________________________"+"storied  R.C.C. residential  /  commercial  /  residential  cum commercial / institutional building measuring "+"___________________"+" located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_totalfloors}+"</style> storied  R.C.C. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_occupancy}+"</style>  building measuring <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_plotarea} +"</style> located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="33" y="41" width="337" height="69"/>
+				<reportElement x="33" y="41" width="456" height="45" />
 				<textElement>
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{ownersname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ownersname}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="200">
-			<textField>
-				<reportElement x="10" y="28" width="540" height="89"/>
-				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="styled">
+		<band height="219">
+			<textField evaluationTime="Report">
+				<reportElement x="8" y="0" width="540" height="101" />
+				<textElement textAlignment="Justified" markup="styled">
 					<font size="10"/>
+					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed "+" _________________________"+"storied  R.C.C. residential  /  commercial  /  residential  cum commercial / institutional building measuring "+"___________________"+" located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $V{var_totalfloors}+ "</style> storied  R.C.C. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $V{var_occupancy}+ "</style> building measuring <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $V{var_plotarea}+ "</style> located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="130" width="169" height="20"/>
+				<reportElement x="10" y="128" width="169" height="20" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Name of Architect on record :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="161" width="169" height="20"/>
+				<reportElement x="10" y="148" width="169" height="20" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Name of Engineer on record :]]></text>
 			</staticText>
-			<line>
-				<reportElement x="198" y="180" width="250" height="1"/>
-			</line>
-			<break>
-				<reportElement x="0" y="190" width="100" height="1"/>
-			</break>
 			<textField>
-				<reportElement x="201" y="130" width="311" height="20"/>
+				<reportElement x="201" y="128" width="311" height="20" />
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{architect}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{architect}]]></textFieldExpression>
 			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="201" y="148" width="311" height="20" />
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{var_engineeron}]]></textFieldExpression>
+			</textField>
+			<break>
+				<reportElement x="0" y="197" width="100" height="1" />
+			</break>
 		</band>
-		<band height="668">
+		<band height="681">
 			<staticText>
-				<reportElement x="10" y="31" width="540" height="625"/>
-				<textElement textAlignment="Justified" lineSpacing="1_1_2">
+				<reportElement x="10" y="31" width="540" height="625" />
+				<textElement textAlignment="Justified">
 					<font size="10"/>
+					<paragraph lineSpacing="1_1_2"/>
 				</textElement>
 				<text><![CDATA[1. Prior  permission  for  commencement  of  the  building  should  be  sought  for  on Form V obtainable from the Gangtok Municipal Corporation.
 2. In case, the ownership is found to be defective at any stage of time the approval accorded and this order shall stand automatically revoked and the structure/work
@@ -211,36 +251,89 @@ responsible  for  the  loss  of  life  and  property,  as  a  result  of  such  
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="4" width="540" height="20"/>
+				<reportElement x="10" y="4" width="540" height="20" />
 				<textElement textAlignment="Justified">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[This construction order is approved on the following conditions:- ]]></text>
 			</staticText>
 		</band>
-		<band height="128">
+		<band height="187">
 			<staticText>
-				<reportElement x="10" y="3" width="540" height="20"/>
+				<reportElement x="10" y="3" width="540" height="20" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Two copies of the approved B.P. Plan are returned herewith for your record.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="338" y="40" width="198" height="45"/>
+				<reportElement x="324" y="40" width="212" height="45" />
 				<textElement textAlignment="Center" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["Authorised Signature\n" + $F{office}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Authorised Signature\n" + $F{office}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="87" width="540" height="37"/>
+				<reportElement x="10" y="87" width="540" height="34" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[" Note: "
+				<textFieldExpression><![CDATA[" Note: "
 + "Contact:  _________ (Officers Name), Assistant Town Planner, G.M.C (Gangtok).Mob No: "]]></textFieldExpression>
 			</textField>
+			<componentElement>
+				<reportElement x="10" y="161" width="528" height="20" />
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="blocks" >
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource(new java.io.ByteArrayInputStream($F{planinfoobject}.getBytes("UTF-8")),"planDetail.blocks")]]></dataSourceExpression>
+						<returnValue fromVariable="subvar_totalfloors" toVariable="var_totalfloors"/>
+					</datasetRun>
+					<jr:listContents height="20" width="528">
+						<staticText>
+							<reportElement x="18" y="0" width="259" height="20" >
+								<printWhenExpression><![CDATA[false]]></printWhenExpression>
+							</reportElement>
+							<text><![CDATA[SubDataset: planinfoobject -> blocks]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="10" y="121" width="528" height="20" />
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="additionalinfo" >
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream($F{additionalinfo}.getBytes("UTF-8") ))]]></dataSourceExpression>
+						<returnValue fromVariable="subvar_engineeron" toVariable="var_engineeron"/>
+					</datasetRun>
+					<jr:listContents height="20" width="528">
+						<staticText>
+							<reportElement x="18" y="0" width="211" height="20" >
+								<printWhenExpression><![CDATA[false]]></printWhenExpression>
+							</reportElement>
+							<text><![CDATA[SubDataset: additionalinfo]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="10" y="141" width="528" height="20" />
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="planinfoobject" >
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream($F{planinfoobject}.getBytes("UTF-8") ))]]></dataSourceExpression>
+						<returnValue fromVariable="subvar_occupancy" toVariable="var_occupancy"/>
+						<returnValue fromVariable="subvar_plotarea" toVariable="var_plotarea"/>
+						<returnValue fromVariable="subvar_blocks" toVariable="var_blocks"/>
+					</datasetRun>
+					<jr:listContents height="20" width="528">
+						<staticText>
+							<reportElement x="18" y="0" width="235" height="20" >
+								<printWhenExpression><![CDATA[false]]></printWhenExpression>
+							</reportElement>
+							<text><![CDATA[SubDataset: planinfoobject]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
 		</band>
 	</detail>
 	<pageFooter>
