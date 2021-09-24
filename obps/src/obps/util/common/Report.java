@@ -111,10 +111,10 @@ public class Report extends HttpServlet {
 					reportName = "reports/buildingpermit02.jrxml";
 					filename = "BuildingPermit.pdf";
 
-					HashMap plandet = planinfo.getPlanInfoDetails(permitnumber);
-					params.putAll(plandet);
+//					HashMap plandet = planinfo.getPlanInfoDetails(permitnumber);
+//					params.putAll(plandet);
 
-					System.out.println("params for buildingpermit:: " + params.toString());
+//					System.out.println("params for buildingpermit:: " + params.toString());
 				} else {
 					response.sendRedirect("error.jsp?msg=REPORT_VALIDATION_ERROR");
 					return;

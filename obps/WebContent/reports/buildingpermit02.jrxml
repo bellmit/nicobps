@@ -8,7 +8,7 @@
 			<fieldDescription><![CDATA[engineeron]]></fieldDescription>
 		</field>
 		<variable name="subvar_engineeron" class="java.lang.String" resetType="None">
-			<variableExpression><![CDATA[$F{engineeron}]]></variableExpression>
+			<variableExpression><![CDATA[$F{engineeron}== null || $F{engineeron}== "" ? "________________" :$F{engineeron}]]></variableExpression>
 		</variable>
 	</subDataset>
 	<subDataset name="planinfoobject" >
@@ -18,17 +18,11 @@
 		<field name="plotarea" class="java.lang.String">
 			<fieldDescription><![CDATA[planDetail.planInformation.plotArea]]></fieldDescription>
 		</field>
-		<field name="blocks" class="java.lang.String">
-			<fieldDescription><![CDATA[planDetail.blocks]]></fieldDescription>
-		</field>
 		<variable name="subvar_occupancy" class="java.lang.String" resetType="None">
-			<variableExpression><![CDATA[$F{occupancy}]]></variableExpression>
+			<variableExpression><![CDATA[$F{occupancy}== null || $F{occupancy}== ""  ? "________________" :$F{occupancy}]]></variableExpression>
 		</variable>
 		<variable name="subvar_plotarea" class="java.lang.String" resetType="None">
-			<variableExpression><![CDATA[$F{plotarea} +" sqmtr "]]></variableExpression>
-		</variable>
-		<variable name="subvar_blocks" class="java.lang.String" resetType="None">
-			<variableExpression><![CDATA[$F{blocks}]]></variableExpression>
+			<variableExpression><![CDATA[$F{plotarea} == null || $F{plotarea} =="" ? "________________" : ($F{plotarea}+" sqmtr ")]]></variableExpression>
 		</variable>
 	</subDataset>
 	<subDataset name="blocks" >
@@ -39,7 +33,7 @@
 			<fieldDescription><![CDATA[number]]></fieldDescription>
 		</field>
 		<variable name="subvar_totalfloors" class="java.lang.String" resetType="None">
-			<variableExpression><![CDATA[$F{blocknumber} > 1 ? $V{subvar_totalfloors}+ " : " + $F{totalfloors} : ($F{totalfloors}).toString()]]></variableExpression>
+			<variableExpression><![CDATA[($F{totalfloors}== null || $F{blocknumber}==null) ? "____" :  ($F{blocknumber} > 1 ? $V{subvar_totalfloors}+ " : " + $F{totalfloors} : ($F{totalfloors}).toString())]]></variableExpression>
 		</variable>
 	</subDataset>
 	<parameter name="permitnumber" class="java.lang.String">
@@ -89,11 +83,18 @@ and bap.permitnumber=$P{permitnumber}]]>
 	<field name="plotidentifier2" class="java.lang.String"/>
 	<field name="architect" class="java.lang.String"/>
 	<field name="additionalinfo" class="java.lang.String"/>
-	<variable name="var_engineeron" class="java.lang.String" resetType="None"/>
-	<variable name="var_occupancy" class="java.lang.String" resetType="None"/>
-	<variable name="var_plotarea" class="java.lang.String" resetType="None"/>
-	<variable name="var_blocks" class="java.lang.String" resetType="None"/>
-	<variable name="var_totalfloors" class="java.lang.String" resetType="None"/>
+	<variable name="var_engineeron" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$V{var_engineeron}]]></variableExpression>
+	</variable>
+	<variable name="var_occupancy" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$V{var_occupancy}]]></variableExpression>
+	</variable>
+	<variable name="var_plotarea" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$V{var_plotarea}]]></variableExpression>
+	</variable>
+	<variable name="var_totalfloors" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[$V{var_totalfloors}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -130,7 +131,7 @@ and bap.permitnumber=$P{permitnumber}]]>
 Form of Sanction.]]></text>
 			</staticText>
 			<image scaleImage="RetainShape" onErrorType="Blank">
-				<reportElement x="239" y="15" width="147" height="74" />
+				<reportElement x="247" y="15" width="147" height="74" />
 				<imageExpression><![CDATA[$F{logo}]]></imageExpression>
 			</image>
 		</band>
@@ -177,7 +178,7 @@ Form of Sanction.]]></text>
 				<textFieldExpression><![CDATA[$F{ownersname}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="219">
+		<band height="204">
 			<textField evaluationTime="Report">
 				<reportElement x="8" y="0" width="540" height="101" />
 				<textElement textAlignment="Justified" markup="styled">
@@ -218,9 +219,16 @@ Form of Sanction.]]></text>
 				<reportElement x="0" y="197" width="100" height="1" />
 			</break>
 		</band>
-		<band height="681">
+		<band height="627">
 			<staticText>
-				<reportElement x="10" y="31" width="540" height="625" />
+				<reportElement x="10" y="4" width="540" height="20" />
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[This construction order is approved on the following conditions:- ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="24" width="540" height="598" />
 				<textElement textAlignment="Justified">
 					<font size="10"/>
 					<paragraph lineSpacing="1_1_2"/>
@@ -250,15 +258,8 @@ Control)  Act,1985  as  amended  in  2000,and  the  Sikkim  Building  Constructi
 responsible  for  the  loss  of  life  and  property,  as  a  result  of  such  unauthorized excavation/construction.
 ]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="10" y="4" width="540" height="20" />
-				<textElement textAlignment="Justified">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[This construction order is approved on the following conditions:- ]]></text>
-			</staticText>
 		</band>
-		<band height="187">
+		<band height="148">
 			<staticText>
 				<reportElement x="10" y="3" width="540" height="20" />
 				<textElement>
@@ -267,14 +268,14 @@ responsible  for  the  loss  of  life  and  property,  as  a  result  of  such  
 				<text><![CDATA[Two copies of the approved B.P. Plan are returned herewith for your record.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="324" y="40" width="212" height="45" />
+				<reportElement x="289" y="50" width="249" height="45" />
 				<textElement textAlignment="Center" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Authorised Signature\n" + $F{office}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="87" width="540" height="34" />
+				<reportElement x="10" y="95" width="540" height="34" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -282,61 +283,36 @@ responsible  for  the  loss  of  life  and  property,  as  a  result  of  such  
 + "Contact:  _________ (Officers Name), Assistant Town Planner, G.M.C (Gangtok).Mob No: "]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="10" y="161" width="528" height="20" />
+				<reportElement x="10" y="140" width="528" height="0" />
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
 					<datasetRun subDataset="blocks" >
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource(new java.io.ByteArrayInputStream($F{planinfoobject}.getBytes("UTF-8")),"planDetail.blocks")]]></dataSourceExpression>
 						<returnValue fromVariable="subvar_totalfloors" toVariable="var_totalfloors"/>
 					</datasetRun>
-					<jr:listContents height="20" width="528">
-						<staticText>
-							<reportElement x="18" y="0" width="259" height="20" >
-								<printWhenExpression><![CDATA[false]]></printWhenExpression>
-							</reportElement>
-							<text><![CDATA[SubDataset: planinfoobject -> blocks]]></text>
-						</staticText>
-					</jr:listContents>
+					<jr:listContents height="0" width="528"/>
 				</jr:list>
 			</componentElement>
 			<componentElement>
-				<reportElement x="10" y="121" width="528" height="20" />
+				<reportElement x="10" y="140" width="528" height="0" />
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
 					<datasetRun subDataset="additionalinfo" >
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream($F{additionalinfo}.getBytes("UTF-8") ))]]></dataSourceExpression>
 						<returnValue fromVariable="subvar_engineeron" toVariable="var_engineeron"/>
 					</datasetRun>
-					<jr:listContents height="20" width="528">
-						<staticText>
-							<reportElement x="18" y="0" width="211" height="20" >
-								<printWhenExpression><![CDATA[false]]></printWhenExpression>
-							</reportElement>
-							<text><![CDATA[SubDataset: additionalinfo]]></text>
-						</staticText>
-					</jr:listContents>
+					<jr:listContents height="0" width="528"/>
 				</jr:list>
 			</componentElement>
 			<componentElement>
-				<reportElement x="10" y="141" width="528" height="20" />
+				<reportElement x="10" y="140" width="528" height="0" />
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
 					<datasetRun subDataset="planinfoobject" >
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream($F{planinfoobject}.getBytes("UTF-8") ))]]></dataSourceExpression>
 						<returnValue fromVariable="subvar_occupancy" toVariable="var_occupancy"/>
 						<returnValue fromVariable="subvar_plotarea" toVariable="var_plotarea"/>
-						<returnValue fromVariable="subvar_blocks" toVariable="var_blocks"/>
 					</datasetRun>
-					<jr:listContents height="20" width="528">
-						<staticText>
-							<reportElement x="18" y="0" width="235" height="20" >
-								<printWhenExpression><![CDATA[false]]></printWhenExpression>
-							</reportElement>
-							<text><![CDATA[SubDataset: planinfoobject]]></text>
-						</staticText>
-					</jr:listContents>
+					<jr:listContents height="0" width="528"/>
 				</jr:list>
 			</componentElement>
 		</band>
 	</detail>
-	<pageFooter>
-		<band splitType="Stretch"/>
-	</pageFooter>
 </jasperReport>
