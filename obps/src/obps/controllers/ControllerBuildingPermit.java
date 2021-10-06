@@ -175,6 +175,7 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/bpaform.htm")
 	public String basicDetailsForm(Model model) {
 		LOG.info("URL: bpaform.htm");
+		
 		return BPAConstants.COMPONENT_URL_MAPPING.concat("/bpaform");
 	}
 
@@ -213,6 +214,7 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/getEdcrDetails.htm")
 	public @ResponseBody Map<String, Object> getEdcrDetails(@ModelAttribute("SESSION_USERCODE") Integer usercode,
 			@RequestParam(name = "param") String edcrnumber) {
+		
 		return SBI.getEdcrDetails(usercode, edcrnumber);
 	};
 
@@ -272,6 +274,11 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/listOwnershiptypes.htm")
 	public @ResponseBody List<CommonMap> listOwnershiptypes() {
 		return SBI.listOwnershiptypes();
+	}
+	@GetMapping(value = "/listEngineers.htm")
+	public @ResponseBody List<CommonMap> listEngineers(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		System.out.println("usercode::"+usercode);
+		return SBI.listEngineers(usercode);
 	}
 
 	@GetMapping(value = "/listRelationshiptypes.htm")

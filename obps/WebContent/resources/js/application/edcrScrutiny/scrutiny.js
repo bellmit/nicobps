@@ -59,6 +59,14 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 						return status;
 					}
 				}, {
+            "title": "Next Process",
+            "data": "status",
+            render: (data, type, row, meta) => {
+              if(data == 'Accepted') return "Apply for BPA";
+              else return data;
+            }
+          },
+				 {
 					"title": "Plan Report",
 					"data": "edcrnumber",
 					render: (data, type, row, meta) => {

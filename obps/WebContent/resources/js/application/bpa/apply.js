@@ -31,6 +31,7 @@ app.controller("CommonCtrl", [
     $scope.Officelocations = [];
     $scope.OwnerSubtypes = Ownershipsubtypes;
     $scope.Ownertypes = [];
+    $scope.Engineers = [];
     $scope.Relationshiptypes = [];
     $scope.Salutations = [];
     $scope.States = [];
@@ -58,6 +59,13 @@ app.controller("CommonCtrl", [
       }, (data = ""));
     };
     $scope.listOwnershiptypes();
+    
+    $scope.listEngineers = () => {
+      BS.listEngineers((response) => {
+        $scope.Engineers = response;
+      }, (data = ""));
+    };
+    $scope.listEngineers();
 
     $scope.listRelationshiptypes = () => {
       BS.listRelationshiptypes((response) => {
@@ -110,6 +118,7 @@ app.controller("CommonCtrl", [
     		$scope.BPA.ownerdetails[index].peraddressline2 = $scope.BPA.ownerdetails[index].preaddressline2;
     		$scope.BPA.ownerdetails[index].pertownvillage= $scope.BPA.ownerdetails[index].pretownvillage;
     		$scope.BPA.ownerdetails[index].perstatecode = $scope.BPA.ownerdetails[index].prestatecode;
+    		$scope.listDistricts(2,$scope.BPA.ownerdetails[index].perstatecode);
     		$scope.BPA.ownerdetails[index].perdistrictcode = $scope.BPA.ownerdetails[index].predistrictcode ;
     		$scope.BPA.ownerdetails[index].perpincode = $scope.BPA.ownerdetails[index].prepincode  ;
     	}

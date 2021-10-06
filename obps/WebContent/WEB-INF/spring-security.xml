@@ -63,10 +63,10 @@
 			<!-- <password-encoder hash="bcrypt"></password-encoder> -->
             <jdbc-user-service data-source-ref="dataSource" 
                                users-by-username-query="SELECT username, userpassword AS password, true AS enabled
-														FROM userlogins WHERE username = ?"
+														FROM nicobps.userlogins WHERE username = ?"
 
                                authorities-by-username-query="SELECT username, 'U' as authority
-															FROM userlogins
+															FROM nicobps.userlogins
 															WHERE username = ?"
 			/>
         </authentication-provider>

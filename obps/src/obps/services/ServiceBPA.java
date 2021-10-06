@@ -114,7 +114,7 @@ class ServiceBPA implements ServiceBPAInterface {
 	@Override
 	public List<CommonMap> listOfficelocations(Integer officecode) {
 		String sql = "SELECT O.locationcode AS key, O.locationname AS value, nomenclature AS value1 "
-				+ "FROM masters.officelocations O  " + "WHERE O.officecode = ?  " + "ORDER BY O.locationname";
+				+ "FROM masters.officelocations O  " + "WHERE O.officecode = ?  " + "ORDER BY key ASC";
 		return SUI.listCommonMap(sql, new Object[] { officecode });
 	}
 
@@ -812,4 +812,13 @@ class ServiceBPA implements ServiceBPAInterface {
 			return false;
 	}
 
+	
+	@Override
+	public List<CommonMap> listEngineers( Integer usercode) {
+		String sql = " SELECT  distinct T.applicantsname AS key, T.applicantsname AS value"
+				+ "				FROM  nicobps.licensees T ,  nicobps.licenseeofficesvalidities  B, "
+				+ "				nicobps.USERLOGINS U  WHERE   Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END >= current_date"
+				+ "				 AND B.officecode in(Select officecode from nicobps.useroffices where usercode=?) AND   T.licenseetypecode=2  ORDER BY T.applicantsname";
+		return SUI.listCommonMap(sql, new Object[] { usercode });
+	}
 }

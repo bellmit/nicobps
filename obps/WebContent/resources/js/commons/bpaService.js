@@ -118,6 +118,9 @@ app.service("bpaService", [
       listOwnershiptypes: async function (callback, data = "") {
         CUS.getData("./listOwnershiptypes.htm", data, callback);
       },
+       listEngineers: async function (callback, data = "") {
+        CUS.getData("./listEngineers.htm", data, callback);
+      },
       listRejectedApplications: async function (callback, data = "") {
         CUS.getData("./listRejectedApplications.htm", data, callback);
       },

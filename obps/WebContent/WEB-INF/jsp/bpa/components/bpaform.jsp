@@ -61,11 +61,29 @@
 		<div class="row">
 			<div class="col">
 				<div class="form-group">
-					<label class="col-sm-12">Name of Engineer on Record </label>
-					<div class="col-sm-12">
+<!-- 					<label class="col-sm-12">Name of Engineer on Record </label> -->
+				<!-- 	<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="nameofengineer"
 							ng-model="BPA.additionalinfo.nameofengineer" value="VALUE" required/>						
+					</div> -->
+<!-- 					modified -->
+								<div class="col">
+				<div class="form-group">
+					<label class="col-sm-12">Name of Engineer on Record <span class="fa fa-asterisk"></span></label>
+					<div class="col-sm-12">
+						<select class="form-control custom-form-control" name="nameofengineer"
+							ng-model="BPA.additionalinfo.nameofengineer"
+							ng-options="E.key as E.value for E in Engineers"
+							required>
+							<option selected readonly value="">Select Engineer</option>
+						</select>
+						<div class="col" ng-if="bpaform.nameofengineer.$touched" style="color:red">
+							<span ng-show="bpaform.nameofengineer.$error.required">Required</span>
+						</div>
 					</div>
+				</div>
+			</div>
+										<!-- 			end		modified -->
 				</div>
 			</div>
 			<div class="col">
@@ -576,7 +594,7 @@
 <div class="card">
 	<div class="card-body">
 		<div style="text-align:center; margin: auto;">
-			<input type="button" class="btn btn-primary" value="Save" ng-click="save()">
+			<input type="button" class="btn btn-primary" value="Save and Next" ng-click="save()">
 		</div>
 		<div class="col" ng-if="serverMsg">
    			<br/>

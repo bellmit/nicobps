@@ -79,7 +79,7 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 					+ "LEFT JOIN nicobps.applicationflowremarks afr on afr.applicationcode= c.applicationcode and afr.afrcode=(select max(afrcode) from nicobps.applicationflowremarks where applicationcode=afr.applicationcode) "
 					+ "LEFT JOIN masters.processflow pf on pf.modulecode=2 and pf.toprocesscode=afr.toprocesscode "
 					+ "LEFT JOIN masters.pageurls page on page.urlcode=pf.urlcode "
-					+ "WHERE a.usercode=? order by a.entrydate desc";
+					+ "WHERE a.usercode=? and c.applicationcode is null order by a.entrydate desc";
 			Object[] criteria = { usercode };
 			list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EdcrScrutiny.class), criteria);
 		} catch (Exception e) {

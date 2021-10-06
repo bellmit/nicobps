@@ -57,16 +57,7 @@ app.controller("CommonCtrl", [
 								else
 									return '';
 							} */
-					}, {
-						"title": "Next Process",
-						"data": "nextprocessname",
-						render: (data, type, row, meta) => {
-							let status = data;
-							if (row.rejectdate != null && row.rejectdate != '')
-								status = 'NA';
-							return status;
-						}
-					}, {
+					},  {
 						"title": "Status",
 						"data": "status",
 						render: (data, type, row, meta) => {
@@ -75,7 +66,17 @@ app.controller("CommonCtrl", [
 								status = "Rejected";
 							return status;
 						}
-					}, {
+					},{
+						"title": "Next Process",
+						"data": "nextprocessname",
+						render: (data, type, row, meta) => {
+							let status = data;
+							if (row.rejectdate != null && row.rejectdate != '')
+								status = 'NA';
+							return status;
+						}
+					},
+					 {
 						"title": "Remarks",
 						"data": "remarks",
 						render: (data, type, row, meta) => {
