@@ -88,51 +88,62 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 
 		var i = 1;
 		jQuery("#displayRecords").html("");
-		$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;' border='1' class='table table table-bordered  table-hover'></table>");
+		$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;font-size:90%;' border='1' class='table  table-bordered  table-hover'></table>");
 		jQuery('#displayRecordsTable').DataTable({
+			dom: '<"top"i>rt<"bottom"lp>',
 			data: obj,
 			columns: [
 				{
 					"title": "Slno",
+					"width": "1%",
 					"render": function(data, type, full, meta) {
 						return i++;
 					}
 				},
 				{
 					"title": "EDCR Number",
-					"data": "edcrnumber"
+					"data": "edcrnumber",
+					"width": "5%"
 				},
 				{
 					"title": "filename(.dxf) ",
-					"data": "originalfilename"
+					"data": "originalfilename",
+					"width": "7%"
 				},
 				{
 					"title": "Application Code",
-					"data": "applicationcode"
+					"data": "applicationcode",
+					"width": "5%"
 				}, {
 					"title": "Permit Number",
-					"data": "permitnumber"
+					"data": "permitnumber",
+					"width": "5%"
 				},
 
 				{
 					"title": "Owner Name",
-					"data": "ownername"
+					"data": "ownername",
+					"width": "8%"
 				},
 
 				{
 					"title": "Ownership SubType",
-					"data": "ownershipsubtype"
+					"data": "ownershipsubtype",
+					"width": "4%"
 				},
 				{
 					"title": "Site Address ",
-					"data": "address"
+					"data": "address",
+					"width": "20%"
 				},
 				{
 					"title": "Current Process",
-					"data": "fromprocessname"
+					"data": "fromprocessname",
+					"width": "20%"
 				}, {
 					"title": "Next Process",
-					"data": "toprocessname"
+					"data": "toprocessname",
+					"width": "20%"
 				},
 
 
@@ -140,6 +151,7 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 					"title": "Action",
 					"sortable": false,
 					"data": "permitnumber",
+					"width": "5%",
 					"render": function(data, type, row, meta) {
 
 						let div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Print" ng-click="printpermit(\'' + data + '\')" class=" btn btn-primary">Print</button>';
@@ -150,7 +162,7 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 			"sortable": false,
 			"columnDefs": [
 				{
-					"width": "2%", "targets": 0, "searchable": false,
+					"width": "1%", "targets": 0, "searchable": false,
 					"orderable": false,
 				},
 

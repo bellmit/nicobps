@@ -26,41 +26,49 @@ app.controller("CommonCtrl", [
 
 		$scope.setAppEdcrDetailsTable = (tData) => {
 			$("#displayRecords").html("");
-			$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;' border='1' class='table table table-bordered  table-hover'></table>");
+			$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;font-size:85%;' border='1' class='table  table-bordered  table-hover'></table>");
 			var table = jQuery('#displayRecordsTable').DataTable({
 				"data": tData,
 				"columns": [
 					{
 						"title": "Slno",
 						"data": "edrnumber",
-						"width": "2%",
+						"width": "1%",
 						render: function(data, type, row, meta) {
 							return meta.row + 1;
 						}
 					}, {
 						"title": "EDCR Number",
-						"data": "edcrnumber"
+						"data": "edcrnumber",
+						"width": "5%"
 					}, {
 						"title": "filename(.dxf) ",
-						"data": "originalfilename"
+						"data": "originalfilename",
+						"width": "8%"
 					}, {
 						"title": "scrutiny date ",
-						"data": "edcrdate"
+						"data": "edcrdate",
+						"width": "5%"
 					}, {
 						"title": "Application code",
-						"data": "applicationcode"
+						"data": "applicationcode",
+						"width": "8%"
 					}, {
 						"title": "Owner Name ",
-						"data": "ownername"
+						"data": "ownername",
+						"width": "13%"
 					}, {
 						"title": "Site Address ",
-						"data": "address"
+						"data": "address",
+						"width": "20%"
 					},{
 						"title": "Current Process ",
-						"data": "fromprocessname"
+						"data": "fromprocessname",
+						"width": "20%"
 					}, {
 						"title": "Next Process",
 						"data": "toprocessname",
+						"width": "20%",
 						render: (data, type, row, meta) => {
 							if (data == null || data == '') return "Apply for BPA";
 							else return data;

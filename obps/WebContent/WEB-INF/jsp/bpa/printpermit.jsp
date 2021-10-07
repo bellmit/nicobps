@@ -221,6 +221,7 @@
 							<div class="card d-none " id="searchresults">
 								<!--start of panel default 1-->
 								<div class="card-header bg-dark  text-white">Search Result</div>
+								<br/>
 								<div class="table-responsive" id="displayRecordsDiv">
 									<div id="displayRecords"
 										style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px'></div>
