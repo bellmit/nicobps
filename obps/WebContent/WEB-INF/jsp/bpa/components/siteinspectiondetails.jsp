@@ -37,7 +37,7 @@
 				<label class="col-sm-1" style="text-align: center;">{{($index+1)}}</label> 
 				<label class="col">{{Q.questiondescription}}</label>
 				<label class="col-sm-2">{{Q.response}}</label>
-				<label class="col">{{(Q.remarks != null && Q.remarks != '')?Q.remarks:'NA'}}</label>
+				<label class="col">{{(Q.remarks != null && Q.remarks != '')?Q.remarks:''}}</label>
 			</div>
 		</div>
 	</div>
