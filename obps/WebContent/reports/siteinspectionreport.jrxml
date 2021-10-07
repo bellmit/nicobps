@@ -126,7 +126,7 @@ WHERE O.OFFICECODE = AP.OFFICECODE
 							<textField>
 								<reportElement x="0" y="0" width="84" height="30" />
 								<textElement textAlignment="Center"/>
-								<textFieldExpression><![CDATA[$F{response}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[($F{response} != null && $F{response} != '')?(($F{response} =='X')?'Not Applicable':$F{response}):'']]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

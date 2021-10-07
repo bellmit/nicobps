@@ -77,7 +77,7 @@ public class Report extends HttpServlet {
 			con = ds.getConnection();
 
 			String reportDirectory = getServletContext().getRealPath("/") + "reports/";
-			String logoPath = reportDirectory + "gmc_logobw.png";
+//			String logoPath = reportDirectory + "gmc_logobw.png";
 			// String embPath = reportDirectory+"nei.gif";
 
 			if (status != null && status.equals("1")) {
@@ -199,18 +199,20 @@ public class Report extends HttpServlet {
 
 			// System.out.println("reportName : "+reportName);
 			// params.put("embPath", embPath);
-			params.put("logopath", logoPath);
+//			params.put("logopath", logoPath);
 			params.put("SUBREPORT_DIR", reportDirectory);
 
 			JasperDesign jasperDesign = JRXmlLoader.load(getServletContext().getRealPath("/") + reportName);
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 			JasperPrint jasperprint = JasperFillManager.fillReport(jasperReport, params, con);
 
+			
 			// export report to pdf and stream back to browser
 			byte[] pdfasbytes = JasperExportManager.exportReportToPdf(jasperprint);
 			outstream = response.getOutputStream();
 			response.setContentType("application/pdf");
 			response.setContentLength(pdfasbytes.length);
+		
 
 			response.setHeader("Content-disposition", "inline; filename=\"" + filename + "\"");
 			outstream.write(pdfasbytes);
@@ -220,7 +222,7 @@ public class Report extends HttpServlet {
 			out = response.getWriter();
 			System.out.println(
 					"Exception thrown by class " + this.getClass() + " at " + new java.util.Date() + " :: " + e);
-			System.out.println("HERE----------");
+		
 			e.printStackTrace();
 			// Logger.getLogger(Report.class.getName()).log(Level.SEVERE, null, e);
 			response.sendRedirect("error.jsp");

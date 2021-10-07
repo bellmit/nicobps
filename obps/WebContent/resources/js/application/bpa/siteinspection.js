@@ -184,7 +184,9 @@ app.controller("CommonCtrl", [
 			valid = $scope.validateForm();
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
-			$scope.bpa.questionnaires = $scope.bpa.initQuestionnaires($scope.Questionnaires);
+//			$scope.bpa.questionnaires = $scope.bpa.initQuestionnaires($scope.Questionnaires);
+			$scope.bpa.questionnaires = $scope.Questionnaires;
+			
 			data = $scope.bpa.init($scope.bpa);
 			console.log("f-data: ",data)
 			if (!valid) {
