@@ -61,7 +61,7 @@
       		</label>
       		<div class="col">
       			<textarea class="form-control" style="width: 100%; height: 100px; min-height:100px; max-height: 250px;" 
-      				ng-model="modal.remarks" pattern-address></textarea>
+      				ng-model="modal.remarks" pattern="[a-zA-Z0-9. -\/*]{1,99}"></textarea>
       		</div>
       	</div>
       </div>
