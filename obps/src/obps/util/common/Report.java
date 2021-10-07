@@ -176,7 +176,20 @@ public class Report extends HttpServlet {
 
 				reportName = "reports/stakeholder.jrxml";
 				filename = "stakeholder_" + applicationcode + ".pdf";
-			} else {
+			}else if (status != null && status.equals("5")) {
+				System.out.println("applicationcode=" + request.getParameter("applicationcode"));
+				String applicationcode = (request.getParameter("applicationcode") == null
+						|| request.getParameter("applicationcode").equals("")) ? null
+								: request.getParameter("applicationcode").trim();
+				if (applicationcode == null) {
+					response.sendRedirect("error.jsp?msg=REPORT_PARAM_MISSING");
+					return;
+				}
+				params.put("applicationcode", applicationcode);
+
+				reportName = "reports/siteinspectionreport.jrxml";
+				filename = "siteinspection_" + applicationcode + ".pdf";
+			}else {
 				response.sendRedirect("error.jsp?msg=REPORT_STATUS_MISSING");
 				return;
 			}

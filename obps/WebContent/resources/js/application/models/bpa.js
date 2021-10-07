@@ -39,7 +39,7 @@ const Timeout = {
 const ComboResponse = [
 	{key: 'Y', value: 'YES', enabled: true},
 	{key: 'N', value: 'NO', enabled: true},
-	{key: 'X', value: 'NA', enabled: true}
+	{key: 'X', value: 'Not Applicable', enabled: true}
 ];
 
 var ApplicationFlow = function () {

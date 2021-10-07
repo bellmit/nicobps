@@ -452,7 +452,8 @@ class ServiceBPA implements ServiceBPAInterface {
 					+ "INNER JOIN masters.modulesenclosures ME ON ME.enclosurecode = EN.enclosurecode    "
 					+ "INNER JOIN masters.processes P ON (P.processcode, P.modulecode) = (ME.processcode, ME.modulecode)    "
 					+ "WHERE " + "    ME.officecode = ?    " + "AND ME.modulecode = ?    "
-					+ "AND BE.applicationcode = ?    ";
+					+ "AND BE.applicationcode = ?    "
+					+ "ORDER BY ME.processcode ,ME.sequenceno ";
 			details = SUI.listGeneric(sql, new Object[] { getApplicationOfficecode(applicationcode),
 					BPAConstants.MODULE_CODE, applicationcode });
 			if (details != null && !details.isEmpty())

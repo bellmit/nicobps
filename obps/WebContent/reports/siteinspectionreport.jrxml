@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="siteinspectionreport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="app_questionaires" >
+		<parameter name="applicationcode" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT OQ.officecode, Q.questioncode, Q.questiondescription,AQ.aqcode, AQ.response, AQ.remarks
+FROM masters.officequestionaires  OQ
+INNER JOIN masters.questionaires Q ON Q.questioncode = OQ.questioncode
+LEFT JOIN nicobps.applicationsquestionaires AQ ON AQ.questioncode = OQ.questioncode
+ AND AQ.applicationcode = $P{applicationcode}
+WHERE UPPER(enabled) = 'Y'
+ AND OQ.officecode = (SELECT officecode FROM nicobps.applications
+WHERE applicationcode = $P{applicationcode});]]>
+		</queryString>
+		<field name="officecode" class="java.lang.Integer"/>
+		<field name="questioncode" class="java.lang.Integer"/>
+		<field name="questiondescription" class="java.lang.String"/>
+		<field name="aqcode" class="java.lang.Integer"/>
+		<field name="response" class="java.lang.String"/>
+		<field name="remarks" class="java.lang.String"/>
+		<variable name="serialNumber" class="java.lang.Integer" calculation="Count">
+			<variableExpression><![CDATA[0]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="applicationcode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT OFFICENAME1 ||  CHR(10) ||
+CASE WHEN OFFICENAME2 IS NULL OR LENGTH(TRIM(OFFICENAME2)) = 0 THEN ''   ELSE OFFICENAME2  ||  CHR(10) END ||
+CASE WHEN OFFICENAME3 IS NULL OR LENGTH(TRIM(OFFICENAME3)) = 0 THEN ''  ELSE OFFICENAME3 END AS OFFICE,
+LOGO
+FROM MASTERS.OFFICES O,NICOBPS.APPLICATIONS AP, NICOBPS.BPAAPPLICATIONS BA
+WHERE O.OFFICECODE = AP.OFFICECODE
+ AND AP.APPLICATIONCODE=BA.APPLICATIONCODE
+ AND  AP.APPLICATIONCODE=$P{applicationcode};]]>
+	</queryString>
+	<field name="office" class="java.lang.String"/>
+	<field name="logo" class="java.io.InputStream"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="95" splitType="Stretch">
+			<image scaleImage="RetainShape" onErrorType="Blank">
+				<reportElement x="18" y="-2" width="100" height="86" />
+				<imageExpression><![CDATA[$F{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="118" y="0" width="423" height="84" />
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{office}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="15" y="88" width="526" height="1" />
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="326" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table" x="18" y="80" width="523" height="240" />
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="app_questionaires" >
+						<datasetParameter name="applicationcode">
+							<datasetParameterExpression><![CDATA[$P{applicationcode}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="71" >
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="71" height="30" />
+								<textElement textAlignment="Center">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Slno]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="37" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="71" height="30" />
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$V{serialNumber}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="227" >
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="227" height="30" />
+								<textElement textAlignment="Center">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Questionnaire]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="37" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="227" height="30" />
+								<textElement>
+									<font isUnderline="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{questiondescription}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="84" >
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="84" height="30" />
+								<textElement textAlignment="Center">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Response]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="37" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="84" height="30" />
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{response}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="209" >
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="207" height="30" />
+								<textElement textAlignment="Center">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Remarks]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="37" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="207" height="30" />
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[($F{remarks} != null && $F{remarks} != '') ? $F{remarks}:'']]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="18" y="45" width="241" height="23" />
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Site Inspection Questionnaires :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="149" y="12" width="282" height="22" />
+				<textElement>
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{applicationcode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="12" width="131" height="22" />
+				<textElement>
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Application Code:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

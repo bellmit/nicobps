@@ -59,7 +59,7 @@
 														<!-- <input type="checkbox" name="response_{{$index}}" ng-model="Q.response"/> -->
 														<span>{{$index+1}}: {{Q.questiondescription}} <span class="fa fa-asterisk"></span></span>
 													</div>
-													<div class="col">
+													<div class="col-sm-2.5">
 														<select class="form-control custom-form-control" 
 															id="response_{{Q.questioncode}}" ng-model="Q.response"
 															ng-options="R.key as R.value for R in Response | filter: {enabled:true}"
@@ -67,11 +67,11 @@
 															<option value="" selected disabled>-Select options-</option>
 															<option value="Y">Yes</option>
 															<option value="N">No</option>
-															<option value="X">NA</option>
+															<option value="X">Not Applicable</option>
 														</select>
 														<span ng-if="Q.errorMsg != null && Q.errorMsg != ''" style="color:red" >{{Q.errorMsg}}</span>
 													</div>
-													<div class="col-sm-5">
+													<div class="col-sm-4">
 														<textarea rows="1" cols="10" name="remarks_{{$index}}" class="form-control textarea" 
 		                               				       		ng-model="Q.remarks" maxlength="99" autocomplete="off" ng-disabled="Q.response != 'Y'"
 		                               				       		ng-change="validateQuestionnairesResponse(2, Q.questioncode)">
