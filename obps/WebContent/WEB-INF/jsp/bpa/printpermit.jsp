@@ -11,7 +11,8 @@
 }
 </style>
 </head>
-<body ng-app="PermitApp" ng-controller="permitCtrl"  ng-init="init(applicationcode=('${applicationcode}'))">
+<body ng-app="PermitApp" ng-controller="permitCtrl"
+	ng-init="init(applicationcode=('${applicationcode}'))">
 	<div class="d-flex" id="wrapper">
 		<%@include file="../common/menuside.jsp"%>
 		<div id="page-content-wrapper">
@@ -45,7 +46,7 @@
 														<div class="col-4 ">
 															<input type="text" id="applicationcode"
 																name="applicationcode" ng-model="applicationcode"
-																class="form-control text-uppercase"  maxlength="20"/>
+																class="form-control text-uppercase" maxlength="20" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyapplicationcode"
@@ -68,16 +69,18 @@
 											<div class="card-header bg-info text-white"
 												data-toggle="collapse" data-target="#bypermitno">Search
 												By Permit Number</div>
-											<div id="bypermitno" class="collapse" data-parent="#accordion">
+											<div id="bypermitno" class="collapse"
+												data-parent="#accordion">
 
 												<div class="card-body ">
 
 													<div class="form-group row ">
-														<label class="col-2 control-label">Permit Number : </label>
+														<label class="col-2 control-label">Permit Number :
+														</label>
 														<div class="col-4 ">
 															<input type="text" id="permitnumber" name="permitnumber"
 																ng-model="permitnumber"
-																class="form-control text-uppercase"  maxlength="30" />
+																class="form-control text-uppercase" maxlength="30" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbypermitnumber"
@@ -109,7 +112,7 @@
 														<div class="col-4 ">
 															<input type="text" id="edcrnumber" name="edcrnumber"
 																ng-model="edcrnumber"
-																class="form-control text-uppercase"  maxlength="30" />
+																class="form-control text-uppercase" maxlength="30" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyedcrnumber"
@@ -140,7 +143,7 @@
 														<label class="col-2 control-label">Owner Name : </label>
 														<div class="col-4 ">
 															<input type="text" id="ownername" name="ownername"
-																ng-model="ownername" class="form-control"  maxlength="50"/>
+																ng-model="ownername" class="form-control" maxlength="50" />
 														</div>
 														<div class="col-4 ">
 															<input type="button" id="searchbyownername"
@@ -218,7 +221,10 @@
 							<div class="card d-none " id="searchresults">
 								<!--start of panel default 1-->
 								<div class="card-header bg-dark  text-white">Search Result</div>
-								<div class="card-body" id="displayRecords" style='width: 100%;'></div>
+								<div class="table-responsive" id="displayRecordsDiv">
+									<div id="displayRecords"
+										style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px'></div>
+								</div>
 							</div>
 							<!--End of Search result -->
 

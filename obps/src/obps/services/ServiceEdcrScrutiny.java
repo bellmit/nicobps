@@ -62,7 +62,7 @@ public class ServiceEdcrScrutiny {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest().getSession(true); // true == allow create
 	}
-	
+
 	public List<EdcrScrutiny> fetch_usercd(String usercd) {
 		List<EdcrScrutiny> resp = null;
 		resp = DaoedcrScrutinyInterface.fetchEdcr_usercd(usercd);
@@ -77,15 +77,15 @@ public class ServiceEdcrScrutiny {
 	}
 
 	public JSONObject Scrutinize(MultipartFile planFile, String usercode, String OfficeCode, String stateid,
-			String tenantid) {
+			String tenantid, String originalfilename) {
 		String resp = null;
 		JSONObject respJson = null;
-		byte[] binaryPlanReport=null;
-		byte[] binaryDxfFile=null;
+		byte[] binaryPlanReport = null;
+		byte[] binaryDxfFile = null;
 		final String uuid = UUID.randomUUID().toString().replace("-", "");
 		JSONObject userInfo = new JSONObject();
 		userInfo.put("uuid", "1c79f77e-e847-4663-98a7-5aee31f185c5");
-		userInfo.put("tenantId", "0003");
+//		userInfo.put("tenantId", "0003");
 		userInfo.put("id", "12345");
 		JSONObject RequestInfo = new JSONObject();
 		RequestInfo.put("userInfo", userInfo);
@@ -93,10 +93,10 @@ public class ServiceEdcrScrutiny {
 		edcrRequest.put("transactionNumber", uuid);
 		edcrRequest.put("applicationSubType", "NEW_CONSTRUCTION");
 		edcrRequest.put("appliactionType", "BUILDING_PLAN_SCRUTINY");
-		
-		Userlogin user=(Userlogin)session().getAttribute("user");
+
+		Userlogin user = (Userlogin) session().getAttribute("user");
 		edcrRequest.put("applicantName", user.getFullname());
-		
+
 		edcrRequest.put("tenantId", stateid + "." + tenantid);
 		edcrRequest.put("RequestInfo", RequestInfo);
 		try {
@@ -129,30 +129,33 @@ public class ServiceEdcrScrutiny {
 				edcrnumber = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("edcrNumber")).toString();
 			}
 			String status = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("status")).toString();
-			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport")).toString();
+			String planReport = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("planReport"))
+					.toString();
 			if (planReport != null || planReport != "") {
 				URL url = new URL(planReport);
 				planReport = planReport.replace(url.getProtocol(), (new URL(serverUrl)).getProtocol());
-				
+
 				url = new URL(planReport);
-				binaryPlanReport=readfile(url);
-			 
+				binaryPlanReport = readfile(url);
+
 			}
 			String dxfFile = (((List<Map<String, Object>>) json.get("edcrDetail")).get(0).get("dxfFile")).toString();
 			System.out.println(dxfFile);
 			if (dxfFile != null || dxfFile != "") {
 				URL url = new URL(dxfFile);
 				dxfFile = dxfFile.replace(url.getProtocol(), (new URL(serverUrl)).getProtocol());
-				
-				url =  new URL(dxfFile);
-				binaryDxfFile=readfile(url);
-			 
+
+				url = new URL(dxfFile);
+				binaryDxfFile = readfile(url);
+
 			}
 			String edcrdetails = (new ObjectMapper())
 					.writeValueAsString(((List<Map<String, Object>>) json.get("edcrDetail")).get(0));
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("usercode", usercode);
 			map.put("useroffice", OfficeCode);
+			System.out.println("this is original file name " + originalfilename);
+			map.put("originalfilename", originalfilename);
 			map.put("edcrnumber", edcrnumber);
 			map.put("status", status);
 			map.put("planreport", binaryPlanReport);
@@ -206,7 +209,7 @@ public class ServiceEdcrScrutiny {
 				baos.write(byteChunk, 0, n);
 			}
 			binaryFile = baos.toByteArray();
-			System.out.println("binaryFile-------"+binaryFile);
+			System.out.println("binaryFile-------" + binaryFile);
 		} catch (IOException e) {
 			System.err.printf("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());
 			e.printStackTrace();

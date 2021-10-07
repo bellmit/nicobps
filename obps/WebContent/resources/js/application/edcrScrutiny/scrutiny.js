@@ -1,3 +1,13 @@
+var originalfilename;
+$(document).ready(function() {
+	$('input[type="file"]').change(function(e) {
+		originalfilename = e.target.files[0].name;
+
+	});
+
+
+});
+
 var app = angular.module("CommonApp", []);
 app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $window) {
 	$scope.listLicensees = function() {
@@ -7,7 +17,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
-			 	console.log(JSON.stringify(response));
+				console.log(JSON.stringify(response));
 				$timeout(function() {
 					$scope.edcrscrutinylist = response;
 					$scope.setEdcrListTable($scope.edcrscrutinylist);
@@ -15,6 +25,8 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			}
 		});
 	};
+
+
 	$scope.setEdcrListTable = (tData) => {
 		$("#displayRecords").html("");
 		$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;' border='1' class='table table table-bordered  table-hover'></table>");
@@ -59,14 +71,6 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 						return status;
 					}
 				}, {
-            "title": "Next Process",
-            "data": "status",
-            render: (data, type, row, meta) => {
-              if(data == 'Accepted') return "Apply for BPA";
-              else return data;
-            }
-          },
-				 {
 					"title": "Plan Report",
 					"data": "edcrnumber",
 					render: (data, type, row, meta) => {
@@ -110,7 +114,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 		});
 		table.on('click', 'tr td:nth-of-type(2),td:nth-of-type(3),td:nth-of-type(4),td:nth-of-type(5)', function() {
 			var data = table.row(this).data();
-			 
+
 			if ((data.applicationcode == null || data.applicationcode == '') && data.status == "Accepted")
 				$window.location.href = "applybuildingpermit.htm?edcrnumber=" + data.edcrnumber;
 			else if ((data.applicationcode != null || data.applicationcode != '') && data.status == "Accepted")
@@ -127,14 +131,14 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			cache: false,
 			dataType: 'json',
 			success: function(response) {
-				 
+
 				$timeout(function() {
 					$scope.userofficelist = response;
 				}, 0);
 			}
 		});
-		 
-			
+
+
 	};
 	$scope.listOffices();
 	$scope.generateReport = (planreport) => {
@@ -152,6 +156,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 			data.append('OfficeCode', (JSON.parse($scope.validoffice)).officecode);
 			data.append('stateid', (JSON.parse($scope.validoffice)).stateid);
 			data.append('tenantid', (JSON.parse($scope.validoffice)).tenantid);
+			data.append('originalfilename', originalfilename)
 			jQuery.ajax({
 				type: "POST",
 				url: "./scrutinize_edcr.htm",
@@ -165,7 +170,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 						$scope.edcrscrutiny = response;
 
 					}, 0);
-					 
+
 					if (response.status != '') {
 						if (response.status == 'error') {
 							jQuery('.edcrResp').css("visibility", "hidden");
@@ -182,9 +187,9 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 							jQuery('#genReport').css("visibility", "visible");
 							if (response.status == "Accepted") {
 								jQuery('#edcrstatus').css("color", "green")
-								jQuery('#applybpa').html('<img src="resources/images/hand.png" alt="hand" height="40px" width="40px"/><a href="applybuildingpermit.htm?edcrnumber='+response.edcrnumber+'">-->Apply for Building Permit <a/>');
+								jQuery('#applybpa').html('<img src="resources/images/hand.png" alt="hand" height="40px" width="40px"/><a href="applybuildingpermit.htm?edcrnumber=' + response.edcrnumber + '">-->Apply for Building Permit <a/>');
 							} else {
-								 
+
 								jQuery('#edcrstatus').css("color", "red")
 							}
 							jQuery('#edcrnumber').css("color", "blue")

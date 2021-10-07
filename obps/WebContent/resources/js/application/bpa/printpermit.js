@@ -88,7 +88,7 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 
 		var i = 1;
 		jQuery("#displayRecords").html("");
-		jQuery("#displayRecords").html("<table id='displayRecordsTable' class='table table-striped' style='width:100%;' > </table>");
+		$("#displayRecords").html("<table id='displayRecordsTable' style='width: 100%; margin: auto;' border='1' class='table table table-bordered  table-hover'></table>");
 		jQuery('#displayRecordsTable').DataTable({
 			data: obj,
 			columns: [
@@ -99,16 +99,21 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 					}
 				},
 				{
+					"title": "EDCR Number",
+					"data": "edcrnumber"
+				},
+				{
+					"title": "filename(.dxf) ",
+					"data": "originalfilename"
+				},
+				{
 					"title": "Application Code",
 					"data": "applicationcode"
 				}, {
 					"title": "Permit Number",
 					"data": "permitnumber"
 				},
-				{
-					"title": "EDCR Number",
-					"data": "edcrnumber"
-				},
+
 				{
 					"title": "Owner Name",
 					"data": "ownername"
@@ -119,9 +124,17 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 					"data": "ownershipsubtype"
 				},
 				{
-					"title": "Entry Date",
-					"data": "entrydate"
+					"title": "Site Address ",
+					"data": "address"
 				},
+				{
+					"title": "Current Process",
+					"data": "fromprocessname"
+				}, {
+					"title": "Next Process",
+					"data": "toprocessname"
+				},
+
 
 				{
 					"title": "Action",

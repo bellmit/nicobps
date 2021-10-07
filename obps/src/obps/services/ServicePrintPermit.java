@@ -18,11 +18,20 @@ public class ServicePrintPermit implements ServicePrintPermitInterface {
 	public List<Map<String, Object>> getPermitList(String applicationcode, String permitnumber, String edcrnumber,
 			String ownername, String fromentrydate, String toentrydate, String criteria) {
 
-		String sql = "select ba.applicationcode,ba.edcrnumber,bo.ownername,"
+		String sql = "select ba.applicationcode,ba.edcrnumber,bo.ownername,EDCR.originalfilename, "
+		        + " (plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address, "
+				+ " AF.fromprocesscode, PRF.processname AS fromprocessname,AF.toprocesscode, PR.processname AS toprocessname,  "
 				+ " ba.landregistrationdetails,ba.ownershipsubtype,bap.permitnumber,bap.remarks,"
 				+ " to_char(bap.entrydate, 'DD-MM-YYYY') as entrydate" + " from nicobps.bpaapplications ba "
 				+ " inner join nicobps.bpaownerdetails bo on ba.applicationcode=bo.applicationcode "
 				+ " inner join nicobps.bpaapproveapplications bap on ba.applicationcode=bap.applicationcode  "
+				+ " inner join nicobps.edcrscrutiny EDCR on EDCR.edcrnumber= ba.edcrnumber "
+				+ " INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (    "  
+				+ "	SELECT applicationcode, MAX(entrydate)  FROM nicobps.applicationflowremarks   "   
+			    + "	WHERE applicationcode = ba.applicationcode "
+				+ "	GROUP BY applicationcode)   "
+				+ " INNER JOIN masters.processes PRF ON PRF.processcode = AF.fromprocesscode AND PRF.modulecode = AF.modulecode   "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode "
 				+ " where ";
 
 		if (criteria.equals("byappcode")) {

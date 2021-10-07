@@ -39,11 +39,11 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		try {
 			Integer usercode = Integer.valueOf((String) param.get("usercode"));
 			Integer useroffice = Integer.valueOf((String) param.get("useroffice"));
-			sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,planinfoobject,status,entrydate,officecode,dxffile,scrutinyreport) "
-					+ "VALUES (?,?,?,?,now(),?,?,?) ";
+			sql = "INSERT INTO nicobps.edcrScrutiny(usercode,edcrnumber,planinfoobject,status,entrydate,officecode,dxffile,scrutinyreport,originalfilename) "
+					+ "VALUES (?,?,?,?,now(),?,?,?,?) ";
 			Object[] values = { usercode, ((String) param.get("edcrnumber")).trim(),
 					((String) param.get("response")).trim(), ((String) param.get("status")).trim(), useroffice, param.get("dxffile"),
-					param.get("planreport") };
+					param.get("planreport"),param.get("originalfilename") };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
