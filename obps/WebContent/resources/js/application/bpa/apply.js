@@ -141,6 +141,16 @@ app.controller("CommonCtrl", [
       bpa.plotarea.$touched = true;
       bpa.occupancy.$touched = true;
       bpa.plotaddressline1.$touched = true;
+      bpa.nameofengineer.$touched = true;
+      
+      
+      if (
+        bpa.nameofengineer.$modelValue == null ||
+        bpa.nameofengineer.$modelValue == ""
+      ) {
+        bpa.nameofengineer.$error.invalid = true;
+        flag = false;
+      }
       if (
         bpa.plotaddressline1.$modelValue == null ||
         bpa.plotaddressline1.$modelValue == ""
@@ -399,6 +409,7 @@ app.controller("CommonCtrl", [
         // $timeout(() => (bpa.plotpincode.$error.invalid = false), 3000);
         flag = false;
       }
+      
       return flag;
     };
 
