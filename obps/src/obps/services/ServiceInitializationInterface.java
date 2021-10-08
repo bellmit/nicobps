@@ -5,6 +5,7 @@ import java.util.Map;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.Filetypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Offices;
@@ -18,11 +19,15 @@ public interface ServiceInitializationInterface {
 
 	public Long getMaxFeeTypecode();
 
+	public Long getMaxFileTypecode();
+
 	public Long getMaxFeeCode();
 
 	public boolean createLicenseeRegistration(Map<String, Object> param);
 
 	public boolean initfeetypes(Map<String, Object> param);
+
+	public boolean initfiletypes(Map<String, Object> param);
 
 	public boolean initQuestionaires(Map<String, Object> param);
 
@@ -39,6 +44,8 @@ public interface ServiceInitializationInterface {
 	public boolean updateLicenseesRegistrationsm(LicenseesRegistrationsm licensee);
 
 	public boolean updatefeetypes(FeeTypes feetype);
+
+	public boolean updatefiletypes(Filetypes filetype);
 
 	public boolean updatequestionaires(Questionnaire questionaire);
 
@@ -62,12 +69,14 @@ public interface ServiceInitializationInterface {
 
 	public List<FeeTypes> listFeeTypes();
 
+	public List<Filetypes> listFileTypes();
+
 	public List<Questionnaire> listQuestionaires();
-	
+
 	public List<Offices> listOfficesAndQuestionaires();
-	
+
 	public List<Offices> listOffices();
-	
+
 	public String saveOfficeQuestioniares(List<Map<String, Object>> officesquestions);
 
 }

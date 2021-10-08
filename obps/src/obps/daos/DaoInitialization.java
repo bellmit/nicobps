@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.Filetypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Offices;
@@ -76,6 +77,22 @@ public class DaoInitialization implements DaoInitializationInterface {
 			e.getStackTrace();
 			response = false;
 			System.out.println("Error in DaoUserManagement.updatefeetypes(updatefeetypes )  : " + e);
+		}
+		return response;
+	}
+	@Override
+	public boolean updatefiletypes(Filetypes filetype) {
+		String sql = "";
+		boolean response = false;
+		try {
+			sql = "UPDATE masters.filetypes SET filetypedescription = ? WHERE filetypecode = ?";
+			Object[] param = new Object[] { filetype.getFiletypedescription(), filetype.getFiletypecode() };
+			response = jdbcTemplate.update(sql, param) > 0;
+		} catch (Exception e) {
+			response = false;
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.updatefiletypes(updatefiletypes )  : " + e);
 		}
 		return response;
 	}
@@ -278,6 +295,19 @@ public class DaoInitialization implements DaoInitializationInterface {
 		}
 		return (list != null) ? list : new LinkedList();
 	}
+	@Override
+	public List<Filetypes> listFileTypes() {
+		List<Filetypes> list = null;
+		try {
+			String sql = "Select filetypecode, filetypedescription, enabled from"
+					+ " masters.filetypes Order by filetypedescription";
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Filetypes>(Filetypes.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listFileTypes()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+	}
 
 	@Override
 	public List<Questionnaire> listQuestionaires() {
@@ -307,6 +337,23 @@ public class DaoInitialization implements DaoInitializationInterface {
 			e.getStackTrace();
 			response = false;
 			System.out.println("Error in DaoUserManagement.createUser(Map<String,String> param) : " + e);
+		}
+		return response;
+	}
+	@Override
+	public boolean initfiletypes(Map<String, Object> param) {
+		boolean response = false;
+		String sql = null;
+		Integer filetypecode = Integer.valueOf((String) param.get("filetypecode"));
+		try {
+			sql = "INSERT INTO masters.filetypes(filetypecode,filetypedescription) " + "VALUES (?,?) ";
+			Object[] values = { filetypecode, ((String) param.get("filetypedescription")).trim() };
+			response = jdbcTemplate.update(sql, values) > 0;
+			
+		} catch (Exception e) {
+			e.getStackTrace();
+			response = false;
+			System.out.println("Error in DaoUserManagement.initfiletypes(Map<String,String> param) : " + e);
 		}
 		return response;
 	}

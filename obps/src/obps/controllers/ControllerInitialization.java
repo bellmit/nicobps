@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.Filetypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.OfficeLocations;
@@ -38,7 +39,7 @@ import obps.services.ServiceInitializationInterface;
 import obps.services.ServiceUserManagementInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.validators.InitFeeMasterValidator;
-
+import obps.validators.InitFiletypeValidator;
 import obps.validators.InitLicenseesRegistrationValidator;
 import obps.validators.InitOccupanciesValidator;
 import obps.validators.InitOfficesValidator;
@@ -61,11 +62,13 @@ public class ControllerInitialization {
 	@Autowired
 	private InitSubOccupanciesValidator initSubOccupanciesValidator;
 	@Autowired
+	private InitFiletypeValidator initFileTypeValidator;
+	@Autowired
 	private InitFeeMasterValidator initFeeMasterValidator;
 	@Autowired
 
 	private ServiceInitializationInterface serviceInitalizationInterface;
-	
+
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
 
@@ -75,7 +78,7 @@ public class ControllerInitialization {
 	@Autowired
 
 	private InitOfficesValidator initOfficesValidator;
-	
+
 	@GetMapping("/initlicenseesregistrationsm.htm")
 	public String initlicenseesregistrationsm() {
 		return "initialization/initlicenseesregistrationsm";
@@ -86,39 +89,37 @@ public class ControllerInitialization {
 			@RequestBody Map<String, Object> licensee) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		String validate = "";
-		if(licensee!=null) {
-			String licenseeregistrationcode ="";
-			if(serviceInitalizationInterface.getMaxLicenseecode()!=null) {
+		if (licensee != null) {
+			String licenseeregistrationcode = "";
+			if (serviceInitalizationInterface.getMaxLicenseecode() != null) {
 				licenseeregistrationcode = serviceInitalizationInterface.getMaxLicenseecode() + "";
 				licensee.put("licenseeregistrationcode", licenseeregistrationcode);
 			}
 			validate = initLicenseesRegistrationValidator.validateInitLicenseesRegistration(licensee);
-			if(validate!="")
-			{
+			if (validate != "") {
 				response.put("code", 200);
-				response.put("data",validate);
+				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
 
-		String sql = "";
-		Object[] values = { licensee.get("licenseedescription") };
-		sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
+			String sql = "";
+			Object[] values = { licensee.get("licenseedescription") };
+			sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
 
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		if(!exist) {
-			System.out.println("does not exist");
-		if (serviceInitalizationInterface.createLicenseeRegistration(licensee)) {
-			System.out.println("insert init!!");
-			response.put("code", 200);
-			response.put("data", "Success");
-			return ResponseEntity.ok().body(response);
-		}
-		}
-		else {
-			response.put("code", 200);
-			response.put("data", "Exist");
-			return ResponseEntity.ok().body(response);
-		}
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+			if (!exist) {
+				System.out.println("does not exist");
+				if (serviceInitalizationInterface.createLicenseeRegistration(licensee)) {
+					System.out.println("insert init!!");
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
+				}
+			} else {
+				response.put("code", 200);
+				response.put("data", "Exist");
+				return ResponseEntity.ok().body(response);
+			}
 		}
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
@@ -143,16 +144,15 @@ public class ControllerInitialization {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String validate = "";
-		if(licensee!=null) {
-			if(licensee.getLicenseeregistrationcode()>0)
+		if (licensee != null) {
+			if (licensee.getLicenseeregistrationcode() > 0)
 				param.put("licenseeregistrationcode", licensee.getLicenseeregistrationcode());
-			if(licensee.getLicenseedescription()!=null)
+			if (licensee.getLicenseedescription() != null)
 				param.put("licenseedescription", licensee.getLicenseedescription());
 			validate = initLicenseesRegistrationValidator.validateInitLicenseesRegistration(param);
-			if(validate!="")
-			{
+			if (validate != "") {
 				response.put("code", 200);
-				response.put("data",validate);
+				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
 			String sql = "";
@@ -160,24 +160,20 @@ public class ControllerInitialization {
 			sql = "SELECT * FROM masters.licenseesregistrationsm WHERE  LOWER(licenseedescription)=LOWER(?) ";
 
 			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-			if(!exist) {
+			if (!exist) {
 				if (serviceInitalizationInterface.updateLicenseesRegistrationsm(licensee)) {
 					response.put("code", 200);
 					response.put("data", "Success");
 					return ResponseEntity.ok().body(response);
 				}
-				}
-				else {
-					response.put("code", 200);
-					response.put("data", "Exist");
-					return ResponseEntity.ok().body(response);
-				}
-			
-			
+			} else {
+				response.put("code", 200);
+				response.put("data", "Exist");
+				return ResponseEntity.ok().body(response);
+			}
+
 		}
-	
-				
-	
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
@@ -191,20 +187,20 @@ public class ControllerInitialization {
 	@PostMapping(value = "/initfeetypes.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initfeetypes(@RequestBody Map<String, Object> feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String feetypecode ="";
-		if(serviceInitalizationInterface.getMaxFeeTypecode()!=null) {
+		String feetypecode = "";
+		if (serviceInitalizationInterface.getMaxFeeTypecode() != null) {
 			feetypecode = serviceInitalizationInterface.getMaxFeeTypecode() + "";
 			feetype.put("feetypecode", feetypecode);
 		}
-		String validate="";
-		validate=initFeeMasterValidator.validateInitFeeTypes(feetype);
+		String validate = "";
+		validate = initFileTypeValidator.validateInitFileTypes(feetype);
 		System.out.println(validate);
-		if(validate!="") {
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-			
+
 //		user.put("usertype", "F");
 		// check existance
 		String sql = "";
@@ -212,19 +208,18 @@ public class ControllerInitialization {
 		sql = "SELECT * FROM masters.feetypes WHERE  LOWER(feetypedescription)=LOWER(?) ";
 
 		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		if(!exist) {
+		if (!exist) {
 			if (serviceInitalizationInterface.initfeetypes(feetype)) {
 				response.put("code", 200);
 				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
-		}
-		else {
+		} else {
 			response.put("code", 200);
 			response.put("data", "exist");
 			return ResponseEntity.ok().body(response);
 		}
-		
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
@@ -233,80 +228,76 @@ public class ControllerInitialization {
 	@PostMapping(value = "/updateinitfeetypes.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateinitfeetypes(@RequestBody FeeTypes feetype) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate="";
-		validate=initFeeMasterValidator.validateInitFeeTypes(feetype);
+		String validate = "";
+		validate = initFeeMasterValidator.validateInitFeeTypes(feetype);
 		System.out.println(validate);
-		if(validate!="") {
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-				String sql = "";
-				Object[] values = { feetype.getFeetypedescription() };
-				sql = "SELECT * FROM masters.feetypes WHERE  LOWER(feetypedescription)=LOWER(?) ";
+		String sql = "";
+		Object[] values = { feetype.getFeetypedescription() };
+		sql = "SELECT * FROM masters.feetypes WHERE  LOWER(feetypedescription)=LOWER(?) ";
 
-				boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-				if(!exist) {
-					if (serviceInitalizationInterface.updatefeetypes(feetype)) {
-						response.put("code", 200);
-						response.put("data", "Success");
-						return ResponseEntity.ok().body(response);
-					}
-				}
-				else {
-					response.put("code", 200);
-					response.put("data", "exist");
-					return ResponseEntity.ok().body(response);
-				}
-					
-		
+		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceInitalizationInterface.updatefeetypes(feetype)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+		} else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
- 
+
 	@PostMapping(value = "/updatefeemaster.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updatefeemaster(@RequestBody FeeMaster feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		System.out.println("feemaster:" + feemaster);
 		String validate = initFeeMasterValidator.validateInitFeeMaster(feemaster);
-		if(validate!="") {
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
 		// check existance
 		String sql = "";
-		Object[] values = { feemaster.getLicenseetypecode(), feemaster.getOfficecode(),
-				feemaster.getFeetypecode() };
+		Object[] values = { feemaster.getLicenseetypecode(), feemaster.getOfficecode(), feemaster.getFeetypecode() };
 		sql = "SELECT * FROM masters.feemaster WHERE  licenseetypecode=? AND officecode=? AND feetypecode=? ";
 
 		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		if(!exist) {
+		if (!exist) {
 			if (serviceInitalizationInterface.updatefeemaster(feemaster)) {
 				response.put("code", 200);
 				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
-		}else {
+		} else {
 			response.put("code", 200);
 			response.put("data", "exist");
 			return ResponseEntity.ok().body(response);
 		}
-		
+
 		response.put("code", HttpStatus.OK);
-		response.put("data","Error");
+		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
-	
 	@PostMapping(value = "/initusages.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initusages(@RequestBody Map<String, Object> usages) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		if(usages!=null) {
-			String validate="";
-			validate=initUsagesValidator.validateInitUsages(usages);
-			if(validate!="") {
+		if (usages != null) {
+			String validate = "";
+			validate = initUsagesValidator.validateInitUsages(usages);
+			if (validate != "") {
 				response.put("code", 200);
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
@@ -323,34 +314,34 @@ public class ControllerInitialization {
 					response.put("data", "Success");
 					return ResponseEntity.ok().body(response);
 				}
-			}else {
+			} else {
 				response.put("code", 200);
 				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
 		}
-		
 
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
+
 	@PostMapping(value = "/updateusages.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updateusages(@RequestBody Usages usages) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		if(usages!=null) {
-			if(usages.getSuboccupancycode()!=null)
+		if (usages != null) {
+			if (usages.getSuboccupancycode() != null)
 				param.put("suboccupancycode", usages.getSuboccupancycode());
-			if(usages.getUsagecode()!=null)
+			if (usages.getUsagecode() != null)
 				param.put("usagecode", usages.getUsagecode());
-			if(usages.getUsagename()!=null)
+			if (usages.getUsagename() != null)
 				param.put("usagename", usages.getUsagename());
-			if(usages.getDescription()!=null)
+			if (usages.getDescription() != null)
 				param.put("description", usages.getDescription());
-			String validate="";
-			validate=initUsagesValidator.validateInitUsages(param);
-			if(validate!="") {
+			String validate = "";
+			validate = initUsagesValidator.validateInitUsages(param);
+			if (validate != "") {
 				response.put("code", 200);
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
@@ -366,14 +357,12 @@ public class ControllerInitialization {
 					response.put("data", "Success");
 					return ResponseEntity.ok().body(response);
 				}
-			}else {
+			} else {
 				response.put("code", 200);
 				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
 		}
-
-		
 
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
@@ -410,39 +399,39 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> initfeemaster(@RequestBody Map<String, Object> feemaster) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 
-		String feecode="";
-		if(serviceInitalizationInterface.getMaxFeeCode()!=null) {
+		String feecode = "";
+		if (serviceInitalizationInterface.getMaxFeeCode() != null) {
 			feecode = serviceInitalizationInterface.getMaxFeeCode() + "";
 			feemaster.put("feecode", feecode);
 		}
-			
-		String validate= initFeeMasterValidator.validateInitFeeMaster(feemaster);
-		System.out.println("validate"+validate);
-		if(validate!="") {
+
+		String validate = initFeeMasterValidator.validateInitFeeMaster(feemaster);
+		System.out.println("validate" + validate);
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
 		// check existance
-				String sql = "";
-				Object[] values = { Integer.parseInt(feemaster.get("licenseetypecode").toString()) , Integer.parseInt(feemaster.get("officecode").toString()),
-						Integer.parseInt(feemaster.get("feetypecode").toString()) };
-				sql = "SELECT * FROM masters.feemaster WHERE  licenseetypecode=? AND officecode=? AND feetypecode=? ";
+		String sql = "";
+		Object[] values = { Integer.parseInt(feemaster.get("licenseetypecode").toString()),
+				Integer.parseInt(feemaster.get("officecode").toString()),
+				Integer.parseInt(feemaster.get("feetypecode").toString()) };
+		sql = "SELECT * FROM masters.feemaster WHERE  licenseetypecode=? AND officecode=? AND feetypecode=? ";
 
-				boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-				if(!exist) {
-					if (serviceInitalizationInterface.initfeemaster(feemaster)) {
-						response.put("code", 200);
-						response.put("data", "Success");
-						return ResponseEntity.ok().body(response);
-					}
-				}
-				else {
-					response.put("code", 200);
-					response.put("data", "exist");
-					return ResponseEntity.ok().body(response);
-				}
-		
+		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceInitalizationInterface.initfeemaster(feemaster)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+		} else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
@@ -451,15 +440,15 @@ public class ControllerInitialization {
 	@PostMapping(value = "/initsuboccupancies.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initsuboccupancies(@RequestBody Map<String, Object> suboccupancies) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		
-		if(suboccupancies!=null) {
-			String validate="";
+
+		if (suboccupancies != null) {
+			String validate = "";
 			validate = initSubOccupanciesValidator.validateInitSubOccupancies(suboccupancies);
-			if(validate!="") {
+			if (validate != "") {
 				response.put("code", 200);
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
-			} 
+			}
 			String sql = "";
 			Object[] values = { suboccupancies.get("suboccupancycode"), suboccupancies.get("description"),
 					suboccupancies.get("suboccupancyname") };
@@ -473,34 +462,32 @@ public class ControllerInitialization {
 					response.put("data", "Success");
 					return ResponseEntity.ok().body(response);
 				}
-			} 
-			else {
+			} else {
 				response.put("code", 200);
 				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
 		}
-		
 
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@PostMapping(value = "/updatesuboccupancy.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updatesuboccupancy(@RequestBody SubOccupancies suboccupancies) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		if(suboccupancies!=null) {
-			if(suboccupancies.getSuboccupancycode()!=null)
+		if (suboccupancies != null) {
+			if (suboccupancies.getSuboccupancycode() != null)
 				param.put("suboccupancycode", suboccupancies.getSuboccupancycode());
-			if(suboccupancies.getDescription()!=null)
+			if (suboccupancies.getDescription() != null)
 				param.put("description", suboccupancies.getDescription());
-			if(suboccupancies.getSuboccupancyname()!=null)
+			if (suboccupancies.getSuboccupancyname() != null)
 				param.put("suboccupancyname", suboccupancies.getSuboccupancyname());
-			String validate="";
+			String validate = "";
 			validate = initSubOccupanciesValidator.validateInitSubOccupancies(param);
-			if(validate!="") {
+			if (validate != "") {
 				response.put("code", 200);
 				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
@@ -514,58 +501,54 @@ public class ControllerInitialization {
 			if (!exist) {
 				if (serviceInitalizationInterface.updatesuboccupancy(suboccupancies)) {
 					response.put("code", 200);
-					response.put("data","Success");
+					response.put("data", "Success");
 					return ResponseEntity.ok().body(response);
 				}
-			}else {
+			} else {
 				response.put("code", 200);
-				response.put("data","Exist");
+				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
 		}
 		// check existance
-		
 
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
 
-	
-
 	@PostMapping(value = "/initoccupancies.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initoccupancies(@RequestBody Map<String, Object> occupancy) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate="";
-		if(occupancy!=null) {
-			validate=initOccupanciesValidator.validateInitOccupancies(occupancy);
-			if(validate!="") {
+		String validate = "";
+		if (occupancy != null) {
+			validate = initOccupanciesValidator.validateInitOccupancies(occupancy);
+			if (validate != "") {
 				response.put("code", 200);
-				response.put("data",validate);
+				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
-				
+
 			String sql = "";
 			Object[] values = { occupancy.get("occupancycode"), occupancy.get("occupancyname"),
 					occupancy.get("occupancyalias") };
 			sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) OR LOWER(occupancyname)=LOWER(?) OR LOWER(occupancyalias)=LOWER(?) ";
 			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-			System.out.println("exist::"+exist);
+			System.out.println("exist::" + exist);
 			if (!exist) {
 				if (serviceInitalizationInterface.initoccupancy(occupancy)) {
 					response.put("code", 200);
 					response.put("data", "Success");
 					return ResponseEntity.ok().body(response);
 				}
-			}
-			else {
+			} else {
 				response.put("code", 200);
 				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
-				
+
 		}
-	
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
@@ -575,38 +558,38 @@ public class ControllerInitialization {
 	public ResponseEntity<HashMap<String, Object>> updateoccupancy(@RequestBody Occupancies occupancy) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		String validate="";
-		if(occupancy!=null) {
-			if(occupancy.getOccupancycode()!=null)
+		String validate = "";
+		if (occupancy != null) {
+			if (occupancy.getOccupancycode() != null)
 				param.put("occupancycode", occupancy.getOccupancycode());
-			if(occupancy.getOccupancyname()!=null)
+			if (occupancy.getOccupancyname() != null)
 				param.put("occupancyname", occupancy.getOccupancyname());
-			if(occupancy.getOccupancyalias()!=null)
+			if (occupancy.getOccupancyalias() != null)
 				param.put("occupancyalias", occupancy.getOccupancyalias());
-			validate=initOccupanciesValidator.validateInitOccupancies(param);
-			if(validate!="") {
+			validate = initOccupanciesValidator.validateInitOccupancies(param);
+			if (validate != "") {
 				response.put("code", 200);
-				response.put("data",validate);
+				response.put("data", validate);
 				return ResponseEntity.ok().body(response);
 			}
-			
-		String sql = "";
-		Object[] values = { occupancy.getOccupancycode(), occupancy.getOccupancyname(),
-				occupancy.getOccupancyalias()};
-		sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) AND LOWER(occupancyname)=LOWER(?) AND LOWER(occupancyalias)=LOWER(?)  ";
-		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-				if (!exist) {
-			if (serviceInitalizationInterface.updateoccupancy(occupancy)) {
+
+			String sql = "";
+			Object[] values = { occupancy.getOccupancycode(), occupancy.getOccupancyname(),
+					occupancy.getOccupancyalias() };
+			sql = "SELECT * FROM masters.occupancies WHERE  LOWER(occupancycode)=LOWER(?) AND LOWER(occupancyname)=LOWER(?) AND LOWER(occupancyalias)=LOWER(?)  ";
+			boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+			if (!exist) {
+				if (serviceInitalizationInterface.updateoccupancy(occupancy)) {
+					response.put("code", 200);
+					response.put("data", "Success");
+					return ResponseEntity.ok().body(response);
+				}
+			} else {
 				response.put("code", 200);
-				response.put("data", "Success");
+				response.put("data", "Exist");
 				return ResponseEntity.ok().body(response);
 			}
-		}else {
-			response.put("code", 200);
-			response.put("data", "Exist");
-			return ResponseEntity.ok().body(response);
-		}
-				
+
 		}
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
@@ -636,49 +619,48 @@ public class ControllerInitialization {
 		System.out.println("listSubOccupancyr");
 		return serviceInitalizationInterface.listSubOccupancy();
 	}
+
 	@GetMapping(value = "/listProcesses.htm")
 	public @ResponseBody Map<String, Object> listUsers(HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
-		System.out.println("modulecode::::"+params.get("modulecode"));
-		
-		
-		Map<String, Object> data = new LinkedHashMap<>();
-		
-		data.put("processesList", serviceUserManagementInterface.listProcesses(Integer.parseInt(params.get("modulecode"))));
-	
+		System.out.println("modulecode::::" + params.get("modulecode"));
 
-	return data;
+		Map<String, Object> data = new LinkedHashMap<>();
+
+		data.put("processesList",
+				serviceUserManagementInterface.listProcesses(Integer.parseInt(params.get("modulecode"))));
+
+		return data;
 	}
-	
+
 	@GetMapping("/initquestionaires.htm")
 	public String initquestionaires() {
 		return "initialization/initquestionaires";
 	}
-	
+
 	@GetMapping("/listQuestionaires.htm")
 	public @ResponseBody List<Questionnaire> listQuestionaires() {
 
 		return serviceInitalizationInterface.listQuestionaires();
 	}
-	
-	
+
 	@PostMapping(value = "/initquestionaires.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initquestionaires(@RequestBody Map<String, Object> questionaires) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String questioncode ="";
-		if(serviceInitalizationInterface.getMaxFeeTypecode()!=null) {
+		String questioncode = "";
+		if (serviceInitalizationInterface.getMaxFeeTypecode() != null) {
 			questioncode = serviceInitalizationInterface.getMaxFeeTypecode() + "";
 			questionaires.put("questioncode", questioncode);
 		}
-		String validate="";
-		validate=initFeeMasterValidator.validateQuestionaires(questionaires);
+		String validate = "";
+		validate = initFeeMasterValidator.validateQuestionaires(questionaires);
 		System.out.println(validate);
-		if(validate!="") {
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-			
+
 //		user.put("usertype", "F");
 		// check existance
 		String sql = "";
@@ -686,86 +668,167 @@ public class ControllerInitialization {
 		sql = "SELECT * FROM masters.questionaires WHERE  LOWER(questiondescription)=LOWER(?) ";
 
 		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-		if(!exist) {
+		if (!exist) {
 			if (serviceInitalizationInterface.initQuestionaires(questionaires)) {
 				response.put("code", 200);
 				response.put("data", "Success");
 				return ResponseEntity.ok().body(response);
 			}
-		}
-		else {
+		} else {
 			response.put("code", 200);
 			response.put("data", "exist");
 			return ResponseEntity.ok().body(response);
 		}
-		
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	@PostMapping(value = "/updatequestionaires.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> updatequestionaires(@RequestBody Questionnaire questionaire) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		String validate="";
-		validate=initFeeMasterValidator.validateQuestionaires(questionaire);
+		String validate = "";
+		validate = initFeeMasterValidator.validateQuestionaires(questionaire);
 		System.out.println(validate);
-		if(validate!="") {
+		if (validate != "") {
 			response.put("code", 200);
 			response.put("data", validate);
 			return ResponseEntity.ok().body(response);
 		}
-				String sql = "";
-				Object[] values = { questionaire.getQuestiondescription() };
-				sql = "SELECT * FROM masters.questionaires WHERE  LOWER(questiondescription)=LOWER(?) ";
+		String sql = "";
+		Object[] values = { questionaire.getQuestiondescription() };
+		sql = "SELECT * FROM masters.questionaires WHERE  LOWER(questiondescription)=LOWER(?) ";
 
-				boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
-				if(!exist) {
-					if (serviceInitalizationInterface.updatequestionaires(questionaire)) {
-						response.put("code", 200);
-						response.put("data", "Success");
-						return ResponseEntity.ok().body(response);
-					}
-				}
-				else {
-					response.put("code", 200);
-					response.put("data", "exist");
-					return ResponseEntity.ok().body(response);
-				}
-					
-		
+		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceInitalizationInterface.updatequestionaires(questionaire)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+		} else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
+
 		response.put("code", HttpStatus.OK);
 		response.put("data", "Error");
 		return ResponseEntity.ok().body(response);
 	}
-	
-	
-	@GetMapping(value="/initofficequestionaires.htm")
+
+	@GetMapping(value = "/initofficequestionaires.htm")
 	public String initOfficeQuestionaires() {
 		System.out.println("initOfficeQuestionaires");
-		
+
 		return "initialization/initofficequestionaires";
-	}	
-	
+	}
+
 	@GetMapping(value = "/listOfficesAndQuestionaires.htm")
 	public @ResponseBody List<Offices> listOfficesAndQuestionaires() {
 
 		return serviceInitalizationInterface.listOfficesAndQuestionaires();
 	}
-	
+
 	@PostMapping(value = "/saveOfficeQuestioniares.htm")
 	public @ResponseBody String saveOfficeQuestioniares(@RequestBody List<Map<String, Object>> officesquestions) {
-		String response="";
-		if(officesquestions!=null) {
-			String validate= initOfficesValidator.validateOfficesQuestionaires(officesquestions);
-			if(validate!="")
-				response=validate;
+		String response = "";
+		if (officesquestions != null) {
+			String validate = initOfficesValidator.validateOfficesQuestionaires(officesquestions);
+			if (validate != "")
+				response = validate;
 			else
 				response = serviceInitalizationInterface.saveOfficeQuestioniares(officesquestions);
 		}
-		
+
 		return response;
-		 
+
 	}
 
+	@GetMapping("/initfiletypes.htm")
+	public String initfiletypes() {
+		return "initialization/initfiletypes";
+	}
+
+	@PostMapping(value = "/initfiletypes.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> initfiletypes(@RequestBody Map<String, Object> filetype) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		String filetypecode = "";
+		if (serviceInitalizationInterface.getMaxFileTypecode() != null) {
+			filetypecode = serviceInitalizationInterface.getMaxFileTypecode() + "";
+			filetype.put("filetypecode", filetypecode);
+		}
+		String validate = "";
+		validate = initFileTypeValidator.validateInitFileTypes(filetype);
+		System.out.println("validate::::"+validate);
+		if (validate != "") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+
+//		user.put("usertype", "F");
+		// check existance
+		String sql = "";
+		Object[] values = { filetype.get("filetypedescription") };
+		sql = "SELECT * FROM masters.filetypes WHERE  LOWER(filetypedescription)=LOWER(?) ";
+
+		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceInitalizationInterface.initfiletypes(filetype)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+		} else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
+
+		response.put("code", HttpStatus.OK);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping(value = "/updateinitfiletypes.htm", consumes = "application/json")
+	public ResponseEntity<HashMap<String, Object>> updateinitfiletypes(@RequestBody Filetypes filetype) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		String validate = "";
+		validate = initFileTypeValidator.validateInitFileTypes(filetype);
+		System.out.println(validate);
+		if (validate != "") {
+			response.put("code", 200);
+			response.put("data", validate);
+			return ResponseEntity.ok().body(response);
+		}
+		String sql = "";
+		Object[] values = { filetype.getFiletypedescription() };
+		sql = "SELECT * FROM masters.filetypes WHERE  LOWER(filetypedescription)=LOWER(?) ";
+
+		boolean exist = serviceInitalizationInterface.checkExistance(sql, values);
+		if (!exist) {
+			if (serviceInitalizationInterface.updatefiletypes(filetype)) {
+				response.put("code", 200);
+				response.put("data", "Success");
+				return ResponseEntity.ok().body(response);
+			}
+		} else {
+			response.put("code", 200);
+			response.put("data", "exist");
+			return ResponseEntity.ok().body(response);
+		}
+
+		response.put("code", HttpStatus.OK);
+		response.put("data", "Error");
+		return ResponseEntity.ok().body(response);
+	}
+
+	
+	@GetMapping("/listFileTypes.htm")
+	public @ResponseBody List<Filetypes> listFileTypes() {
+
+		return serviceInitalizationInterface.listFileTypes();
+	}
 }

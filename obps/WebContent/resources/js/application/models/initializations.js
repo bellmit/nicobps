@@ -56,6 +56,14 @@ function FeeType() {
 	};
 	return FeeType;
 }
+function Filetype() {
+	var Filetype = {
+		"filetypecode": 0,
+		"filetypedescription": "",
+		"enabled": "Y"
+	};
+	return Filetype;
+}
 
 function Questionaire() {
 	var Questionaire = {

@@ -1,6 +1,6 @@
-app.controller('createfeetypeCtrl', ['$scope', '$sce', '$compile','$timeout','commonInitFactory', 'commonInitService', 
+app.controller('createfiletypeCtrl', ['$scope', '$sce', '$compile','$timeout','commonInitFactory', 'commonInitService', 
 	function ($scope, $sce, $compile,$timeout,commonInitFactory, commonInitService) {
-	var scope = angular.element($("#createfeetypeCtrl")).scope();
+	var scope = angular.element($("#createfiletypeCtrl")).scope();
 	commonInitService.success();
 	/* Common Ajax Params */
 	var successMsg = "Success: Fee Type created or updated successfully";
@@ -19,8 +19,8 @@ app.controller('createfeetypeCtrl', ['$scope', '$sce', '$compile','$timeout','co
 //	$scope.offices = [];
 	
 	
-	 $scope.feetype = new FeeType();
-$scope.feetypes=[];
+	 $scope.filetype = new Filetype();
+$scope.filetypes=[];
 
 
 //    $scope.user = new Userlogins();
@@ -34,13 +34,13 @@ $scope.feetypes=[];
 //    	return offc.officename1+((offc.officename2)?(', '+offc.officename2):'')+((offc.officename3)?(', '+offc.officename3):'');
 //    };
     
-    $scope.edit = function (feetypecode) {
+    $scope.edit = function (filetypecode) {
     	$scope.actionButton = 2;
-    	$scope.feetype = new FeeType();
+    	$scope.filetype = new Filetype();
  
-        $scope.feetypes.forEach((o, x) => {
-        	if (o.feetypecode == feetypecode){
-        		$scope.feetype = o;
+        $scope.filetypes.forEach((o, x) => {
+        	if (o.filetypecode == filetypecode){
+        		$scope.filetype = o;
         	}
         });
 //        $scope.listOfficeCells($scope.user.officecode);
@@ -50,20 +50,20 @@ $scope.feetypes=[];
     };
 
     $scope.reset = function () {
-       $scope.listFeeTypes();
-    	$scope.feetype = new FeeType();
+       $scope.listFileTypes();
+    	$scope.filetype = new Filetype();
     	$scope.actionButton = 1;
     };
 
     $scope.save = function () {
     	
-        if($scope.feetypeForm.$invalid)
+        if($scope.filetypeForm.$invalid)
             return false;
    
         $scope.method = "POST";
-        $scope.urlEndpoint = "./initfeetypes.htm";
+        $scope.urlEndpoint = "./initfiletypes.htm";
     	
-        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, (response) => { 
+        commonInitService.save($scope.method, $scope.urlEndpoint, $scope.filetype, (response) => { 
 			
 			if(response.data=="Error")
 				MsgBox("Error Inserting Data");
@@ -80,7 +80,7 @@ $scope.feetypes=[];
 				MsgBox(response.data);			
 				
 			}
-			$scope.listFeeTypes();  
+			$scope.listFileTypes();  
 			
 			}, () => {
 			 alert("Error") 
@@ -100,11 +100,11 @@ $scope.feetypes=[];
 //    };
 //    
     $scope.update = () => {
-	    if($scope.feetypeForm.$invalid)
+	    if($scope.filetypeForm.$invalid)
              return false;
 	    $scope.method = "POST";
-    	$scope.urlEndpoint = "./updateinitfeetypes.htm";
-    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.feetype, (response) => { 
+    	$scope.urlEndpoint = "./updateinitfiletypes.htm";
+    	commonInitService.save($scope.method, $scope.urlEndpoint, $scope.filetype, (response) => { 
 			if(response.data=="Error")
 				MsgBox("Error Inserting Data");
 			 else if(response.data=="Success"){
@@ -120,7 +120,7 @@ $scope.feetypes=[];
 				MsgBox(response.data);			
 				
 			}
-			$scope.listFeeTypes();  
+			$scope.listFileTypes();  
 			
 			}, () => {
 			 alert("Error") 
@@ -138,17 +138,17 @@ $scope.feetypes=[];
             columns: [
                 {
                     "title": "Slno",
-                    "data": "feetypecode"
+                    "data": "filetypecode"
                 },
                 {
-                    "title": "Fee Type Description",
-                    "data": "feetypedescription"
+                    "title": "File Type Description",
+                    "data": "filetypedescription"
                 }, 
                 
                 {
                     "title": "Action",
                     "sortable": false,
-                    "data": "feetypecode",
+                    "data": "filetypecode",
                     "render": function (data, type, row, meta) {
                     	let status = row.enabled == 'Y'?'Disable':'Enable';
                     	let div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Edit" ng-click="edit(' + data + ')" class="btn btn-primary b-btn" >Edit</button>';
@@ -169,12 +169,12 @@ $scope.feetypes=[];
     };
     
     
-    $scope.validateFeeTypeForm = function() {
+    $scope.validatefiletypeForm = function() {
 
       
-        if($scope.feetype.feetypedescription === "" || $scope.feetype.feetypedescription === null){
-            jQuery("#feetypedescription").focus();
-            alert("feetypedescription cannot be empty");
+        if($scope.filetype.filetypedescription === "" || $scope.filetype.filetypedescription === null){
+            jQuery("#filetypedescription").focus();
+            alert("filetypedescription cannot be empty");
             return false;
         }
       
@@ -183,28 +183,31 @@ $scope.feetypes=[];
         
 
         /* READ DATA */
-     $scope.listFeeTypes = (feetypecode = 0) => {
+     $scope.listFileTypes = (filetypecode = 0) => {
         	
-        	if(feetypecode == 0){
-        		commonInitFactory.listFeeTypes((response)=>{
-            		$scope.feetypes=response;
-            		$scope.setDataTable($scope.feetypes);
+        	if(filetypecode == 0){
+        		commonInitFactory.listFileTypes((response)=>{
+            		$scope.filetypes=response;
+            		$scope.setDataTable($scope.filetypes);
             	});
         	}else{
-        		commonInitFactory.listFeeTypes((response)=>{
-        			$scope.feetypes.forEach((o, x) => {
-        				if(o.feetypecode == feetypecode){
-        					$scope.feetypes[x] = response;
+        		commonInitFactory.listFileTypes((response)=>{
+        			$scope.filetypes.forEach((o, x) => {
+        				if(o.filetypecode == filetypecode){
+        					$scope.filetypes[x] = response;
         				}
         			});
-            		$scope.setDataTable($scope.feetypes);
-            	}, feetypecode);
+            		$scope.setDataTable($scope.filetypes);
+            	}, filetypecode);
         	}
         	
         };
-        $scope.listFeeTypes();
+        $scope.listFileTypes();
 
 
         
     }]);
 
+/**
+ * 
+ */

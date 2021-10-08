@@ -10,6 +10,7 @@ import obps.daos.DaoInitializationInterface;
 import obps.domains.DomainUserManagementInterface;
 import obps.models.FeeMaster;
 import obps.models.FeeTypes;
+import obps.models.Filetypes;
 import obps.models.LicenseesRegistrationsm;
 import obps.models.Occupancies;
 import obps.models.Offices;
@@ -40,6 +41,11 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 		String sql = "SELECT MAX(feetypecode) FROM masters.feetypes ";
 		return serviceUtilInterface.getMaxValue(sql) + 1;
 	}
+	@Override
+	public Long getMaxFileTypecode() {
+		String sql = "SELECT MAX(filetypecode) FROM masters.filetypes ";
+		return serviceUtilInterface.getMaxValue(sql) + 1;
+	}
 
 	@Override
 	public Long getMaxFeeCode() {
@@ -55,6 +61,10 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	@Override
 	public boolean updatefeetypes(FeeTypes feeTypes) {
 		return DaoInitializationInterface.updatefeetypes(feeTypes);
+	}
+	@Override
+	public boolean updatefiletypes(Filetypes fileTypes) {
+		return DaoInitializationInterface.updatefiletypes(fileTypes);
 	}
 	@Override
 	public boolean updatequestionaires(Questionnaire questionaire) {
@@ -111,6 +121,10 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 		return DaoInitializationInterface.listFeeTypes();
 	}
 	@Override
+	public List<Filetypes> listFileTypes() {
+		return DaoInitializationInterface.listFileTypes();
+	}
+	@Override
 	public List<Questionnaire> listQuestionaires() {
 		return DaoInitializationInterface.listQuestionaires();
 	}
@@ -123,6 +137,10 @@ public class ServiceInitialization implements ServiceInitializationInterface {
 	@Override
 	public boolean initfeetypes(Map<String, Object> param) {
 		return DaoInitializationInterface.initfeetypes(param);
+	}
+	@Override
+	public boolean initfiletypes(Map<String, Object> param) {
+		return DaoInitializationInterface.initfiletypes(param);
 	}
 	@Override
 	public boolean initQuestionaires(Map<String, Object> param) {
