@@ -253,7 +253,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 	/////////////////////
 	@Override
 	public List<CommonMap> listBpaEnclosures(final Short modulecode, String aplicationcode) {
-		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,applicationcode AS value2 FROM masters.enclosures E     "
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,applicationcode AS value2,filetypes AS value4 FROM masters.enclosures E     "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "LEFT OUTER JOIN nicobps.bpaenclosures BE ON BE.enclosurecode=M.enclosurecode AND BE.applicationcode=? "
 				+ "WHERE E.enabled='Y' AND  M.modulecode=? AND M.processcode=3 "
@@ -551,7 +551,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, " + 
 				"0 AS totalac,  COUNT(A.APPLICATIONCODE)  AS approvedac, 0  AS pendingac  " + 
 				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  " + 
-				"INNER JOIN BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE " + 
+				"INNER JOIN NICOBPS.BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE " + 
 				"WHERE MODULECODE = 2  " + 
 				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
 				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  " + 

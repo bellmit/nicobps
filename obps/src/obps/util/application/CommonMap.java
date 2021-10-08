@@ -8,8 +8,17 @@ public class CommonMap {
     private String value1;
     private String value2;
     private Integer value3;
+    private String value4;
 
-    public CommonMap() {
+    public String getValue4() {
+		return value4;
+	}
+
+	public void setValue4(String value4) {
+		this.value4 = value4;
+	}
+
+	public CommonMap() {
     }
 
     public CommonMap(String key, String value) {

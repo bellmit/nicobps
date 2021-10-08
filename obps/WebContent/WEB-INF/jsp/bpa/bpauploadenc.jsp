@@ -33,7 +33,8 @@
 										<core:forEach items="${enclosuresList}" var="enclosur"
 											varStatus="loop">
 											<tr class="row">
-												<td class="col-md-9"><core:if test="${empty enclosur.value2}">
+												<td class="col-md-8"><core:if
+														test="${empty enclosur.value2}">
 														<form:checkbox
 															path="appenclosures[${loop.index}].enclosurecode"
 															value="${enclosur.key}" id="chk_${enclosur.key}"
@@ -43,8 +44,8 @@
 															path="appenclosures[${loop.index}].enclosurecode"
 															value="${enclosur.key}" id="chk_${enclosur.key}"
 															cssClass="chkbox" />
-													</core:if> <label for="chk_${enclosur.key}"> <core:out value="${enclosur.value}"
-															escapeXml="enccode" /> <core:if
+													</core:if> <label for="chk_${enclosur.key}"> <core:out
+															value="${enclosur.value}" escapeXml="enccode" /> <core:if
 															test="${fn:contains(enclosur.value1, 'Y') && empty enclosur.value2}">
 															<span style="color: red">*</span>
 														</core:if>
@@ -52,16 +53,17 @@
 												<td class="col-md-3"><form:input
 														path="appenclosures[${loop.index}].fileContent"
 														type="file" cssClass="file" id="file_${enclosur.key}"
-														disabled="true" /> <span style="color: red"><form:errors
+														patt="${enclosur.value4}" disabled="true" /> <span
+													style="color: red"><form:errors
 															path="appenclosures[${loop.index}].fileContent"
 															cssClass="error" /></span> <span
 													id="file_<core:out value="${enclosur.key}" escapeXml="true"></core:out>Msg"
 													class="error" style="color: red"></span></td>
-<%-- 												<td class="col-md-1"><core:if test="${not empty enclosur.value2}"> --%>
-<!-- 														<a -->
-<%-- 															href="outputbpa.htm?applicationcode=${enclosur.value2}&enclosurecode=${enclosur.key}" --%>
-<!-- 															target="_blank">View Enclosures</a> -->
-<%-- 													</core:if></td> --%>
+												<%-- 												<td class="col-md-1"><core:if test="${not empty enclosur.value2}"> --%>
+												<!-- 														<a -->
+												<%-- 															href="outputbpa.htm?applicationcode=${enclosur.value2}&enclosurecode=${enclosur.key}" --%>
+												<!-- 															target="_blank">View Enclosures</a> -->
+												<%-- 													</core:if></td> --%>
 
 											</tr>
 										</core:forEach>
@@ -92,7 +94,7 @@
 													</div>
 													<div style="text-align: center; padding-top: 10px">
 														<input type="submit" name="_submit" id="_submit"
-															value="Upload" class="btn btn-primary b-btn"  />
+															value="Upload" class="btn btn-primary b-btn" />
 													</div>
 
 													<div id="UploadEncMsg" class="formErrorContent"></div>
