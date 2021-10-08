@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>OBPS | Create Fee Types</title>
+		<title>OBPS | Create File Types</title>
 		<%@include file="../common/headerfiles.jsp" %>     		
 		<script src="resources/js/util/sha256.min.js"></script>
 	</head>
