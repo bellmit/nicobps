@@ -22,16 +22,22 @@ public class InitEnclosuresValidator {
 		String response = "";
 		String encldesc = "";
 		String enclname = "";
+		String filetypes = "";
+		String pattern = "[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
+		
+		Pattern p = Pattern.compile(pattern);
+
+		Matcher m1 = p.matcher(enclname);
 
 		if (param.get("enclosurename") != null)
 			enclname = ((String) param.get("enclosurename")).trim();
 
 		if (param.get("enclosuredescription") != null)
 			encldesc = ((String) param.get("enclosuredescription")).trim();
-		String pattern = "[^A-Za-z_ 0-9\\'\\/\\.\\,\\-\\(\\)\\_]";
-		Pattern p = Pattern.compile(pattern);
 
-		Matcher m1 = p.matcher(enclname);
+		
+		
+		
 
 		boolean b1 = m1.find();
 
@@ -49,7 +55,18 @@ public class InitEnclosuresValidator {
 			response = "Enclosure Description Cannot be more than 255 characters";
 			return response;
 		}
+		if (param.get("filetypes") != null) {
+			if (((String) param.get("filetypes")).equals(""))
+				response = "Filetype should not be empty!!";
+			
 
+		} else {
+
+			response = "Filetype should not be null!!";
+			
+		}
+
+		
 		return response;
 
 	}
@@ -82,8 +99,9 @@ public class InitEnclosuresValidator {
 			}
 
 			if (up.get("officecode") != null) {
-				
-				if (up.get("officecode").toString().trim() != "" && Integer.parseInt(up.get("officecode").toString())!=0) {
+
+				if (up.get("officecode").toString().trim() != ""
+						&& Integer.parseInt(up.get("officecode").toString()) != 0) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
 							up.get("officecode").toString().trim())) {
 
@@ -108,7 +126,7 @@ public class InitEnclosuresValidator {
 
 			if (up.get("licenseetypecode") != null) {
 				if (up.get("licenseetypecode").toString().trim() != ""
-						&& Integer.parseInt(up.get("licenseetypecode").toString())!=0) {
+						&& Integer.parseInt(up.get("licenseetypecode").toString()) != 0) {
 					if (!Patterns.PatternCompileMatche(Patterns.PATTERN_POSITIVEINTEGER,
 							up.get("licenseetypecode").toString().trim())) {
 
