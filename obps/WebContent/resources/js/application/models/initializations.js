@@ -60,7 +60,8 @@ function Filetype() {
 	var Filetype = {
 		"filetypecode": 0,
 		"filetypedescription": "",
-		"enabled": "Y"
+		"enabled": "Y",
+		"isChecked":false
 	};
 	return Filetype;
 }
@@ -183,7 +184,8 @@ function Enclosures(){
 var Enclosures={
 "enclosurecode":0,
 "enclosurename":"",
-"enclosuredescription":""
+"enclosuredescription":"",
+"filetypes":""
 }
 };
 

@@ -13,6 +13,8 @@ import obps.daos.DaoUserManagementInterface;
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.domains.DomainUserManagementInterface;
 import obps.models.Enclosures;
+import obps.models.FeeTypes;
+import obps.models.Filetypes;
 import obps.models.Modules;
 import obps.models.ModulesEnclosures;
 import obps.models.Offices;
@@ -58,6 +60,11 @@ public class ServiceEnclosureManagement implements ServiceEnclosureManagementInt
 	@Override
     public List<Enclosures> listEnclosures(){    	    	
 		return DaoEnclosureManagementInterface.listEnclosures();	
+	} 
+	
+	@Override
+    public List<Filetypes> listFiletypes(){    	    	
+		return DaoEnclosureManagementInterface.listFiletypes();	
 	} 
 	@Override
     public List<ModulesEnclosures> listModulesAndEnclosures(Integer modulecode,Integer processcode,Integer officecode, Integer licenseetypecode) {

@@ -14,7 +14,9 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 	/*------------------------*/
 	$scope.enclosures = new Enclosures();
 	$scope.enclosurereg=[];
+	//$scope.filetypes= new Filetype();
 	
+	$scope.filetypelist = [];
 	   
     $scope.trustHTML = function (post) {
 		
@@ -31,19 +33,78 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
         		
         	}
         }); 
+
+    $scope.checks();
    jQuery('html, body').animate({
             scrollTop: 0
         }, 2000);
 	};
   $scope.reset = function () {
+	
   	$scope.enclosures = new Enclosures();
 	$scope.actionButton =1;
-};
+//	$scope.filetypes= new Filetype();
+	$scope.filetypelist = [];
+	jQuery.each($scope.filetypes, function(i, v) {
 	
+				v.checked = false;
+			});
+	   
+};
+
+ $scope.checks = function() {
+		
+			var response;
+
+			jQuery.each($scope.filetypes, function(i0, v0) {
+
+				response = false;
+					
+					console.log('filetypedescription' + v0.filetypedescription);
+						console.log('$scope.enclosures.filetypes' + $scope.enclosures.filetypes);
+					if ($scope.enclosures.filetypes.includes(v0.filetypedescription)) {
+						response = true;
+						$scope.filetypelist.push(v0.filetypedescription);
+						
+					}else{
+						response = false;
+					}
+				
+				v0.checked = response;
+			});
+		};
+		
+		$scope.validate =()=>{
+			 var file = [];
+
+
+ 
+				if (($scope.enclosures.enclosurename!="" && $scope.enclosures.enclosurename!= undefined) &&  ($scope.enclosures.filetypes!="" && $scope.enclosures.filetypes!=undefined ) ){
+					console.log("1");
+					file.push({
+						enclosurecode: $scope.enclosures.enclosurecode,
+						enclosurename: $scope.enclosures.enclosurename,
+						enclosuredescription:$scope.enclosures.enclosuredescription,
+						filetypes: $scope.enclosures.filetypes
+					});
+				}
+			
+			if (file.length === 0) {
+				alert("Please fill or check inputs!! ");
+				return false;
+			}
+			
+			return true;
+		}
    $scope.save = function () {
     	
      if($scope.enclosureForm.$invalid)
         return false;
+
+	   if(!$scope.validate())
+			return false;
+
+
        $scope.method = "POST";
         $scope.urlEndpoint = "./initenclosures.htm";
     	
@@ -54,9 +115,11 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 					MsgBox("Enclosures inserted successfully.");
 					$scope.reset();
 					$scope.listEnclosures();
+					 $scope.listfiletypes();
 				} else if (response.data=="exist") {
 					MsgBox("Enclosure name already exist");
 					$scope.listEnclosures();
+					 $scope.listfiletypes();
 				}
 				else if(response.data=="Error"){
 				alert("Error");
@@ -81,7 +144,9 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 	  if($scope.enclosureForm.$invalid)
           return false;
            
-          
+           if(!$scope.validate())
+			return false;
+			
 	  $scope.method = "POST";
    $scope.urlEndpoint = "./updateinitenclosures.htm";
 
@@ -127,6 +192,10 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
                     "title": "Enclosure Description",
                     "data": "enclosuredescription"
                 }, 
+                {
+                    "title": "Enclosure Types",
+                    "data": "filetypes"
+                }, 
 
                 
                 {
@@ -164,6 +233,7 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
         };
 
       /* READ DATA */
+	
      $scope.listEnclosures = (enclosurecode = 0) => {
         	
         	if(enclosurecode == 0){
@@ -184,7 +254,53 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
         	}
         	
         };
+    $scope.listfiletypes = () => {
+//			commonInitFactory.listFiletypes((response)=>{
+//				console.log("listFiletypes ::" + response.toString());
+//            		//$scope.filetypes=response;
+//
+//    });
+
+       jQuery.ajax({
+				type: "GET",
+				url: "./listFiletypes.htm",
+				// dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function(response) {
+					var scope = angular.element($("#enclosuresCtrl")).scope();
+					scope.$apply(function() {
+						scope.filetypes = response;
+
+					});
+					
+				},
+				error: function(xhr) {
+					alert(xhr.status + " = " + xhr);
+					alert(
+						"Sorry, there was an error while trying to process the request."
+					);
+				},
+			});
+
+
+	};
+	
+	
+	
+	$scope.addfiletypes = function(filetype) {
+	    if(filetype.checked) {
+	        $scope.filetypelist.push(filetype.filetypedescription);
+	    } else {
+	        var toDel = $scope.filetypelist.indexOf(filetype.filetypedescription);
+	        $scope.filetypelist.splice(toDel, 1);
+	    }
+
+         console.log($scope.filetypelist.toString());
+        $scope.enclosures.filetypes=$scope.filetypelist.toString();
+   }
+
         $scope.listEnclosures();
+        $scope.listfiletypes();
   
 
         

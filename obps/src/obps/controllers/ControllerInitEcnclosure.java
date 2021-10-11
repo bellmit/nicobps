@@ -33,6 +33,7 @@ import obps.validators.InitEnclosuresValidator;
 
 import obps.daos.DaoEnclosureManagementInterface;
 import obps.models.Enclosures;
+import obps.models.Filetypes;
 import obps.models.Pageurls;
 import obps.models.Userlogin;
 import obps.services.ServiceEnclosureManagementInterface;
@@ -72,6 +73,7 @@ public class ControllerInitEcnclosure {
 
 	@PostMapping(value = "/initenclosures.htm", consumes = "application/json")
 	public ResponseEntity<HashMap<String, Object>> initenclosures(@RequestBody Map<String, Object> enclosures) {
+		
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if(enclosures!=null) {
 			String validate= initEnclosuresValidator.validateInitEnclosure(enclosures);
@@ -154,6 +156,13 @@ public class ControllerInitEcnclosure {
 	public @ResponseBody List<Enclosures> listEnclosures() {
 		System.out.println("dasdasdasd");
 		return serviceUserManagementInterface.listEnclosures();
+	}
+	
+	@GetMapping("/listFiletypes.htm")
+	public @ResponseBody List<Filetypes> listFiletypes() {
+		System.out.println("listFiletypes");
+		
+		return serviceUserManagementInterface.listFiletypes();
 	}
 
 

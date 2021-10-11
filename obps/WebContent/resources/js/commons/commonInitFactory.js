@@ -63,11 +63,15 @@ app.factory('commonInitFactory', function($http) {
 						callback(response);
 					});
 		},
-
-		
-			
+				
 			listUsages: function(callback) {
 			$http.get("./listUsages.htm").success(
+					function(response, status, headers, config) {
+						callback(response);
+					});
+		},	
+		listFiletypes: function(callback) {
+			$http.get("./listFiletypes.htm").success(
 					function(response, status, headers, config) {
 						callback(response);
 					});

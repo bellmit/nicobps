@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import obps.models.Enclosures;
-import obps.models.Modules;
+import obps.models.Filetypes;
 import obps.models.ModulesEnclosures;
 import obps.models.Offices;
 import obps.models.PaymentModes;
@@ -20,6 +20,8 @@ public interface ServiceEnclosureManagementInterface {
 	boolean updateinitoffices(Map<String, Object> offices);
 
 	List<Enclosures> listEnclosures();
+	
+	List<Filetypes> listFiletypes();
 
 	List<Offices> listOffices();
 

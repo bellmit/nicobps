@@ -4,15 +4,25 @@ public class Enclosures {
 	private Integer enclosurecode;
 	private String enclosurename;
 	private String enclosuredescription;
+	private String filetypes;
 	public Enclosures() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Enclosures(Integer enclosurecode, String enclosurename, String enclosuredescription) {
+	public Enclosures(Integer enclosurecode, String enclosurename, String enclosuredescription,String filetypes) {
 		super();
 		this.enclosurecode = enclosurecode;
 		this.enclosurename = enclosurename;
 		this.enclosuredescription = enclosuredescription;
+		this.filetypes = filetypes;
+	}
+	
+	
+	public String getFiletypes() {
+		return filetypes;
+	}
+	public void setFiletypes(String filetypes) {
+		this.filetypes = filetypes;
 	}
 	public Integer getEnclosurecode() {
 		return enclosurecode;

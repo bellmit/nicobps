@@ -1,5 +1,5 @@
 package obps.daos;
-  
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import obps.models.Enclosures;
+import obps.models.Filetypes;
 import obps.models.Modules;
 import obps.models.ModulesEnclosures;
 import obps.models.OfficeLocations;
@@ -54,7 +55,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 
 	@Override
 	public boolean initenclosures(Map<String, Object> param) {
-		System.out.println("asdasdasdadasdddddENCMINE");
+
 		boolean response = false;
 		String sql = null;
 		Long enclosurecode = (Long) param.get("enclosurecode");
@@ -64,10 +65,10 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 
 		System.out.println("HERE");
 		try {
-			sql = "INSERT INTO masters.enclosures(enclosurecode,enclosurename,enclosuredescription,enabled) "
-					+ "VALUES (?,?,?,?) ";
-			Object[] values = { enclosurecode, ((String) param.get("enclosurename")).trim(), enclosuredescription,
-					'Y' };
+			sql = "INSERT INTO masters.enclosures(enclosurecode,enclosurename,enclosuredescription,enabled,filetypes) "
+					+ "VALUES (?,?,?,?,?) ";
+			Object[] values = { enclosurecode, ((String) param.get("enclosurename")).trim(), enclosuredescription, 'Y',
+					((String) param.get("filetypes")).trim() };
 			response = jdbcTemplate.update(sql, values) > 0;
 
 		} catch (Exception e) {
@@ -85,11 +86,12 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		String sql = null;
 		Long officecode = (Long) param.get("officecode");
 
-		byte [] logo = null;
-		String officename3="",officeshortname="",senderemailid="",emailidpassword="",smsusername="",smspassword="",smssenderid="",isregisteringoffice="",stateid="",tenantid="";
-		Integer registeringofficecode = null ;
-		if(param.get("officename3")!=null){
-			officename3=((String) param.get("officename3")).trim();
+		byte[] logo = null;
+		String officename3 = "", officeshortname = "", senderemailid = "", emailidpassword = "", smsusername = "",
+				smspassword = "", smssenderid = "", isregisteringoffice = "", stateid = "", tenantid = "";
+		Integer registeringofficecode = null;
+		if (param.get("officename3") != null) {
+			officename3 = ((String) param.get("officename3")).trim();
 
 		}
 		if (param.get("officeshortname") != null) {
@@ -108,56 +110,40 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 			smspassword = ((String) param.get("smspassword")).trim();
 		}
 
-		if(param.get("isregisteringoffice")!=null){
+		if (param.get("isregisteringoffice") != null) {
 			isregisteringoffice = ((String) param.get("isregisteringoffice")).trim();
 		}
-		if(param.get("smssenderid")!=null){
-			smssenderid=((String) param.get("smssenderid")).trim();
+		if (param.get("smssenderid") != null) {
+			smssenderid = ((String) param.get("smssenderid")).trim();
 
 		}
 		if (param.get("tenantid") != null) {
 			tenantid = ((String) param.get("tenantid")).trim();
 		}
 
-		
-		if(param.get("isregisteringoffice")!=null){
+		if (param.get("isregisteringoffice") != null) {
 			isregisteringoffice = ((String) param.get("isregisteringoffice")).trim();
 		}
-		
-		if(param.get("registeringofficecode")!=null && isregisteringoffice!="Y"){
+
+		if (param.get("registeringofficecode") != null && isregisteringoffice != "Y") {
 			registeringofficecode = Integer.valueOf((String) param.get("registeringofficecode"));
 		}
-		
-		try 
-		{
-			if(param.get("logo")!=null) {
-				 logo = Base64.getDecoder().decode((String)param.get("logo") );
-				
+
+		try {
+			if (param.get("logo") != null) {
+				logo = Base64.getDecoder().decode((String) param.get("logo"));
 
 			}
 			sql = "INSERT INTO masters.offices(officecode,officename1,officename2,"
 					+ "officename3,officeshortname,signatoryname,"
 					+ "signatorydesignation,senderemailid,emailidpassword,smsusername,smspassword,smssenderid,isregisteringoffice,registeringofficecode,stateid,tenantid,logo) "
 					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
-			Object[] values = { officecode, 
-					((String) param.get("officename1")).trim(),
-					((String) param.get("officename2")).trim(),
-					officename3,
-					officeshortname,
-					
-					((String) param.get("signatoryname")).trim(),
-					((String) param.get("signatorydesignation")).trim(),
-					senderemailid,
-					emailidpassword,
-					smsusername,
-					smspassword,
-					smssenderid,
-					isregisteringoffice,
-					registeringofficecode,
-					stateid,
-					tenantid,
-					logo
-					};
+			Object[] values = { officecode, ((String) param.get("officename1")).trim(),
+					((String) param.get("officename2")).trim(), officename3, officeshortname,
+
+					((String) param.get("signatoryname")).trim(), ((String) param.get("signatorydesignation")).trim(),
+					senderemailid, emailidpassword, smsusername, smspassword, smssenderid, isregisteringoffice,
+					registeringofficecode, stateid, tenantid, logo };
 
 			response = jdbcTemplate.update(sql, values) > 0;
 
@@ -178,9 +164,9 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		if (param.get("enclosuredescription") != null)
 			enclosuredescription = ((String) param.get("enclosuredescription")).trim();
 		try {
-			sql = "UPDATE masters.enclosures SET enclosurename = ?, enclosuredescription = ? WHERE enclosurecode = ?";
+			sql = "UPDATE masters.enclosures SET enclosurename = ?, enclosuredescription = ? , filetypes=? WHERE enclosurecode = ?";
 			Object[] values = new Object[] { ((String) param.get("enclosurename")).trim(), enclosuredescription,
-					param.get("enclosurecode") };
+					((String) param.get("filetypes")).trim(), param.get("enclosurecode") };
 			response = jdbcTemplate.update(sql, values) > 0;
 		} catch (Exception e) {
 			response = false;
@@ -197,46 +183,33 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		String sql = "";
 		boolean response = false;
 
-		byte [] logo = null;	
-		Integer registeringofficecode = null ;
-		
-		if(offices.get("registeringofficecode")!=null && !offices.get("isregisteringoffice").toString().equals("Y")){
+		byte[] logo = null;
+		Integer registeringofficecode = null;
+
+		if (offices.get("registeringofficecode") != null
+				&& !offices.get("isregisteringoffice").toString().equals("Y")) {
 			registeringofficecode = Integer.valueOf(offices.get("registeringofficecode").toString());
 		}
-		
-		try 
-		{
+
+		try {
 
 			System.out.println(offices);
 			if (offices.get("logo") != null) {
 				logo = Base64.getDecoder().decode((String) offices.get("logo"));
 			}
-				
+
 			sql = "UPDATE masters.offices SET officename1 = ?, officename2 = ?,officename3=?,"
 					+ "officeshortname = ?, signatoryname = ?,signatorydesignation=?,"
 
 					+ "senderemailid = ?, emailidpassword = ?,smsusername=?,"
 					+ "smspassword = ?,smssenderid=?,isregisteringoffice=?,registeringofficecode=?,stateid=?,tenantid=?,logo=?"
-					+ " WHERE officecode = ?"					;
-			Object[] param = new Object[] { 
-					offices.get("officename1"), 
-					offices.get("officename2"),
-					offices.get("officename3"), 
-					offices.get("officeshortname"), 
-					offices.get("signatoryname"),
-					offices.get("signatorydesignation"), 
-					offices.get("senderemailid"), 
-					offices.get("emailidpassword"),
-					offices.get("smsusername"), 
-					offices.get("smspassword"),
-					offices.get("smssenderid"),
-					offices.get("isregisteringoffice"),
-					registeringofficecode,
-					offices.get("stateid"),
-					offices.get("tenantid"),
-					logo,
-					offices.get("officecode")
-					};
+					+ " WHERE officecode = ?";
+			Object[] param = new Object[] { offices.get("officename1"), offices.get("officename2"),
+					offices.get("officename3"), offices.get("officeshortname"), offices.get("signatoryname"),
+					offices.get("signatorydesignation"), offices.get("senderemailid"), offices.get("emailidpassword"),
+					offices.get("smsusername"), offices.get("smspassword"), offices.get("smssenderid"),
+					offices.get("isregisteringoffice"), registeringofficecode, offices.get("stateid"),
+					offices.get("tenantid"), logo, offices.get("officecode") };
 
 			response = jdbcTemplate.update(sql, param) > 0;
 		} catch (Exception e) {
@@ -247,17 +220,35 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		}
 		return response;
 	}
+
 	@Override
 	public List<Enclosures> listEnclosures() {
 
 		List<Enclosures> list = null;
 		try {
-			String sql = "Select enclosurecode, enclosurename, enclosuredescription, "
-					+ "enabled From masters.enclosures Order by enclosurename";
+			String sql = "Select enclosurecode, enclosurename, enclosuredescription,filetypes, enabled "
+					+ "  From masters.enclosures Order by enclosurename";
 			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Enclosures>(Enclosures.class));
 		} catch (Exception e) {
 			e.getStackTrace();
 			System.out.println("Error in DaoUserManagement.listEnclosures()  : " + e);
+		}
+		return (list != null) ? list : new LinkedList();
+
+	}
+
+	@Override
+	public List<Filetypes> listFiletypes() {
+
+		List<Filetypes> list = null;
+		try {
+			String sql = "SELECT filetypedescription, filetypecode, enabled "
+					+ "  FROM masters.filetypes ORDER BY filetypecode;";
+
+			list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Filetypes>(Filetypes.class));
+		} catch (Exception e) {
+			e.getStackTrace();
+			System.out.println("Error in DaoUserManagement.listFiletypes()  : " + e);
 		}
 		return (list != null) ? list : new LinkedList();
 
@@ -372,6 +363,7 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 		}
 		return (list != null) ? list : new LinkedList();
 	}
+
 	@Override
 	public boolean mapModuleEnclosures(List<Map<String, Object>> modulesenclosures) {
 
@@ -522,4 +514,3 @@ public class DaoEnclosureManagement implements DaoEnclosureManagementInterface {
 	}
 
 }
-

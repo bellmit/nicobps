@@ -153,8 +153,11 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 					"data": "permitnumber",
 					"width": "5%",
 					"render": function(data, type, row, meta) {
-
-						let div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Print" ng-click="printpermit(\'' + data + '\')" class=" btn btn-primary">Print</button>';
+						console.log("processcode :: "+ row.toprocesscode);
+						let div ="<div></div>"
+						if (row.toprocesscode==14){
+							div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Print" ng-click="printpermit(\'' + data + '\')" class=" btn btn-primary">Print</button>';
+						}
 						return div;
 					}
 				}
