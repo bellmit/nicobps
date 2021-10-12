@@ -17,12 +17,13 @@
                          <label>
                          	<core:out value="${enclosur.value}" escapeXml="enccode"/>
                          	<core:if test="${fn:contains(enclosur.value1, 'Y') && empty enclosur.value2}">                         		
-                       			<span style="color:red">*</span>                         		 
-                         	</core:if>                    
+                       			<span style="color:red">*</span>                          		 
+                         	</core:if>  
+                         	<span class="ml-2" style="color:#0073ec;font-size:13px;">[${enclosur.value4}]</span>                   
                        	 </label>                        	 
-                     </td>                        
+                     </td>                     
                      <td class="col-md-1">
-                         <form:input path="appenclosures[${loop.index}].fileContent" type="file" cssClass="file" id="file_${enclosur.key}" disabled="true"/>
+                         <form:input path="appenclosures[${loop.index}].fileContent" type="file" cssClass="file" id="file_${enclosur.key}" patt="${enclosur.value4}" disabled="true"/>
                          <span style="color:red"><form:errors path="appenclosures[${loop.index}].fileContent" cssClass="error"/></span>                                                  
                          <span id="file_<core:out value="${enclosur.key}" escapeXml="true"></core:out>Msg" class="error" style="color:red"></span>  
                      </td>  

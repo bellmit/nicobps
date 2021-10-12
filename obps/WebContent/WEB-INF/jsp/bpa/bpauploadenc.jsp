@@ -47,7 +47,7 @@
 													</core:if> <label for="chk_${enclosur.key}"> <core:out
 															value="${enclosur.value}" escapeXml="enccode" /> <core:if
 															test="${fn:contains(enclosur.value1, 'Y') && empty enclosur.value2}">
-															<span style="color: red">*</span>
+															<span style="color: red">*</span><span class="ml-2" style="color:#0073ec;font-size:13px;">[${enclosur.value4}]</span>  
 														</core:if>
 												</label></td>
 												<td class="col-md-3"><form:input

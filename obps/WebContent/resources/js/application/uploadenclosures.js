@@ -22,14 +22,25 @@ jQuery(document).ready(function () {
         }        
     });       
     jQuery('.file').change(function(){
-        var fileContent = jQuery(this).val();
-        var checkimg = fileContent.toLowerCase();
-        if (!checkimg.match(PATTERN_FILE_ENC))
-        {
-            showMsg(jQuery(this).attr('id'), "Enclosoures should be of jpg/jpeg/png/pdf type");
-        }else{
-            showMsg(jQuery(this).attr('id'), "");
-        }        
+	
+	    var fileContent = jQuery(this).val();
+		var checkimg = fileContent.toLowerCase();
+		var dbpatt = jQuery(this).attr('patt');
+		var array = dbpatt.split(',');
+		var patt = "(";
+		array.forEach(function(item) {
+			patt += "\\." + item + "|";
+
+		});
+		patt = patt.substring(0, patt.length - 1);
+		patt += ")$";
+		var PATTERN_FILE = new RegExp(patt);
+		if (!checkimg.match(PATTERN_FILE)) {
+			showMsg(jQuery(this).attr('id'), "Enclosoures should be "+dbpatt);
+		} else {
+			showMsg(jQuery(this).attr('id'), "");
+		}
+ 
     });
     
     /*

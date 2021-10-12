@@ -24,8 +24,6 @@ jQuery(document).ready(function() {
 	jQuery('.file').change(function() {
 		var fileContent = jQuery(this).val();
 		var checkimg = fileContent.toLowerCase();
-
-
 		var dbpatt = jQuery(this).attr('patt');
 		var array = dbpatt.split(',');
 		var patt = "(";
@@ -37,10 +35,6 @@ jQuery(document).ready(function() {
 		patt = patt.substring(0, patt.length - 1);
 		patt += ")$";
 		var PATTERN_FILE = new RegExp(patt);
-		alert(PATTERN_FILE)
-
-
-
 
 		if (!checkimg.match(PATTERN_FILE)) {
 			showMsg(jQuery(this).attr('id'), "Enclosoures should be "+dbpatt);

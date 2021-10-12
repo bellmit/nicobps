@@ -226,7 +226,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode) {
-		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2 FROM masters.enclosures E   "
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2,filetypes AS value4 FROM masters.enclosures E   "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "LEFT OUTER JOIN nicobps.licenseesenclosures LE ON LE.enclosurecode=M.enclosurecode AND LE.usercode=? "
 				+ "WHERE E.enabled='Y' AND  M.modulecode=? AND licenseetypecode=? "
@@ -237,7 +237,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listEnclosuresNotUploades(final Short modulecode, Integer usercode, Short licenseetypecode) {
-		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1 FROM masters.enclosures E  "
+		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,filetypes AS value4 FROM masters.enclosures E  "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode "
 				+ "WHERE E.enabled='Y' AND mandatory='Y' AND M.modulecode=? "
 				+ " AND  case when ? != -1 then licenseetypecode=? else licenseetypecode ISNULL end   "
