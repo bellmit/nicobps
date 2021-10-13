@@ -829,7 +829,7 @@ class ServiceBPA implements ServiceBPAInterface {
 		String sql = " SELECT  distinct T.applicantsname AS key, T.applicantsname AS value"
 				+ "				FROM  nicobps.licensees T ,  nicobps.licenseeofficesvalidities  B, "
 				+ "				nicobps.USERLOGINS U  WHERE   Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END >= current_date"
-				+ "				 AND B.officecode in(Select officecode from nicobps.useroffices where usercode=?) AND   T.licenseetypecode=2  ORDER BY T.applicantsname";
+				+ "				 AND B.officecode in(Select officecode from nicobps.licenseeofficesvalidities  where usercode=?) AND   T.licenseetypecode=2  ORDER BY T.applicantsname";
 		return SUI.listCommonMap(sql, new Object[] { usercode });
 	}
 }
