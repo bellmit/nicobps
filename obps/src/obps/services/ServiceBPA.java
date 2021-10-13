@@ -746,7 +746,15 @@ class ServiceBPA implements ServiceBPAInterface {
 	/* CREATE */
 	@Override
 	public boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response) {
-		return DBI.approveBPApplication(bpa, response);
+		
+		if (bpa != null && bpa.getDocuments() != null && !bpa.getDocuments().isEmpty()) {
+			bpa.getDocuments().forEach(r -> {
+				r.setFileImageByBase64String(r.getFile());
+			});
+			return DBI.approveBPApplication(bpa, response);
+		
+		}
+		return false;
 	}
 
 	@Override

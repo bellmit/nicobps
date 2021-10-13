@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import obps.models.AppQuestionnaire;
 import obps.models.BpaApplication;
@@ -44,24 +45,39 @@ public class DaoBPA implements DaoBPAInterface {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
+
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response) {
 		boolean status = false;
 		try {
 			String applicationcode = bpa.getProcessflow().getApplicationcode();
 			List<Object[]> params = new ArrayList<>();
+			List<Object[]> params2 = new ArrayList<>();
 			List<CommonMap> conditions = bpa.getConditions();
 			Object[] param;
 
+			String sql1 = "INSERT INTO nicobps.bpaenclosures(   "
+					+ "            appenclosurecode, applicationcode, enclosurecode, enclosureimage,    "
+					+ "            entrydate)   " + "VALUES (   "
+					+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
+					+ "	?, ?, ?, now()   " + ")   ";
+
+			bpa.getDocuments().forEach(document -> {
+				params.add(new Object[] { applicationcode, document.getCode(), document.getFileImage() });
+			});
+			status = jdbcTemplate.batchUpdate(sql1, params).length == params.size();
+			if (!status)
+				throw new Exception("Failed to update approval details");
 			String sql = "INSERT INTO nicobps.bpaconditions( "
 					+ "            bpaenclosurecode, applicationcode, conditiondescription, "
 					+ "            entrydate) " + "    VALUES ("
 					+ "				(SELECT COALESCE(MAX(bpaenclosurecode), 0)+1 FROM nicobps.bpaconditions), "
-					+ "				?, ?, now()" + "		)";
+					+ "				?, ?, now()" + "		) ";
 			conditions.forEach(c -> {
-				params.add(new Object[] { applicationcode, c.getValue() });
+				params2.add(new Object[] { applicationcode, c.getValue() });
 			});
-			status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
+			status = jdbcTemplate.batchUpdate(sql, params2).length == params2.size();
 			if (!status)
 				throw new Exception("Failed to insert application conditions");
 
@@ -87,6 +103,7 @@ public class DaoBPA implements DaoBPAInterface {
 			e.printStackTrace();
 			LOG.log(Level.SEVERE, e.getLocalizedMessage());
 		}
+		
 		return status;
 	}
 
@@ -136,7 +153,6 @@ public class DaoBPA implements DaoBPAInterface {
 					+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
 					+ "	?, ?, ?, now()   " + ")   ";
 
-
 			if (data.getEnclosures() != null && !data.getEnclosures().isEmpty()) {
 				List<Object[]> params = new ArrayList<>();
 				data.getEnclosures().forEach(report -> {
@@ -146,7 +162,7 @@ public class DaoBPA implements DaoBPAInterface {
 				if (!status)
 					throw new Exception("Failed to update bpa enclosures details");
 			}
-			
+
 			status = commonProcessingFunction(data.getApplicationcode(), data.getFromusercode(), null, null,
 					data.getRemarks(), data.getTousercode(), response);
 			if (!status)
@@ -250,60 +266,47 @@ public class DaoBPA implements DaoBPAInterface {
 			status = jdbcTemplate.update(sql, param) > 0;
 			if (!status)
 				throw new Exception("Error: Failed to insert into applications");
-			
-			sql = "INSERT INTO nicobps.bpaapplications(    " + 
-					"    applicationcode, edcrnumber, ownershiptypecode, ownershipsubtype,     " + 
-					"    plotaddressline1, plotaddressline2, plotvillagetown, plotpincode,     " + 
-					"    plotgiscoordinates, officelocationcode, landregistrationdetails,     " + 
-					"    landregistrationno, plotidentifier1, plotidentifier2, plotidentifier3,     " + 
-					"    holdingno, additionalinfo, entrydate)    " + 
-					"VALUES (?, ?, ?, ?,     " + 
-					"    ?, ?, ?, ?,     " + 
-					"    ?, ?, ?,     " + 
-					"    ?, ?, ?, ?,     " + 
-					"    ?, ?::json, now())    " + 
-					"";
-			
+
+			sql = "INSERT INTO nicobps.bpaapplications(    "
+					+ "    applicationcode, edcrnumber, ownershiptypecode, ownershipsubtype,     "
+					+ "    plotaddressline1, plotaddressline2, plotvillagetown, plotpincode,     "
+					+ "    plotgiscoordinates, officelocationcode, landregistrationdetails,     "
+					+ "    landregistrationno, plotidentifier1, plotidentifier2, plotidentifier3,     "
+					+ "    holdingno, additionalinfo, entrydate)    " + "VALUES (?, ?, ?, ?,     "
+					+ "    ?, ?, ?, ?,     " + "    ?, ?, ?,     " + "    ?, ?, ?, ?,     "
+					+ "    ?, ?::json, now())    " + "";
+
 			param = new Object[] { bpa.getApplicationcode(), bpa.getEdcrnumber(), bpa.getOwnershiptypecode(),
 					bpa.getOwnershipsubtype(), bpa.getPlotaddressline1(), bpa.getPlotaddressline2(),
 					bpa.getPlotvillagetown(), bpa.getPlotpincode(), bpa.getPlotgiscoordinates(),
 					bpa.getOfficelocationcode(), bpa.getLandregistrationdetails(), bpa.getLandregistrationno(),
-					bpa.getPlotidentifier1(), bpa.getPlotidentifier2(), bpa.getPlotidentifier3(), bpa.getHoldingno(), 
-					bpa.getAdditionalinfo()};
+					bpa.getPlotidentifier1(), bpa.getPlotidentifier2(), bpa.getPlotidentifier3(), bpa.getHoldingno(),
+					bpa.getAdditionalinfo() };
 
 			status = jdbcTemplate.update(sql, param) > 0;
 			if (!status)
 				throw new Exception("Error: Failed to insert into bpaapplications");
 
-			sql = "INSERT INTO nicobps.bpaownerdetails(   " 
+			sql = "INSERT INTO nicobps.bpaownerdetails(   "
 					+ "            ownerdetailcode, applicationcode, salutationcode,    "
 					+ "            ownername, relationshiptypecode, relationname,    "
 					+ "            mobileno, emailid, preaddressline1, "
 					+ "			   preaddressline2, pretownvillage, predistrictcode, "
-					+ "			   prepincode, peraddressline1, peraddressline2,   " 
+					+ "			   prepincode, peraddressline1, peraddressline2,   "
 					+ "            pertownvillage, perdistrictcode, perpincode, "
-					+ "			   additionalinfo, entrydate)   " 
-					+ " VALUES (	"
-					+ "		(SELECT COALESCE(MAX(ownerdetailcode), 0) +1 FROM nicobps.bpaownerdetails),  ?, ?,    " 
-					+ "		?, ?, ?,    " 
-					+ "		?, ?, ?,    " 
-					+ "		?, ?, ?,    " 
-					+ "		?, ?, ?,    " 
-					+ "		?, ?, ?,    " 
-					+ "     ?::json, now()    " 
-					+ "	)";
+					+ "			   additionalinfo, entrydate)   " + " VALUES (	"
+					+ "		(SELECT COALESCE(MAX(ownerdetailcode), 0) +1 FROM nicobps.bpaownerdetails),  ?, ?,    "
+					+ "		?, ?, ?,    " + "		?, ?, ?,    " + "		?, ?, ?,    " + "		?, ?, ?,    "
+					+ "		?, ?, ?,    " + "     ?::json, now()    " + "	)";
 			List<Object[]> params = new ArrayList<>();
 			if (bpa.getOwnerdetails() != null && !bpa.getOwnerdetails().isEmpty()) {
 				for (BpaOwnerDetail od : bpa.getOwnerdetails()) {
-					param = new Object[] { 
-							bpa.getApplicationcode(), od.getSalutationcode(), 
-							od.getOwnername(), od.getRelationshiptypecode(), od.getRelationname(), 
-							od.getMobileno(), od.getEmailid(), od.getPreaddressline1(), 
-							od.getPreaddressline2(), od.getPretownvillage(), od.getPredistrictcode(),
-							od.getPrepincode(), od.getPeraddressline1(), od.getPeraddressline2(),
-							od.getPertownvillage(), od.getPerdistrictcode(), od.getPerpincode(),
-							od.getAdditionalinfo()
-					};
+					param = new Object[] { bpa.getApplicationcode(), od.getSalutationcode(), od.getOwnername(),
+							od.getRelationshiptypecode(), od.getRelationname(), od.getMobileno(), od.getEmailid(),
+							od.getPreaddressline1(), od.getPreaddressline2(), od.getPretownvillage(),
+							od.getPredistrictcode(), od.getPrepincode(), od.getPeraddressline1(),
+							od.getPeraddressline2(), od.getPertownvillage(), od.getPerdistrictcode(),
+							od.getPerpincode(), od.getAdditionalinfo() };
 					params.add(param);
 				}
 
@@ -482,7 +485,7 @@ public class DaoBPA implements DaoBPAInterface {
 					toprocesscode, USERCODE, tousercode, remarks);
 			if (!status)
 				throw new Exception("Error: Failed to update applicationflow");
-			LOG.info("tousercode: "+tousercode);
+			LOG.info("tousercode: " + tousercode);
 			if (tousercode == null || tousercode.compareTo(0) < 0 || tousercode == USERCODE) {
 				setNextProcessingUrl(applicationcode, USERCODE, fromprocesscode, "N", response);
 			} else {

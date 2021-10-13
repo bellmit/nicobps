@@ -2,6 +2,8 @@ package obps.daos;
 
 import java.util.HashMap;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
 import obps.models.BpaApproval;
@@ -10,6 +12,7 @@ import obps.models.BpaSiteInspection;
 
 public interface DaoBPAInterface {
 
+	@Transactional
 	boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response);
 
 	boolean processBPApplication(BpaProcessFlow data, HashMap<String, Object> response);

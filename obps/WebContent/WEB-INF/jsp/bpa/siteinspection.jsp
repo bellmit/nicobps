@@ -83,7 +83,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="card mt-5">
+										<div class="card mt-5" ng-hide="Enclosures.length==0">
 											<div class="card-header">Documents</div>
 											<div class="card-body">
 												<div class="form-group row"  ng-repeat="R in SiteEnclosures track by $index">

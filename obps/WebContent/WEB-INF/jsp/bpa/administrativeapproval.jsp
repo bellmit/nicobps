@@ -24,6 +24,9 @@
 			<div id="page-content-wrapper">
 				<%@include file="../common/menutop.jsp"%>
 				<div class="container-fluid">
+				<h3 class="mt-4" style="font-size: 32px; border-bottom: 3px solid #005776">
+						{{taskStatus.nextprocessname}}
+					</h3>
 					<form name="bpaform">
 						<div class="card-body">
 							<label class="h4">Application details</label> <label
@@ -38,6 +41,39 @@
 						<document-details></document-details>
 						<site-inspection-details></site-inspection-details>
 						<file-view-modal></file-view-modal>
+								<div class="card mt-5" ng-hide="Enclosures.length==0">
+											<div class="card-header">Documents</div>
+											<div class="card-body">
+												<div class="form-group row"  ng-repeat="R in SiteEnclosures track by $index">
+													<div class="col-sm-7" ng-hide="R.flag === true">
+														<select class="form-control custom-form-control"
+															name="officelocationcode" ng-model="enclosurecode"
+															ng-options="O.enclosurecode as (O.enclosurename) for O in Enclosures| filter: selected === false"
+															ng-change="setLabel($index, enclosurecode)"
+															required>
+															<option selected="selected" disabled="disabled" value="">Select Options</option>
+														</select>
+														<label style="color:red" ng-if="R.error === true")>{{R.errormsg}}</label>
+													</div>
+													<label class="col-sm-7" ng-show="R.flag === true">{{($index+1)+":  "+R.name}}<span class="fa fa-asterisk"></span></label>
+													<div class="col-sm-5">
+														<div class="row mb-5">
+															<div class="btn btn-outline-primary btn-sm float-left">
+																<input type="file" name="report_{{$index}}" ng-model="R.file" file-model="R.file" ng-change="setLabel($index, null, R.file)" required>
+																<span class="col" style="color:red"></span>
+																<span class="col" style="color:red" ng-if="bpa.error[$index]">Required</span>
+															</div>
+															<div class="plus" ng-if="SiteEnclosures.length >= 1 && SiteEnclosures.length == $index+1">
+																<i class="fa fa-plus" title="Add more file" ng-click="filterEnclosure(1, enclosurecode)"></i>
+															</div>
+															<div class="minus" ng-if="SiteEnclosures.length >= 2 && SiteEnclosures.length == $index+1">
+																<i class="fa fa-minus" title="Remove file" ng-click="filterEnclosure(2, enclosurecode)"></i>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 						<div class="card mb-4">
 							<div class="card-body">
 								<div class="card-title h4">Conditions</div>
