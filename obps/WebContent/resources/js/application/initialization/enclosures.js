@@ -61,8 +61,8 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 				response = false;
 					
 					console.log('filetypedescription' + v0.filetypedescription);
-						console.log('$scope.enclosures.filetypes' + $scope.enclosures.filetypes);
-								if ($scope.enclosures.filetypes != null){
+					console.log('$scope.enclosures.filetypes' + $scope.enclosures.filetypes);
+						if ($scope.enclosures.filetypes != null){
 									if ($scope.enclosures.filetypes.includes(v0.filetypedescription)) {
 								response = true;
 								$scope.filetypelist.push(v0.filetypedescription);
@@ -72,7 +72,7 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 							}
 						}else{
 								response = false;
-							}
+						}
 					
 				
 				v0.checked = response;
