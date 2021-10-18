@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>OBPS | Map Office Questionaires</title>
+		<title>OBPS | Map Office Questionnaires</title>
 		<%@include file="../common/headerfiles.jsp" %>     		
 		<script src="resources/js/util/sha256.min.js"></script>
 		<style>
@@ -42,7 +42,7 @@
 		                            </td>    
 		                                                             
 		                            <td rowspan="15" style="width:65%;border: 1px solid blue;">
-		                                <div style="width:100%;max-height:250px;overflow-y: auto ">
+		                                <div style="width:100%;max-height:300px;overflow-y: auto ">
 		                                    <table border="1" cellspacing="0"width="100%">
 		                                        <tr>
 		                                            <th></th>
@@ -69,7 +69,8 @@
 		                        <tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr>
 		                    </table>
 	                	</form>
-	        		</div>		
+	        		</div>	
+	        		<br/>	
 	        		<div id="displayRecords" style='width:80%;margin: 15px auto 50px auto;'></div>	
 	        	</div>			        	       	               	
 	        </div>           

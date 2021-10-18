@@ -110,7 +110,7 @@ console.log($scope.office.mappedquestioniares);
                     "title": "Action",
                     "sortable": false,
                     "render": function (data, type, row, meta) {
-                    	let div = '<button style="padding:5px" ng-click="mappedQuestions('+row.officecode+')">Map Questioniares</button>';
+                    	let div = '<button style="padding:5px" ng-click="mappedQuestions('+row.officecode+')" class="btn btn-primary b-btn">Map Questionnaires</button>';
                         return div;
                     }
                 }
