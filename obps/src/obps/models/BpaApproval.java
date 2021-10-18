@@ -14,6 +14,17 @@ public class BpaApproval implements Serializable {
 
 	private BpaProcessFlow processflow;
 	private List<CommonMap> conditions;
+	private List<AppEnclosure> documents;
+	
+	
+
+	public List<AppEnclosure> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<AppEnclosure> documents) {
+		this.documents = documents;
+	}
 
 	public BpaProcessFlow getProcessflow() {
 		return processflow;
