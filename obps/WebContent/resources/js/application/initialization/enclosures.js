@@ -62,13 +62,18 @@ app.controller('enclosuresCtrl', ['$scope', '$sce', '$compile','$timeout','commo
 					
 					console.log('filetypedescription' + v0.filetypedescription);
 						console.log('$scope.enclosures.filetypes' + $scope.enclosures.filetypes);
-					if ($scope.enclosures.filetypes.includes(v0.filetypedescription)) {
-						response = true;
-						$scope.filetypelist.push(v0.filetypedescription);
-						
-					}else{
-						response = false;
-					}
+								if ($scope.enclosures.filetypes != null){
+									if ($scope.enclosures.filetypes.includes(v0.filetypedescription)) {
+								response = true;
+								$scope.filetypelist.push(v0.filetypedescription);
+								
+							}else{
+								response = false;
+							}
+						}else{
+								response = false;
+							}
+					
 				
 				v0.checked = response;
 			});
@@ -288,15 +293,23 @@ commonInitService.save1($scope.method, $scope.urlEndpoint, $scope.enclosures, fu
 	
 	
 	$scope.addfiletypes = function(filetype) {
+		 let uniqueFiletypes = [...new Set($scope.filetypelist)];
+
+         console.log("unique :: "+uniqueFiletypes);
+         $scope.filetypelist= uniqueFiletypes;
+
 	    if(filetype.checked) {
 	        $scope.filetypelist.push(filetype.filetypedescription);
 	    } else {
+		  
 	        var toDel = $scope.filetypelist.indexOf(filetype.filetypedescription);
 	        $scope.filetypelist.splice(toDel, 1);
 	    }
 
-         console.log($scope.filetypelist.toString());
+       //  console.log("filetypeslist :" +$scope.filetypelist.toString());
+        
         $scope.enclosures.filetypes=$scope.filetypelist.toString();
+       //  console.log( " enclosures : "+$scope.enclosures.filetypes.toString());
    }
 
         $scope.listEnclosures();

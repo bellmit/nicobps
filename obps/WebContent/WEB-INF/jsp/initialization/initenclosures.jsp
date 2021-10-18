@@ -43,8 +43,8 @@
 										<tr class="form-group has-feedback">
 											<td class="title">Enclosure Types<span style="color:red">*</span>:</td>
 											<td class="col-xs-5 ">
-												<div ng-repeat="item in filetypes" >
-													<label><input type="checkbox" ng-model="item.checked" ng-change="addfiletypes(item)" >{{item.filetypedescription}}</label>
+												<div ng-repeat="item in filetypes" style="display:inline;" class="col">
+													<label><input type="checkbox" ng-model="item.checked" ng-change="addfiletypes(item)"  class="col-xs-3 p-m-5">{{item.filetypedescription}}</label>
 
 												</div>
 											</td>

@@ -24,7 +24,7 @@
 </div> -->
 <div class="card mb-4">
 	<div class="card-body">
-		<div class="card-title h5">Site Inspection Questionnaires <a href="./Report?status=5&applicationcode={{bpa.applicationcode}}" target="_blank" class="btn btn-primary  col-md-1  float-right">Print</a></div>
+		<div class="card-title h5">Site Inspection Questionnaires <a href="./Report?status=5&applicationcode={{bpa.applicationcode}}" target="_blank" class="btn btn-primary  col-md-1  float-right"><i class="fas fa-print"></i>Print</a></div>
 		<div class="card-body">
 			<div class="form-group row">
 				<label class="col-sm-1" style="text-align: center;">Slno</label>
