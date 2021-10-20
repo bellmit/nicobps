@@ -45,7 +45,6 @@ public class DaoBPA implements DaoBPAInterface {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
 	public boolean approveBPApplication(BpaApproval bpa, HashMap<String, Object> response) {
@@ -56,17 +55,20 @@ public class DaoBPA implements DaoBPAInterface {
 			List<Object[]> params2 = new ArrayList<>();
 			List<CommonMap> conditions = bpa.getConditions();
 			Object[] param;
+			if (bpa.getDocuments() != null) {
+				String sql1 = "INSERT INTO nicobps.bpaenclosures(   "
+						+ "            appenclosurecode, applicationcode, enclosurecode, enclosureimage,    "
+						+ "            entrydate)   " + "VALUES (   "
+						+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
+						+ "	?, ?, ?, now()   " + ")   ";
 
-			String sql1 = "INSERT INTO nicobps.bpaenclosures(   "
-					+ "            appenclosurecode, applicationcode, enclosurecode, enclosureimage,    "
-					+ "            entrydate)   " + "VALUES (   "
-					+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
-					+ "	?, ?, ?, now()   " + ")   ";
-
-			bpa.getDocuments().forEach(document -> {
-				params.add(new Object[] { applicationcode, document.getCode(), document.getFileImage() });
-			});
-			status = jdbcTemplate.batchUpdate(sql1, params).length == params.size();
+				bpa.getDocuments().forEach(document -> {
+					params.add(new Object[] { applicationcode, document.getCode(), document.getFileImage() });
+				});
+				status = jdbcTemplate.batchUpdate(sql1, params).length == params.size();
+			} else {
+				status = true;
+			}
 			if (!status)
 				throw new Exception("Failed to update approval details");
 			String sql = "INSERT INTO nicobps.bpaconditions( "
@@ -103,7 +105,7 @@ public class DaoBPA implements DaoBPAInterface {
 			e.printStackTrace();
 			LOG.log(Level.SEVERE, e.getLocalizedMessage());
 		}
-		
+
 		return status;
 	}
 
@@ -381,18 +383,28 @@ public class DaoBPA implements DaoBPAInterface {
 	public boolean saveBPASiteInspection(BpaSiteInspection bpa, Integer USERCODE, Integer fromprocesscode,
 			HashMap<String, Object> response) {
 		boolean status = false;
+		List<Object[]> params = new ArrayList<>();
 		try {
-			String sql = "INSERT INTO nicobps.bpaenclosures(   "
-					+ "            appenclosurecode, applicationcode, enclosurecode, enclosureimage,    "
-					+ "            entrydate)   " + "VALUES (   "
-					+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
-					+ "	?, ?, ?, now()   " + ")   ";
+			if (bpa.getReports() != null) {
+				if (!bpa.getReports().isEmpty()) {
+					String sql = "INSERT INTO nicobps.bpaenclosures(   "
+							+ "            appenclosurecode, applicationcode, enclosurecode, enclosureimage,    "
+							+ "            entrydate)   " + "VALUES (   "
+							+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
+							+ "	?, ?, ?, now()   " + ")   ";
 
-			List<Object[]> params = new ArrayList<>();
-			bpa.getReports().forEach(report -> {
-				params.add(new Object[] { bpa.getApplicationcode(), report.getCode(), report.getFileImage() });
-			});
-			status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
+					
+					bpa.getReports().forEach(report -> {
+						params.add(new Object[] { bpa.getApplicationcode(), report.getCode(), report.getFileImage() });
+					});
+					status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
+				}else {
+					status= true;
+				}
+
+			} else {
+				status= true;
+			}
 			if (!status)
 				throw new Exception("Failed to update siteinspection details");
 

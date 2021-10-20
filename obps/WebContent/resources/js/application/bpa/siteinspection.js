@@ -40,6 +40,7 @@ app.controller("CommonCtrl", [
 		/* GET */
 		BS.listBPAEnclosures((response) => {
 			$scope.Enclosures = response;
+			
 			$scope.Enclosures.forEach((o, x) => {
 				o.selected = false;
 			});
@@ -141,11 +142,11 @@ app.controller("CommonCtrl", [
 			let status = true;
 			let form = $scope.bpa;
 			form = $scope.SiteEnclosures;
-			
+				console.log("lenght"+$scope.Enclosures.length)
 			try{
 				status = $scope.validateQuestionnairesResponse(); 
 				if(!status) return status;
-				
+				if ($scope.Enclosures.length != 0) {	
 				$scope.SiteEnclosures.find( e => e.file == null || e.file == '').error = true;
 				if($scope.SiteEnclosures.find( e => e.file == null || e.file == '').name != null 
 						&& $scope.SiteEnclosures.find( e => e.file == null || e.file == '').name != '')
@@ -155,7 +156,7 @@ app.controller("CommonCtrl", [
 					$scope.SiteEnclosures.find( e => e.file == null || e.file == '').errormsg = `Please select enclosure first`;
 				if($scope.SiteEnclosures.find( e => e.file == null || e.file == '').error)
 					status = false;
-				
+				}
 			} catch (e) {}
 			
 			if(status){
