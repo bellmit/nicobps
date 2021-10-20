@@ -12,6 +12,7 @@ public class EdcrScrutiny {
 	private String status;
 	private String scrutinyreport;
 	private String dxffile;
+	private String originalfilename;
 	private String officename;
 	private String applicationcode;
 	private String pageurl;
@@ -19,6 +20,14 @@ public class EdcrScrutiny {
 	public EdcrScrutiny() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getOriginalfilename() {
+		return originalfilename;
+	}
+
+	public void setOriginalfilename(String originalfilename) {
+		this.originalfilename = originalfilename;
 	}
 
 	public String getPageurl() {
@@ -110,7 +119,7 @@ public class EdcrScrutiny {
 	}
 
 	public EdcrScrutiny(Integer usercode, Integer officecode, String edcrnumber, String planinfoobject,
-			String entrydate, String status, String scrutinyreport, String dxffile, String officename,
+			String entrydate, String status, String scrutinyreport, String dxffile,String originalfilename, String officename,
 			String applicationcode,String pageurl) {
 		super();
 		this.usercode = usercode;
@@ -121,6 +130,7 @@ public class EdcrScrutiny {
 		this.status = status;
 		this.scrutinyreport = scrutinyreport;
 		this.dxffile = dxffile;
+		this.originalfilename = originalfilename;
 		this.officename = officename;
 		this.applicationcode = applicationcode;
 		this.pageurl = pageurl;

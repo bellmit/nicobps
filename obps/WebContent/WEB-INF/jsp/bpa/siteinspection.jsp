@@ -126,7 +126,7 @@
 			</div>
 		</div>
 	</body>
-	<script src="resources/js/util/filevalidation.js" type="text/javascript"></script>
+	
 	<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>

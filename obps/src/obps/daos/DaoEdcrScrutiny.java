@@ -72,7 +72,7 @@ public class DaoEdcrScrutiny implements DaoEdcrScrutinyInterface {
 		Integer usercode = Integer.valueOf((String) usercd);
 		List<EdcrScrutiny> list = null;
 		try {
-			String sql = "SELECT a.usercode,a.officecode,a.edcrnumber,a.status,a.entrydate,b.officename1 as officename ,c.applicationcode,page.pageurl "
+			String sql = "SELECT a.usercode,a.officecode,a.edcrnumber,a.status,a.entrydate,a.originalfilename,b.officename1 as officename ,c.applicationcode,page.pageurl "
 					+ "FROM nicobps.edcrscrutiny a "
 					+ "inner join masters.offices b on a.officecode=b.officecode "
 					+ "left join nicobps.bpaapplications c on a.edcrnumber=c.edcrnumber "

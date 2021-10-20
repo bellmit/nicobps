@@ -51,6 +51,10 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 						return edcrnumber;
 					}
 				}, {
+					"title": "filename(.dxf) ",
+					"data": "originalfilename",
+					"width": "8%"
+				}, {
 					"title": "Uploaded On",
 					"data": "entrydate",
 					render: (data, type, row, meta) => {
