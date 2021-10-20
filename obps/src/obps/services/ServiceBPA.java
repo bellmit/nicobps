@@ -266,12 +266,12 @@ class ServiceBPA implements ServiceBPAInterface {
 	@Override
 
 	public List<Map<String, Object>> listBPApplications(Integer USERCODE,Integer processcode) {
-		String sql = "SELECT EDCR.originalfilename,TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,SELECT EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,BPAO.ownername,       "
+		String sql = "SELECT EDCR.originalfilename,TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,BPAO.ownername,       "
 				+ "      APP.applicationcode, APP.officecode, APP.modulecode, APP.usercode, APP.applicationslno, APP.servicetypecode, TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate ,    "
 				+ "      AF.toprocesscode, PRF.processname AS currentprocessname, PR.processname AS nextprocessname, AF.fromusercode, AF.tousercode, FUL.fullname AS fromusername, TUL.fullname AS tousername,  "
 				+ "      PU.pageurl, PU.urlcode    " + "FROM nicobps.edcrscrutiny EDCR       "
 				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber    "
-				+ "   "
+				+ "INNER JOIN nicobps.bpaownerdetails BPAO ON BPAO.applicationcode = BPA.applicationcode     "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode     "
 				+ "INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (    "
 				+ "	SELECT applicationcode, MAX(entrydate)   	FROM nicobps.applicationflowremarks    "
