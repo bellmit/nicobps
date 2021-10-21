@@ -164,7 +164,7 @@ public class RegistrationsStakeholderValidator {
 
 		if (validatecommoncodes(((String) param.get("predistrictcode")).trim())) {
 
-			LOG.info(" validate predistrictcode");
+			LOG.info(" validatecommoncodes  predistrictcode");
 			response = "invalid";
 			return response;
 		}
@@ -247,7 +247,7 @@ public class RegistrationsStakeholderValidator {
 		}
 		if ((String) param.get("listLicenseesregistrationsm") != null
 				|| (String) param.get("listLicenseesregistrationsm") != "") {
-			LOG.info(" validate listLicenseesregistrationsm");
+			LOG.info("  listLicenseesregistrationsm not null");
 			JSONParser parser = new JSONParser();
 			Object obj;
 			try {
@@ -321,7 +321,9 @@ public class RegistrationsStakeholderValidator {
 	}
 
 	public boolean validatecommoncodes(String data) {
-		if (!data.toString().matches("^[1-9]{1,5}$") || data.length() > 5) {
+		System.out.println("data" + data);
+		System.out.println("cond : "+ data.toString().matches("^[1-9][0-9]{0,4}$") + " " +  data.length());
+		if (!data.toString().matches("^[1-9][0-9]{0,4}$") || data.length() > 5) {
 //           System.out.println("invalid format");
 			return true;
 		}

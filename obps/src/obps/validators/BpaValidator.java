@@ -142,7 +142,7 @@ public class BpaValidator {
 
 		if (bpa.getHoldingno() != null) {
 			if (!bpa.getHoldingno().trim().isEmpty()) {
-				if (!Patterns.PatternMatche(Patterns.PATTERN_ALPHA_NUMERIC, bpa.getHoldingno())
+				if (!Patterns.PatternMatche(Patterns.PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD, bpa.getHoldingno())
 						|| bpa.getHoldingno().length() > 5) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", " HOLDING_NUMBER IS INVALID,ENTER A VALID HOLDING_NUMBER");

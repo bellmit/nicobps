@@ -6,7 +6,9 @@ const CUT_CMD = 17 && 88;
 const COPY_CMD = 17 && 67;
 const PASTE_CMD = 17 && 86;
 
-const PATTERN_ADDRESS = /^[0-9a-zA-Z\ ()'.,]+$/;
+const PATTERN_ADDRESS = /^[0-9a-zA-Z\-()'.,\/ ]+$/;
+const PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD = /^[0-9a-zA-Z\-()\/\.]+$/;  
+
 app.directive("patternAddress", function () {
   return {
     require: "?ngModel",
@@ -75,6 +77,33 @@ app.directive("patternAlphaNumeric", function () {
       element.on("keyup", function (e) {
         if (
           !element.val().match(PATTERN_ALPHA_NUMERIC) &&
+          e.keyCode !== 46 && // delete
+          e.keyCode !== 8 && // backspace
+          e.keyCode !== CUT_CMD &&
+          e.keyCode !== COPY_CMD &&
+          e.keyCode !== PASTE_CMD
+        ) {
+          e.preventDefault();
+        } else {
+          oldVal = element.val();
+        }
+
+        ngModelCtrl.$setViewValue(oldVal);
+        ngModelCtrl.$render();
+      });
+      element.on("blur", function (e) { });
+    },
+  };
+});
+
+app.directive("patternAlphaNumericSlashDashBracketsPeriod", function () {
+  return {
+    require: "?ngModel",
+    link: function (scope, element, attributes, ngModelCtrl) {
+      var oldVal = null;
+      element.on("keyup", function (e) {
+        if (
+          !element.val().match(PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD) &&
           e.keyCode !== 46 && // delete
           e.keyCode !== 8 && // backspace
           e.keyCode !== CUT_CMD &&

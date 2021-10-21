@@ -46,6 +46,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		}
 		return list;
 	}
+
 	@Override
 	public List<Map<String, Object>> listLicensees(Integer usercode, Integer officecode, Integer processcode) {
 		String sql = "SELECT l.*,lt.*,d.*,s.statename,p.processcode,pf.flowname as nextprocessname,app.applicationcode,to_char(app.entrydate, 'DD-MM-YYYY')  as applicationdate,off.officecode,off.officename1,"
@@ -62,13 +63,14 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "INNER JOIN nicobps.userlogins u on l.usercode=u.usercode "
 				+ "INNER JOIN masters.offices off on off.officecode=app.officecode "
 				+ "INNER JOIN masters.states s on s.statecode=d.statecode "
-				+ "WHERE afr.toprocesscode=? AND case when ?=1 then 1=1 else off.officecode=? end " + "ORDER BY l.entrydate DESC ";
-		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { processcode,usercode, officecode });
+				+ "WHERE afr.toprocesscode=? AND case when ?=1 then 1=1 else off.officecode=? end "
+				+ "ORDER BY l.entrydate DESC ";
+		List<Map<String, Object>> list = SUI.listGeneric(sql, new Object[] { processcode, usercode, officecode });
 		for (Map<String, Object> m : list) {
 			m.put("transactions", daoPaymentInterface.getTransaction(m.get("applicationcode").toString()));
 		}
 		return list;
-	}	
+	}
 
 	@Override
 	public byte[] getEnclosure(Integer usercode, Integer enclosurecode) {
@@ -115,13 +117,20 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		dmlList.add(new BatchUpdateModel(sql, values2));
 
 		List<Map<String, Object>> list = SUI.getAllNextProcessflows(1, nextprocessode);
+	
 		if (list.get(0).get("fromprocesscode").equals(list.get(0).get("toprocesscode"))) {
 			sql = "INSERT INTO nicobps.licenseeofficesvalidities(applicationcode, usercode, officecode, validfrom, validto, extendedto, extendedby) VALUES (?, ?, ?, ?, ?, ?, ?) ";
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date());
-			c.add(Calendar.YEAR, 1);
-			c.set(Calendar.MONTH, 3);
+			System.out.println(" date 1 : " + c.getTime());
+//			c.add(Calendar.YEAR, 1);
+			  System.out.println(" get fin year " + getFinYear());
+			c.set(Calendar.YEAR, getFinYear());
+			c.set(Calendar.MONTH, 2);
 			c.set(Calendar.DAY_OF_MONTH, 31);
+			
+			
+			System.out.println(" date 2 : " + c.getTime());
 
 			dmlList.add(new BatchUpdateModel(sql,
 					new Object[] { applicationcode, usercode, officecode, new Date(), c.getTime(), null, null }));
@@ -143,7 +152,9 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				}
 			}
 		}
-		return SUI.update(dmlList);
+	return SUI.update(dmlList);
+		
+
 	}
 
 	@Override
@@ -171,6 +182,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			return "false";
 		}
 	}
+
 	@Override
 	public Map<String, Object> getLicenceeValidity(Integer usercode, Integer officecode) {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -178,13 +190,11 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 		// -------------------------
 		// -------Valid
 		// -------------------------
-		
-		
-		
+
 		String sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE, "
 				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
 				+ "CASE WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3 ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE, "
-				+ "validto,extendedto,CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END AS VALIDITY, "
+				+ "validto,extendedto,CASE WHEN EXTENDEDTO IS NULL THEN TO_CHAR(VALIDTO, 'dd-mm-yyyy') ELSE TO_CHAR(EXTENDEDTO, 'dd-mm-yyyy') END AS VALIDITY, "
 				+ "CASE WHEN EXTENDEDTO IS NULL THEN 'VALID UPTO : ' || TO_CHAR(VALIDTO, 'dd-mm-yyyy') ELSE 'VALID UPTO : ' || TO_CHAR(EXTENDEDTO, 'dd-mm-yyyy') END AS STATUS, "
 				+ "CASE WHEN VALIDTO > CURRENT_DATE THEN 1 ELSE 2 END AS STATUSCODE "
 				+ "FROM nicobps.USERLOGINS U, MASTERS.OFFICES O, nicobps.LICENSEEOFFICESVALIDITIES V, nicobps.APPLICATIONS A "
@@ -199,13 +209,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 					+ " and its valid till " + list.get(0).get("validity"));
 			return response;
 		}
-		
-		
-		
-		
-		
-		
-			
+
 		// -------------------------
 		// -------Expired
 		// -------------------------
@@ -227,38 +231,32 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 					+ list.get(0).get("validity") + ".Please click on the button above to renew your empanelment.");
 //			return response; // Should it be returned from here?
 		}
-		
-		
+
 		// -------------------------
-				// -------Verified and awaiting Payment
-				// -------------------------
-				sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
-						+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
-						+ "         CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
-						+ "             "
-						+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
-						+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
-						+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
-						+ " LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
-						+ " WHERE 1 = 1  AND TOPROCESSCODE = 5 " + " AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
-						+ " AND U.USERCODE  = ? " + " AND A.MODULECODE IN (1, 3) "
-						+ " ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
-				list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
-				if (!list.isEmpty()) {
-					System.out.println("3");
-					
-					
-					
-					response.put("VERIFIED",
-							"Your application for emnpanelment with " + list.get(0).get("office")
-									+ " office bearing application code " + list.get(0).get("applicationcode")
-									+ " has been verified. Please pay the Registration Fee. click on the Home Link > Payment of Registration Fees.");
-					
-					return response;
-				}
-		
-		
-		
+		// -------Verified and awaiting Payment
+		// -------------------------
+		sql = "SELECT U.USERCODE, U.USERNAME, A.APPLICATIONCODE,  "
+				+ "(O.OFFICENAME1::TEXT || CASE WHEN O.OFFICENAME2 IS NOT NULL THEN O.OFFICENAME2 ELSE ''::CHARACTER VARYING END::TEXT) || "
+				+ "         CASE  WHEN O.OFFICENAME3 IS NOT NULL THEN O.OFFICENAME3  ELSE ''::CHARACTER VARYING END::TEXT AS OFFICE "
+				+ "             "
+				+ "FROM  nicobps.USERLOGINS U INNER JOIN nicobps.APPLICATIONS A ON U.USERCODE = A.USERCODE  "
+				+ "INNER JOIN MASTERS.OFFICES O ON O.OFFICECODE = A.OFFICECODE "
+				+ "INNER JOIN nicobps.APPLICATIONFLOWREMARKS AFR ON (A.APPLICATIONCODE = AFR.APPLICATIONCODE) "
+				+ " LEFT OUTER JOIN nicobps.applicationstransactionmap ATM ON A.APPLICATIONCODE = ATM.APPLICATIONCODE  "
+				+ " WHERE 1 = 1  AND TOPROCESSCODE = 5 " + " AND ATM.APPLICATIONCODE IS NULL  "
+				+ "AND O.OFFICECODE = ?  " + " AND U.USERCODE  = ? " + " AND A.MODULECODE IN (1, 3) "
+				+ " ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
+		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
+		if (!list.isEmpty()) {
+			System.out.println("3");
+
+			response.put("VERIFIED", "Your application for emnpanelment with " + list.get(0).get("office")
+					+ " office bearing application code " + list.get(0).get("applicationcode")
+					+ " has been verified. Please pay the Registration Fee. click on the Home Link > Payment of Registration Fees.");
+
+			return response;
+		}
+
 		// -------------------------
 		// -------Awaiting Verification
 		// -------------------------
@@ -273,7 +271,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "WHERE 1 = 1  " + "AND ATM.APPLICATIONCODE IS NULL  " + "AND O.OFFICECODE = ?  "
 				+ "AND U.USERCODE  = ? " + "AND A.MODULECODE IN (1, 3) "
 				+ "ORDER BY A.MODULECODE, U.USERCODE, AFR.ENTRYDATE DESC LIMIT 1";
-		
+
 		list = SUI.listGeneric(sql, new Object[] { officecode, usercode });
 		if (!list.isEmpty()) {
 			System.out.println("4");
@@ -353,4 +351,16 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 				+ "				where li.usercode=?  ORDER BY o.officename1 DESC  ";
 		return SUI.listGeneric(sql, new Object[] { usercode });
 	}
+	
+	public int getFinYear() {
+		Integer FIRST_FIN_MONTH  = Calendar.APRIL;
+		System.out.println("FIRST_FISCAL_MONTH "+ FIRST_FIN_MONTH );
+
+		Calendar calendarDate = Calendar.getInstance();
+        int month = calendarDate.get(Calendar.MONTH);
+        int year = calendarDate.get(Calendar.YEAR);
+        System.out.println(" month " + month + " year "+year);
+      
+        return (month >= FIRST_FIN_MONTH) ? year+1 : year ;
+    }
 }

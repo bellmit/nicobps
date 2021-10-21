@@ -471,8 +471,7 @@ public class ControllerUserManagement {
 		if (serviceUserManagementInterface.updatePassword(param)) {
 			return ResponseEntity.ok(new String("Password updated successfully!"));
 		} else {
-			return ResponseEntity.badRequest().body(new String(
-					"Sorry, but we are unable to process the request at the moment. Please try again later."));
+			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 	}
 

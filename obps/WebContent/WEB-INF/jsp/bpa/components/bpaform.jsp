@@ -199,7 +199,7 @@
 					<label class="col">Plot No./Khata No.</label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="plotno"
-							ng-model="BPA.plotidentifier1" maxlength="10" pattern-alpha-numeric/>
+							ng-model="BPA.plotidentifier1" maxlength="10" pattern-alpha-numeric-slash-dash-brackets-period/>
 						<div class="col" ng-if="bpaform.plotno.$touched" style="color:red">
 <!-- 							<span ng-show="bpaform.plotno.$error.required">Required</span> -->
 						</div>
@@ -212,7 +212,7 @@
 						No.</label>
 					<div class="col-sm-12">
 						<input type="text" class="form-control custom-form-control" name="holdingno"
-							ng-model="BPA.holdingno" maxlength="5" pattern-alpha-numeric/>
+							ng-model="BPA.holdingno" maxlength="5" pattern-alpha-numeric-slash-dash-brackets-period/>
 						<div class="col" ng-if="bpaform.holdingno.$touched" style="color:red">
 <!-- 							<span ng-show="bpaform.holdingno.$error.required">Required</span> -->
 						</div>
