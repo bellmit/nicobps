@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit02" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="06693ae2-350c-4c9e-a059-fdbdc57b614d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingpermit02" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
 	<property name="ireport.zoom" value="1.1269722013523664"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="575"/>
-	<subDataset name="additionalinfo" uuid="bcd25f99-c673-4175-9c11-55fe9132014c">
-		<field name="engineeron" class="java.lang.String">
-			<fieldDescription><![CDATA[engineeron]]></fieldDescription>
+	<property name="ireport.y" value="838"/>
+	<subDataset name="additionalinfo" >
+		<field name="nameofengineer" class="java.lang.String">
+			<fieldDescription><![CDATA[nameofengineer]]></fieldDescription>
 		</field>
 		<variable name="subvar_engineeron" class="java.lang.String" resetType="None">
-			<variableExpression><![CDATA[$F{engineeron}== null || $F{engineeron}== "" ? "________________" :$F{engineeron}]]></variableExpression>
+			<variableExpression><![CDATA[$F{nameofengineer}== null || $F{nameofengineer}== "" ? "________________" :$F{nameofengineer}]]></variableExpression>
 		</variable>
 	</subDataset>
-	<subDataset name="planinfoobject" uuid="38bb442f-c4fa-4aa0-8ab1-369b95e77e4a">
+	<subDataset name="planinfoobject" >
 		<field name="occupancy" class="java.lang.String">
 			<fieldDescription><![CDATA[planDetail.planInformation.occupancy]]></fieldDescription>
 		</field>
@@ -40,7 +40,7 @@
 			<variableExpression><![CDATA[$F{plotarea} == null || $F{plotarea} =="" ? "_______________" : new BigDecimal(Double.parseDouble($F{plotarea}) * 10.76391042).setScale(4, BigDecimal.ROUND_HALF_DOWN).toString()]]></variableExpression>
 		</variable>
 	</subDataset>
-	<subDataset name="blocks" uuid="3fa8f4d4-7ee6-41c0-b597-79f6f60c2e4c">
+	<subDataset name="blocks" >
 		<field name="totalfloors" class="java.lang.Integer">
 			<fieldDescription><![CDATA[building.totalFloors]]></fieldDescription>
 		</field>
@@ -49,6 +49,24 @@
 		</field>
 		<variable name="subvar_totalfloors" class="java.lang.String" resetType="None">
 			<variableExpression><![CDATA[($F{totalfloors}== null || $F{blocknumber}==null) ? "____" :  ($F{blocknumber} > 1 ? $V{subvar_totalfloors}+ " : " + $F{totalfloors} : ($F{totalfloors}).toString())]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="bpaconditions" >
+		<parameter name="permitnumber" class="java.lang.String" isForPrompting="false"/>
+		<queryString>
+			<![CDATA[select ba.applicationcode,ba.permitnumber,bc.conditioncode,bc.conditiondescription
+from  nicobps.bpaapproveapplications ba
+inner join nicobps.bpaconditions bc
+on ba.applicationcode=bc.applicationcode
+where ba.permitnumber=$P{permitnumber}
+order by bc.bpaenclosurecode;]]>
+		</queryString>
+		<field name="applicationcode" class="java.lang.String"/>
+		<field name="permitnumber" class="java.lang.String"/>
+		<field name="conditioncode" class="java.lang.Integer"/>
+		<field name="conditiondescription" class="java.lang.String"/>
+		<variable name="serialNumber" class="java.lang.Integer" calculation="Count">
+			<variableExpression><![CDATA[0]]></variableExpression>
 		</variable>
 	</subDataset>
 	<parameter name="permitnumber" class="java.lang.String">
@@ -111,28 +129,28 @@ and bap.permitnumber=$P{permitnumber}]]>
 	<title>
 		<band height="272" splitType="Stretch">
 			<textField>
-				<reportElement x="10" y="89" width="540" height="89" uuid="30cc3dab-5de7-4f4a-bb25-0dcb8120e09a"/>
+				<reportElement x="10" y="89" width="540" height="89" />
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{office}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="405" y="177" width="133" height="20" uuid="923be6a8-1ed3-431d-9041-dcf1a146a043"/>
+				<reportElement x="405" y="177" width="133" height="20" />
 				<textElement markup="none">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Date " + $F{approvaldate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="177" width="328" height="20" uuid="84ab3fe4-26dc-45a0-a424-54ca8baf6d41"/>
+				<reportElement x="10" y="177" width="328" height="20" />
 				<textElement markup="none">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Issue No   " + $F{permitnumber}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="219" width="540" height="52" uuid="d7db29ef-38b6-4d0e-86e2-5180edea9fac"/>
+				<reportElement x="10" y="219" width="540" height="52" />
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -140,8 +158,8 @@ and bap.permitnumber=$P{permitnumber}]]>
 (See regulation 09 of the Sikkim Building Construction Regulation, 1991)
 Form of Sanction.]]></text>
 			</staticText>
-			<image scaleImage="RetainShape" onErrorType="Blank">
-				<reportElement x="247" y="15" width="147" height="74" uuid="0e0676b8-b7d6-45c0-aa0b-b4a081a6f38c"/>
+			<image onErrorType="Blank">
+				<reportElement x="238" y="10" width="100" height="79" />
 				<imageExpression><![CDATA[$F{logo}]]></imageExpression>
 			</image>
 		</band>
@@ -152,28 +170,28 @@ Form of Sanction.]]></text>
 	<detail>
 		<band height="269" splitType="Prevent">
 			<staticText>
-				<reportElement x="10" y="15" width="19" height="20" uuid="f9e15f92-a815-4135-8196-03dbd0086a43"/>
+				<reportElement x="10" y="15" width="19" height="20" />
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[To,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="123" width="540" height="20" uuid="c625d3e8-61d9-46e4-b903-32be50c425d4"/>
+				<reportElement x="10" y="123" width="540" height="20" />
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[THE VALIDITY OF THIS ORDER IS FOR THREE YEARS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="103" width="540" height="20" uuid="f98a055e-e17c-4f60-8e2d-a4f13ff6190f"/>
+				<reportElement x="10" y="103" width="540" height="20" />
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Subject:- CONSTRUCTION ORDER. ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Report">
-				<reportElement stretchType="RelativeToTallestObject" x="8" y="156" width="540" height="108" uuid="aea14bc0-b79b-4eb3-9fa6-2871e4709905"/>
+				<reportElement stretchType="RelativeToTallestObject" x="8" y="156" width="540" height="108" />
 				<textElement textAlignment="Justified" markup="styled">
 					<font size="10"/>
 					<paragraph lineSpacing="1_1_2"/>
@@ -181,7 +199,7 @@ Form of Sanction.]]></text>
 				<textFieldExpression><![CDATA["With  reference  to  your  application  bearing Application Code <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applicationcode}+ "</style> Dated  <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{applydate} + "</style>,  approval  has  been  granted  to <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">" + $F{ownersname}  + "</style> for construction of proposed <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_totalfloors}+"</style> storied  R.C.C. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_occupancy}+"</style>  building measuring <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_plotarea} +"</style> located at <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{plotaddress}+"</style> at Ward No. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $F{locationname}+"</style>."]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="33" y="41" width="456" height="52" uuid="44970b76-edf6-4078-bee1-e69937b26e90"/>
+				<reportElement x="33" y="41" width="456" height="52" />
 				<textElement>
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -189,8 +207,8 @@ Form of Sanction.]]></text>
 			</textField>
 		</band>
 		<band height="179">
-			<textField evaluationTime="Report">
-				<reportElement x="8" y="0" width="540" height="74" uuid="79b5119c-7ba8-4a97-924c-742f9d6f52de"/>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="8" y="0" width="540" height="74" />
 				<textElement textAlignment="Justified" markup="styled">
 					<font size="10"/>
 					<paragraph lineSpacing="1_1_2"/>
@@ -198,85 +216,93 @@ Form of Sanction.]]></text>
 				<textFieldExpression><![CDATA[" 	 The proposed structure is approved for registered landed property having Khatiyan no. <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $V{var_khatianno}+"</style> , Khasara no - <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+$V{var_khasarano}+"</style> , and measuring <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $V{var_plotarea}+"</style> ( <style isBold=\"true\" isUnderline=\"true\" pdfFontName=\"Helvetica-Bold\">"+ $V{var_plotarea_sqft}+"</style> sq.ft.)."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="93" width="169" height="20" uuid="a4cebc2c-9528-4041-b976-a2c0f656f8b3"/>
+				<reportElement x="12" y="93" width="169" height="20" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Name of Architect on record :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="113" width="169" height="20" uuid="05594712-9346-4dde-8e1f-63b994874f11"/>
+				<reportElement x="12" y="113" width="169" height="20" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Name of Engineer on record :]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="203" y="93" width="311" height="20" uuid="bfa05a87-d33c-49ad-b197-b06f7a25970f"/>
+				<reportElement x="203" y="93" width="311" height="20" />
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{architect}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="203" y="113" width="311" height="20" uuid="61088a2e-97bd-4e60-b625-0ce89ed65d3b"/>
+				<reportElement x="203" y="113" width="311" height="20" />
 				<textElement>
 					<font isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{var_engineeron}]]></textFieldExpression>
 			</textField>
 			<break>
-				<reportElement x="0" y="166" width="100" height="1" uuid="d7018276-e303-4295-a114-997edc9c0fc5"/>
+				<reportElement x="0" y="166" width="100" height="1" />
 			</break>
 		</band>
-		<band height="627">
+		<band height="291">
 			<staticText>
-				<reportElement x="10" y="4" width="540" height="20" uuid="dfeec594-f64c-420c-9fba-af3c7c29eb97"/>
+				<reportElement x="10" y="4" width="540" height="20" />
 				<textElement textAlignment="Justified">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[This construction order is approved on the following conditions:- ]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="8" y="24" width="540" height="598" uuid="60390d33-c026-486e-9df6-14387857b19b"/>
-				<textElement textAlignment="Justified">
-					<font size="10"/>
-					<paragraph lineSpacing="1_1_2"/>
-				</textElement>
-				<text><![CDATA[1. Prior  permission  for  commencement  of  the  building  should  be  sought  for  on Form V obtainable from the Gangtok Municipal Corporation.
-2. In case, the ownership is found to be defective at any stage of time the approval accorded and this order shall stand automatically revoked and the structure/work building thus constructed shall be considered as without proper approval and shall be dealt accordingly.
-3. The  construction  of  the  building  should  be  completed  not  later  than  three  years from  the  date  of  issue  of  construction  order.  Failure  to  do  so  the  B.P.  Plan automatically  shall  stand  cancelled  and  the  B.P.  Plan  should  be  submitted  for renewal.
-4. No  new  building  or  part    thereof  shall  be  occupied  or  allowed  to  be  occupied  or used  or  permitted  to  be  used  by  any  person  until  permission  has  granted  in  that behalf.
-5. The construction should be as per approved BPP and no  deviation is permissible without the prior permission of the Government.
-6. The construction should be as per the order and supervision of Gangtok Municipal Corporation Town Planner/Engineer.
-7. The  Engineer/Town  planner  of  Gangtok  Municipal  Corporation  must  be  informed before  the  foundation  is  laid.  Only  after  the  foundation  is  passed  by  Divisional Engineer/Town planner, the construction shall be allowed to continue.
-8. Strict quality control to be maintained in the process of construction.
-9. There should be enough facilities for good sanitation and drainage system.
-10. The door or window panels shall be fixed in such a way that they shall not, when open project on any street.
-11. The building shall not be constructed within 10 ft. of the live electric wire running on any public street.
-12. The  land  vacated  in  consequence  of  the  enforcement  of  the  set  back  limit  shall form part of the public street.
-13. The  excavated  earth  obtained  from  site  development  &  foundation,  shall  not  be dumped  on  public  street,  road,  gully  and  jhoras.  Moreover  any  building materials found  lying  on  the  road  setback  or  over  drains  shall  be  seized  and  auctioned without  ant  notice  whatsoever,  and  action  shall  be  taken  as  per  the  bye-laws against the defaulters.
-14. No Construction involving earth excavation works shall be allowed with effect from 1st  of  June  to  30th  of  September.  Anyone  found  carrying  out  construction  in contravention  of  the  above  shall  be  penalized  as  per  the  relevant  clause  of  the Sikkim  Allotment  and  House  Sites  and  Construction  of  Building  (Regulation  and Control)  Act,1985  as  amended  in  2000,and  the  Sikkim  Building  Construction Regulation, 1991 as amended in 2000. Such person shall also be solely responsible  for  the  loss  of  life  and  property,  as  a  result  of  such  unauthorized excavation/construction.
-]]></text>
-			</staticText>
+			<componentElement>
+				<reportElement key="table" x="10" y="24" width="538" height="262" />
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="bpaconditions" >
+						<datasetParameter name="permitnumber">
+							<datasetParameterExpression><![CDATA[$P{permitnumber}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="24" >
+						<jr:columnHeader height="13" rowSpan="1"/>
+						<jr:detailCell height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="24" height="23" />
+								<textFieldExpression><![CDATA[$V{serialNumber}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="524" >
+						<jr:columnHeader height="13" rowSpan="1"/>
+						<jr:detailCell height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="511" height="23" />
+								<textElement textAlignment="Justified"/>
+								<textFieldExpression><![CDATA[$F{conditiondescription}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
-		<band height="148">
+		<band height="186">
 			<staticText>
-				<reportElement x="10" y="3" width="540" height="20" uuid="2b649882-0c6a-468a-8e5d-1ea19a077126"/>
+				<reportElement x="10" y="3" width="540" height="20" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Two copies of the approved B.P. Plan are returned herewith for your record.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="289" y="50" width="249" height="45" uuid="9dec6142-ef27-4676-9e97-f4ab0faa4aaa"/>
+				<reportElement x="289" y="76" width="249" height="45" />
 				<textElement textAlignment="Center" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Authorised Signature\n" + $F{office}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="95" width="540" height="34" uuid="6bad2f7b-994d-4644-b0d8-f82c16040fa5"/>
+				<reportElement x="10" y="121" width="540" height="34" />
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -284,9 +310,9 @@ Form of Sanction.]]></text>
 + "Contact:  _________ (Officers Name), Assistant Town Planner, G.M.C (Gangtok).Mob No: "]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="10" y="140" width="528" height="0" uuid="2ebe484e-df0a-4492-a24c-dbc19caa3f31"/>
+				<reportElement x="10" y="166" width="528" height="0" />
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
-					<datasetRun subDataset="blocks" uuid="149475b2-b572-4373-ad0f-2b9e6c5acf86">
+					<datasetRun subDataset="blocks" >
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource(new java.io.ByteArrayInputStream($F{planinfoobject}.getBytes("UTF-8")),"planDetail.blocks")]]></dataSourceExpression>
 						<returnValue fromVariable="subvar_totalfloors" toVariable="var_totalfloors"/>
 					</datasetRun>
@@ -294,9 +320,9 @@ Form of Sanction.]]></text>
 				</jr:list>
 			</componentElement>
 			<componentElement>
-				<reportElement x="10" y="140" width="528" height="0" uuid="c87d82ac-298e-40de-8b47-94958823e3d1"/>
+				<reportElement x="10" y="166" width="528" height="0" />
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
-					<datasetRun subDataset="additionalinfo" uuid="3554332a-d215-4f80-9049-6b45c88b227e">
+					<datasetRun subDataset="additionalinfo" >
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream($F{additionalinfo}.getBytes("UTF-8") ))]]></dataSourceExpression>
 						<returnValue fromVariable="subvar_engineeron" toVariable="var_engineeron"/>
 					</datasetRun>
@@ -304,9 +330,9 @@ Form of Sanction.]]></text>
 				</jr:list>
 			</componentElement>
 			<componentElement>
-				<reportElement x="10" y="140" width="528" height="0" uuid="69a71203-e02a-4f4b-9936-567a78d84c8f"/>
+				<reportElement x="10" y="166" width="528" height="0" />
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
-					<datasetRun subDataset="planinfoobject" uuid="875a5f65-9cd1-4790-a77e-01864166e113">
+					<datasetRun subDataset="planinfoobject" >
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JsonDataSource( new java.io.ByteArrayInputStream($F{planinfoobject}.getBytes("UTF-8") ))]]></dataSourceExpression>
 						<returnValue fromVariable="subvar_occupancy" toVariable="var_occupancy"/>
 						<returnValue fromVariable="subvar_plotarea" toVariable="var_plotarea"/>
