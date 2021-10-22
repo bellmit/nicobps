@@ -143,7 +143,7 @@ public class ServiceStakeholder implements ServiceStakeholderInterface {
 			String sqlCount = "SELECT count(*) FROM nicobps.userpages where usercode=? and urlcode=? ";
 			Integer count = null;
 			sql = "INSERT INTO nicobps.userpages(userpagecode,usercode,urlcode) VALUES (?,?,?) ";
-			for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38 }) {
+			for (Integer urlcode : new Integer[] { 11, 12, 13, 17, 18, 21, 26, 38, 41 }) {
 				count = Integer.valueOf(
 						SUI.listGeneric(sqlCount, new Object[] { usercode, urlcode }).get(0).get("count").toString());
 				if (count == null || count == 0) {
