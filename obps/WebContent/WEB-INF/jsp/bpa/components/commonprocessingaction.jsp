@@ -12,7 +12,7 @@
 							<div class="dropdown-menu">
 								<forward-button></forward-button>
 								<reject-button></reject-button>
-								<send-to-citizen-button></send-to-citizen-button>
+								<!-- <send-to-citizen-button></send-to-citizen-button>  -->
 							</div>
 						</div>
 					</div>
