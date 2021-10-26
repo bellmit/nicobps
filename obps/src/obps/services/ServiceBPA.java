@@ -117,7 +117,7 @@ class ServiceBPA implements ServiceBPAInterface {
 	@Override
 	public List<CommonMap> listOwnershiptypes() {
 		String sql = "SELECT OW.ownershiptypecode AS key, OW.ownershiptypename AS value  "
-				+ "FROM masters.ownershiptypes OW  " + "ORDER BY OW.ownershiptypename";
+				+ "FROM masters.ownershiptypes OW  WHERE ENABLED='Y' " + " ORDER BY OW.ownershiptypename";
 		return SUI.listCommonMap(sql);
 	}
 

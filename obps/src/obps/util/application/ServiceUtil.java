@@ -493,7 +493,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "								where "
 				+ " CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END <=current_date "
 				+ " AND li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='Y' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC  ";
-	//	System.out.println("Query 1 "+ sql + "  Ofice code"+ officecode);
+		System.out.println("Query 1 "+ sql + "  Ofice code"+ officecode);
 		
 		return this.listGeneric(sql, new Object[] { officecode });
 	}
@@ -572,9 +572,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 				   + "   GROUP BY applicationcode " 
 				   + ") " 
 				   + "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode " 
-				   + "WHERE AF.modulecode=2 AND AF.tousercode = ? " 
+				   //+ "WHERE AF.modulecode=2 AND AF.tousercode = ? " 
+				   +"WHERE AF.modulecode=2 AND AF.toprocesscode IN (5,6,7,8,9,10,11,12,14) AND "
+				   +"CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
 				   +"GROUP BY PR.processcode,PR.processname ";
-		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode});
+		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode,usercode});
 	}	
 	
 	
@@ -590,9 +592,10 @@ public class ServiceUtil implements ServiceUtilInterface {
 				   + ") " 
 				   + "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode " 
 				   + "WHERE AF.modulecode=1 AND AF.toprocesscode IN (4,6) AND "
-				   + "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=2) ELSE tousercode=? END " 
+				   //+ "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=?) ELSE tousercode=? END " 
+				   +"CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
 				   + "GROUP BY PR.processcode,PR.processname ";		
-		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode});
+		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode,usercode});
 	}		
 	
     @Override

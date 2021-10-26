@@ -84,8 +84,7 @@
 						<div class="col-md-12 py-12 px-12"
 							style="border-top: 3px solid #005776; border-bottom: 3px solid #005776; padding-top: 20px; align-content: center;">
 
-							<h4 style="padding-left: 30%; font-style: oblique;">--------------eDCR
-								Scrutiny List --------------</h4>
+							<h4 style="padding-left: 30%;">eDCR Scrutiny List</h4>
 							<div class="table-responsive" id="displayRecordsDiv">
 								<div id="displayRecords"
 									style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px'></div>
