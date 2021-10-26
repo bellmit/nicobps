@@ -493,7 +493,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "								where "
 				+ " CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END <=current_date "
 				+ " AND li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='Y' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC  ";
-		System.out.println("Query 1 "+ sql + "  Ofice code"+ officecode);
+	//	System.out.println("Query 1 "+ sql + "  Ofice code"+ officecode);
 		
 		return this.listGeneric(sql, new Object[] { officecode });
 	}

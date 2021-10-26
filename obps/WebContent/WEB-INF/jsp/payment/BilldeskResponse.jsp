@@ -9,8 +9,8 @@
 		<%-- 		<%@include file="../common/menuside.jsp"%> --%>
 
 		<div id="page-content-wrapper">
-			<%@include file="../common/menutop.jsp"%>
-			<div class="container-fluid">
+<%-- 			<%@include file="../common/menutop.jsp"%> --%>
+ 			<div class="container-fluid"> 
 
 				<div class="row justify-content-center">
 					<div class="col-md-10">
