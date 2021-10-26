@@ -20,7 +20,7 @@ public class Patterns {
     //public static final String PATTERN_NAME = "^[a-zA-Z\\. ]*$";    
             
     public static final String PATTERN_ALPHA_NUMERIC = "[a-zA-Z0-9]*";
-    public static final String PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD = "[0-9a-zA-Z\\-()\\/\\.]*$";
+    public static final String PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD = "[0-9a-zA-Z\\-()\\/\\. \\\\,]*$";
     public static final String PATTERN_ALLOW_ALL = "^[a-zA-Z0-9\\s\\d\\(\\)\\{\\}\\[\\]\\/\\-@#$%&!_=.'`~]*$";
     
     public static final String PATTERN_YEAR = "^([1-9]){1}([0-9]){3}$";

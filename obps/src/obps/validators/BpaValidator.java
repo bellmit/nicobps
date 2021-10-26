@@ -79,7 +79,7 @@ public class BpaValidator {
 
 		if (bpa.getPlotaddressline2() != null) {
 			if (!bpa.getPlotaddressline2().trim().isEmpty()) {
-				if ( bpa.getPlotaddressline2().length() > 30) {
+				if ( bpa.getPlotaddressline2().length() > 99) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", "THE ENTERED PLOT_ADDRESS_LINE_2 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_2");
 				}
