@@ -68,7 +68,7 @@ public class BpaValidator {
 		}
 
 		if (bpa.getPlotaddressline1() != null) {
-			if ( bpa.getPlotaddressline1().length() > 99) {
+			if (bpa.getPlotaddressline1().length() > 99) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", " THE ENTERED PLOT_ADDRESS_LINE_1 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_1");
 			}
@@ -79,7 +79,7 @@ public class BpaValidator {
 
 		if (bpa.getPlotaddressline2() != null) {
 			if (!bpa.getPlotaddressline2().trim().isEmpty()) {
-				if ( bpa.getPlotaddressline2().length() > 99) {
+				if (bpa.getPlotaddressline2().length() > 99) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", "THE ENTERED PLOT_ADDRESS_LINE_2 IS INVALID,ENTER A VALID PLOT_ADDRESS_LINE_2");
 				}
@@ -122,7 +122,7 @@ public class BpaValidator {
 
 		if (bpa.getLandregistrationdetails() != null) {
 			if (!bpa.getLandregistrationdetails().trim().isEmpty()) {
-				if ( bpa.getLandregistrationdetails().length() > 99) {
+				if (bpa.getLandregistrationdetails().length() > 99) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", "LAND_REGISTRATION_DETAILS IS INVALID,ENTER A VALID LAND_REGISTRATION_DETAILS");
 				}
@@ -142,14 +142,13 @@ public class BpaValidator {
 
 		if (bpa.getHoldingno() != null) {
 			if (!bpa.getHoldingno().trim().isEmpty()) {
-				if (!Patterns.PatternMatche(Patterns.PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD, bpa.getHoldingno())
-						|| bpa.getHoldingno().length() > 5) {
+				if (!Patterns.PatternMatche(Patterns.PATTERN_ALPHA_NUMERIC_SLASH_DASH_BRACKETS_PERIOD,
+						bpa.getHoldingno()) || bpa.getHoldingno().length() > 5) {
 					response.put("code", HttpStatus.BAD_REQUEST.value());
 					response.put("msg", " HOLDING_NUMBER IS INVALID,ENTER A VALID HOLDING_NUMBER");
 				}
 			}
 		}
-		
 
 		if (bpa.getEntrydate() != null) {
 			if (!Patterns.PatternMatche(Patterns.PATTERN_DATE, bpa.getEntrydate())
@@ -225,11 +224,11 @@ public class BpaValidator {
 			response.put("code", HttpStatus.BAD_REQUEST.value());
 			response.put("msg", " VALUE IN APPLICATION CODE IS NULL, ENTER A VALID APPLICATION CODE");
 		}
-
+		
 		if (bpaAl.getProcessflow().getFromusercode() != null) {
 			if (!Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_INTEGER,
 					bpaAl.getProcessflow().getFromusercode().toString())
-					|| bpaAl.getProcessflow().getFromusercode() > 7) {
+					||String.valueOf(bpaAl.getProcessflow().getFromusercode()).length() > 7) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN FROM_USERCODE, ENTER A VALID FROM_USERCODE");
 			}
@@ -239,8 +238,8 @@ public class BpaValidator {
 		}
 
 		if (bpaAl.getProcessflow().getRemarks() != null) {
-			if (!Patterns.PatternMatche(Patterns.XPATTERN_WITH_PERIOD_COMMA_AND_INVERTED_COMMA, bpaAl.getProcessflow().getRemarks())
-					|| bpaAl.getProcessflow().getRemarks().length() > 255) {
+			if (!Patterns.PatternMatche(Patterns.XPATTERN_WITH_PERIOD_COMMA_AND_INVERTED_COMMA,
+					bpaAl.getProcessflow().getRemarks()) || bpaAl.getProcessflow().getRemarks().length() > 255) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", "INVALID VALUE IN REMARKS, ENTER VALID REMARKS ");
 			}
@@ -248,11 +247,16 @@ public class BpaValidator {
 
 		if (bpaAl.getProcessflow().getTousercode() != null) {
 			if (!Patterns.PatternMatche(Patterns.XPATTERN_POSITIVE_INTEGER,
-					bpaAl.getProcessflow().getTousercode().toString()) || bpaAl.getProcessflow().getTousercode() > 7) {
+					bpaAl.getProcessflow().getTousercode().toString())
+					|| String.valueOf(bpaAl.getProcessflow().getTousercode()).length() > 7) {
 				response.put("code", HttpStatus.BAD_REQUEST.value());
 				response.put("msg", " INVALID VALUE IN TO_USERCODE , ENTER A VALID TO_USERCODE");
 			}
-		} 
+		}
+		
+		
+		
+		
 	}
 
 	public void Validateprocessbpapplication(BpaProcessFlow bpaPf, Map<String, Object> response) {

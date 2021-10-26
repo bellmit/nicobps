@@ -433,7 +433,10 @@ public class ControllerBpaProcessing {
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
+		System.out.println("usercodeeeeeeeeeeee  "+usercode);
 		bpa.getProcessflow().setFromusercode(usercode);
+		System.out.println("usercodeeeeeeeeeeee  "+bpa.getProcessflow().getFromusercode());
+		
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
 		Bvalid.ValidateapproveApplication(bpa, response);
 		if (!response.isEmpty()) {
