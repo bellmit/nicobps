@@ -59,7 +59,6 @@
 	background-color: #dee2e6;
 	cursor: pointer;
 }
-
 </style>
 </head>
 <body ng-app="CommonApp" ng-controller="CommonCtrl">
@@ -68,8 +67,9 @@
 		<div id="page-content-wrapper">
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
-				<span id="pcode" style="display:block">${processcode}</span>
-				<h3 class="mt-4" style="font-size: 32px;">Verifications/Approvals of Stakeholder Registrations</h3>
+				<span id="pcode" style="display: block">${processcode}</span>
+				<h3 class="mt-4" style="font-size: 32px;">Verifications/Approvals
+					of Stakeholder Registrations</h3>
 				<div class="row">
 					<div class="col-md-12 py-4 px-5" id='displayRecords'>
 						<!-- <table class="table" style='border-bottom:'>
@@ -274,10 +274,12 @@
 									style="padding-top: 5px; padding-bottom: 5px; float: right;"></span>
 							</button>
 							<div class="dropup-content">
-							
-								<a href="./Report?status=4&applicationcode={{applicant.applicationcode}}" target="_blank">Application</a>
-								<a href="./Report?status=1&transactioncode={{fee.transactioncode}}" target="_blank"
-									ng-repeat="fee in applicant.transactions">{{fee.feetypedescription}}</a>
+
+								<a
+									href="./Report?status=4&applicationcode={{applicant.applicationcode}}"
+									target="_blank">Application</a> <a
+									href="./Report?status=1&transactioncode={{fee.transactioncode}}"
+									target="_blank" ng-repeat="fee in applicant.transactions">{{fee.feetypedescription}}</a>
 							</div>
 						</div>
 						<div class="dropup col-md-6"
@@ -287,8 +289,10 @@
 									style="padding-top: 5px; padding-bottom: 5px; float: right;"></span>
 							</button>
 							<div class="dropup-content">
-								<a href="#" ng-repeat="p in nextProcesses"
-									ng-click="showRemarks(p)">{{p.action||p.flowname}}</a>
+								<div ng-repeat="p in nextProcesses">
+									<a href="#" ng-if="p.toprocesscode !='3' && p.toprocesscode !='5'"
+										ng-click="showRemarks(p)">{{p.action||p.flowname}}</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -307,13 +311,14 @@
 							style="width: 350px; height: 200px;"></textarea></td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><button class="btn btn-primary b-btn" 
+					<td colspan="2" align="center"><button
+							class="btn btn-primary b-btn"
 							ng-click="updateStakeholder(applicant,process)">Submit</button></td>
 				</tr>
 			</table>
 		</div>
 	</div>
-	<%@include file="../common/footer.jsp" %> 
+	<%@include file="../common/footer.jsp"%>
 </body>
 <script src="resources/js/application/stakeholder/srverify.js"></script>
 </html>
