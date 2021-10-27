@@ -290,7 +290,7 @@
 							</button>
 							<div class="dropup-content">
 								<div ng-repeat="p in nextProcesses">
-									<a href="#" ng-if="p.toprocesscode !='3' && p.toprocesscode !='5'"
+									<a href="#" ng-if="!( p.fromprocesscode =='4' &&p.toprocesscode =='3' ) && !( p.fromprocesscode =='6' && p.toprocesscode =='5') "
 										ng-click="showRemarks(p)">{{p.action||p.flowname}}</a>
 								</div>
 							</div>
