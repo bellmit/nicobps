@@ -155,4 +155,10 @@ public interface ServiceUtilInterface {
 	public List<Audittrail> listAuditrail();
 	
 	public void initAuditrail(HttpServletRequest request);
+	
+     public Map<String, Object> getUserDetails(Integer usercode);
+     
+     public Map<String, Object> getApplicationDetails(String applicationcode);
+	
+	public String getOfficeName(Integer officecode);
 }

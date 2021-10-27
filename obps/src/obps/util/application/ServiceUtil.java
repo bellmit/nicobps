@@ -246,10 +246,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 		if (licenseetypecode == null) {
 			licenseetypecode = -1;
 		}
-	
-		Object[] criteria = { modulecode, licenseetypecode,licenseetypecode, usercode };
+
+		Object[] criteria = { modulecode, licenseetypecode, licenseetypecode, usercode };
 		return this.listCommonMap(sql, criteria);
 	}
+
 	/////////////////////
 	@Override
 	public List<CommonMap> listBpaEnclosures(final Short modulecode, String aplicationcode) {
@@ -339,15 +340,11 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 		String sql = "SELECT  U.USERCODE, USERNAME, VALIDTO, EXTENDEDTO, O1.STATEID, O1.TENANTID,O1.OFFICENAME1,O1.OFFICECODE,  O1.STATEID, O1.TENANTID, "
 				+ "Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END AS NEWVALIDTO  "
-				+ "FROM MASTERS.OFFICES O1,  " + "nicobps.licenseeofficesvalidities  B,  "
-				+ "nicobps.USERLOGINS U  " + "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE  "
-				+ "AND U.USERCODE = B.USERCODE " 
+				+ "FROM MASTERS.OFFICES O1,  " + "nicobps.licenseeofficesvalidities  B,  " + "nicobps.USERLOGINS U  "
+				+ "WHERE O1.REGISTERINGOFFICECODE = B.OFFICECODE  " + "AND U.USERCODE = B.USERCODE "
 				+ " AND    Case when EXTENDEDTO is null then b.validto else   EXTENDEDTO  END >= current_date "
 				+ " AND    U.USERCODE = ?   " + "ORDER BY O1.OFFICENAME1";
 
-			
-		
-		
 		Object[] criteria = { usercode };
 		return this.listGeneric(sql, criteria);
 	}
@@ -493,8 +490,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ "								where "
 				+ " CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END <=current_date "
 				+ " AND li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y' and isregisteringoffice='Y' and registeringofficecode=? ORDER BY officename1) ORDER BY l.applicantsname DESC  ";
-		System.out.println("Query 1 "+ sql + "  Ofice code"+ officecode);
-		
+		System.out.println("Query 1 " + sql + "  Ofice code" + officecode);
+
 		return this.listGeneric(sql, new Object[] { officecode });
 	}
 
@@ -506,8 +503,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 				+ " CASE WHEN EXTENDEDTO IS NULL THEN VALIDTO ELSE EXTENDEDTO END <=current_date "
 				+ " li.officecode IN(SELECT officecode FROM masters.offices WHERE enabled='Y'  and registeringofficecode=? ORDER BY officename1) OR officecode=? ORDER BY l.applicantsname DESC  ";
 
-		System.out.println("Query 2 "+ sql + "  Ofice code"+ officecode);
-		
+		System.out.println("Query 2 " + sql + "  Ofice code" + officecode);
+
 		return this.listGeneric(sql, new Object[] { officecode, officecode });
 	}
 
@@ -532,119 +529,103 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 		return this.listGeneric(sql, new Object[] { officecode });
 	}
-	
-	
-	public List<DashboardData> listDashboardData() 
-	{		
-		String sql = " SELECT OFFICE AS officename, SUM(totalac) as totalac, sum(approvedac) AS approvedac, SUM(totalac) - sum(approvedac)  AS pendingac  " + 
-				"FROM(SELECT " + 
-				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, " + 
-				"COUNT(A.APPLICATIONCODE) AS totalac,  0 AS approvedac, 0 AS pendingac  " + 
-				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  " + 
-				"WHERE MODULECODE = 2  " + 
-				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  " + 
-				"UNION ALL  " + 
-				"SELECT " + 
-				"OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, " + 
-				"0 AS totalac,  COUNT(A.APPLICATIONCODE)  AS approvedac, 0  AS pendingac  " + 
-				"FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  " + 
-				"INNER JOIN NICOBPS.BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE " + 
-				"WHERE MODULECODE = 2  " + 
-				"GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  " + 
-				"||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  " + 
-				") S " + 
-				"GROUP BY OFFICE " + 
-				"ORDER BY OFFICE";
-		return this.listGeneric(DashboardData.class, sql, new Object[] { });
+
+	public List<DashboardData> listDashboardData() {
+		String sql = " SELECT OFFICE AS officename, SUM(totalac) as totalac, sum(approvedac) AS approvedac, SUM(totalac) - sum(approvedac)  AS pendingac  "
+				+ "FROM(SELECT "
+				+ "OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  "
+				+ "||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, "
+				+ "COUNT(A.APPLICATIONCODE) AS totalac,  0 AS approvedac, 0 AS pendingac  "
+				+ "FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  "
+				+ "WHERE MODULECODE = 2  "
+				+ "GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  "
+				+ "||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  "
+				+ "UNION ALL  " + "SELECT "
+				+ "OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  "
+				+ "||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END AS OFFICE, "
+				+ "0 AS totalac,  COUNT(A.APPLICATIONCODE)  AS approvedac, 0  AS pendingac  "
+				+ "FROM NICOBPS.APPLICATIONS A  INNER JOIN MASTERS.OFFICES O ON O.officecode = A.officecode  "
+				+ "INNER JOIN NICOBPS.BPAAPPROVEAPPLICATIONS BP ON A.APPLICATIONCODE = BP.APPLICATIONCODE "
+				+ "WHERE MODULECODE = 2  "
+				+ "GROUP BY OFFICENAME1 || ' ' || CHR(10) || CASE WHEN OFFICENAME2 IS NOT NULL THEN OFFICENAME2 ELSE '' END  "
+				+ "||  ' ' ||  CHR(10) || CASE WHEN OFFICENAME3 IS NOT NULL THEN OFFICENAME3 ELSE '' END  " + ") S "
+				+ "GROUP BY OFFICE " + "ORDER BY OFFICE";
+		return this.listGeneric(DashboardData.class, sql, new Object[] {});
 	}
-	
-	public List<UserApplications> listUserApplications(Integer usercode) 
-	{		
-		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP " 
-				   + "INNER JOIN nicobps.applicationflowremarks AF "
-				   + "ON (AF.applicationcode, AF.entrydate) = "
-				   + "( " 
-				   + "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks " 
-				   + "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
-				   + "   GROUP BY applicationcode " 
-				   + ") " 
-				   + "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode " 
-				   //+ "WHERE AF.modulecode=2 AND AF.tousercode = ? " 
-				   +"WHERE AF.modulecode=2 AND AF.toprocesscode IN (5,6,7,8,9,10,11,12,14) AND "
-				   +"CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
-				   +"GROUP BY PR.processcode,PR.processname ";
-		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode,usercode});
-	}	
-	
-	
-	public List<UserApplications> listStakeholderApplications(Integer usercode) 
-	{		
-		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP " 
-				   + "INNER JOIN nicobps.applicationflowremarks AF "
-				   + "ON (AF.applicationcode, AF.entrydate) = "
-				   + "( " 
-				   + "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks " 
-				   + "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
-				   + "   GROUP BY applicationcode " 
-				   + ") " 
-				   + "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode " 
-				   + "WHERE AF.modulecode=1 AND AF.toprocesscode IN (4,6) AND "
-				   //+ "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=?) ELSE tousercode=? END " 
-				   +"CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
-				   + "GROUP BY PR.processcode,PR.processname ";		
-		return this.listGeneric(UserApplications.class, sql, new Object[] {usercode,usercode});
-	}		
-	
-    @Override
-    public List<Audittrail> listAuditrail() 
-    {
-        Object[] criteria = new Object[]{};  
-        String sql = "SELECT username,A.userid,actiontaken,pageurl,browser,os,ipaddress,TO_CHAR(A.entrydate,'YYYY-MM-DD HH:MI:SS AM') AS entrydate FROM nicobps.audittrail A "
-                   + "LEFT OUTER JOIN nicobps.userlogins UL ON UL.username=A.userid "
-                   + "ORDER BY A.entrydate DESC ";     
-        return this.listGeneric(Audittrail.class, sql, criteria);
-    }   	
-	
-    @Override
-    public void initAuditrail(HttpServletRequest request) 
-    {
-        String userid,actiontaken;
-        Userlogin user=(Userlogin)request.getSession().getAttribute("user");
-        if (user.getUsername()!= null) {
-            userid = user.getUsername();
-        } else if (request.getParameter("userid")!= null && !request.getParameter("userid").equals("")) {
-            userid = request.getParameter("userid");
-        }else if (request.getAttribute("userid")!= null && !request.getAttribute("userid").equals("")) {
-            userid = (String)request.getAttribute("userid");
-        }else{
-            userid = "";
-        }
-        
-        if (request.getParameter("actiontaken")!= null && !request.getParameter("actiontaken").equals("")) {
-            actiontaken = request.getParameter("actiontaken");
-        }else if (request.getAttribute("actiontaken")!= null && !request.getAttribute("actiontaken").equals("")) {
-            actiontaken = (String)request.getAttribute("actiontaken");
-        }else{
-            actiontaken = "";
-        }        
-        
-        HashMap<String, String> map=Utilty.getClientDetails(request);
-        map.put("userid",userid);
-        map.put("actiontaken",actiontaken);
-        
-        if(actiontaken.equals("Login")){ 
-            map.put("pageurl","/obps/login.htm");        
-            map.put("actiontaken","Login Success");        
-        }
-        if(actiontaken.equals("Logout")){
-            map.put("pageurl","/obps/logout.htm");
-            map.put("actiontaken","Logout Success");        
-        }
-        daoUtilInterface.initAuditrail(map);
- 
+
+	public List<UserApplications> listUserApplications(Integer usercode) {
+		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP "
+				+ "INNER JOIN nicobps.applicationflowremarks AF " + "ON (AF.applicationcode, AF.entrydate) = " + "( "
+				+ "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks "
+				+ "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
+				+ "   GROUP BY applicationcode " + ") "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode "
+				// + "WHERE AF.modulecode=2 AND AF.tousercode = ? "
+				+ "WHERE AF.modulecode=2 AND AF.toprocesscode IN (5,6,7,8,9,10,11,12,14) AND "
+				+ "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
+				+ "GROUP BY PR.processcode,PR.processname ";
+		return this.listGeneric(UserApplications.class, sql, new Object[] { usercode, usercode });
+	}
+
+	public List<UserApplications> listStakeholderApplications(Integer usercode) {
+		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP "
+				+ "INNER JOIN nicobps.applicationflowremarks AF " + "ON (AF.applicationcode, AF.entrydate) = " + "( "
+				+ "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks "
+				+ "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
+				+ "   GROUP BY applicationcode " + ") "
+				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode "
+				+ "WHERE AF.modulecode=1 AND AF.toprocesscode IN (4,6) AND "
+				// + "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode
+				// FROM nicobps.useroffices WHERE usercode=?) ELSE tousercode=? END "
+				+ "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
+				+ "GROUP BY PR.processcode,PR.processname ";
+		return this.listGeneric(UserApplications.class, sql, new Object[] { usercode, usercode });
+	}
+
+	@Override
+	public List<Audittrail> listAuditrail() {
+		Object[] criteria = new Object[] {};
+		String sql = "SELECT username,A.userid,actiontaken,pageurl,browser,os,ipaddress,TO_CHAR(A.entrydate,'YYYY-MM-DD HH:MI:SS AM') AS entrydate FROM nicobps.audittrail A "
+				+ "LEFT OUTER JOIN nicobps.userlogins UL ON UL.username=A.userid " + "ORDER BY A.entrydate DESC ";
+		return this.listGeneric(Audittrail.class, sql, criteria);
+	}
+
+	@Override
+	public void initAuditrail(HttpServletRequest request) {
+		String userid, actiontaken;
+		Userlogin user = (Userlogin) request.getSession().getAttribute("user");
+		if (user.getUsername() != null) {
+			userid = user.getUsername();
+		} else if (request.getParameter("userid") != null && !request.getParameter("userid").equals("")) {
+			userid = request.getParameter("userid");
+		} else if (request.getAttribute("userid") != null && !request.getAttribute("userid").equals("")) {
+			userid = (String) request.getAttribute("userid");
+		} else {
+			userid = "";
+		}
+
+		if (request.getParameter("actiontaken") != null && !request.getParameter("actiontaken").equals("")) {
+			actiontaken = request.getParameter("actiontaken");
+		} else if (request.getAttribute("actiontaken") != null && !request.getAttribute("actiontaken").equals("")) {
+			actiontaken = (String) request.getAttribute("actiontaken");
+		} else {
+			actiontaken = "";
+		}
+
+		HashMap<String, String> map = Utilty.getClientDetails(request);
+		map.put("userid", userid);
+		map.put("actiontaken", actiontaken);
+
+		if (actiontaken.equals("Login")) {
+			map.put("pageurl", "/obps/login.htm");
+			map.put("actiontaken", "Login Success");
+		}
+		if (actiontaken.equals("Logout")) {
+			map.put("pageurl", "/obps/logout.htm");
+			map.put("actiontaken", "Logout Success");
+		}
+		daoUtilInterface.initAuditrail(map);
+
 //        System.out.print("\n================Auditrail Log Starts===============\n");
 //        System.out.print("userid : "+map.get("userid"));
 //        System.out.print("\nactiontaken : "+map.get("actiontaken"));
@@ -653,6 +634,38 @@ public class ServiceUtil implements ServiceUtilInterface {
 //        System.out.print("\nipaddress : "+map.get("ipaddress"));
 //        System.out.print("\npageurl : "+map.get("pageurl"));    
 //        System.out.print("\n================Auditrail Log Ends=================\n");
-    }	
-	
+	}
+
+	@Override
+	public Map<String, Object> getUserDetails(Integer usercode) {
+
+		String sql = " SELECT U.USERCODE, U.USERNAME,U.MOBILENO " + " FROM nicobps.USERLOGINS U "
+				+ " WHERE  U.USERCODE = ? ;";
+
+		List<Map<String, Object>> list = this.listGeneric(sql, new Object[] { usercode });
+		return (!list.isEmpty()) ? list.get(0) : new HashMap<>();
+
+	}
+
+	@Override
+	public String getOfficeName(Integer officecode) {
+		String sql = " SELECT officename1" + " FROM MASTERS.OFFICES " + " WHERE OFFICECODE=?;";
+
+		return this.getStringObject(sql, new Object[] { officecode });
+	}
+
+	@Override
+	public Map<String, Object> getApplicationDetails(String applicationcode) {
+		String sql = "  SELECT AP.APPLICATIONCODE,UL.MOBILENO,UL.USERNAME,BO.MOBILENO,BO.EMAILID"
+				+ "				 FROM NICOBPS.APPLICATIONS AP "
+				+ "				 INNER JOIN NICOBPS.BPAAPPLICATIONS BAP ON BAP.APPLICATIONCODE=AP.APPLICATIONCODE"
+				+ "				 INNER JOIN NICOBPS.BPAOWNERDETAILS BO ON BAP.APPLICATIONCODE=BO.APPLICATIONCODE"
+				+ "				 INNER JOIN NICOBPS.USERLOGINS UL ON UL.USERCODE=AP.USERCODE"
+				+ "				 WHERE AP.APPLICATIONCODE=?  ;";
+
+		List<Map<String, Object>> list = this.listGeneric(sql, new Object[] { applicationcode });
+		return (!list.isEmpty()) ? list.get(0) : new HashMap<>();
+
+	}
+
 }
