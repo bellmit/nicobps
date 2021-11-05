@@ -165,7 +165,7 @@ public class ControllerUserManagement {
 		if (validate != "") {
 			return ResponseEntity.badRequest().body(new String(validate));
 		}
-		
+
 		if (serviceUserManagementInterface.checkEmailExistance((String) param.get("username"))) {
 			return ResponseEntity.badRequest().body(new String("Email already exists!"));
 		}
@@ -188,8 +188,12 @@ public class ControllerUserManagement {
 					emailotp = Utilty.getRandomNumber() + "";
 					request.getSession().setAttribute("emailotp", emailotp.toString());
 				}
-				serviceNotification.sentNotification(1, "REGISTRATION", mobileno, emailid, new String[] { mobileotp },
-						new String[] { emailotp });
+				try {
+					serviceNotification.sentNotification(2, "OTP_REGISTER", mobileno, emailid,
+							new String[] { mobileotp }, new String[] { emailotp });
+				} catch (Exception e) {
+					Log.info("serviceNotification"+e);
+				}
 				return ResponseEntity.ok(new String("0"));
 			} else {
 				if (isemail.equals("Y")) {
@@ -283,7 +287,7 @@ public class ControllerUserManagement {
 	@RequestMapping(value = "submitLicenseesenclosures.htm", params = "_submit", method = RequestMethod.POST)
 	public String submitLicenseesenclosures(ModelMap model,
 			@ModelAttribute("licenseesenclosures") LicenseesEnclosures licenseesenclosures, BindingResult result,
-			HttpServletRequest request)  {
+			HttpServletRequest request) {
 		Userlogin user = (Userlogin) request.getSession().getAttribute("user");
 		String successurl = user != null ? "uploadenclosuresint" : "uploadenclosuresext";
 
@@ -471,7 +475,8 @@ public class ControllerUserManagement {
 		if (serviceUserManagementInterface.updatePassword(param)) {
 			return ResponseEntity.ok(new String("Password updated successfully!"));
 		} else {
-			return ResponseEntity.badRequest().body(new String("Sorry, but we are unable to process the request at the moment. Please try again later."));
+			return ResponseEntity.badRequest().body(new String(
+					"Sorry, but we are unable to process the request at the moment. Please try again later."));
 		}
 	}
 
@@ -645,22 +650,17 @@ public class ControllerUserManagement {
 		return response;
 	}
 
-	
-	
-	
 	@RequestMapping("/profile.htm")
-	public String profile(Model model,HttpServletRequest request) {
+	public String profile(Model model, HttpServletRequest request) {
 		String usercode = (String) request.getSession().getAttribute("usercode");
-		//System.out.println("usercode : "+usercode);
-		UserDetails userdetails = serviceUserManagementInterface.getUserDetails(Integer.valueOf(usercode));		
-		model.addAttribute("userdetails",userdetails);
+		// System.out.println("usercode : "+usercode);
+		UserDetails userdetails = serviceUserManagementInterface.getUserDetails(Integer.valueOf(usercode));
+		model.addAttribute("userdetails", userdetails);
 		return "profile";
 	}
-	
-	
+
 	@GetMapping("/userwards.htm")
-	public String userwards(Model model, HttpServletRequest req,
-			@RequestParam Map<String, String> params) {
+	public String userwards(Model model, HttpServletRequest req, @RequestParam Map<String, String> params) {
 
 		model.addAttribute("officeList", serviceUtilInterface.listUserOffices());
 
@@ -676,9 +676,8 @@ public class ControllerUserManagement {
 	public @ResponseBody Map<String, Object> listUsers(HttpServletRequest req,
 			@RequestParam Map<String, String> params) {
 		Map<String, Object> data = new LinkedHashMap<>();
-		
-			data.put("usersList", serviceUtilInterface.listUsers(Integer.parseInt(params.get("officecode"))));
-		
+
+		data.put("usersList", serviceUtilInterface.listUsers(Integer.parseInt(params.get("officecode"))));
 
 		return data;
 	}
@@ -691,15 +690,14 @@ public class ControllerUserManagement {
 		return serviceUserManagementInterface.listUserAndMappedWards(Integer.parseInt(params.get("officecode")));
 
 	}
-	
+
 	@PostMapping(value = "/saveUserWards.htm")
 	public @ResponseBody String saveUserWards(@RequestBody List<Map<String, Object>> userwards) {
 		String response = "";
-		if(userwards==null || userwards.isEmpty()) {
-			response="nodata";
+		if (userwards == null || userwards.isEmpty()) {
+			response = "nodata";
 			return response;
 		}
-		
 
 		String validate = userManagementValidator.validateUserWards(userwards);
 		if (validate != "") {
@@ -710,5 +708,5 @@ public class ControllerUserManagement {
 		}
 		return response;
 	}
-	
+
 }
