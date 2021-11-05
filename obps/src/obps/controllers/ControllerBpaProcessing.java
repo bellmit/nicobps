@@ -30,14 +30,22 @@ import obps.models.BpaSiteInspection;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
+import obps.util.application.ServiceUtilInterface;
+import obps.util.notifications.ServiceNotification;
 import obps.validators.BpaValidator;
 
 @Controller
 @SessionAttributes({ "SESSION_PATHURL", "SESSION_USERCODE" })
 public class ControllerBpaProcessing {
-	private static final Logger LOG = Logger.getLogger(ControllerBuildingPermit.class.toGenericString());
+	private static final Logger LOG = Logger.getLogger(ControllerBpaProcessing.class.toGenericString());
 
 	private static String pathurl;
+
+	@Autowired
+	private ServiceNotification serviceNotification;
+
+	@Autowired
+	private ServiceUtilInterface serviceUtilInterface;
 
 	@Autowired
 	private ServiceBPAInterface SBI;
@@ -145,15 +153,19 @@ public class ControllerBpaProcessing {
 
 	@GetMapping(value = "/bpainbox.htm")
 	public String bpaInbox(ModelMap model, @ModelAttribute("SESSION_USERCODE") Integer usercode,
-			@RequestParam(required = false) String processcode
-			) {
+			@RequestParam(required = false) String processcode) {
 		usercode = getSessionUsercode(model);
-		if (usercode != null) 
-		{
-			if(processcode!=null) {
-				model.addAttribute("processcode",processcode);				
-			}			
+		if (usercode != null) {
+			if (processcode != null) {
+				model.addAttribute("processcode", processcode);
+			}else {
+				model.addAttribute("processcode", null);
+			}
 			return BPAConstants.PARENT_URL_MAPPING.concat("/inbox");
+			
+//			model.addAttribute("page","bpainbox");
+//
+//			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
 		}
 
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
@@ -220,6 +232,10 @@ public class ControllerBpaProcessing {
 		usercode = getSessionUsercode(model);
 		if (usercode != null && usercode > -1) {
 			model.addAttribute("applicationcode", applicationcode);
+			
+//			model.addAttribute("page","bpasearch");
+			
+//			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
 			return BPAConstants.PARENT_URL_MAPPING.concat("/search");
 		}
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
@@ -382,13 +398,13 @@ public class ControllerBpaProcessing {
 
 	@GetMapping(value = "/listbpapplications.htm")
 	public @ResponseBody List<Map<String, Object>> listBPApplications(ModelMap model,
-			@RequestParam(value="param",required = false) String processcode,
-			@ModelAttribute("SESSION_USERCODE") Integer usercode) {		
+			@RequestParam(value = "param", required = false) String processcode,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
 		usercode = getSessionUsercode(model);
-		if(processcode!=null && processcode.trim().length()>0) {
-			return SBI.listBPApplications(usercode,Integer.valueOf(processcode));
-		}else {
-			return SBI.listBPApplications(usercode);			
+		if (processcode != null && processcode.trim().length() > 0) {
+			return SBI.listBPApplications(usercode, Integer.valueOf(processcode));
+		} else {
+			return SBI.listBPApplications(usercode);
 		}
 	};
 
@@ -433,10 +449,10 @@ public class ControllerBpaProcessing {
 		if (usercode == null)
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
-		System.out.println("usercodeeeeeeeeeeee  "+usercode);
+//		System.out.println("usercodeeeeeeeeeeee  " + usercode);
 		bpa.getProcessflow().setFromusercode(usercode);
-		System.out.println("usercodeeeeeeeeeeee  "+bpa.getProcessflow().getFromusercode());
-		
+//		System.out.println("usercodeeeeeeeeeeee  " + bpa.getProcessflow().getFromusercode());
+
 // -------------------------------------------VALIDATION STARTS---------------------------------------------------------------------
 		Bvalid.ValidateapproveApplication(bpa, response);
 		if (!response.isEmpty()) {
@@ -444,10 +460,34 @@ public class ControllerBpaProcessing {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
-		
-		if (SBI.approveBPApplication(bpa, response))
+
+		if (SBI.approveBPApplication(bpa, response)) {
+			Map<String, Object> appdet = serviceUtilInterface
+					.getApplicationDetails(bpa.getProcessflow().getApplicationcode());
+			String applicationcode = bpa.getProcessflow().getApplicationcode();
+
+			if (appdet != null && applicationcode != null) {
+				if (!appdet.isEmpty() && !applicationcode.isEmpty()) {
+
+					try {
+						String emailid = appdet.get("username").toString();
+						String mobileno = appdet.get("mobileno").toString();
+
+						serviceNotification.sentNotification(2, "BPA_APPROVED", mobileno, emailid,
+								new String[] { applicationcode }, new String[] { applicationcode });
+
+					} catch (Exception e) {
+						LOG.info("Exception while sending Notification : " + e);
+					}
+				} else {
+					LOG.info(" Empty Inputs!!!");
+				}
+			} else {
+				LOG.info(" Unable to send Notification!!!");
+			}
+
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
-		else
+		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -493,6 +533,28 @@ public class ControllerBpaProcessing {
 // -------------------------------------------VALIDATION ENDS---------------------------------------------------------------------
 
 		if (SBI.rejectBPApplication(data, response)) {
+			Map<String, Object> appdet = serviceUtilInterface.getApplicationDetails(data.getApplicationcode());
+			String applicationcode = data.getApplicationcode();
+
+			if (appdet != null && applicationcode != null) {
+				if (!appdet.isEmpty() && !applicationcode.isEmpty()) {
+
+					try {
+						String emailid = appdet.get("username").toString();
+						String mobileno = appdet.get("mobileno").toString();
+
+						serviceNotification.sentNotification(2, "BPA_REJECT", mobileno, emailid,
+								new String[] { applicationcode }, new String[] { applicationcode });
+					} catch (Exception e) {
+						LOG.info("Exception while sending Notification : " + e);
+					}
+				} else {
+					LOG.info(" Empty Inputs!!!");
+				}
+			} else {
+				LOG.info(" Unable to send Notification!!!");
+			}
+
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -537,9 +599,49 @@ public class ControllerBpaProcessing {
 
 		data.setFromusercode(usercode);
 		if (SBI.sendToCitizenBPApplication(data, response)) {
+//			Map<String, Object> appdet = serviceUtilInterface.getApplicationDetails(data.getApplicationcode());
+//			String applicationcode = data.getApplicationcode();
+//
+//			if (appdet != null && applicationcode != null) {
+//				if (!appdet.isEmpty() && !applicationcode.isEmpty()) {
+//			try {
+//				String emailid = appdet.get("username").toString();
+//				String mobileno = appdet.get("mobileno").toString();
+//
+//				serviceNotification.sentNotification(2, "BPA_SENT_TO_CITIZEN", mobileno, emailid,
+//						new String[] { applicationcode }, new String[] { applicationcode });
+//			} catch (Exception e) {
+//				LOG.info("Exception while sending Notification : " + e);
+//			}
+
+//				} else {
+//					LOG.info(" Empty Inputs!!!");
+//				}
+//			} else {
+//				LOG.info(" Unable to send Notification!!!");
+//			}
+
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@GetMapping(value = "/bpacommon.htm")
+	public String getBPApplications(ModelMap model, @RequestParam(value = "param", required = false) String processcode,
+			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
+		System.out.println("bpacommon");
+		usercode = getSessionUsercode(model);
+		if (usercode != null) {
+			if (processcode != null && processcode.trim().length() > 0) {
+				model.addAttribute("processcode", processcode);
+			}else {
+				model.addAttribute("processcode", null);
+			}
+			
+		}
+		model.addAttribute("page","bpainbox");
+
+		return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
+	};
 
 }

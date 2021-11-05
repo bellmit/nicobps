@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,15 +23,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import obps.services.ServiceStakeholderInterface;
 import obps.util.application.CommonMap;
 import obps.util.application.ServiceUtilInterface;
+import obps.util.notifications.ServiceNotification;
 import obps.validators.ExtendValidityValidator;
 import obps.validators.StakeHolderValidator;
 
 @Controller
 public class ControllerStakeholder {
+	private static final Logger LOG = Logger.getLogger(ControllerStakeholder.class.toGenericString());
+
 	@Autowired
 	private ServiceStakeholderInterface SSI;
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
+
+	@Autowired
+	private ServiceNotification serviceNotification;
 
 	@Autowired
 	private ExtendValidityValidator extendValidator;
@@ -46,10 +53,10 @@ public class ControllerStakeholder {
 	}
 
 	@GetMapping("/srverify.htm")
-	public String verification(Model model,@RequestParam(required = false) String processcode) {
-		if(processcode!=null) {
-			model.addAttribute("processcode",processcode);				
-		}		
+	public String verification(Model model, @RequestParam(required = false) String processcode) {
+		if (processcode != null) {
+			model.addAttribute("processcode", processcode);
+		}
 		model.addAttribute("pageType", "Verification");
 		return "stakeholder/srverify";
 	}
@@ -84,6 +91,31 @@ public class ControllerStakeholder {
 			return "stakeholder/ulbregistration";
 		}
 		Map<String, Object> url = serviceUtilInterface.getCurrentProcessStatus(1, applicationcode).get(0);
+
+		Map<String, Object> userdet = serviceUtilInterface.getUserDetails(Integer.valueOf(usercode));
+		String officename = serviceUtilInterface.getOfficeName(officecode);
+
+		if (userdet != null && officename != null) {
+			if (!userdet.isEmpty() && !officename.isEmpty()) {
+
+				try {
+					String emailid = userdet.get("username").toString();
+					String mobileno = userdet.get("mobileno").toString();
+
+					serviceNotification.sentNotification(2, "EMPANEL", mobileno, emailid,
+							new String[] { officename, applicationcode }, new String[] { officename, applicationcode });
+				} catch (Exception e) {
+					LOG.info("Exception while sending Notification : " + e);
+				}
+
+			} else {
+				LOG.info(" Empty Inputs!!!");
+			}
+
+		} else {
+			LOG.info(" Unable to send Notification!!!");
+		}
+
 		return "redirect:" + url.get("pageurl") + "?applicationcode=" + applicationcode + "&officecode=" + officecode;
 	}
 
@@ -128,15 +160,18 @@ public class ControllerStakeholder {
 	}
 
 	@PostMapping("/listLicensees.htm")
-	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req,@RequestParam(required = false) String processcode) {		
+	public @ResponseBody List<Map<String, Object>> listLicensees(HttpServletRequest req,
+			@RequestParam(required = false) String processcode) {
 		List<CommonMap> offices = serviceUtilInterface.listUserOffices();
 		Integer officecode = Integer.valueOf((!offices.isEmpty()) ? offices.get(0).getKey() : "0");
-		if(processcode!=null && processcode.trim().length()>0) {
-			return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),officecode != null ? officecode : 0,Integer.valueOf(processcode));
-		}else {
-			return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),officecode != null ? officecode : 0);	
+		if (processcode != null && processcode.trim().length() > 0) {
+			return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),
+					officecode != null ? officecode : 0, Integer.valueOf(processcode));
+		} else {
+			return SSI.listLicensees(Integer.valueOf(req.getSession().getAttribute("usercode").toString()),
+					officecode != null ? officecode : 0);
 		}
-		
+
 	}
 
 	@PostMapping("/getLicensee.htm")
@@ -174,9 +209,47 @@ public class ControllerStakeholder {
 			if (res != "")
 				return res;
 			else {
-				if (SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks))
+				if (SSI.updateStakeholder(officecode, applicationcode, usercode, toprocesscode, remarks)) {
 					res = "success";
-				else
+
+					Map<String, Object> userdet = serviceUtilInterface.getUserDetails(Integer.valueOf(usercode));
+					String officename = serviceUtilInterface.getOfficeName(officecode);
+					Map<String, Object> fee = SSI.getFeeMaster(officecode, Integer.valueOf(usercode), 2);
+
+					if (userdet != null && officename != null && fee != null) {
+						if (!userdet.isEmpty() && !officename.isEmpty() && !fee.isEmpty()) {
+
+							try {
+								String emailid = userdet.get("username").toString();
+								String mobileno = userdet.get("mobileno").toString();
+								String feeamount = fee.get("feeamount").toString();
+
+								if (toprocesscode == 5) {
+									serviceNotification.sentNotification(2, "EMPANEL_PAY", mobileno, emailid,
+											new String[] { officename, applicationcode, feeamount },
+											new String[] { officename, applicationcode, feeamount });
+								}
+//								else if (toprocesscode == 4 || toprocesscode== 6) {
+//									serviceNotification.sentNotification(2, "EMPANEL_REJECT",mobileno , emailid, new String[] { officename,applicationcode },	new String[] {  officename,applicationcode });
+//								}
+								else if (toprocesscode == 7) {
+									serviceNotification.sentNotification(2, "EMPANEL_APPROVE", mobileno, emailid,
+											new String[] { officename, applicationcode },
+											new String[] { officename, applicationcode });
+								}
+
+							} catch (Exception e) {
+								LOG.info("Exception while sending Notification : " + e);
+							}
+
+						} else {
+							LOG.info(" Empty Inputs!!!");
+						}
+
+					} else {
+						LOG.info(" Unable to send Notification!!!");
+					}
+				} else
 					res = "false";
 			}
 		}

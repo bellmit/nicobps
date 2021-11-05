@@ -111,9 +111,10 @@ public class ServiceNotification {
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public String createMessage(String message, List<String> params) {
-		String str = "";
+		String str = message;
+	
 		for (int i = 0; i < params.size(); i++) {
-			str= message.replace("{" + i + "}", params.get(i));
+				str= str.replace("{" + i + "}", params.get(i));
 		}
 		return str;
 	}

@@ -3,6 +3,7 @@ package obps.controllers;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import obps.services.ServiceUploadBpaEnclosuersInterface;
 import obps.services.ServiceUserManagementInterface;
 import obps.util.application.ServiceUtilInterface;
 import obps.util.common.UtilFile;
+import obps.util.notifications.ServiceNotification;
 import obps.validators.ValidateBpaEnclosures;
 
 //@RestController
@@ -37,11 +39,16 @@ import obps.validators.ValidateBpaEnclosures;
 @Configuration
 @PropertySource("classpath:application.properties")
 public class ControllerUploadBpaEnclosures {
+	private static final Logger LOG = Logger.getLogger(ControllerUploadBpaEnclosures.class.toGenericString());
+
 	private static final String PARENT_URL_MAPPING = "/bpa";
 	@Autowired
 	private ServiceUtilInterface serviceUtilInterface;
 	@Autowired
 	private ServiceUploadBpaEnclosuersInterface ServiceUploadBpaEnclosuersInterface;
+
+	@Autowired
+	private ServiceNotification serviceNotification;
 
 	@Autowired
 	private ServiceUserManagementInterface serviceUserManagementInterface;
@@ -95,6 +102,31 @@ public class ControllerUploadBpaEnclosures {
 			if (ServiceUploadBpaEnclosuersInterface.submitBpaEnclosureDetails(bpaenclosures)) {
 				model.addAttribute("successMsg", "The documents have been uploaded successfully.");
 				successurl = "redirect:bpatrackstatus.htm?applicationcode=" + bpaenclosures.getApplicationcode();
+
+				Map<String, Object> userdet = serviceUtilInterface
+						.getUserDetails(Integer.valueOf(bpaenclosures.getUsercode()));
+				String applicationcode = bpaenclosures.getApplicationcode();
+
+				if (userdet != null && applicationcode != null) {
+					if (!userdet.isEmpty() && !applicationcode.isEmpty()) {
+						try {
+							String emailid = userdet.get("username").toString();
+							String mobileno = userdet.get("mobileno").toString();
+
+							serviceNotification.sentNotification(2, "BPA_APPLY", mobileno, emailid,
+									new String[] { applicationcode }, new String[] { applicationcode });
+
+						} catch (Exception e) {
+							LOG.info("Exception while sending Notification : " + e);
+						}
+					} else {
+						LOG.info(" Empty Inputs!!!");
+					}
+
+				} else {
+					LOG.info(" Unable to send Notification!!!");
+				}
+
 			} else {
 				model.addAttribute("successMsg",
 						"Sorry, but we are unable to process the request at the moment. Please try again later.!");
@@ -149,7 +181,6 @@ public class ControllerUploadBpaEnclosures {
 		}
 		return successUrel;
 	}
-
 
 	@GetMapping(value = { "/dayendstat.htm", "/dayendStat.htm" })
 	public String dayendstat(Model model, HttpServletRequest request) {
