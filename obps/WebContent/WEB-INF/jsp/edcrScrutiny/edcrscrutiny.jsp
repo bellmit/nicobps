@@ -62,7 +62,7 @@
 										name="edcrnumber" style="font-weight: bold;">{{edcrscrutiny.edcrnumber}}</label><br><div id="applybpa"></div></td>
 									<td><input type="button" value="Generate Scrutiny Report"
 										id="genReport" name="genReport"
-										ng-click="generateReport(edcrscrutiny.planReport);"
+										ng-click="generateReport({{edcrscrutiny.edcrnumber}});"
 										formtarget="_blank" class="btn btn-info btn-sm"
 										style="margin-left: 70px"></td>
 								</tr>
