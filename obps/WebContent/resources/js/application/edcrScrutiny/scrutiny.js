@@ -146,7 +146,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 	};
 	$scope.listOffices();
 	$scope.generateReport = (edcrnumber) => {
-		$window.open('./ScrutinyshowFile.htm?edcrnumber=' + edcrnumber + '', '_blank');
+		$window.open('./ScrutinyshowFile.htm?edcrnumber=' + edcrnumber, '_blank');
 	}
 	$scope.submitDetails = () => {
 		if (validateDetails()) {
