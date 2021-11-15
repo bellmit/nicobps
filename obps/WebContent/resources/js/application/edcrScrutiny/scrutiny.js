@@ -232,7 +232,7 @@ app.controller('edcrscrutinyController', function($scope, $compile, $timeout, $w
 		//---------check file extension-----------
 		var fileExtension = $('#dxffile').val().replace(/^.*\./, '');
 		if (fileExtension != "dxf") {
-			$scope.errorDxfFile = "*Invalid File Type";
+			$scope.errorDxfFile = "*Invalid File Type ony dxf file allowed";
 			$timeout(function() {
 				$scope.errorDxfFile = "";
 			}, 3000);

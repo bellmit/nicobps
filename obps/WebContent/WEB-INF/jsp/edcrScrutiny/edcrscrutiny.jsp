@@ -40,8 +40,11 @@
 									</span>
 									</td>
 									<td colspan="2"><input type="file" id="dxffile"
-										name="dxffile" ng-model="dxffile" class="btn btn-info btn-sm" /><span
-										class="" style="color: red;">{{errorDxfFile}}</span></td>
+										name="dxffile" ng-model="dxffile" class="btn btn-info btn-sm" />
+										<span class="ml-2" style="color: #0073ec; font-size: 13px;">[dxf]</span>
+										<p>
+											<span class="" style="color: red;">{{errorDxfFile}}</span>
+										</p></td>
 								</tr>
 								<tr>
 									<td style="height: 20px" colspan="3"></td>
@@ -57,16 +60,17 @@
 									<td style="font-size: 20px; font-weight: bold;"><label
 										for="edcrstatus">EDCR Status :</label><label id="edcrstatus"
 										name="edcrstatus">{{edcrscrutiny.status}}</label></td>
-									<td style="font-size: 20px; "><label
-										for="edcrnumber">EDCR Number :</label><label id="edcrnumber"
-										name="edcrnumber" style="font-weight: bold;">{{edcrscrutiny.edcrnumber}}</label><br><div id="applybpa"></div></td>
+									<td style="font-size: 20px;"><label for="edcrnumber">EDCR
+											Number :</label><label id="edcrnumber" name="edcrnumber"
+										style="font-weight: bold;">{{edcrscrutiny.edcrnumber}}</label><br>
+									<div id="applybpa"></div></td>
 									<td><input type="button" value="Generate Scrutiny Report"
 										id="genReport" name="genReport"
 										ng-click="generateReport(edcrscrutiny.edcrnumber);"
 										formtarget="_blank" class="btn btn-info btn-sm"
 										style="margin-left: 70px"></td>
 								</tr>
-								 <tr>
+								<tr>
 									<td style="height: 20px" colspan="3" id=" "></td>
 								</tr>
 								<tr class="edcrResp" style="visibility: hidden;">
