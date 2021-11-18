@@ -150,7 +150,9 @@ public class ControllerBuildingPermit {
 		usercode = getSessionUsercode(model);
 		if (usercode != null && usercode > -1) {
 			model.addAttribute("applicationcode", applicationcode);
-			return BPAConstants.PARENT_URL_MAPPING.concat("/trackstatus");
+			model.addAttribute("page","bpastatus");
+			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
+//			return BPAConstants.PARENT_URL_MAPPING.concat("/trackstatus");
 		}
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
@@ -160,7 +162,9 @@ public class ControllerBuildingPermit {
 		LOG.info("URL: buildingpermit.htm");
 		usercode = getSessionUsercode(model);
 		if (usercode != null && usercode > -1) {
-			return BPAConstants.PARENT_URL_MAPPING.concat("/buildingpermit");
+			model.addAttribute("page","buildingpermit");
+			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
+//			return BPAConstants.PARENT_URL_MAPPING.concat("/buildingpermit");
 		}
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}

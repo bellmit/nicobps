@@ -158,14 +158,13 @@ public class ControllerBpaProcessing {
 		if (usercode != null) {
 			if (processcode != null) {
 				model.addAttribute("processcode", processcode);
-			}else {
+			} else {
 				model.addAttribute("processcode", null);
 			}
-			return BPAConstants.PARENT_URL_MAPPING.concat("/inbox");
-			
-//			model.addAttribute("page","bpainbox");
-//
-//			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
+//			return BPAConstants.PARENT_URL_MAPPING.concat("/inbox");
+
+			model.addAttribute("page", "bpainbox");
+			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
 		}
 
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
@@ -232,11 +231,10 @@ public class ControllerBpaProcessing {
 		usercode = getSessionUsercode(model);
 		if (usercode != null && usercode > -1) {
 			model.addAttribute("applicationcode", applicationcode);
-			
-//			model.addAttribute("page","bpasearch");
-			
-//			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
-			return BPAConstants.PARENT_URL_MAPPING.concat("/search");
+
+			model.addAttribute("page", "bpasearch");
+			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
+//			return BPAConstants.PARENT_URL_MAPPING.concat("/search");
 		}
 		return BPAConstants.REDIRECT_MAPPING.concat("login.htm");
 	}
@@ -634,12 +632,12 @@ public class ControllerBpaProcessing {
 		if (usercode != null) {
 			if (processcode != null && processcode.trim().length() > 0) {
 				model.addAttribute("processcode", processcode);
-			}else {
+			} else {
 				model.addAttribute("processcode", null);
 			}
-			
+
 		}
-		model.addAttribute("page","bpainbox");
+		model.addAttribute("page", "bpainbox");
 
 		return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
 	};
