@@ -44,10 +44,10 @@
 			<div class="container-fluid">
 				<h3 class="mt-4"
 					style="font-size: 32px; border-bottom: 3px solid #005776">
-					<ng-element ng-if="page == 'bpainbox' ">BPA Applications</ng-element>
-					<ng-element ng-if="page == 'bpastatus' ">BPA Applications Status</ng-element>
-					<ng-element ng-if="page == 'buildingpermit' ">BPA Applications</ng-element>
-					<ng-element ng-if="page == 'bpasearch' ">BPA Search Applications</ng-element>
+					<ng-element ng-if="page == 'bpainbox' "> Applications</ng-element>
+					<ng-element ng-if="page == 'bpastatus' "> Application Status</ng-element>
+					<ng-element ng-if="page == 'buildingpermit' "> Applications</ng-element>
+					<ng-element ng-if="page == 'bpasearch' "> Search Applications</ng-element>
 				</h3>
 
 
