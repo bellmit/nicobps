@@ -87,10 +87,17 @@
 		</div>
 	</div>
 </body>
+<ng-element ng-if="${page} == 'bpastatus' ">
+	<script type="text/javascript">
+		const APPCODE = '${applicationcode}';
+	</script>
+</ng-element>
 <script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 <script src="resources/js/application/models/bpa.js"
 	type="text/javascript"></script>
 <script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
 <script src="resources/js/application/bpa/bpacommon.js"
 	type="text/javascript"></script>
+
+	
 </html>

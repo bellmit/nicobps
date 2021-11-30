@@ -387,14 +387,14 @@ app.controller("CommonCtrl", [
 			
 		
 			
-//			if ($scope.page =="bpastatus"){
-//				try{
-//				console.log(APPCODE);
-//					if(APPCODE != null && APPCODE != '' && APPCODE.length > 10){
-//						table.search( APPCODE ).draw();
-//					}
-//			   }catch (e) {console.log(e);}
-//			}
+			if ($scope.page =="bpastatus"){
+				try{
+				console.log(APPCODE);
+					if(APPCODE != null && APPCODE != '' && APPCODE.length > 10){
+						table.search( APPCODE ).draw();
+					}
+			   }catch (e) {console.log(e);}
+			}
 		}
 	},
 ]);
