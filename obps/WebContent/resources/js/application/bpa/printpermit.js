@@ -81,7 +81,10 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 		window.open("./Report?status=2&permitnumber=" + permitno);
 
 	};
-
+	$scope.printsigneddoc = function(permitnumber) {
+		console.log("permitno " + permitnumber);
+		window.open("outputsigneddoc.htm?permitnumber=" + permitnumber, 'location=no,800px,width=800px,left=140px,top=10px,toolbar=no,scrollbars=yes,resizable=yes');
+	};
 
 	/*-----------------------------------------------------------------------------------------------------------------------------------*/
 	$scope.setDataTable = function(obj) {
@@ -153,10 +156,11 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 					"data": "permitnumber",
 					"width": "5%",
 					"render": function(data, type, row, meta) {
-						console.log("processcode :: "+ row.toprocesscode);
-						let div ="<div></div>"
-						if (row.toprocesscode==14){
+						console.log("processcode :: " + row.toprocesscode);
+						let div = "<div></div>"
+						if (row.toprocesscode == 14) {
 							div = '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Print" ng-click="printpermit(\'' + data + '\')" class=" btn btn-primary">Print</button>';
+							div += '<div style="text-align:center"><button style="padding:.1em; margin-right: .5em" value="Print" ng-click="printsigneddoc(\'' + data + '\')" class=" mt-2 btn btn-primary">Print signed doc</button>';
 						}
 						return div;
 					}
@@ -226,6 +230,3 @@ app.controller('permitCtrl', function($scope, $compile, $timeout) {
 	}
 
 });
-
-
-
