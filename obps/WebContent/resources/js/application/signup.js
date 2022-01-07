@@ -390,13 +390,14 @@ function validateDetails(signupDetails) {
 	}
 
 
+	/* commented for auditing
 	if (signupDetails.userresponsecaptcha == "") {
 		showMsg("jcaptcha", "This field is required");
 		return false;
 	} else {
 		showMsg("jcaptcha", "");
 	}
-
+*/
 	return true;
 }
 

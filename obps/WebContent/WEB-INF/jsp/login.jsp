@@ -65,7 +65,7 @@
 							<div class="form-group">
 								<label for="jcaptchaimg" class="">Captcha:</label>
 								 <img src="./jcaptchalogin.jpg" id="jcaptchaimg" onclick="changeCaptchaLogin();" title="Click To Reload" style="cursor: pointer;"/>
-								<input class="form-control" type="text" id="jcaptchalogin" name="jcaptchalogin" value="" autocomplete="off" required>
+								<input class="form-control" type="text" id="jcaptchalogin" name="jcaptchalogin" value="" autocomplete="off" ><!--  required-->
 							</div>							
 							<div class="container" align="center">
 								<span style="color: red; width: 100%;"> 

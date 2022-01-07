@@ -155,9 +155,11 @@ public class ControllerUserManagement {
 		String issms = environment.getProperty("cansentsms");
 		String isemail = environment.getProperty("cansentemail");
 
-		if (usersessioncaptcha == null || userresponsecaptcha == null
-				|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
-			return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
+		if (environment.getProperty("billdesk.currency").equals("true")) {
+			if (usersessioncaptcha == null || userresponsecaptcha == null
+					|| !usersessioncaptcha.trim().equals(userresponsecaptcha.trim())) {
+				return ResponseEntity.badRequest().body(new String("Please check your entered captcha!"));
+			}
 		}
 
 		String validate = registrationstakeholderValidator.validateUserDetails(param);
@@ -192,7 +194,7 @@ public class ControllerUserManagement {
 					serviceNotification.sentNotification(2, "OTP_REGISTER", mobileno, emailid,
 							new String[] { mobileotp }, new String[] { emailotp });
 				} catch (Exception e) {
-					Log.info("serviceNotification"+e);
+					Log.info("serviceNotification" + e);
 				}
 				return ResponseEntity.ok(new String("0"));
 			} else {

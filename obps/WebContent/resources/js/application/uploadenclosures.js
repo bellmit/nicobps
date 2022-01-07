@@ -106,10 +106,11 @@ function onbeforeSubmit()
         }        
     }   
   
+	/* disabled for audit
 	if(jQuery.trim(jQuery("#userresponsecaptcha").val())===""){
     	showMsg("UploadEnc", "Please enter captcha"); 
     	 return false;   
-    }    
+    } */   
 
    
     return true;        
