@@ -45,6 +45,7 @@
 	         <frame-options />
 	         <xss-protection />
 	         <header name="X-Content-Security-Policy" value="default-src 'self' https: 'unsafe-eval' 'unsafe-inline'; object-src 'self' https: blob:;script-src 'self' https: blob:; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;base-uri 'self';frame-ancestors 'self'"/>
+	         <header name="X-Frame-Options" value="sameorigin"/>
 	         <!--<header ref="headerWriter"/>-->
 			 <xss-protection block="true"/>
 		</headers>        
