@@ -66,7 +66,7 @@ public class ServiceBilldeskGateway {
 		SECURE_SECRET = environment.getRequiredProperty("billdesk.merchant.secret.key");
 		CHECK_SUM_PWD = environment.getRequiredProperty("billdesk.merchant.pwd");
 		MERCHANT_URL_PAY = environment.getRequiredProperty("billdesk.url.debit");
-		RETURN_URL = environment.getRequiredProperty("billdesk.url.return");
+		RETURN_URL = environment.getRequiredProperty("host_server")+environment.getRequiredProperty("billdesk.url.return");
 		tenantid = "sk.gangtok";
 	}
 

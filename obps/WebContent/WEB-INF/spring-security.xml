@@ -44,14 +44,15 @@
 	         <hsts />
 	         <frame-options />
 	         <xss-protection />
-	         <header name="X-Content-Security-Policy" value="default-src 'self'"/>
+	         <header name="X-Content-Security-Policy" value="default-src 'self' https: 'unsafe-eval' 'unsafe-inline'; object-src 'self' https: blob:;script-src 'self' https: blob:; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;base-uri 'self';frame-ancestors 'self'"/>
 	         <!--<header ref="headerWriter"/>-->
-			 <!--<xss-protection block="false"/>-->
+			 <xss-protection block="true"/>
 		</headers>        
                 		
-		
+		<custom-filter ref="corsHandler" after="PRE_AUTH_FILTER"/>
     </http> 
     
+    <beans:bean id="corsHandler" class="obps.security.CorsFilter"/>  
     <beans:bean id="csrfMatcher" class="obps.security.CsrfSecurityRequestMatcher"/>  
     <beans:bean id="captchaVerifierFilter" class="obps.security.CaptchaVerifierFilter" p:failureUrl="/loginfailed.htm" />  
     <beans:bean id="MyAuthenticationSuccessHandler" class="obps.security.MyAuthenticationSuccessHandler" />

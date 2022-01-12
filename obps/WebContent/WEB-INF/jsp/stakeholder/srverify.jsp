@@ -67,7 +67,7 @@
 		<div id="page-content-wrapper">
 			<%@include file="../common/menutop.jsp"%>
 			<div class="container-fluid">
-				<span id="pcode" style="display: block">${processcode}</span>
+				<span id="pcode" style="display: none">${processcode}</span>
 				<h3 class="mt-4" style="font-size: 32px;">Verifications/Approvals
 					of Stakeholder Registrations</h3>
 				<div class="row">
