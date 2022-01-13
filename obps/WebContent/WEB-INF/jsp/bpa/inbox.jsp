@@ -32,4 +32,5 @@
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
 	<script src="resources/js/application/bpa/inbox.js" type="text/javascript"></script>
+	<%@include file="../common/footer.jsp" %> 
 </html>
