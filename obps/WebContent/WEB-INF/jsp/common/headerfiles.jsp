@@ -24,7 +24,7 @@
 <!-- <script src="resources/js/vendor/jQuery/jquery-ui.min.js"></script>  -->
 
 <!-- Angular -->
-<script src="resources/js/vendor/angular/angular1.3.js"></script> 
+<script src="resources/js/vendor/angular/angular1.8.min.js"></script> 
 <script src="resources/js/vendor/angular/checklist-model.min.js"></script>
  
 <!-- Bootstrap Template -->

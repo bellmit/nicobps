@@ -59,7 +59,7 @@
     <li>Page-1</li>
     <li>Page-2</li> 
 -->
-	<li>Logged in as : ${user.fullname} <span id='un' style="display:none;">${user.username}</span></li>
+	<li>Logged in as : ${user.fullname}</li>
 	
 </ul>
 
