@@ -54,7 +54,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 			// following line to
 			// avoid encoded attacks.
 			// value = ESAPI.encoder().canonicalize(value);
-			System.out.println(value);
 			// Avoid null characters
 			value = value.replaceAll("", "");
 			// Avoid iframe
@@ -109,8 +108,8 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 			scriptPattern = Pattern.compile("onload(.*?)=",
 					Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 			value = scriptPattern.matcher(value).replaceAll("");
-			value =value.replaceAll("<", "&lt").replaceAll(">", "&gt");
-		}
+
+			value =value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");		}
 		return value;
 	}
 }

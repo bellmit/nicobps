@@ -58,7 +58,7 @@ public class ControllerLogin {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         request.setAttribute("userid",userid);
         request.setAttribute("actiontaken","Loginfailed");        
-		SUI.initAuditrail(request);
+//		SUI.initAuditrail(request);
         return "login";
     }	
 	
