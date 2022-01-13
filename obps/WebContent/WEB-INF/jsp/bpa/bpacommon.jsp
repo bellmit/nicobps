@@ -36,7 +36,7 @@
 
 </head>
 <body ng-app="CommonApp" ng-controller="CommonCtrl"
-	ng-init="init('${page}','${processcode}')">
+	ng-init="init('${page}','${processcode}','${applicationcode}')">
 	<div class="d-flex" id="wrapper">
 		<%@include file="../common/menuside.jsp"%>
 		<div id="page-content-wrapper">
@@ -52,9 +52,9 @@
 
 
 
-				<div class="card" ng-show="{{search}}">
+				<div class="card" ng-if="search">
 					<div class="card-body">
-						<form onsubmit="return;">
+						<form >
 							<div class="input-group" style="padding: 2rem 5rem">
 								<input type="text"
 									class="form-control custom-form-control text-center"
@@ -63,7 +63,7 @@
 									ng-model="searchParam"> <span
 									class="input-group-addon login-input-group-addon search">
 									<i class="fa fa-search" title="Search"
-									ng-click="searchApplication()"></i> <input type="submit"
+									ng-click="searchApplication()"></i> <input type="button"
 									class="fa fa-search" ng-click="searchApplication()"
 									style="display: none">
 								</span>
@@ -87,11 +87,7 @@
 		</div>
 	</div>
 </body>
-<ng-element ng-if="${page} == 'bpastatus' ">
-	<script type="text/javascript">
-		const APPCODE = '${applicationcode}';
-	</script>
-</ng-element>
+
 <script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
 <script src="resources/js/application/models/bpa.js"
 	type="text/javascript"></script>

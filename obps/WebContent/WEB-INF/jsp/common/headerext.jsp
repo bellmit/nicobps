@@ -54,7 +54,7 @@
 	<div class="container">
 		<nav class="navbar navbar-expand-sm navbar-dark px-0">
 			<div class="d-flex w-100 b-nav-mobile">
-				<button class="navbar-toggler align-self-center b-btn-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" onclick="myFunction(this)">
+				<button id="nav_but" class="navbar-toggler align-self-center b-btn-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" >
 					<span style="display:none;">Menu</span>
 					<div>
 					  <div class="bar1"></div>

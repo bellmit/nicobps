@@ -22,13 +22,13 @@
 					</h3>
 					<div class="card">
 						<div class="card-body">
-							<form onsubmit="return;">
+							<form >
 								<div class="input-group" style="padding: 2rem 5rem">
 									<input type="text" class="form-control custom-form-control text-center" id="searchParam"
 										placeholder="Search by: applicationcode, edcrnumber, permitnumber or owner's name" ng-model="searchParam">
 									<span class="input-group-addon login-input-group-addon search">
 										<i class="fa fa-search" title="Search" ng-click="searchApplication()"></i>
-										<input type="submit" class="fa fa-search" ng-click="searchApplication()" style="display: none">
+										<input type="button" class="fa fa-search" ng-click="searchApplication()" style="display: none">
 									</span>
 								</div>
 							</form>

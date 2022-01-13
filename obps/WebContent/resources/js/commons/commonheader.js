@@ -4,6 +4,12 @@ jQuery(document).ajaxSend(function() {
 jQuery(document).ajaxComplete(function() {
 	jQuery("#ajaxLoading").fadeOut();
 });
+$(document).ready(function() {
+	$("#nav_but").on('click', function() {
+		myFunction(this);
+	})
+
+})
 var focused;
 var MsgCallBack;
 function MsgBox(text, modal, callback) {
