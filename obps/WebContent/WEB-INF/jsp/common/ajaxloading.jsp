@@ -23,11 +23,3 @@
         <img src="resources/images/c-processing.gif" alt="LOADING....." height="100px" width="100px"/>
     </div>
 </div>
-<script>
-jQuery(document).ajaxSend(function(){
-    jQuery("#ajaxLoading").fadeIn();
-});
-jQuery(document).ajaxComplete(function(){
-    jQuery("#ajaxLoading").fadeOut();
-});
-</script>

@@ -82,22 +82,5 @@
 			</div>
 		</nav>
 	</div>		
-	<script>
-		function myFunction(x) {
-		  x.classList.toggle("change");
-		}
-	</script>		
-	
-	
-	<script> 
-	    var pathname = window.location.pathname; 
-	    jQuery(".lk").removeClass("active");
-	    jQuery(".lk").each(function() {
-	        var hrf = jQuery(this).attr("href");	        
-	        if (pathname.indexOf(hrf) !== -1) {
-	            jQuery(this).addClass("active");	            
-	        }       
-	    });
-	</script>	
 			
 </div>
