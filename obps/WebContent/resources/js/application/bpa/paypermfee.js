@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$scope",
 	"$http",
@@ -9,7 +9,7 @@ app.controller("CommonCtrl", [
 	"$window",
 	"commonInitService",
 	"bpaService",
-	function ($scope, $http, $timeout, $window, CIS, BS) {
+	function($scope, $http, $timeout, $window, CIS, BS) {
 		console.log("BPA: Pay Application Fee");
 
 		let data = "";
@@ -23,14 +23,18 @@ app.controller("CommonCtrl", [
 
 		$scope.Fees = [];
 		$scope.PayModes = [];
-		
-		$scope.FeeType = FeeType;
 
+		$scope.FeeType = FeeType;
+		$scope.init = (applicationcode) => {
+
+			APPCODE = applicationcode;
+
+		};
 
 		/* GET */
 		BS.getBpaPermitFee((response) => {
 			$scope.Fees = response;
-			if($scope.Fees != null){
+			if ($scope.Fees != null) {
 				$scope.bpa.feetypecode = $scope.Fees.feetypecode;
 				let len = Object.keys($scope.Fees).length;
 				if (len > 0)
@@ -61,22 +65,22 @@ app.controller("CommonCtrl", [
 			valid = $window.confirm("Are you sure you want to submit?");
 			if (!valid) return;
 
-//			CIS.save("POST", "./bpapaypermfees.htm", data, (success) => {
+			//			CIS.save("POST", "./bpapaypermfees.htm", data, (success) => {
 			CIS.save("POST", ProcessingUrl.bpaMakePayment, data, (success) => {
 				$scope.serverMsg = success.msg;
 				if (success.code == '201') {
 					$scope.serverMsg = "You will be redirect to a different page to complete payment.";
 					$scope.serverResponseInfo = true;
-					if(success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != ''){
+					if (success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != '') {
 						try {
 							$timeout(() => {
 								let url = success.nextProcess.key;
 								$window.location.href = url;
 							}, Timeout.TwoSecond);
 						} catch (e) { }
-					}else{
+					} else {
 						$time(() => $window.location.reload(), Timeout.TwoSecond);
-					} 
+					}
 
 				} else {
 					$scope.serverResponseFail = true;

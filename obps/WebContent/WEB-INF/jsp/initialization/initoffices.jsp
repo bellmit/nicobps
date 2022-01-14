@@ -167,7 +167,7 @@
 											<td class="col-md-2"><b>Logo:</b></td>
 											<td class="col-md-4 selectContainer"><input type="file"
 												class="form-control" id="logo" name="logo" ng-model="logo"
-												autocomplete="off" onchange='addFile()' />
+												autocomplete="off"  />
 												<a id="viewlogo" href="#" ng-click="showFile(offices.username)">View
 													Logo</a>
 													<div class="col-md-12" id="enclosureWindow"></div>

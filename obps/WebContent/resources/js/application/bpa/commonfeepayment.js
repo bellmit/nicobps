@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$scope",
 	"$http",
@@ -9,7 +9,7 @@ app.controller("CommonCtrl", [
 	"$window",
 	"commonInitService",
 	"bpaService",
-	function ($scope, $http, $timeout, $window, CIS, BS) {
+	function($scope, $http, $timeout, $window, CIS, BS) {
 		console.log("BPA: Pay Application Fee");
 
 		let data = "";
@@ -23,21 +23,25 @@ app.controller("CommonCtrl", [
 
 		$scope.Fees = [];
 		$scope.PayModes = [];
+		$scope.init = (applicationcode) => {
 
+			APPCODE = applicationcode;
+
+		};
 
 		/* GET */
 		BS.getBpaPermitFee((response) => {
 			$scope.Fees = response;
-			if($scope.Fees != null){
+			if ($scope.Fees != null) {
 				console.log("$scope.Fees: ", $scope.Fees);
-				if($scope.Fees.calculatedFee != null){
+				if ($scope.Fees.calculatedFee != null) {
 					$scope.bpa.amount = 0;
 					$scope.Fees.calculatedFee.forEach((o, x) => {
 						console.log(o);
 						$scope.bpa.amount += parseFloat(o.amount)
-						console.log("$scope.bpa.amount: ",$scope.bpa.amount);
+						console.log("$scope.bpa.amount: ", $scope.bpa.amount);
 					});
-				}else{
+				} else {
 					let len = Object.keys($scope.Fees).length;
 					if (len > 0)
 						$scope.bpa.amount = $scope.Fees.feeamount;
@@ -73,16 +77,16 @@ app.controller("CommonCtrl", [
 				if (success.code == '201') {
 					$scope.serverMsg = "You will be redirect to a different page to complete payment.";
 					$scope.serverResponseInfo = true;
-					if(success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != ''){
+					if (success.nextProcess != null && success.nextProcess.key != null && success.nextProcess.key != '') {
 						try {
 							$timeout(() => {
 								let url = success.nextProcess.key;
 								$window.location.href = url;
 							}, Timeout.TwoSecond);
 						} catch (e) { }
-					}else{
+					} else {
 						$time(() => $window.location.reload(), Timeout.TwoSecond);
-					} 
+					}
 
 				} else {
 					$scope.serverResponseFail = true;

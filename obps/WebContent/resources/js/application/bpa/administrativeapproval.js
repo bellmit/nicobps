@@ -1,6 +1,7 @@
 /**
  * @author Decent Khongstia
  */
+var APPCODE;
 
 app.controller("CommonCtrl", [
 	"$sce",
@@ -176,7 +177,11 @@ app.controller("CommonCtrl", [
 				$scope.serverMsg = "";
 			}, Timeout.Reload);
 		};
+		$scope.init = (applicationcode) => {
 
+			APPCODE = applicationcode;
+
+		};
 		$scope.forward = () => {
 
 

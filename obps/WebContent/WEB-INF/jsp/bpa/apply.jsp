@@ -6,7 +6,7 @@
 		<%@include file="../common/headerfiles.jsp"%>
 		<link href="resources/css/bpa-style.css" rel="stylesheet"/>
 	</head>
-	<body ng-app="CommonApp" ng-controller="CommonCtrl" id="appId">
+	<body ng-app="CommonApp" ng-controller="CommonCtrl" id="appId" ng-init="init('${edcrnumber}')">
 		<div class="d-flex" id="wrapper">
 			<%@include file="../common/menuside.jsp"%>
 			<div id="page-content-wrapper">
@@ -46,7 +46,5 @@
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
 	<script src="resources/js/application/bpa/apply.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		const EDCRNUMBER = '${edcrnumber}';
-	</script>
+
 </html>

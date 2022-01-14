@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$scope",
 	"$http",
@@ -14,6 +14,11 @@ app.controller("CommonCtrl", [
 		console.log("TrackApplicationStatus");
 
 		$scope.AppStatus = [];
+			$scope.init = (applicationcode) => {
+
+			APPCODE = applicationcode;
+
+		};
 		/*GET_DATA*/
 
 		$scope.listApplictionsCurrentProcessStatus = () => {

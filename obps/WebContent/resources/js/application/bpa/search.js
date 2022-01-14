@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$scope",
 	"$http",
@@ -15,7 +15,11 @@ app.controller("CommonCtrl", [
 
 		$scope.AppStatus = [];
 		$scope.searchParam = "";
+		$scope.init = (applicationcode) => {
 
+			APPCODE = applicationcode;
+
+		};
 		/*GET_DATA*/
 		$scope.searchApplication = () => {
 			$scope.errorMsg = "";
@@ -67,15 +71,15 @@ app.controller("CommonCtrl", [
 						"title": "scrutiny date ",
 						"data": "edcrdate",
 						"width": "5%"
-					},  {
+					}, {
 						"title": "Site Address ",
 						"data": "address",
 						"width": "25%"
-					},{
+					}, {
 						"title": "Updated By",
 						"data": "updatedby",
 						"width": "5%",
-					},{
+					}, {
 						"title": "Current Process ",
 						"data": "currentprocessname",
 						"width": "15%"

@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$sce",
 	"$scope",
@@ -10,7 +10,7 @@ app.controller("CommonCtrl", [
 	"$window",
 	"commonInitService",
 	"bpaService",
-	function ($sce, $scope, $http, $timeout, $window, CIS, BS) {
+	function($sce, $scope, $http, $timeout, $window, CIS, BS) {
 		console.log("BPA: Site Inspection");
 
 		let data = "";
@@ -28,38 +28,42 @@ app.controller("CommonCtrl", [
 		$scope.modal = new Modal();
 		$scope.Response = ComboResponse;
 		$scope.taskStatus = new TaskStatus();
-		
+
 		$scope.DocumentDetails = [];
 		$scope.OwnerDetails = [];
 		$scope.Questionnaires = [];
 		$scope.Enclosures = [];
 		$scope.Users = [];
-		$scope.SiteEnclosures = new Array({code:null, name:'', file:null, error:false, errormsg: null});
+		$scope.SiteEnclosures = new Array({ code: null, name: '', file: null, error: false, errormsg: null });
 		$scope.bpa.applicationcode = APPCODE;
-		
+		$scope.init = (applicationcode) => {
+
+			APPCODE = applicationcode;
+
+		};
 		/* GET */
 		BS.listBPAEnclosures((response) => {
 			$scope.Enclosures = response;
-			
+
 			$scope.Enclosures.forEach((o, x) => {
 				o.selected = false;
 			});
 		}, APPCODE);
-		
+
 		BS.listSiteInspectionQuestionnaires((response) => {
 			$scope.Questionnaires = response;
 		}, APPCODE);
-		
+
 		/* ACTION */
 		$scope.addRemoveMoreFile = (opt) => {
-			switch(opt){
+			switch (opt) {
 				case 1:
-					$scope.SiteEnclosures.push({code:null, name:'', file:null, error:false, errormsg: null});
+					$scope.SiteEnclosures.push({ code: null, name: '', file: null, error: false, errormsg: null });
 					break;
 				default:
 					$scope.SiteEnclosures.pop();
 			}
-			
+
 		};
 
 		$scope.clearAfterCreateProcess = () => {
@@ -71,108 +75,108 @@ app.controller("CommonCtrl", [
 				$scope.serverMsg = "";
 			}, Timeout.Reload);
 		};
-		
+
 		$scope.filterEnclosure = (opt, code) => {
-			if(opt == 1){
-				$scope.SiteEnclosures.find( l => l.code == code).error = false;
-				if($scope.SiteEnclosures.find( l => l.code == code).name == null || $scope.SiteEnclosures.find( l => l.code == code).name == ""){
-					$scope.SiteEnclosures.find( l => l.code == code).error = true;
-					$scope.SiteEnclosures.find( l => l.code == code).errormsg = `Please select enclosure first`;
+			if (opt == 1) {
+				$scope.SiteEnclosures.find(l => l.code == code).error = false;
+				if ($scope.SiteEnclosures.find(l => l.code == code).name == null || $scope.SiteEnclosures.find(l => l.code == code).name == "") {
+					$scope.SiteEnclosures.find(l => l.code == code).error = true;
+					$scope.SiteEnclosures.find(l => l.code == code).errormsg = `Please select enclosure first`;
 					return;
 				}
-				if($scope.SiteEnclosures.find( l => l.code == code).file == null || $scope.SiteEnclosures.find( l => l.code == code).file == ""){
-					$scope.SiteEnclosures.find( l => l.code == code).error = true;
-					$scope.SiteEnclosures.find( l => l.code == code).errormsg = `Please upload ${$scope.SiteEnclosures.find( l => l.code == code).name} first`;
+				if ($scope.SiteEnclosures.find(l => l.code == code).file == null || $scope.SiteEnclosures.find(l => l.code == code).file == "") {
+					$scope.SiteEnclosures.find(l => l.code == code).error = true;
+					$scope.SiteEnclosures.find(l => l.code == code).errormsg = `Please upload ${$scope.SiteEnclosures.find(l => l.code == code).name} first`;
 					return;
 				}
 				$scope.addRemoveMoreFile(opt);
-				$scope.Enclosures.find( e => e.enclosurecode == code).selected = true;
-				$scope.SiteEnclosures.find( l => l.code == code).flag = true;
-				
-			}else{
+				$scope.Enclosures.find(e => e.enclosurecode == code).selected = true;
+				$scope.SiteEnclosures.find(l => l.code == code).flag = true;
+
+			} else {
 				$scope.addRemoveMoreFile(opt);
-				$scope.SiteEnclosures[$scope.SiteEnclosures.length-1].flag = false;
-				$scope.Enclosures.find( e => e.enclosurecode == $scope.SiteEnclosures[$scope.SiteEnclosures.length-1].code).selected = false;
-				
+				$scope.SiteEnclosures[$scope.SiteEnclosures.length - 1].flag = false;
+				$scope.Enclosures.find(e => e.enclosurecode == $scope.SiteEnclosures[$scope.SiteEnclosures.length - 1].code).selected = false;
+
 			}
 		};
-		
+
 
 		$scope.setLabel = (index, code) => {
-			if(index != null && code!= null){
-				$scope.SiteEnclosures[index].name = $scope.Enclosures.find( e => e.enclosurecode == code).enclosurename;
+			if (index != null && code != null) {
+				$scope.SiteEnclosures[index].name = $scope.Enclosures.find(e => e.enclosurecode == code).enclosurename;
 				$scope.SiteEnclosures[index].code = code;
 				$scope.SiteEnclosures[index].error = false;
-			}else{
-				if($scope.SiteEnclosures[index].file != null && $scope.SiteEnclosures[index].file != '')
+			} else {
+				if ($scope.SiteEnclosures[index].file != null && $scope.SiteEnclosures[index].file != '')
 					$scope.SiteEnclosures[index].error = false;
-			}	
+			}
 		}
-		
+
 		$scope.validateQuestionnairesResponse = (opt = 0, code) => {
 			let valid = true;
-			try{
+			try {
 				console.log(`validateQuestionnairesResponse: ${opt} - code: ${code}`);
-				if(opt == 1){
-					$scope.Questionnaires.find( q => (q.questioncode == code)).errorMsg = '';
-					$scope.Questionnaires.find( q => {
-						if((q.questioncode == code) && (q.response == null || q.response == ''))
+				if (opt == 1) {
+					$scope.Questionnaires.find(q => (q.questioncode == code)).errorMsg = '';
+					$scope.Questionnaires.find(q => {
+						if ((q.questioncode == code) && (q.response == null || q.response == ''))
 							valid = false;
 						return !valid;
 					}).errorMsg = 'Please select options';
-				} else{
-					$scope.Questionnaires.find( q => q.questioncode != null).errorMsg = '';
-					$scope.Questionnaires.find( q => {
-						if(q.response == null || q.response == '')
+				} else {
+					$scope.Questionnaires.find(q => q.questioncode != null).errorMsg = '';
+					$scope.Questionnaires.find(q => {
+						if (q.response == null || q.response == '')
 							valid = false;
 						return !valid;
-					}) .errorMsg = 'Please select options';
+					}).errorMsg = 'Please select options';
 				}
-				if(!valid){
+				if (!valid) {
 					$('html, body').animate({
 						scrollTop: $("#car_questionnaires").offset().top
 					});
 				}
-			}catch (e) {
+			} catch (e) {
 			}
 			return valid;
 		};
-		
+
 		$scope.validateForm = (opt = 0) => {
 			let status = true;
 			let form = $scope.bpa;
 			form = $scope.SiteEnclosures;
-				console.log("lenght"+$scope.Enclosures.length)
-			try{
-				status = $scope.validateQuestionnairesResponse(); 
-				if(!status) return status;
-				if ($scope.Enclosures.length != 0) {	
-				$scope.SiteEnclosures.find( e => e.file == null || e.file == '').error = true;
-				if($scope.SiteEnclosures.find( e => e.file == null || e.file == '').name != null 
-						&& $scope.SiteEnclosures.find( e => e.file == null || e.file == '').name != '')
-					$scope.SiteEnclosures.find( e => e.file == null || e.file == '').errormsg 
-							= `Please upload ${$scope.SiteEnclosures.find( e => e.file == null || e.file == '').name} first`;
-				else
-					$scope.SiteEnclosures.find( e => e.file == null || e.file == '').errormsg = `Please select enclosure first`;
-				if($scope.SiteEnclosures.find( e => e.file == null || e.file == '').error)
-					status = false;
-				}
-			} catch (e) {}
-			
-			if(status){
-				$scope.bpa.reports = $scope.SiteEnclosures.filter( e => e.code != null && e.code != '' && e.file != null && e.file != '');
-			}
-			
-			return status;
-			
-			form = $scope.bpa;
-			if(form.reports != null && form.reports.length > 0){
-				form.error = new Array();
-				for(let x = 0; x < form.reports.length; x ++){
-					if(form.reports[x] == undefined || form.reports[x] == null || form.reports[x] == ''){
+			console.log("lenght" + $scope.Enclosures.length)
+			try {
+				status = $scope.validateQuestionnairesResponse();
+				if (!status) return status;
+				if ($scope.Enclosures.length != 0) {
+					$scope.SiteEnclosures.find(e => e.file == null || e.file == '').error = true;
+					if ($scope.SiteEnclosures.find(e => e.file == null || e.file == '').name != null
+						&& $scope.SiteEnclosures.find(e => e.file == null || e.file == '').name != '')
+						$scope.SiteEnclosures.find(e => e.file == null || e.file == '').errormsg
+							= `Please upload ${$scope.SiteEnclosures.find(e => e.file == null || e.file == '').name} first`;
+					else
+						$scope.SiteEnclosures.find(e => e.file == null || e.file == '').errormsg = `Please select enclosure first`;
+					if ($scope.SiteEnclosures.find(e => e.file == null || e.file == '').error)
 						status = false;
-						form.error[x]= true;
-						$timeout(() => form.error[x]= false, 3000);
+				}
+			} catch (e) { }
+
+			if (status) {
+				$scope.bpa.reports = $scope.SiteEnclosures.filter(e => e.code != null && e.code != '' && e.file != null && e.file != '');
+			}
+
+			return status;
+
+			form = $scope.bpa;
+			if (form.reports != null && form.reports.length > 0) {
+				form.error = new Array();
+				for (let x = 0; x < form.reports.length; x++) {
+					if (form.reports[x] == undefined || form.reports[x] == null || form.reports[x] == '') {
+						status = false;
+						form.error[x] = true;
+						$timeout(() => form.error[x] = false, 3000);
 					}
 				}
 			}
@@ -185,11 +189,11 @@ app.controller("CommonCtrl", [
 			valid = $scope.validateForm();
 			$scope.bpa.tousercode = $scope.modal.usercode;
 			$scope.bpa.remarks = $scope.modal.remarks;
-//			$scope.bpa.questionnaires = $scope.bpa.initQuestionnaires($scope.Questionnaires);
+			//			$scope.bpa.questionnaires = $scope.bpa.initQuestionnaires($scope.Questionnaires);
 			$scope.bpa.questionnaires = $scope.Questionnaires;
-			
+
 			data = $scope.bpa.init($scope.bpa);
-			console.log("f-data: ",data)
+			console.log("f-data: ", data)
 			if (!valid) {
 				$('#commonModal').modal('hide');
 				$timeout(() => {
@@ -197,7 +201,7 @@ app.controller("CommonCtrl", [
 				}, 5);
 				return;
 			}
-			
+
 			if ($scope.modal.usercode == null || $scope.modal.usercode == "") {
 				alert("Please select user");
 				return false;

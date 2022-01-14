@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$sce",
 	"$scope",
@@ -10,9 +10,9 @@ app.controller("CommonCtrl", [
 	"$window",
 	"commonInitService",
 	"bpaService",
-	function ($sce, $scope, $http, $timeout, $window, CIS, BS) {
+	function($sce, $scope, $http, $timeout, $window, CIS, BS) {
 		console.log("BPA: Citizen Task");
-		
+
 		let data = "";
 		$scope.serverResponseError = false;
 		$scope.serverResponseFail = false;
@@ -21,16 +21,16 @@ app.controller("CommonCtrl", [
 
 		$scope.bpa = new ProcessFlow();
 		$scope.taskStatus = new TaskStatus();
-		
+
 		$scope.bpa.applicationcode = APPCODE;
-		
+
 		/*GET*/
 		$scope.taskStatus = new TaskStatus();
-		
+
 		BS.getCurrentProcessTaskStatus((response) => {
 			$scope.taskStatus = response;
 		}, APPCODE);
-		
+
 		/*ACTION*/
 		$scope.clearAfterCreateProcess = () => {
 			$timeout(() => {
@@ -41,10 +41,10 @@ app.controller("CommonCtrl", [
 				$scope.serverMsg = "";
 			}, Timeout.ThreeSecond);
 		};
-		
+
 		$scope.setModalTitle = (opt) => {
 			$scope.modal = new Modal();
-			switch(opt){
+			switch (opt) {
 				case 4:
 					$scope.modal.action = 4;
 					$scope.modal.actionname = "Send";
@@ -52,7 +52,7 @@ app.controller("CommonCtrl", [
 					break;
 			}
 		}
-		
+
 		/*CREATE*/
 		$scope.returnFromCitizen = () => {
 			let data = {}, valid = false;
@@ -86,5 +86,9 @@ app.controller("CommonCtrl", [
 
 			$scope.clearAfterCreateProcess();
 		};// End returnFromCitizen
-		
-}]);
+		$scope.init = (applicationcode) => {
+
+			APPCODE = applicationcode;
+
+		};
+	}]);

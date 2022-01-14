@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-
+var APPCODE;
 app.controller("CommonCtrl", [
 	"$scope",
 	"$http",
@@ -9,7 +9,7 @@ app.controller("CommonCtrl", [
 	"$window",
 	"commonInitService",
 	"bpaService",
-	function ($scope, $http, $timeout, $window, CIS, BS) {
+	function($scope, $http, $timeout, $window, CIS, BS) {
 		console.log("BPA: Pay Application Fee");
 
 		let data = "";
@@ -23,7 +23,11 @@ app.controller("CommonCtrl", [
 
 		$scope.Fees = [];
 		$scope.PayModes = [];
+		$scope.init = (applicationcode) => {
 
+			APPCODE = applicationcode;
+
+		};
 
 		/* GET */
 		BS.getBpaApplicationFee((response) => {

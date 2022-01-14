@@ -34,7 +34,7 @@
 		</style>
 	</head>
 	</script>
-	<body ng-app="CommonApp" ng-controller="CommonCtrl">
+	<body ng-app="CommonApp" ng-controller="CommonCtrl"  ng-init="init('${applicationcode}')">
 		<div class="d-flex" id="wrapper">
 			<%@include file="../common/menuside.jsp"%>
 			<div id="page-content-wrapper">
@@ -119,7 +119,5 @@
 	<script src="resources/js/application/models/bpa.js" type="text/javascript"></script>
 	<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
 	<script src="resources/js/application/bpa/commonfeepayment.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		const APPCODE = '${applicationcode}';
-	</script>
+	
 </html>
