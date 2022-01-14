@@ -95,20 +95,19 @@ app.controller("CommonCtrl", [
 			$scope.listNextProcess = (processcode) => {
 				$http.post("./listNextProcess.htm?", {
 					"currentprocesscode": processcode
-				}).success(
+				}).then(
 					function(response, status, headers, config) {
-						$scope.nextProcesses = response
+						$scope.nextProcesses = response.data
 					});
 			};
 		$scope.listLicensees = function() 
 		{			
 		    var processcode="";	    
 		    processcode=document.getElementById("pcode").innerText;			    	
-			$http.post("./listLicensees.htm?processcode="+processcode).success(
+			$http.post("./listLicensees.htm?processcode="+processcode).then(
 				function(response, status, headers, config) {
 
-					console.log(response)
-					$scope.Licensees = response
+					$scope.Licensees = response.data
 
 					jQuery("#displayRecords").html("<table id='displayRecordsTable' style='width:100%' border='1'>\n\
                                                 </table>");
@@ -155,9 +154,9 @@ app.controller("CommonCtrl", [
 				}
 			);
 		},
-			$http.post("./listEnclosures.htm").success(
+			$http.post("./listEnclosures.htm").then(
 				function(response, status, headers, config) {
-					$scope.Enclosures = response
+					$scope.Enclosures = response.data;
 				});
 		$scope.listLicensees();
 		$scope.print = function(transactioncode) {

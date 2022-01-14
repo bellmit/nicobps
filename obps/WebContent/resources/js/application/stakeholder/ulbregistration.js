@@ -28,13 +28,13 @@ app.controller("CommonCtrl", [
 						$timeout(() => {jQuery('#registerbtn').prop('disabled', true);},0);
 					}
 				});
-				$http.post("./getApplicationfee.htm?officecode=" + officecode).success(
+				$http.post("./getApplicationfee.htm?officecode=" + officecode).then(
 					function(response, status, headers, config) {
-						$scope.fee = response
+						$scope.fee = response.data;
 					});
-				$http.post("./listOffices/registeringoffice.htm?registeringofficecode=" + officecode).success(
+				$http.post("./listOffices/registeringoffice.htm?registeringofficecode=" + officecode).then(
 					function(response, status, headers, config) {
-						$scope.Offices = response
+						$scope.Offices = response.data;
 					});
 			}
 	}

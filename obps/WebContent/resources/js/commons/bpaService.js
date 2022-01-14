@@ -8,8 +8,8 @@ app.service("commonUtilService", [
         var url = endpoint;
         if (data != null && data != '')
           url = endpoint.concat("?param=").concat(data);
-        $http.get(url).success(function (response, status, headers, config) {
-          callback(response);
+        $http.get(url).then(function (response, status, headers, config) {
+          callback(response.data);
         });
       },
       getDataV2: async (endpoint, callback, ...data) => {
@@ -28,15 +28,15 @@ app.service("commonUtilService", [
           console.log(param);
           url = endpoint.concat(param);
           
-          $http.get(url).success(function (response, status, headers, config) {
-            callback(response);
+          $http.get(url).then(function (response, status, headers, config) {
+            callback(response.data);
           });
         },
       /* 
       postData: async (endpoint, data, successCallback, errorCallback) => {
         var url = endpoint;
         $http.post(url, data).then((response) => {
-          successCallback(response);
+          successCallback(response.data);
         }, (errResponse) => {
           errorCallback(errResponse);
         })

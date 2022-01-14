@@ -2,78 +2,78 @@
 app.factory('commonInitFactory', function($http) {
 	return {	
 		listUsers : function(callback) {
-			$http.get("./listOfficeUsers.htm").success(
+			$http.get("./listOfficeUsers.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},		
 		listLicensees : function(callback) {
-			$http.get("./listLicensees.htm").success(
+			$http.get("./listLicensees.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listFeeTypes: function(callback) {
-			$http.get("./listFeeTypes.htm").success(
+			$http.get("./listFeeTypes.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listFileTypes: function(callback) {
-			$http.get("./listFileTypes.htm").success(
+			$http.get("./listFileTypes.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listQuestionaires: function(callback) {
-			$http.get("./listQuestionaires.htm").success(
+			$http.get("./listQuestionaires.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listOccupancies: function(callback) {
-			$http.get("./listOccupancies.htm").success(
+			$http.get("./listOccupancies.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listFeeMaster: function(callback) {
-			$http.get("./listFeeMaster.htm").success(
+			$http.get("./listFeeMaster.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listOffices : function(callback) {
-			$http.get("./listOffices.htm").success(
+			$http.get("./listOffices.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},		
 		listEnclosures : function(callback) {
-			$http.get("./listEnclosures.htm").success(
+			$http.get("./listEnclosures.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},
 		
 		listSubOccupancy: function(callback) {
-			$http.get("./listSubOccupancy.htm").success(
+			$http.get("./listSubOccupancy.htm").then(
 
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},
 				
 			listUsages: function(callback) {
-			$http.get("./listUsages.htm").success(
+			$http.get("./listUsages.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		listFiletypes: function(callback) {
-			$http.get("./listFiletypes.htm").success(
+			$http.get("./listFiletypes.htm").then(
 					function(response, status, headers, config) {
-						callback(response);
+						callback(response.data);
 					});
 		},	
 		
