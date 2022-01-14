@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<form:form  method="POST" action="submitLicenseesenclosures.htm?${_csrf.parameterName}=${_csrf.token}" modelAttribute="licenseesenclosures" name="licenseesenclosures" id="licenseesenclosures" enctype="multipart/form-data" onsubmit="javascript:return onbeforeSubmit()">
+<form:form  method="POST" action="submitLicenseesenclosures.htm?${_csrf.parameterName}=${_csrf.token}" modelAttribute="licenseesenclosures" name="licenseesenclosures" id="licenseesenclosures" enctype="multipart/form-data" >
  	 <script src="resources/js/application/uploadenclosures.js"></script>  
      <div class="row">	        				     	
     	<div class="col-md-12 py-12 px-12">
@@ -46,9 +46,9 @@
 					<div class="form-group">
                         <div>
                             <label>Please enter the text as shown in the image <span class="mandatory">*</span></label>                                                                
-                            <img src="./jcaptcha.jpg" id="jcaptchaimg" onclick="changeCaptcha();" title="Click To Reload" style="cursor: pointer;"/>
+                            <img src="./jcaptcha.jpg" id="jcaptchaimg"  title="Click To Reload" style="cursor: pointer;"/>
                             <form:input type="text" path="userresponsecaptcha" autocomplete="off" maxlength="6"/>
-                            <%-- <img src="<core:out value="${contextPath}" escapeXml="true"></core:out>/scripts/images/icon-refresh.png" id="jcaptchaRef" onclick="changeCaptcha();" title="Click To Reload" style="cursor: pointer;"/>    --%>                              
+                                                        
                             <div><form:errors path="userresponsecaptcha" cssClass="error" style="color:red"/></div>    
                         </div> 
                         <div style="text-align: center;padding-top:10px ">                                               

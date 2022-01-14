@@ -3,17 +3,7 @@
 <title>OBPS | Create User</title>
 <%@include file="../common/headerfiles.jsp"%>
 <script src="resources/js/util/sha256.min.js"></script>
-<style>
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
-}
 
-/* Firefox */
-input[type=number] {
-	-moz-appearance: textfield;
-}
-</style>
 </head>
 <body>
 	<div class="d-flex" id="wrapper">
@@ -128,9 +118,6 @@ input[type=number] {
 </body>
 <script src="resources/js/application/models/initializations.js"></script>
 <script src="resources/js/application/initialization/createuser.js"></script>
-<script>
-	$(document).ready(function() {
-		$("#mobileno").numeric();
-	});
-</script>
+<script src="resources/js/application/initialization/createuserval.js"></script>
+
 </html>

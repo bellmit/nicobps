@@ -41,6 +41,14 @@ function signupDetails() {
 
 jQuery(document).ready(function() {
 	PasswordStrength("username", "userpassword");
+	
+	jQuery("#jcaptchaimg").on('click', function() {
+		changeCaptcha();
+	});
+	
+	jQuery("#copyAddress").on('click', function() {
+		copyAddr(this);
+	});
 });
 
 var app = angular.module("applicationApp", ["checklist-model"]);

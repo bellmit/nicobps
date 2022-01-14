@@ -177,7 +177,7 @@
 				     	
 				     	<div class="col-md-12 py-12 px-12">
 				     		<h5 style="border-bottom:3px solid #005776">Permanent Address</h5>	
-				     		<input type="checkbox" id="copyAddress" onclick="copyAddr(this)"> <span class="tinytext">Same as Present Address</span>
+				     		<input type="checkbox" id="copyAddress" > <span class="tinytext">Same as Present Address</span>
 				     		<table id="entrytable" class="peradd">				     			
 				     			<tr>
 				     				<td>
@@ -291,7 +291,7 @@
 			     					<td>
 										<div class="form-group">
 											<label for="jcaptcha" class="">Captcha <span class="mandatory">*</span></label>
-											<img src="./jcaptcha.jpg" id="jcaptchaimg" onclick="changeCaptcha();" title="Click To Reload" style="cursor: pointer;"/>
+											<img src="./jcaptcha.jpg" id="jcaptchaimg"  title="Click To Reload" style="cursor: pointer;"/>
 											<input type="text" ng-model="signupDetails.userresponsecaptcha" id="jcaptcha" name="jcaptcha" value="" class="form-control"  autocomplete="off" >
 											<span id="jcaptchaMsg" class="formErrorContent"></span>
 											<div style="text-align: center;padding-top:10px ">

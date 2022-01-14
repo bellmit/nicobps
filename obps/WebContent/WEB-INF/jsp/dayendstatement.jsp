@@ -92,8 +92,6 @@
 	</div>
 
 </body>
-<script>
-	
-</script>
+
 <script src="resources/js/application/dayendstatment.js"></script>
 </html>

@@ -242,8 +242,6 @@
 	</div>
 
 </body>
-<script>
-	
-</script>
+
 <script src="resources/js/application/bpa/printpermit.js"></script>
 </html>

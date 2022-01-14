@@ -64,12 +64,7 @@
 </ul>
 
  <!-- Menu Toggle Script -->
- <script>
-   $("#menu-toggle").click(function(e) {
-     e.preventDefault();
-     $("#wrapper").toggleClass("toggled");
-   });
- </script>
+ <script src="resources/js/commons/menutop.js"></script>
 
 <!-- ////////////////////////////////////////////// -->  
 <!-- Signup Modal -->

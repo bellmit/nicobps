@@ -48,6 +48,16 @@ jQuery(document).ready(function () {
         jQuery(this).text("");
     });
     */    
+    
+    
+    
+    jQuery("#jcaptchaimg").on('click', function() {
+		changeCaptcha();
+	});
+	
+	jQuery("#licenseesenclosures").on('submit', function() {
+		onbeforeSubmit();
+	});
 }); 
 
 function onbeforeSubmit()

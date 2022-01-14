@@ -87,7 +87,7 @@
 															style="cursor: pointer;" />
 														<form:input type="text" path="userresponsecaptcha"
 															autocomplete="off" maxlength="6" />
-														<%-- <img src="<core:out value="${contextPath}" escapeXml="true"></core:out>/scripts/images/icon-refresh.png" id="jcaptchaRef" onclick="changeCaptcha();" title="Click To Reload" style="cursor: pointer;"/>    --%>
+													
 														<div>
 															<form:errors path="userresponsecaptcha" cssClass="error"
 																style="color:red" />
