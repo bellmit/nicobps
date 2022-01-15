@@ -22,4 +22,5 @@
     <div class="ajax-loading-content" style="text-align: center;">
         <img src="resources/images/c-processing.gif" alt="LOADING....." height="100px" width="100px"/>
     </div>
-</div>
+</div>  
+<script src="resources/js/commons/ajaxloading.js"></script>  

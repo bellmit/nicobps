@@ -35,24 +35,24 @@ app.controller("CommonCtrl", [
 		$scope.Enclosures = [];
 		$scope.Users = [];
 		$scope.SiteEnclosures = new Array({ code: null, name: '', file: null, error: false, errormsg: null });
-		$scope.bpa.applicationcode = APPCODE;
 		$scope.init = (applicationcode) => {
 
 			APPCODE = applicationcode;
+			$scope.bpa.applicationcode = APPCODE;
+			/* GET */
+			BS.listBPAEnclosures((response) => {
+				$scope.Enclosures = response;
+	
+				$scope.Enclosures.forEach((o, x) => {
+					o.selected = false;
+				});
+			}, APPCODE);
+			BS.listSiteInspectionQuestionnaires((response) => {
+				$scope.Questionnaires = response;
+			}, APPCODE);
 
 		};
-		/* GET */
-		BS.listBPAEnclosures((response) => {
-			$scope.Enclosures = response;
 
-			$scope.Enclosures.forEach((o, x) => {
-				o.selected = false;
-			});
-		}, APPCODE);
-
-		BS.listSiteInspectionQuestionnaires((response) => {
-			$scope.Questionnaires = response;
-		}, APPCODE);
 
 		/* ACTION */
 		$scope.addRemoveMoreFile = (opt) => {

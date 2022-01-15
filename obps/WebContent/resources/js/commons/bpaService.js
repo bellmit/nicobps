@@ -97,7 +97,8 @@ app.service("bpaService", [
       listBPAConditions: async function (callback, data = "") {
     	  CUS.getData("./listbpaconditions.htm", data, callback);
       },
-      listBPAEnclosures: async function (callback, data = "") {
+      listBPAEnclosures: async function (callback, data ) {
+        console.log(data);
     	  CUS.getData("./listBpaEnclosures.htm", data, callback);
       },
       listDistricts: async function (callback, data = "") {

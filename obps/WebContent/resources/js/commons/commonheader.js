@@ -1,9 +1,4 @@
-jQuery(document).ajaxSend(function() {
-	jQuery("#ajaxLoading").fadeIn();
-});
-jQuery(document).ajaxComplete(function(event,xhr,options) {
-	jQuery("#ajaxLoading").fadeOut();
-});
+
 $(document).ready(function() {
 	$("#nav_but").on('click', function() {
 		myFunction(this);
@@ -24,7 +19,7 @@ function MsgBox(text, modal, callback) {
 	}
 	jQuery('#msgboxbuttons').html("<button id='msgboxbutton'" +
 		"style='margin: 30px auto 5px auto; width: 70px; border-radius: 5px; border: #34495e solid 2px; text-align: center;'"
-		+ "onclick='jQuery.fancybox.close();msgboxbuttonpressed(MsgCallBack);'>OK</button>")
+		+ ">OK</button>")
 	jQuery.fancybox.close();
 	jQuery("#MsgBox").find("span").html(text);
 	jQuery.fancybox({
@@ -52,12 +47,12 @@ function ConfirmBox(text, callback) {
 	}
 	jQuery.fancybox.close();
 	jQuery("#MsgBox").find("span").html(text);
-	jQuery('#msgboxbuttons').html("<button " +
+	jQuery('#msgboxbuttons').html("<button id='ConfirmboxbuttonYes'" +
 		"style='margin: 30px auto 5px auto; width: 70px; border-radius: 5px; border: #34495e solid 2px; text-align: center;'"
-		+ "onclick='jQuery.fancybox.close();msgboxbuttonpressed(MsgCallBack,true);'>Yes</button>" +
-		"<button " +
+		+ ">Yes</button>" +
+		"<button  id='ConfirmboxbuttonNo'" +
 		"style='margin: 30px auto 5px auto; width: 70px; border-radius: 5px; border: #34495e solid 2px; text-align: center;'"
-		+ "onclick='jQuery.fancybox.close();msgboxbuttonpressed(MsgCallBack,false);'>No</button>")
+		+ ">No</button>")
 	jQuery.fancybox({
 		href: '#MsgBox',
 		'autoSize': true,
@@ -70,6 +65,25 @@ function ConfirmBox(text, callback) {
 	});
 	focused = jQuery(':focus');
 }
+
+//$(document).ready(function(){
+  //$("#msgboxbutton").click(function(){
+  $(document).on('click', '#msgboxbutton', function(){ 
+    jQuery.fancybox.close();
+    msgboxbuttonpressed(MsgCallBack);
+  });
+  //$("#ConfirmboxbuttonYes").click(function(){
+  $(document).on('click', '#ConfirmboxbuttonYes', function(){
+    jQuery.fancybox.close();
+    msgboxbuttonpressed(MsgCallBack,true);
+  });
+  //$("#ConfirmboxbuttonNo").click(function(){
+  $(document).on('click', '#ConfirmboxbuttonNo', function(){
+    jQuery.fancybox.close();
+    msgboxbuttonpressed(MsgCallBack,false);
+  });
+//});
+
 function msgboxbuttonpressed(callback, response) {
 	jQuery('#MsgBox').find('span').html('');
 	if (callback && {}.toString.call(callback) === '[object Function]') {

@@ -37,15 +37,7 @@ app.controller("CommonCtrl", [
 		$scope.States = [];
 
 		/* GET */
-		BS.getEdcrDetails((response) => {
-			let edcr = new EdcrDetail();
-			$scope.EDCR = edcr.init(response);
-			$scope.planInfo = edcr.extractPlanInfo($scope.EDCR);
-			$scope.gmapAddress = ($scope.planInfo.district).toLocaleLowerCase();
-			$scope.occupancy = edcr.extractPlanOccupancy($scope.EDCR);
-			$scope.BPA = $scope.BPA.extractFromEdcrObject($scope.EDCR);
-			$scope.listOfficelocations();
-		}, EDCRNUMBER);
+		
 
 		$scope.listOfficelocations = () => {
 			BS.listOfficelocations((response) => {
@@ -416,7 +408,15 @@ app.controller("CommonCtrl", [
 		console.log("edcr "+ edcrnumber);
 
 			EDCRNUMBER = edcrnumber;
-
+			BS.getEdcrDetails((response) => {
+				let edcr = new EdcrDetail();
+				$scope.EDCR = edcr.init(response);
+				$scope.planInfo = edcr.extractPlanInfo($scope.EDCR);
+				$scope.gmapAddress = ($scope.planInfo.district).toLocaleLowerCase();
+				$scope.occupancy = edcr.extractPlanOccupancy($scope.EDCR);
+				$scope.BPA = $scope.BPA.extractFromEdcrObject($scope.EDCR);
+				$scope.listOfficelocations();
+			}, EDCRNUMBER);
 		};
 
 		/* CREATE */

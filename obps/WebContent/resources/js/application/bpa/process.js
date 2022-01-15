@@ -37,15 +37,14 @@ app.controller("CommonCtrl", [
 		$scope.init = (applicationcode) => {
 
 			APPCODE = applicationcode;
+			BS.listBPAEnclosures((response) => {
 
+				$scope.Enclosures = response;
+				$scope.Enclosures.forEach((o, x) => {
+					o.selected = false;
+				});
+			}, APPCODE);
 		};
-		/* GET */
-		BS.listBPAEnclosures((response) => {
-			$scope.Enclosures = response;
-			$scope.Enclosures.forEach((o, x) => {
-				o.selected = false;
-			});
-		}, APPCODE);
 
 		/*ACTION*/
 		$scope.validateForm = () => {

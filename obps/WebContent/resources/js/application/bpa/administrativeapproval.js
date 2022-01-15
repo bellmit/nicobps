@@ -36,13 +36,7 @@ app.controller("CommonCtrl", [
 		//added
 		$scope.Enclosures = [];
 		$scope.SiteEnclosures = new Array({ code: null, name: '', file: null, error: false, errormsg: null });
-		BS.listBPAEnclosures((response) => {
-			$scope.Enclosures = response;
 
-			$scope.Enclosures.forEach((o, x) => {
-				o.selected = false;
-			});
-		}, APPCODE);
 
 		/* ACTION */
 		$scope.addRemoveMoreFile = (opt) => {
@@ -139,17 +133,7 @@ app.controller("CommonCtrl", [
 
 
 		//end 
-		$scope.bpa.applicationcode = APPCODE;
 
-		BS.listBPAConditions((response) => {
-			$scope.Conditions = response;
-			$scope.Conditions.forEach(c => {
-				if (c.checked === 'Y')
-					c.checked = true;
-				else
-					c.checked = false;
-			});
-		}, APPCODE);
 
 		/*ACTION*/
 		$scope.addRemoveMoreConditions = (key) => {
@@ -180,6 +164,24 @@ app.controller("CommonCtrl", [
 		$scope.init = (applicationcode) => {
 
 			APPCODE = applicationcode;
+			BS.listBPAEnclosures((response) => {
+				$scope.Enclosures = response;
+
+				$scope.Enclosures.forEach((o, x) => {
+					o.selected = false;
+				});
+			}, APPCODE);
+			$scope.bpa.applicationcode = APPCODE;
+
+			BS.listBPAConditions((response) => {
+				$scope.Conditions = response;
+				$scope.Conditions.forEach(c => {
+					if (c.checked === 'Y')
+						c.checked = true;
+					else
+						c.checked = false;
+				});
+			}, APPCODE);
 
 		};
 		$scope.forward = () => {

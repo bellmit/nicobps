@@ -22,14 +22,11 @@ app.controller("CommonCtrl", [
 		$scope.bpa = new ProcessFlow();
 		$scope.taskStatus = new TaskStatus();
 
-		$scope.bpa.applicationcode = APPCODE;
 
 		/*GET*/
 		$scope.taskStatus = new TaskStatus();
 
-		BS.getCurrentProcessTaskStatus((response) => {
-			$scope.taskStatus = response;
-		}, APPCODE);
+		
 
 		/*ACTION*/
 		$scope.clearAfterCreateProcess = () => {
@@ -89,6 +86,10 @@ app.controller("CommonCtrl", [
 		$scope.init = (applicationcode) => {
 
 			APPCODE = applicationcode;
+			$scope.bpa.applicationcode = APPCODE;
+			BS.getCurrentProcessTaskStatus((response) => {
+				$scope.taskStatus = response;
+			}, APPCODE);
 
 		};
 	}]);

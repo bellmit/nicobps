@@ -1,7 +1,7 @@
 /**
  * @author Decent Khongstia
  */
-var APPCODE;
+var APPCAPPCODEODE;
 app.controller("CommonCtrl", [
 	"$scope",
 	"$http",
@@ -19,7 +19,6 @@ app.controller("CommonCtrl", [
 		$scope.serverResponseSuccess = false;
 
 		$scope.bpa = {};
-		$scope.bpa.applicationcode = APPCODE;
 
 		$scope.Fees = [];
 		$scope.PayModes = [];
@@ -28,6 +27,7 @@ app.controller("CommonCtrl", [
 		$scope.init = (applicationcode) => {
 
 			APPCODE = applicationcode;
+			$scope.bpa.applicationcode = APPCODE;
 
 		};
 

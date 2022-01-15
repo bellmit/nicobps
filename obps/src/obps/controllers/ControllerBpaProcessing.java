@@ -422,6 +422,7 @@ public class ControllerBpaProcessing {
 	@GetMapping(value = "/listBpaEnclosures.htm")
 	public @ResponseBody List<Map<String, Object>> listBPAEnclosures(
 			@RequestParam(name = "param") String applicationcode) {
+		System.out.println("\n\n INSIDE listBpaEnclosures.htm");
 		return SBI.listBPAEnclosures(applicationcode);
 	};
 
