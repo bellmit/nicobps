@@ -318,6 +318,7 @@ app.controller("CommonCtrl", [
 
 
 		$scope.searchApplication = () => {
+		
 			$scope.displaycols = tablecolumns_2;
 			$scope.errorMsg = "";
 			$("#displayRecords").html("");

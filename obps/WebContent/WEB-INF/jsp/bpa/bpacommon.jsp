@@ -52,7 +52,7 @@
 
 
 
-				<div class="card" ng-if="search">
+				<div class="card" ng-show="search">
 					<div class="card-body">
 						<form >
 							<div class="input-group" style="padding: 2rem 5rem">
