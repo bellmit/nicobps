@@ -10,7 +10,7 @@ app.controller("CommonCtrl", [
 	"commonInitService",
 	"bpaService",
 	function($scope, $http, $timeout, $window, CIS, BS) {
-		console.log("BPA: Pay Application Fee");
+		console.log("BPA: Pay Application Fee app");
 
 		let data = "";
 		$scope.serverResponseError = false;
@@ -25,25 +25,25 @@ app.controller("CommonCtrl", [
 		$scope.init = (applicationcode) => {
 
 			APPCODE = applicationcode;
-			$scope.bpa.applicationcode = APPCODE;	
+			$scope.bpa.applicationcode = APPCODE;
+			/* GET */
+			BS.getBpaApplicationFee((response) => {
+				$scope.Fees = response;
+				let len = Object.keys($scope.Fees).length;
+				if (len > 0) {
+					$scope.bpa.amount = $scope.Fees.feeamount;
+					$scope.bpa.feecode = $scope.Fees.feecode;
+					$scope.bpa.officecode = $scope.Fees.officecode;
+				}
+				console.log("$scope.bpa: ", $scope.bpa);
+			}, $scope.bpa.applicationcode);
 
+			BS.getOfficePaymentMode((response) => {
+				$scope.PayModes = response;
+			}, $scope.bpa.applicationcode);
 		};
 
-		/* GET */
-		BS.getBpaApplicationFee((response) => {
-			$scope.Fees = response;
-			let len = Object.keys($scope.Fees).length;
-			if (len > 0) {
-				$scope.bpa.amount = $scope.Fees.feeamount;
-				$scope.bpa.feecode = $scope.Fees.feecode;
-				$scope.bpa.officecode = $scope.Fees.officecode;
-			}
-			console.log("$scope.bpa: ", $scope.bpa);
-		}, $scope.bpa.applicationcode);
 
-		BS.getOfficePaymentMode((response) => {
-			$scope.PayModes = response;
-		}, $scope.bpa.applicationcode);
 
 		/* ACTION */
 		/* $scope.beforeSubmit = () => {

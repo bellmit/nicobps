@@ -33,10 +33,11 @@ app.controller("CommonCtrl", [
 		$scope.OwnerDetails = [];
 		$scope.Questionnaires = [];
 
-		$scope.bpa.applicationcode = APPCODE;
+		
 		$scope.init = (applicationcode) => {
-
+			
 			APPCODE = applicationcode;
+			$scope.bpa.applicationcode = APPCODE;
 			BS.listBPAEnclosures((response) => {
 
 				$scope.Enclosures = response;

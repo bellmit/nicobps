@@ -104,16 +104,19 @@ app.controller("CommonCtrl", [
 		};
 
 		$scope.sameAddr = (index) => {
-			let isSameAddress = $scope.bpaform['isSameAddress' + index].$modelValue;
-			if (isSameAddress && $scope.BPA.ownerdetails != null && $scope.BPA.ownerdetails[index] != null) {
-				$scope.BPA.ownerdetails[index].peraddressline1 = $scope.BPA.ownerdetails[index].preaddressline1;
-				$scope.BPA.ownerdetails[index].peraddressline2 = $scope.BPA.ownerdetails[index].preaddressline2;
-				$scope.BPA.ownerdetails[index].pertownvillage = $scope.BPA.ownerdetails[index].pretownvillage;
-				$scope.BPA.ownerdetails[index].perstatecode = $scope.BPA.ownerdetails[index].prestatecode;
-				$scope.listDistricts(2, $scope.BPA.ownerdetails[index].perstatecode);
-				$scope.BPA.ownerdetails[index].perdistrictcode = $scope.BPA.ownerdetails[index].predistrictcode;
-				$scope.BPA.ownerdetails[index].perpincode = $scope.BPA.ownerdetails[index].prepincode;
-			}
+			$timeout(() => {
+				let isSameAddress = $scope.bpaform['isSameAddress' + index].$modelValue;
+				if (isSameAddress && $scope.BPA.ownerdetails != null && $scope.BPA.ownerdetails[index] != null) {
+					$scope.BPA.ownerdetails[index].peraddressline1 = $scope.BPA.ownerdetails[index].preaddressline1;
+					$scope.BPA.ownerdetails[index].peraddressline2 = $scope.BPA.ownerdetails[index].preaddressline2;
+					$scope.BPA.ownerdetails[index].pertownvillage = $scope.BPA.ownerdetails[index].pretownvillage;
+					$scope.BPA.ownerdetails[index].perstatecode = $scope.BPA.ownerdetails[index].prestatecode;
+					$scope.listDistricts(2, $scope.BPA.ownerdetails[index].perstatecode);
+					$scope.BPA.ownerdetails[index].perdistrictcode = $scope.BPA.ownerdetails[index].predistrictcode;
+					$scope.BPA.ownerdetails[index].perpincode = $scope.BPA.ownerdetails[index].prepincode;
+				}
+
+			 }, 0);
 		}
 
 		$scope.setGoogleMapLocation = (location) => {
