@@ -515,8 +515,13 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	@Override
-	public Map<String, Object> getPlanInfo(String permitnumber) {
-		return daoUtilInterface.getPlanInfo(permitnumber);
+	public Map<String, Object> getPlanInfoPermit(String permitnumber) {
+		return daoUtilInterface.getPlanInfoPermit(permitnumber);
+	}
+	
+	@Override
+	public Map<String, Object> getPlanInfoEdcr(String edcrnumber) {
+		return daoUtilInterface.getPlanInfoEdcr(edcrnumber);
 	}
 
 	@Override
@@ -667,5 +672,6 @@ public class ServiceUtil implements ServiceUtilInterface {
 		return (!list.isEmpty()) ? list.get(0) : new HashMap<>();
 
 	}
+
 
 }

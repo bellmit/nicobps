@@ -158,6 +158,16 @@ public class BpaValidator {
 
 			}
 		}
+		
+		if (bpa.getIstatkal() != null) {
+			if (bpa.getIstatkal().trim().isEmpty()) {
+				response.put("code", HttpStatus.BAD_REQUEST.value());
+				response.put("msg", "TATKAL VALUE CANNOT BE EMPTY !!");
+			}
+		} else {
+			response.put("code", HttpStatus.BAD_REQUEST.value());
+			response.put("msg", " TATKAL VALUE CANNOT BE NULL !!");
+		}
 
 	}
 

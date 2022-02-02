@@ -6,6 +6,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * @author obps
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BpaApplication implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -27,7 +31,17 @@ public class BpaApplication implements Serializable {
 	private String holdingno;
 	private String entrydate;
 	private String additionalinfo;
+	private String istatkal;
 	private List<BpaOwnerDetail> ownerdetails;
+
+	
+	public String getIstatkal() {
+		return istatkal;
+	}
+
+	public void setIstatkal(String istatkal) {
+		this.istatkal = istatkal;
+	}
 
 	public String getApplicationcode() {
 		return applicationcode;

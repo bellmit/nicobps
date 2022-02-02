@@ -131,6 +131,18 @@ app.controller("CommonCtrl", [
 				} else
 					return data;
 			}
+		},
+		{
+			"title": "Is Tatkal ",
+			"data": "istatkal",
+			"width": "1%",
+			render: (data, type, row, meta) => {
+				if (data == null) {
+
+					return "";
+				} else
+					return data == 'Y' ? 'YES' : 'NO';
+			}
 		}
 		];
 
@@ -247,6 +259,18 @@ app.controller("CommonCtrl", [
 					} else
 						return data;
 				}
+			},
+			{
+				"title": "Is Tatkal ",
+				"data": "istatkal",
+				"width": "1%",
+				render: (data, type, row, meta) => {
+					if (data == null) {
+
+						return "";
+					} else
+						return data == 'Y' ? 'YES' : 'NO';
+				}
 			}
 		];
 
@@ -256,17 +280,17 @@ app.controller("CommonCtrl", [
 
 
 		$scope.init = (page, processcode, applicationcode) => {
-			
+
 			console.log("page  : " + page);
 			console.log("applicationcode  : " + applicationcode);
 			$scope.page = page.toString().trim();
 			$scope.processcode = processcode;
 			$scope.search = (page == "bpasearch" ? true : false);
-			
+
 			console.log("search  : " + $scope.search);
 			if ($scope.page == "bpastatus") {
 				APPCODE = applicationcode;
-				
+
 			};
 		}
 
@@ -318,7 +342,7 @@ app.controller("CommonCtrl", [
 
 
 		$scope.searchApplication = () => {
-		
+
 			$scope.displaycols = tablecolumns_2;
 			$scope.errorMsg = "";
 			$("#displayRecords").html("");
@@ -352,6 +376,17 @@ app.controller("CommonCtrl", [
 				"createdRow": function(row, data, dataIndex) {
 					$compile(angular.element(row).contents())($scope);
 				},
+				"rowCallback": function(row,data,index) {
+				if ($scope.page == "bpainbox") {
+				 if ( data.istatkal == "Y" )
+				    {
+				       $('td', row).css('background-color', '#ffcccb');
+				    // $('td', row).css('color', 'white');
+				    }
+				   
+				}
+				}
+				   
 
 			});
 
@@ -395,8 +430,8 @@ app.controller("CommonCtrl", [
 			});
 
 
-        if ($scope.page == "bpastatus") {
-          
+			if ($scope.page == "bpastatus") {
+
 				try {
 					console.log("APPCODE : " + APPCODE);
 					if (APPCODE != null && APPCODE != '' && APPCODE.length > 10) {
@@ -406,7 +441,7 @@ app.controller("CommonCtrl", [
 			}
 
 
-			
+
 		}
 	},
 ]);

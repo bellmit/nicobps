@@ -326,7 +326,7 @@ public class DaoUtil implements DaoUtilInterface {
 	}
 
 	@Override
-	public Map<String, Object> getPlanInfo(String permitnumber) {
+	public Map<String, Object> getPlanInfoPermit(String permitnumber) {
 
 		System.out.println(" =================getPlanInfoObj==============");
 		System.out.println("permitnumber :" + permitnumber);
@@ -349,29 +349,58 @@ public class DaoUtil implements DaoUtilInterface {
 
 			e.getStackTrace();
 
-			System.out.println("Error in getPlanInfo  : " + e);
+			System.out.println("Error in getPlanInfoPermit  : " + e);
 		}
 
 		return resp;
 
 	};
 
-	
 	@Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
-    public void initAuditrail(HashMap<String, String> map)            
-    {  
-        try
-        {
-            String sql = "INSERT INTO nicobps.audittrail(userid,actiontaken,pageurl,browser,os,ipaddress) "
-                       + "VALUES(?,?,?,?,?,?) "; 
-            Object[] values={map.get("userid"),map.get("actiontaken"),map.get("pageurl"),map.get("browser"),map.get("os"),map.get("ipaddress")};
-            jdbcTemplate.update(sql, values);                        
-        }catch(Exception e){
-            System.out.println("Error in DaoUtil.initAuditrail(final HashMap<String, String> map) : "+e);
-        }finally{
-            map=null;
-        }
-    }    	
-	
+	public Map<String, Object> getPlanInfoEdcr(String edcrnumber) {
+
+		System.out.println(" =================getPlanInfoObj==============");
+		System.out.println("edcrnumber :" + edcrnumber);
+		Map<String, Object> resp = null;
+		try {
+
+			String sqlquery = "SELECT usercode, officecode, edcrnumber, planinfoobject, status, dxffile, "
+					+ "       scrutinyreport, entrydate, originalfilename "
+					+ "  FROM nicobps.edcrscrutiny WHERE status='Accepted' and edcrnumber=?;";
+			Object[] values = { edcrnumber };
+
+			resp = jdbcTemplate.queryForMap(sqlquery, values);
+
+			System.out.println("resp :: " + resp);
+
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+
+		} catch (Exception e) {
+
+			e.getStackTrace();
+
+			System.out.println("Error in getPlanInfoEdcr  : " + e);
+		}
+
+		return resp;
+
+	};
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+	public void initAuditrail(HashMap<String, String> map) {
+		try {
+			String sql = "INSERT INTO nicobps.audittrail(userid,actiontaken,pageurl,browser,os,ipaddress) "
+					+ "VALUES(?,?,?,?,?,?) ";
+			Object[] values = { map.get("userid"), map.get("actiontaken"), map.get("pageurl"), map.get("browser"),
+					map.get("os"), map.get("ipaddress") };
+			jdbcTemplate.update(sql, values);
+		} catch (Exception e) {
+			System.out.println("Error in DaoUtil.initAuditrail(final HashMap<String, String> map) : " + e);
+		} finally {
+			map = null;
+		}
+	}
+
 }

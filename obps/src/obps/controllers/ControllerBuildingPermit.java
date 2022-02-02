@@ -1,6 +1,7 @@
 /*@author Decent Khongstia*/
 package obps.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import obps.models.BpaProcessFlow;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
+import obps.util.common.PlanInfoDetails;
 import obps.validators.BpaValidator;
 
 @Controller
@@ -38,6 +40,9 @@ public class ControllerBuildingPermit {
 	private static final Logger LOG = Logger.getLogger(ControllerBuildingPermit.class.toGenericString());
 
 	private static String pathurl;
+
+	@Autowired
+	private PlanInfoDetails planinfo;
 
 	@Autowired
 	private ServiceBPAInterface SBI;
@@ -150,7 +155,7 @@ public class ControllerBuildingPermit {
 		usercode = getSessionUsercode(model);
 		if (usercode != null && usercode > -1) {
 			model.addAttribute("applicationcode", applicationcode);
-			model.addAttribute("page","bpastatus");
+			model.addAttribute("page", "bpastatus");
 			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
 //			return BPAConstants.PARENT_URL_MAPPING.concat("/trackstatus");
 		}
@@ -162,7 +167,7 @@ public class ControllerBuildingPermit {
 		LOG.info("URL: buildingpermit.htm");
 		usercode = getSessionUsercode(model);
 		if (usercode != null && usercode > -1) {
-			model.addAttribute("page","buildingpermit");
+			model.addAttribute("page", "buildingpermit");
 			return BPAConstants.PARENT_URL_MAPPING.concat("/bpacommon");
 //			return BPAConstants.PARENT_URL_MAPPING.concat("/buildingpermit");
 		}
@@ -179,7 +184,7 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/bpaform.htm")
 	public String basicDetailsForm(Model model) {
 		LOG.info("URL: bpaform.htm");
-		
+
 		return BPAConstants.COMPONENT_URL_MAPPING.concat("/bpaform");
 	}
 
@@ -218,7 +223,7 @@ public class ControllerBuildingPermit {
 	@GetMapping(value = "/getEdcrDetails.htm")
 	public @ResponseBody Map<String, Object> getEdcrDetails(@ModelAttribute("SESSION_USERCODE") Integer usercode,
 			@RequestParam(name = "param") String edcrnumber) {
-		
+
 		return SBI.getEdcrDetails(usercode, edcrnumber);
 	};
 
@@ -279,9 +284,10 @@ public class ControllerBuildingPermit {
 	public @ResponseBody List<CommonMap> listOwnershiptypes() {
 		return SBI.listOwnershiptypes();
 	}
+
 	@GetMapping(value = "/listEngineers.htm")
 	public @ResponseBody List<CommonMap> listEngineers(@ModelAttribute("SESSION_USERCODE") Integer usercode) {
-		System.out.println("usercode::"+usercode);
+		System.out.println("usercode::" + usercode);
 		return SBI.listEngineers(usercode);
 	}
 
@@ -380,6 +386,27 @@ public class ControllerBuildingPermit {
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping(value = "/getPlanInfoDetails.htm")
+	public @ResponseBody Map<String, Object> getPlanInfoDetails(@RequestParam String edcrnumber) {
+
+		Map<String, Object> resp = new HashMap<String, Object>();
+
+		try {
+
+			HashMap plandet = planinfo.getPlanInfoDetails(edcrnumber,"edcr");
+			resp.putAll(plandet);
+
+			System.out.println("params from planinfo :: " + resp.toString());
+		} catch (Exception e) {
+
+			resp.put("error", "Exception encountered while getting list");
+
+		}
+
+		return resp;
+
 	}
 
 }

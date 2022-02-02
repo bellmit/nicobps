@@ -149,7 +149,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				/* + "      PR.processname processname, NPR.processname nextprocessname,   " */
 				+ "      PR.processname processname, CASE WHEN PF.processflowstatus = 'N' THEN NPR.processname ELSE PR.processname END nextprocessname,   "
 				+ "		 TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate,  "
-				+ "      RUL.fullname AS rejectedby, RA.remarks AS rejectremarks, Ra.entrusted, TO_CHAR(RA.entrydate,'DD/MM/YYYY') rejectdate ,TUL.fullname AS tousername  ,UL.fullname AS fromusername ,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,EDCR.originalfilename "
+				+ "      RUL.fullname AS rejectedby, RA.remarks AS rejectremarks, Ra.entrusted, TO_CHAR(RA.entrydate,'DD/MM/YYYY') rejectdate ,TUL.fullname AS tousername  ,UL.fullname AS fromusername ,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,EDCR.originalfilename,BPA.istatkal "
 				+ "FROM nicobps.applicationflowremarks AFR     " + "INNER JOIN (  "
 				+ "	SELECT applicationcode, MAX(entrydate)entrydate  "
 				+ "	FROM nicobps.applicationflowremarks AFR     " + "	WHERE modulecode = AFR.modulecode  "
@@ -168,8 +168,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ " INNER JOIN nicobps.edcrscrutiny EDCR  ON BPA.edcrnumber = EDCR.edcrnumber         "
 				+ "LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AFR.tousercode    "
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AFR.applicationcode  "
-				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode    " 
-				+ "WHERE   "
+				+ "LEFT JOIN nicobps.userlogins RUL ON RUL.usercode = RA.usercode    " + "WHERE   "
 				+ "	AFR.modulecode = ?   " + "	AND   " + "	APP.usercode = ? " + "ORDER BY APP.entrydate";
 		return SUI.listGeneric(sql, new Object[] { BPAConstants.MODULE_CODE, USERCODE });
 	}
@@ -204,9 +203,10 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public List<Map<String, Object>> listAppScrutinyDetailsForBPAV2(Integer usercode) {
-		String sql = "SELECT EDCR.usercode, EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,EDCR.originalfilename,BPAO.ownername,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,         "
+		String sql = "SELECT * FROM ( "
+				+ " SELECT EDCR.usercode, EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,EDCR.originalfilename,BPAO.ownername,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,         "
 				+ "      APP.applicationcode, APP.officecode, APP.modulecode, APP.usercode, APP.applicationslno, APP.servicetypecode, TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate ,      "
-				+ "      AF.fromprocesscode, PRF.processname AS currentprocessname,AF.toprocesscode, PR.processname AS nextprocessname, PU.pageurl, PU.urlcode ,TUL.fullname AS tousername  ,FUL.fullname AS fromusername  "
+				+ "      AF.fromprocesscode, PRF.processname AS currentprocessname,AF.toprocesscode, PR.processname AS nextprocessname, PU.pageurl, PU.urlcode ,TUL.fullname AS tousername  ,FUL.fullname AS fromusername,BPA.istatkal  "
 				+ "FROM nicobps.edcrscrutiny EDCR         "
 				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber         "
 				+ "INNER JOIN nicobps.bpaownerdetails BPAO ON BPAO.applicationcode = BPA.applicationcode    "
@@ -228,10 +228,11 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "WHERE EDCR.status='Accepted' AND EDCR.usercode = ?     " + "UNION ALL    "
 				+ "SELECT EDCR.usercode, EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,EDCR.originalfilename ,    "
 				+ "BPA.applicationcode, null AS officecode, null AS modulecode, null AS usercode, null AS applicationslno, null AS servicetypecode, null AS appdate ,      "
-				+ "null AS fromprocesscode, null AS processname,null AS toprocesscode, null AS processname, null AS pageurl, null AS urlcode,null as ownername,null as plotaddressline1 ,null AS tousername ,null AS fromusername       "
+				+ "null AS fromprocesscode, null AS processname,null AS toprocesscode, null AS processname, null AS pageurl, null AS urlcode,null as ownername,null as plotaddressline1 ,null AS tousername ,null AS fromusername ,null as istatkal      "
 				+ "FROM nicobps.edcrscrutiny EDCR         "
 				+ "LEFT JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber         "
-				+ "WHERE EDCR.status='Accepted' AND EDCR.usercode = ? AND BPA.applicationcode IS NULL";
+				+ "WHERE EDCR.status='Accepted' AND EDCR.usercode = ? AND BPA.applicationcode IS NULL "
+				+ " ) as tabl ORDER BY currentprocessname desc , istatkal DESC";
 		return SUI.listGeneric(sql, new Object[] { usercode, usercode });
 	}
 
@@ -240,7 +241,7 @@ class ServiceBPA implements ServiceBPAInterface {
 		String sql = "SELECT EDCR.originalfilename,TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,BPAO.ownername,       "
 				+ "      APP.applicationcode, APP.officecode, APP.modulecode, APP.usercode, APP.applicationslno, APP.servicetypecode, TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate ,    "
 				+ "      AF.toprocesscode,PRF.processname AS currentprocessname, PR.processname AS nextprocessname, AF.fromusercode, AF.tousercode, FUL.fullname AS fromusername, TUL.fullname AS tousername,  "
-				+ "      PU.pageurl, PU.urlcode    " + "FROM nicobps.edcrscrutiny EDCR       "
+				+ "      PU.pageurl, PU.urlcode , BPA.istatkal  " + "FROM nicobps.edcrscrutiny EDCR       "
 				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber   "
 				+ "INNER JOIN nicobps.bpaownerdetails BPAO ON BPAO.applicationcode = BPA.applicationcode     "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode     "
@@ -263,7 +264,8 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ ")UP ON CASE WHEN AF.tousercode IS NOT NULL THEN UP.usercode = AF.tousercode AND UP.urlcode = PU.urlcode   "
 				+ "	ELSE UP.urlcode = PU.urlcode   " + "       END  "
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode  "
-				+ "WHERE UP.usercode = ?  " + "AND RA.applicationcode IS NULL";
+				+ "WHERE UP.usercode = ?  "
+				+ "AND RA.applicationcode IS NULL  ORDER BY BPA.istatkal DESC,BPA.entrydate";
 		return SUI.listGeneric(sql, new Object[] { USERCODE });
 	}
 
@@ -273,7 +275,7 @@ class ServiceBPA implements ServiceBPAInterface {
 		String sql = "SELECT EDCR.originalfilename,TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,(plotaddressline1 || ' '|| plotaddressline2 || ' '|| plotvillagetown ) as address,EDCR.officecode, EDCR.edcrnumber, EDCR.planinfoobject, EDCR.status, TO_CHAR(EDCR.entrydate, 'DD/MM/YYYY') edcrdate,BPAO.ownername,       "
 				+ "      APP.applicationcode, APP.officecode, APP.modulecode, APP.usercode, APP.applicationslno, APP.servicetypecode, TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate ,    "
 				+ "      AF.toprocesscode, PRF.processname AS currentprocessname, PR.processname AS nextprocessname, AF.fromusercode, AF.tousercode, FUL.fullname AS fromusername, TUL.fullname AS tousername,  "
-				+ "      PU.pageurl, PU.urlcode    " + "FROM nicobps.edcrscrutiny EDCR       "
+				+ "      PU.pageurl, PU.urlcode  ,BPA.istatkal  " + "FROM nicobps.edcrscrutiny EDCR       "
 				+ "INNER JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber    "
 				+ "INNER JOIN nicobps.bpaownerdetails BPAO ON BPAO.applicationcode = BPA.applicationcode     "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode     "
@@ -296,7 +298,8 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ ")UP ON CASE WHEN AF.tousercode IS NOT NULL THEN UP.usercode = AF.tousercode AND UP.urlcode = PU.urlcode   "
 				+ "	ELSE UP.urlcode = PU.urlcode   " + "       END  "
 				+ "LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode  "
-				+ "WHERE UP.usercode = ?  " + "AND RA.applicationcode IS NULL AND AF.toprocesscode=? ";
+				+ "WHERE UP.usercode = ?  "
+				+ "AND RA.applicationcode IS NULL AND AF.toprocesscode=?  ORDER BY BPA.istatkal DESC, BPA.entrydate";
 		return SUI.listGeneric(sql, new Object[] { USERCODE, processcode });
 	}
 
@@ -308,7 +311,7 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "      TO_CHAR(AFR.entrydate, 'DD/MM/YYYY') taskdate, AFR.remarks,   "
 				+ "      PR.processname currentprocessname, CASE WHEN PF.processflowstatus = 'N' THEN NPR.processname ELSE PR.processname END nextprocessname,   "
 				+ "      OD.*, AA.permitnumber," + "      TO_CHAR(APP.entrydate, 'DD/MM/YYYY') appdate, "
-				+ "      RUL.fullname AS rejectedby, RA.remarks AS rejectremarks, Ra.entrusted, TO_CHAR(RA.entrydate,'DD/MM/YYYY') rejectdate , TUL.fullname AS tousername  ,UL.fullname AS fromusername ,OD.ownersname  "
+				+ "      RUL.fullname AS rejectedby, RA.remarks AS rejectremarks, Ra.entrusted, TO_CHAR(RA.entrydate,'DD/MM/YYYY') rejectdate , TUL.fullname AS tousername  ,UL.fullname AS fromusername ,OD.ownersname ,BPA.istatkal "
 				+ "FROM nicobps.applicationflowremarks AFR      INNER JOIN (  "
 				+ "	SELECT applicationcode, MAX(entrydate)entrydate  "
 				+ "	FROM nicobps.applicationflowremarks AFR  WHERE modulecode = AFR.modulecode  "

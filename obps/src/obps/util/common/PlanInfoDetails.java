@@ -25,14 +25,20 @@ public class PlanInfoDetails {
 	@Autowired
 	private ServiceUtilInterface SUI;
 
-	public HashMap getPlanInfoDetails(String permitnumber) {
+	public HashMap getPlanInfoDetails(String edcr_permit, String type) {
 		System.out.println("--------------PlanInfoDetails----------------");
 		HashMap params = new HashMap();
 		JSONObject edcrJson = new JSONObject();
 
 		try {
 
-			Map<String, Object> planinfo = SUI.getPlanInfo(permitnumber);
+			Map<String, Object> planinfo;
+
+			if (type.equals("edcr")) {
+				planinfo = SUI.getPlanInfoEdcr(edcr_permit);
+			} else {
+				planinfo = SUI.getPlanInfoPermit(edcr_permit);
+			}
 
 			JSONParser parser = new JSONParser();
 			edcrJson = (JSONObject) parser.parse((String) planinfo.get("planinfoobject"));
@@ -143,10 +149,14 @@ public class PlanInfoDetails {
 //			System.out.println("flrDetails  : " + flrDetails);
 
 			params.put("blocktotalfloor", blocktotalfloor);
+			
+			params.put("flrDetails", flrDetails);
+			
+			params.put("totalbuiltuparea", edcrContext.read("planDetail.virtualBuilding.totalBuitUpArea"));
 
-			JRBeanCollectionDataSource datas = new JRBeanCollectionDataSource(flrDetails);
+//			JRBeanCollectionDataSource datas = new JRBeanCollectionDataSource(flrDetails);
 
-			params.put("table_builtuparea", datas);
+//			params.put("table_builtuparea", datas);
 
 		} catch (Exception e) {
 

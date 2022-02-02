@@ -53,7 +53,9 @@ public interface DaoUtilInterface {
 
 	public boolean updateextendValidity(Short officecode, Integer usercode, String extendedto, Integer extendedby);
 
-	public Map<String, Object> getPlanInfo(String permitnumber);
-	
+	public Map<String, Object> getPlanInfoPermit(String permitnumber);
+
+	public Map<String, Object> getPlanInfoEdcr(String edcrnumber);
+
 	public void initAuditrail(HashMap<String, String> map);
 }

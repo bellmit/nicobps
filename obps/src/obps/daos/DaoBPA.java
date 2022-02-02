@@ -274,16 +274,16 @@ public class DaoBPA implements DaoBPAInterface {
 					+ "    plotaddressline1, plotaddressline2, plotvillagetown, plotpincode,     "
 					+ "    plotgiscoordinates, officelocationcode, landregistrationdetails,     "
 					+ "    landregistrationno, plotidentifier1, plotidentifier2, plotidentifier3,     "
-					+ "    holdingno, additionalinfo, entrydate)    " + "VALUES (?, ?, ?, ?,     "
+					+ "    holdingno, additionalinfo, entrydate,istatkal)    " + "VALUES (?, ?, ?, ?,     "
 					+ "    ?, ?, ?, ?,     " + "    ?, ?, ?,     " + "    ?, ?, ?, ?,     "
-					+ "    ?, ?::json, now())    " + "";
+					+ "    ?, ?::json, now(),?)    " + "";
 
 			param = new Object[] { bpa.getApplicationcode(), bpa.getEdcrnumber(), bpa.getOwnershiptypecode(),
 					bpa.getOwnershipsubtype(), bpa.getPlotaddressline1(), bpa.getPlotaddressline2(),
 					bpa.getPlotvillagetown(), bpa.getPlotpincode(), bpa.getPlotgiscoordinates(),
 					bpa.getOfficelocationcode(), bpa.getLandregistrationdetails(), bpa.getLandregistrationno(),
 					bpa.getPlotidentifier1(), bpa.getPlotidentifier2(), bpa.getPlotidentifier3(), bpa.getHoldingno(),
-					bpa.getAdditionalinfo() };
+					bpa.getAdditionalinfo() ,bpa.getIstatkal()};
 
 			status = jdbcTemplate.update(sql, param) > 0;
 			if (!status)

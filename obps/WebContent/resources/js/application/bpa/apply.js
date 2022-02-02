@@ -37,7 +37,7 @@ app.controller("CommonCtrl", [
 		$scope.States = [];
 
 		/* GET */
-		
+
 
 		$scope.listOfficelocations = () => {
 			BS.listOfficelocations((response) => {
@@ -116,7 +116,7 @@ app.controller("CommonCtrl", [
 					$scope.BPA.ownerdetails[index].perpincode = $scope.BPA.ownerdetails[index].prepincode;
 				}
 
-			 }, 0);
+			}, 0);
 		}
 
 		$scope.setGoogleMapLocation = (location) => {
@@ -408,7 +408,7 @@ app.controller("CommonCtrl", [
 			return flag;
 		};
 		$scope.init = (edcrnumber) => {
-		console.log("edcr "+ edcrnumber);
+			console.log("edcr " + edcrnumber);
 
 			EDCRNUMBER = edcrnumber;
 			BS.getEdcrDetails((response) => {
@@ -420,8 +420,44 @@ app.controller("CommonCtrl", [
 				$scope.BPA = $scope.BPA.extractFromEdcrObject($scope.EDCR);
 				$scope.listOfficelocations();
 			}, EDCRNUMBER);
+
+			$scope.getPlanInfoDetails(edcrnumber);
 		};
 
+		$scope.getPlanInfoDetails = function(edcrnumber) {
+
+			jQuery.ajax({
+				type: "GET",
+				url: "./getPlanInfoDetails.htm",
+				dataType: "json",
+				data: { edcrnumber: edcrnumber },
+				success: function(response) {
+					console.log("response :: " + response.totalbuiltuparea);
+
+					$scope.totalbuiltuparea = response.totalbuiltuparea;
+					//-- cal
+					let sqmtoft = (parseFloat(response.totalbuiltuparea) * 10.7639).toFixed(3);
+					let amount = sqmtoft * 5;
+					let add_charge = amount.toLocaleString('en-IN', {
+						maximumFractionDigits: 2,
+						style: 'currency',
+						currency: 'INR'
+					});
+
+					//
+
+					$scope.totalbuiltuparea_ft = sqmtoft;
+
+					$scope.additionalcharges = add_charge;
+				},
+				error: function(xhr) {
+					alert(xhr.status + " = " + xhr);
+
+				},
+			});
+		};
+
+	
 		/* CREATE */
 		$scope.save = () => {
 			let BPA = {}, valid = false;

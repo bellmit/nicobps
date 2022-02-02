@@ -78,6 +78,7 @@ var BPA = function () {
     plotidentifier2: "",
     plotidentifier3: "",
     holdingno: "",
+    istatkal:"N",
     entrydate: todaysDate,
     // ownerdetail: new OwnerDetail(),
     ownerdetails: [new OwnerDetail()],
@@ -100,7 +101,8 @@ var BPA = function () {
       this.plotidentifier1 = bpa.plotidentifier1;
       this.plotidentifier2 = bpa.plotidentifier2;
       this.plotidentifier3 = bpa.plotidentifier3;
-      this.holdingno = bpa.holdingno;      
+      this.holdingno = bpa.holdingno; 
+      this.istatkal=bpa.istatkal;     
       let ods = [];
       if(bpa.ownerdetails != null && bpa.ownerdetails.length > 0){
     	  bpa.ownerdetails.forEach((o,x) => ods.push(o.init(o)));
