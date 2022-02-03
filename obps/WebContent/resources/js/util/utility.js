@@ -53,7 +53,7 @@ function PasswordStrength(userid,password)
             bpos=bpos +" jQuery('#colorbar').css( {width: \"" ;
             bpos = bpos + (perc * 2) + "px";
             bpos = bpos + "\" } );";
-            eval(bpos);
+            //eval(bpos);
             jQuery('#percent').html(" " + perc  + "% ");
     })    
 }    

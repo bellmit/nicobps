@@ -163,7 +163,10 @@ app.controller("CommonCtrl", [
 				flag = false;
 			}
 
-			bpa.plotgiscoordinates.$touched = true;
+			
+			if(bpa.plotgiscoordinates!=undefined){
+				bpa.plotgiscoordinates.$touched = true;
+			}
 			/*
 			   * if ( bpa.plotgiscoordinates.$modelValue == null ||
 			   * bpa.plotgiscoordinates.$modelValue == "" ) {

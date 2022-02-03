@@ -226,6 +226,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode) {
+		System.out.println("list2="+usercode);
+		System.out.println("list2="+licenseetypecode);
 		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2,filetypes AS value4 FROM masters.enclosures E   "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "LEFT OUTER JOIN nicobps.licenseesenclosures LE ON LE.enclosurecode=M.enclosurecode AND LE.usercode=? "

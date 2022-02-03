@@ -79,9 +79,9 @@ hr {
 					<!-- 					modified -->
 					<div class="col">
 						<div class="form-group">
-							<label class="col-sm-12">Name of Engineer on Record <span
+							<label class="col-sm-12 pl-0">Name of Engineer on Record <span
 								class="fa fa-asterisk"></span></label>
-							<div class="col-sm-12">
+							<div class="col-sm-12 pl-0">
 								<select class="form-control custom-form-control"
 									name="nameofengineer"
 									ng-model="BPA.additionalinfo.nameofengineer"
@@ -174,35 +174,37 @@ hr {
 			</div>
 		</div>
 		<div class="row">
-			<div class="col">
-				<div class="form-group">
-					<label class="col-sm-12">GIS Coordinates</label>
-					<div class="col-sm-12">
-						<div class="input-group">
-							<input type="text" class="form-control custom-form-control"
-								name="plotgiscoordinates" ng-model="BPA.plotgiscoordinates"
-								maxlength="99" readonly data-toggle="modal"
-								data-target="#gmapModal" />
-							<!-- 								ng-mousedown="toggleGmapModal()"  -->
-							<div class="input-group-append">
-								<button type="button" class="btn btn-outline-default"
-									data-toggle="modal" data-target="#gmapModal">
-									<i class="fa fa-location"></i>
-								</button>
-							</div>
-						</div>
-						<div class="col" ng-if="bpaform.plotgiscoordinates.$touched"
-							style="color: red">
-							<!-- 							<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span> -->
-						</div>
-					</div>
-				</div>
-			</div>
+			
+<!-- 			<div class="col"> -->
+<!-- 				<div class="form-group"> -->
+<!-- 					<label class="col-sm-12">GIS Coordinates</label> -->
+<!-- 					<div class="col-sm-12"> -->
+<!-- 						<div class="input-group"> -->
+<!-- 							<input type="text" class="form-control custom-form-control" -->
+<!-- 								name="plotgiscoordinates" ng-model="BPA.plotgiscoordinates" -->
+<!-- 								maxlength="99" readonly data-toggle="modal" -->
+<!-- 								data-target="#gmapModal" /> -->
+<!-- 															ng-mousedown="toggleGmapModal()"  -->
+<!-- 							<div class="input-group-append"> -->
+<!-- 								<button type="button" class="btn btn-outline-default" -->
+<!-- 									data-toggle="modal" data-target="#gmapModal"> -->
+<!-- 									<i class="fa fa-location"></i> -->
+<!-- 								</button> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 						<div class="col" ng-if="bpaform.plotgiscoordinates.$touched" -->
+<!-- 							style="color: red"> -->
+<!-- 														<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			 
 			<div class="col">
 				<div class="form-group">
 					<label class="col">Ward/Block/Sub-District<span
 						class="fa fa-asterisk"></span></label>
-					<div class="col-sm-12">
+					<div class="col-sm-6">
 						<select class="form-control custom-form-control"
 							name="officelocationcode" ng-model="BPA.officelocationcode"
 							ng-options="O.key as (O.value) for O in Officelocations" required>
