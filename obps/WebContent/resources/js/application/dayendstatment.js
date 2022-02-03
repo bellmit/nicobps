@@ -40,17 +40,16 @@ $scope.getDate = function(element) {
 	}
 });
 
-function printdayeendstat(officecode){	
-
-
+ $("#generate").click(function(){
+   
 	var from = jQuery("#fromentrydate").val();
 	var to = jQuery("#toentrydate").val();
-		
+	var officecode=	jQuery("#officecode").val();
+	
 	if(from==""||!from.match(PATTERN_DATE)){
 	    jQuery("#fromDate").show();
         jQuery("#fromDate").fadeOut(3000);
-		
- false;
+		false;
 	} 
 	if(to=="" || !to.match(PATTERN_DATE)){
 	    jQuery("#toDate").show();
@@ -60,5 +59,29 @@ function printdayeendstat(officecode){
 	
 	var params="status=3&officecode="+officecode+"&fromdate="+from+"&todate="+to;		
 	window.open("./Report?"+params);
-}
+
+  });
+
+
+//function printdayeendstat(officecode){	
+//
+//
+//	var from = jQuery("#fromentrydate").val();
+//	var to = jQuery("#toentrydate").val();
+//		
+//	if(from==""||!from.match(PATTERN_DATE)){
+//	    jQuery("#fromDate").show();
+//        jQuery("#fromDate").fadeOut(3000);
+//		
+// false;
+//	} 
+//	if(to=="" || !to.match(PATTERN_DATE)){
+//	    jQuery("#toDate").show();
+//        jQuery("#toDate").fadeOut(3000);
+//		return false;
+//	}
+//	
+//	var params="status=3&officecode="+officecode+"&fromdate="+from+"&todate="+to;		
+//	window.open("./Report?"+params);
+//}
 

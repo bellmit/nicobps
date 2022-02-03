@@ -38,8 +38,7 @@
 											</div>
 										</div>
 										<div id="fromDate" class="alert">
-											<span class="closebtn"
-												onclick="this.parentElement.style.display = 'none';">&times;</span>
+											<span class="closebtn">&times;</span>
 											<strong></strong> From Date is Required !
 										</div>
 									</div>
@@ -60,22 +59,25 @@
 											</input>
 										</div>
 										<div id="toDate" class="alert">
-											<span class="closebtn"
-												onclick="this.parentElement.style.display = 'none';">&times;</span>
+											<span class="closebtn">&times;</span>
 											<strong></strong> To Date is Required !
 										</div>
 									</div>
 								</div>
 							</div>
+							
 							<div>
-								<core:forEach items="${Listofficecode}" var="office"
-									varStatus="loop">
-									<input type="button" style="padding: .1em; margin-left: 35%"
-										value="Generate Statement" id="${office.key}"
-										onclick="printdayeendstat(id)" value="Print"
+								<input type="button" style="padding: .1em; margin-left: 35%"
+										value="Generate Statement" id="generate"
+										 value="Print"
 										class=" btn btn-primary" />
-									</br>
-								</core:forEach>
+								<core:forEach items="${Listofficecode}" var="office" 
+									varStatus="loop"> 
+										<input type="text" style="display:none"
+											value="${office.key}" id="officecode"
+											class=" btn btn-primary" />  
+								</core:forEach> 
+										
 							</div>
 						</div>
 					</div>
