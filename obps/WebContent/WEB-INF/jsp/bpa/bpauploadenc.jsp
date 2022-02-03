@@ -20,11 +20,7 @@
 						<form:form method="POST"
 							action="submitbpaenclosures.htm?${_csrf.parameterName}=${_csrf.token}"
 							modelAttribute="BpaEnclosures" name="BpaEnclosures"
-							id="BpaEnclosures" enctype="multipart/form-data"
-							onsubmit="javascript:return onbeforeSubmit()">
-							<script
-								src="resources/js/application/bpa/uploadbpaenclouseres.js"></script>
-
+							id="BpaEnclosures" enctype="multipart/form-data">
 							<div class="row">
 								<div class="col-md-12 py-12 px-12">
 									<h5 style="border-bottom: 3px solid #005776">Upload
@@ -83,18 +79,19 @@
 														<label>Please enter the text as shown in the image
 															<span class="mandatory">*</span>
 														</label> <img src="./jcaptcha.jpg" id="jcaptchaimg"
-															onclick="changeCaptcha();" title="Click To Reload"
-															style="cursor: pointer;" />
+															title="Click To Reload" style="cursor: pointer;" />
 														<form:input type="text" path="userresponsecaptcha"
 															autocomplete="off" maxlength="6" />
-													
+
 														<div>
 															<form:errors path="userresponsecaptcha" cssClass="error"
 																style="color:red" />
 														</div>
 													</div>
 													<div style="text-align: center; padding-top: 10px">
-														<input type="submit" name="_submit" id="_submit"
+														<input type="button" id="_submit1"
+															value="Upload" class="btn btn-primary b-btn" />
+														<input type="submit" style='display:none' name="_submit" id="_submit2"
 															value="Upload" class="btn btn-primary b-btn" />
 													</div>
 
@@ -118,6 +115,7 @@
 		</div>
 	</div>
 </body>
+<script	src="resources/js/application/bpa/uploadbpaenclouseres.js"></script>
 </html>
 
 

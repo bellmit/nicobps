@@ -37,7 +37,7 @@ jQuery(document).ready(function() {
 		var PATTERN_FILE = new RegExp(patt);
 
 		if (!checkimg.match(PATTERN_FILE)) {
-			showMsg(jQuery(this).attr('id'), "Enclosoures should be "+dbpatt);
+			showMsg(jQuery(this).attr('id'), "Enclosoures should be " + dbpatt);
 		} else {
 			showMsg(jQuery(this).attr('id'), "");
 		}
@@ -49,9 +49,18 @@ jQuery(document).ready(function() {
 	});
 	*/
 
+	jQuery("#_submit1").on('click', function() {
+		onbeforeSubmit();
+	});
+
+	jQuery('#jcaptchaimg').on('click', function() {
+
+		changeCaptcha();
+	});
 });
 
 function onbeforeSubmit() {
+	console.log("on submit");
 	var count = 0;
 	var status = 0;
 
@@ -62,7 +71,7 @@ function onbeforeSubmit() {
 				count++;
 				var fileContent = jQuery("#" + id).val();
 				if (fileContent === '') {
-					showMsg(id, "Please browse your enclosoures");
+					showMsg(id, "Please browse your enclosures");
 					status++;
 				}
 				else if (fileContent !== '') {
@@ -89,11 +98,14 @@ function onbeforeSubmit() {
 		}
 	}
 
-	if (jQuery.trim(jQuery("#userresponsecaptcha").val()) === "") {
-		showMsg("UploadEnc", "Please enter captcha");
-		return false;
-	}
+	//	if (jQuery.trim(jQuery("#userresponsecaptcha").val()) === "") {
+	//		showMsg("UploadEnc", "Please enter captcha");
+	//		return false;
+	//	}
 
+	//form submit 
+
+	jQuery("#_submit2").trigger('click');
 
 	return true;
 }

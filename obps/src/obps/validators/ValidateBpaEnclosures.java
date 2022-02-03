@@ -1,8 +1,11 @@
 package obps.validators;
 
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -20,6 +23,8 @@ public class ValidateBpaEnclosures implements Validator
 
     @Autowired
     MessageSource messages;
+    @Resource
+	private Environment environment;
 
     @Override
     public boolean supports(Class<?> type) {
@@ -43,10 +48,14 @@ public class ValidateBpaEnclosures implements Validator
         boolean errorFlag = false;
         if (bpaenclosures.getAppenclosures()!= null && bpaenclosures.getAppenclosures().size()>0) 
         {
-            if (bpaenclosures.getSessioncaptcha() != null && bpaenclosures.getUserresponsecaptcha().equalsIgnoreCase(bpaenclosures.getSessioncaptcha())) {
-                errorFlag = false;
-            } else {
-                errorFlag = true;
+            if(environment.getProperty("captcha_enabled").equals("true")) {
+	        	if (bpaenclosures.getSessioncaptcha() != null && bpaenclosures.getUserresponsecaptcha().equalsIgnoreCase(bpaenclosures.getSessioncaptcha())) {
+	                errorFlag = false;
+	            } else {
+	                errorFlag = true;
+	            }
+            }else {
+            	errorFlag = false;
             }
         }
         if (errorFlag) {

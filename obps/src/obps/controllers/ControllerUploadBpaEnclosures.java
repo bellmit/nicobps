@@ -76,7 +76,7 @@ public class ControllerUploadBpaEnclosures {
 		return PARENT_URL_MAPPING.concat("/bpauploadenc");
 	}
 
-	@RequestMapping(value = "submitbpaenclosures.htm", params = "_submit", method = RequestMethod.POST)
+	@RequestMapping(value = "submitbpaenclosures.htm",  method = RequestMethod.POST)
 	public String submitbpaenclosures(ModelMap model,
 			@ModelAttribute("licenseesenclosures") BpaEnclosures bpaenclosures, BindingResult result,
 			HttpServletRequest request) {
@@ -94,7 +94,7 @@ public class ControllerUploadBpaEnclosures {
 		bpaenclosures.setSessioncaptcha((String) request.getSession().getAttribute("CAPTCHA_KEY"));
 		System.out.println("application code =================== " + bpaenclosures.getApplicationcode());
 		vle.validate(bpaenclosures, result);
-
+		System.out.println("result :: "+result.toString());
 		if (!result.hasErrors()) {
 			String afrcode = serviceUserManagementInterface.getMaxAfrCode() + "";
 			bpaenclosures.setAfrcode(afrcode);
