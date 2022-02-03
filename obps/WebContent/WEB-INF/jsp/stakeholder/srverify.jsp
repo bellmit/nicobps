@@ -265,6 +265,7 @@
 							</td>
 						</tr>
 					</table>
+					<div class="h-3"></div>
 					<div style="position: absolute; bottom: 0"
 						class="text-center w-100 row">
 						<div class="dropup col-md-6"
