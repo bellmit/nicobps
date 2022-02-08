@@ -257,8 +257,8 @@
 							to view)</span>
 					</h5>
 				</div>
-				<div class="col-md-4 py-2 px-2 h-50" style="display: block">
-					<table class="table mb-5" id="enclosures">
+				<div class="col-md-4 py-5 px-2 " style="display: block">
+					<table class="table" id="enclosures">
 						<tr ng-repeat="item in applicant.enclosures">
 							<td><span style="cursor: pointer"
 								ng-click="getEnclosure(applicant.usercode,item.enclosurecode)">{{item.enclosurename}}</span>
