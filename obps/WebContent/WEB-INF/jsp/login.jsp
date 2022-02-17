@@ -68,13 +68,12 @@
 								<label class="custom-control-label " for="login-rem-1">Remember me</label>
 							</div> -->
 							<div class="form-group">
-								<label for="jcaptchaimg" class="">Captcha:</label> <img
-									src="./jcaptchalogin.jpg" id="jcaptchaimg"
-								 title="Click To Reload"
-									style="cursor: pointer;" /> <input class="form-control"
+								<label for="jcaptchaimg" class="">Captcha:</label> 
+								<img src="./jcaptchalogin.jpg" id="jcaptchaimg" title="Click To Reload" class="reloadCaptchaButton" style="cursor: pointer;" /> 
+								<i title="Click To Reload" class="reloadCaptchaButton fa fa-refresh ml-2" style="cursor: pointer;"></i>
+									<input class="form-control mt-2" placeholder="Enter Captcha"
 									type="text" id="jcaptchalogin" name="jcaptchalogin" value=""
 									autocomplete="off">
-								<!--  required-->
 							</div>
 							<div class="container" align="center">
 								<span style="color: red; width: 100%;"> <core:out
