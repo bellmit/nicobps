@@ -84,19 +84,36 @@ class ServiceBPA implements ServiceBPAInterface {
 
 	@Override
 	public List<CommonMap> listNextProcessingUsers(Integer usercode, String applicationcode) {
-		String sql = "SELECT U.usercode AS key, U.fullname AS value  " + "FROM nicobps.applicationflowremarks AFR   "
-				+ "INNER JOIN(  " + "		SELECT applicationcode, MAX(afrcode) afrcode "
-				+ "		FROM nicobps.applicationflowremarks    " + "		GROUP BY applicationcode  "
-				+ ")T ON (T.applicationcode, T.afrcode) = (AFR.applicationcode, AFR.afrcode)  "
-				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = T.applicationcode  "
-				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.processflowstatus) = (APP.officecode, AFR.modulecode, AFR.toprocesscode, 'N')  "
-				+ "INNER JOIN (  " + "			SELECT PU.urlcode, PU.pageurl,   "
-				+ "	       	UP.usercode, UL.username, UL.fullname  " + "	FROM masters.pageurls PU  "
-				+ "	INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode  "
-				+ "	INNER JOIN nicobps.userlogins UL ON UL.usercode = UP.usercode  "
-				+ "	ORDER BY UP.usercode, UP.urlcode  " + ")U ON U.urlcode = PF.urlcode  " + "LEFT JOIN (	"
-				+ " SELECT usercode FROM nicobps.licensees  " + ") L ON L.usercode  = U.usercode  "
-				+ "WHERE AFR.applicationcode = ?  " + "AND L.usercode IS NULL " + "ORDER BY U.fullname ";
+//		String sql = "SELECT U.usercode AS key, U.fullname AS value  " + "FROM nicobps.applicationflowremarks AFR   "
+//				+ "INNER JOIN(  " + "		SELECT applicationcode, MAX(afrcode) afrcode "
+//				+ "		FROM nicobps.applicationflowremarks    " + "		GROUP BY applicationcode  "
+//				+ ")T ON (T.applicationcode, T.afrcode) = (AFR.applicationcode, AFR.afrcode)  "
+//				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = T.applicationcode  "
+//				+ "INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.processflowstatus) = (APP.officecode, AFR.modulecode, AFR.toprocesscode, 'N')  "
+//				+ "INNER JOIN (  " + "			SELECT PU.urlcode, PU.pageurl,   "
+//				+ "	       	UP.usercode, UL.username, UL.fullname  " + "	FROM masters.pageurls PU  "
+//				+ "	INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode  "
+//				+ "	INNER JOIN nicobps.userlogins UL ON UL.usercode = UP.usercode  "
+//				+ "	ORDER BY UP.usercode, UP.urlcode  " + ")U ON U.urlcode = PF.urlcode  " + "LEFT JOIN (	"
+//				+ " SELECT usercode FROM nicobps.licensees  " + ") L ON L.usercode  = U.usercode  "
+//				+ "WHERE AFR.applicationcode = ?  " + "AND L.usercode IS NULL " + "ORDER BY U.fullname ";
+
+		String sql = "SELECT U.usercode AS key, U.fullname AS value    FROM nicobps.applicationflowremarks AFR  "
+				+ "				 INNER JOIN(    		SELECT applicationcode, MAX(afrcode) afrcode "
+				+ "				 		FROM nicobps.applicationflowremarks      		GROUP BY applicationcode  "
+				+ "				 )T ON (T.applicationcode, T.afrcode) = (AFR.applicationcode, AFR.afrcode)  "
+				+ "				 INNER JOIN nicobps.applications APP ON APP.applicationcode = T.applicationcode "
+				+ "				 INNER JOIN nicobps.bpaapplications BPA ON BPA.applicationcode = APP.applicationcode      "
+				+ "				 INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.processflowstatus) = (APP.officecode, AFR.modulecode, AFR.toprocesscode, 'N')  "
+				+ "				 INNER JOIN (    			SELECT PU.urlcode, PU.pageurl,   "
+				+ "				 	       	UP.usercode, UL.username, UL.fullname    	FROM masters.pageurls PU  "
+				+ "				 	INNER JOIN nicobps.userpages UP ON UP.urlcode = PU.urlcode  "
+				+ "				 	INNER JOIN nicobps.userlogins UL ON UL.usercode = UP.usercode  "
+				+ "				 	ORDER BY UP.usercode, UP.urlcode    )U ON U.urlcode = PF.urlcode  "
+				+ "				 INNER JOIN nicobps.userofficelocations UOL ON UOL.locationcode = BPA.officelocationcode  AND  UOL.usercode = U.usercode 	"
+				+ "				 LEFT JOIN (	"
+				+ "				 SELECT usercode FROM nicobps.licensees    ) L ON L.usercode  = U.usercode  "
+				+ "				 WHERE AFR.applicationcode = ?   AND L.usercode IS NULL   ORDER BY U.fullname ;";
 		return SUI.listCommonMap(sql, new Object[] { applicationcode });
 	}
 
@@ -427,12 +444,13 @@ class ServiceBPA implements ServiceBPAInterface {
 				+ "       BPA.plotgiscoordinates, BPA.officelocationcode, BPA.landregistrationdetails,   "
 				+ "       BPA.landregistrationno, BPA.plotidentifier1, BPA.plotidentifier2, BPA.plotidentifier3,   "
 				+ "       BPA.holdingno, BPA.entrydate,"
-				+ "		  OL.locationname, OW.ownershiptypename,additionalinfo    "
+				+ "		  OL.locationname, OW.ownershiptypename,additionalinfo ,UL.fullname ,BPA.istatkal,BPA.referenceapplicationcode  "
 				+ "FROM nicobps.bpaapplications  BPA "
 				+ "INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode  "
 				+ "INNER JOIN masters.officelocations OL ON OL.locationcode = BPA.officelocationcode  "
 				+ "INNER JOIN masters.ownershiptypes OW ON OW.ownershiptypecode = BPA.ownershiptypecode   "
-				+ "WHERE BPA.applicationcode = ? ";
+				+ " INNER JOIN nicobps.userlogins UL ON APP.usercode=UL.usercode  "
+				+ " WHERE BPA.applicationcode = ? ";
 		applications = SUI.listGeneric(sql, new Object[] { applicationcode });
 
 		if (applications != null && !applications.isEmpty()) {

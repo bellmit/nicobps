@@ -34,6 +34,12 @@
 }
 </style>
 
+<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
+<script src="resources/js/application/models/bpa.js"
+	type="text/javascript"></script>
+<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
+
+
 </head>
 <body ng-app="CommonApp" ng-controller="CommonCtrl"
 	ng-init="init('${page}','${processcode}','${applicationcode}')">
@@ -45,16 +51,19 @@
 				<h3 class="mt-4"
 					style="font-size: 32px; border-bottom: 3px solid #005776">
 					<ng-element ng-if="page == 'bpainbox' "> Applications</ng-element>
-					<ng-element ng-if="page == 'bpastatus' "> Application Status</ng-element>
-					<ng-element ng-if="page == 'buildingpermit' "> Applications</ng-element>
-					<ng-element ng-if="page == 'bpasearch' "> Search Applications</ng-element>
+					<ng-element ng-if="page == 'bpastatus' "> Application
+					Status</ng-element>
+					<ng-element ng-if="page == 'buildingpermit' ">
+					Applications</ng-element>
+					<ng-element ng-if="page == 'bpasearch' "> Search
+					Applications</ng-element>
 				</h3>
 
 
 
 				<div class="card" ng-show="search">
 					<div class="card-body">
-						<form >
+						<form>
 							<div class="input-group" style="padding: 2rem 5rem">
 								<input type="text"
 									class="form-control custom-form-control text-center"
@@ -80,7 +89,8 @@
 				<br /> <br />
 				<div class="table-responsive" id="displayRecordsDiv">
 					<div id="displayRecords"
-						style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px' ng-class=" page == 'bpainbox' || page == 'buildingpermit' ? 'displayRecordsTable'  : ''"></div>
+						style='width: 100%; margin: 0px auto 50px auto; padding: 0px 20px'
+						ng-class=" page == 'bpainbox' || page == 'buildingpermit' ? 'displayRecordsTable'  : ''"></div>
 				</div>
 
 			</div>
@@ -88,12 +98,6 @@
 	</div>
 </body>
 
-<script src="resources/js/util/ngdirectives.js" type="text/javascript"></script>
-<script src="resources/js/application/models/bpa.js"
-	type="text/javascript"></script>
-<script src="resources/js/commons/bpaService.js" type="text/javascript"></script>
 <script src="resources/js/application/bpa/bpacommon.js"
 	type="text/javascript"></script>
-
-	
 </html>

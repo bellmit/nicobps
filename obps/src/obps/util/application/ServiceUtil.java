@@ -226,8 +226,8 @@ public class ServiceUtil implements ServiceUtilInterface {
 
 	@Override
 	public List<CommonMap> listEnclosures(final Short modulecode, Integer usercode, Short licenseetypecode) {
-		System.out.println("list2="+usercode);
-		System.out.println("list2="+licenseetypecode);
+		System.out.println("list2=" + usercode);
+		System.out.println("list2=" + licenseetypecode);
 		String sql = "SELECT E.enclosurecode AS key,enclosurename AS value,mandatory AS value1,usercode AS value2,filetypes AS value4 FROM masters.enclosures E   "
 				+ "INNER JOIN masters.modulesenclosures M ON M.enclosurecode=E.enclosurecode  "
 				+ "LEFT OUTER JOIN nicobps.licenseesenclosures LE ON LE.enclosurecode=M.enclosurecode AND LE.usercode=? "
@@ -520,7 +520,7 @@ public class ServiceUtil implements ServiceUtilInterface {
 	public Map<String, Object> getPlanInfoPermit(String permitnumber) {
 		return daoUtilInterface.getPlanInfoPermit(permitnumber);
 	}
-	
+
 	@Override
 	public Map<String, Object> getPlanInfoEdcr(String edcrnumber) {
 		return daoUtilInterface.getPlanInfoEdcr(edcrnumber);
@@ -561,17 +561,43 @@ public class ServiceUtil implements ServiceUtilInterface {
 	}
 
 	public List<UserApplications> listUserApplications(Integer usercode) {
-		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP "
-				+ "INNER JOIN nicobps.applicationflowremarks AF " + "ON (AF.applicationcode, AF.entrydate) = " + "( "
-				+ "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks "
-				+ "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
-				+ "   GROUP BY applicationcode " + ") "
-				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode "
-				// + "WHERE AF.modulecode=2 AND AF.tousercode = ? "
-				+ "WHERE AF.modulecode=2 AND AF.toprocesscode IN (5,6,7,8,9,10,11,12,14) AND "
-				+ "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
-				+ "GROUP BY PR.processcode,PR.processname ";
-		return this.listGeneric(UserApplications.class, sql, new Object[] { usercode, usercode });
+//		String sql = "SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac FROM nicobps.applications APP "
+//				+ "INNER JOIN nicobps.applicationflowremarks AF " + "ON (AF.applicationcode, AF.entrydate) = " + "( "
+//				+ "   SELECT applicationcode, MAX(entrydate) FROM nicobps.applicationflowremarks "
+//				+ "   WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode "
+//				+ "   GROUP BY applicationcode " + ") "
+//				+ "INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode "
+//				// + "WHERE AF.modulecode=2 AND AF.tousercode = ? "
+//				+ "WHERE AF.modulecode=2 AND AF.toprocesscode IN (5,6,7,8,9,10,11,12,14) AND "
+//				+ "CASE WHEN AF.tousercode IS NULL THEN APP.officecode IN (SELECT officecode FROM nicobps.useroffices WHERE usercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?)) ELSE tousercode=(SELECT usercode FROM nicobps.userlogins WHERE designation NOT IN ('Architect','Structural Engineer') AND usercode=?) END  "
+//				+ "GROUP BY PR.processcode,PR.processname ";
+//		return this.listGeneric(UserApplications.class, sql, new Object[] { usercode, usercode });
+
+		String sql = " SELECT PR.processcode,PR.processname,COUNT(APP.applicationcode) AS totalac "
+				+ "				 FROM nicobps.edcrscrutiny EDCR       "
+				+ "				 INNER JOIN nicobps.bpaapplications BPA ON BPA.edcrnumber = EDCR.edcrnumber   "
+				+ "				 INNER JOIN nicobps.applications APP ON APP.applicationcode = BPA.applicationcode     "
+				+ "				 INNER JOIN nicobps.applicationflowremarks AF ON (AF.applicationcode, AF.entrydate) = (    "
+				+ "				 	SELECT applicationcode, MAX(entrydate)   	FROM nicobps.applicationflowremarks    "
+				+ "				 	WHERE applicationcode = APP.applicationcode  AND modulecode = APP.modulecode      "
+				+ "				 	GROUP BY applicationcode)    "
+				+ "				 INNER JOIN nicobps.userlogins FUL ON FUL.usercode = AF.fromusercode  "
+				+ "				 LEFT JOIN nicobps.userlogins TUL ON TUL.usercode = AF.tousercode   "
+				+ "				 INNER JOIN masters.processes PR ON PR.processcode = AF.toprocesscode AND PR.modulecode = AF.modulecode   "
+				+ "				 INNER JOIN masters.processes PRF ON PRF.processcode = AF.fromprocesscode AND PRF.modulecode = AF.modulecode  "
+				+ "				 INNER JOIN masters.processflow PF ON (PF.officecode, PF.modulecode, PF.fromprocesscode, PF.toprocesscode,  PF.processflowstatus) = (APP.officecode, PR.modulecode, AF.fromprocesscode, PR.processcode, 'N')        "
+				+ "				 LEFT JOIN masters.pageurls PU ON PU.urlcode = PF.urlcode      INNER JOIN (  "
+				+ "				 	SELECT UP.usercode, UP.urlcode, PU.pageurl, PU.submenu    	FROM nicobps.userpages UP  "
+				+ "				 	INNER JOIN masters.pageurls PU ON PU.urlcode = UP.urlcode    	ORDER BY PU.urlcode  "
+				+ "				 )UP ON CASE WHEN AF.tousercode IS NOT NULL"
+				+ " AND UP.usercode NOT IN (SELECT usercode FROM nicobps.userlogins WHERE trim(designation) in ('Super User','GMC Super User')) "
+				+ " THEN UP.usercode = AF.tousercode AND UP.urlcode = PU.urlcode   "
+				+ "				 	ELSE UP.urlcode = PU.urlcode            END  "
+				+ "				 LEFT JOIN nicobps.bparejectapplications RA ON RA.applicationcode = AF.applicationcode  "
+				+ "				  INNER JOIN nicobps.userofficelocations UOL ON   UP.usercode = UOL.usercode and BPA.officelocationcode=UOL.locationcode "
+				+ "				 WHERE UP.usercode = ? AND  AF.modulecode=2 AND AF.toprocesscode IN (5,6,7,8,9,10,11,12,14)"
+				+ "				 GROUP BY PR.processcode,PR.processname" + "				";
+		return this.listGeneric(UserApplications.class, sql, new Object[] { usercode });
 	}
 
 	public List<UserApplications> listStakeholderApplications(Integer usercode) {
@@ -674,6 +700,5 @@ public class ServiceUtil implements ServiceUtilInterface {
 		return (!list.isEmpty()) ? list.get(0) : new HashMap<>();
 
 	}
-
 
 }

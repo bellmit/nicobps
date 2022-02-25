@@ -274,16 +274,16 @@ public class DaoBPA implements DaoBPAInterface {
 					+ "    plotaddressline1, plotaddressline2, plotvillagetown, plotpincode,     "
 					+ "    plotgiscoordinates, officelocationcode, landregistrationdetails,     "
 					+ "    landregistrationno, plotidentifier1, plotidentifier2, plotidentifier3,     "
-					+ "    holdingno, additionalinfo, entrydate,istatkal)    " + "VALUES (?, ?, ?, ?,     "
-					+ "    ?, ?, ?, ?,     " + "    ?, ?, ?,     " + "    ?, ?, ?, ?,     "
-					+ "    ?, ?::json, now(),?)    " + "";
+					+ "    holdingno, additionalinfo, entrydate,istatkal,referenceapplicationcode)    "
+					+ "VALUES (?, ?, ?, ?,     " + "    ?, ?, ?, ?,     " + "    ?, ?, ?,     " + "    ?, ?, ?, ?,     "
+					+ "    ?, ?::json, now(),?,?)    " + "";
 
 			param = new Object[] { bpa.getApplicationcode(), bpa.getEdcrnumber(), bpa.getOwnershiptypecode(),
 					bpa.getOwnershipsubtype(), bpa.getPlotaddressline1(), bpa.getPlotaddressline2(),
 					bpa.getPlotvillagetown(), bpa.getPlotpincode(), bpa.getPlotgiscoordinates(),
 					bpa.getOfficelocationcode(), bpa.getLandregistrationdetails(), bpa.getLandregistrationno(),
 					bpa.getPlotidentifier1(), bpa.getPlotidentifier2(), bpa.getPlotidentifier3(), bpa.getHoldingno(),
-					bpa.getAdditionalinfo() ,bpa.getIstatkal()};
+					bpa.getAdditionalinfo(), bpa.getIstatkal(), bpa.getReferenceapplicationcode() };
 
 			status = jdbcTemplate.update(sql, param) > 0;
 			if (!status)
@@ -393,17 +393,16 @@ public class DaoBPA implements DaoBPAInterface {
 							+ "	(SELECT COALESCE(MAX(appenclosurecode), 0)+1 FROM nicobps.bpaenclosures),    "
 							+ "	?, ?, ?, now()   " + ")   ";
 
-					
 					bpa.getReports().forEach(report -> {
 						params.add(new Object[] { bpa.getApplicationcode(), report.getCode(), report.getFileImage() });
 					});
 					status = jdbcTemplate.batchUpdate(sql, params).length == params.size();
-				}else {
-					status= true;
+				} else {
+					status = true;
 				}
 
 			} else {
-				status= true;
+				status = true;
 			}
 			if (!status)
 				throw new Exception("Failed to update siteinspection details");

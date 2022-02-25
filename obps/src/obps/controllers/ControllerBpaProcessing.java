@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import obps.models.BpaApproval;
 import obps.models.BpaProcessFlow;
 import obps.models.BpaSiteInspection;
+import obps.services.ServiceBPACommon;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
@@ -49,6 +50,10 @@ public class ControllerBpaProcessing {
 
 	@Autowired
 	private ServiceBPAInterface SBI;
+
+	@Autowired
+	private ServiceBPACommon SBC;
+
 	@Autowired
 	private BpaValidator Bvalid;
 
@@ -400,9 +405,11 @@ public class ControllerBpaProcessing {
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
 		usercode = getSessionUsercode(model);
 		if (processcode != null && processcode.trim().length() > 0) {
-			return SBI.listBPApplications(usercode, Integer.valueOf(processcode));
+//			return SBI.listBPApplications(usercode, Integer.valueOf(processcode));
+			return SBC.listBPApplications(usercode, Integer.valueOf(processcode));
 		} else {
-			return SBI.listBPApplications(usercode);
+//			return SBI.listBPApplications(usercode);
+			return SBC.listBPApplications(usercode);
 		}
 	};
 
@@ -410,7 +417,8 @@ public class ControllerBpaProcessing {
 	public @ResponseBody List<Map<String, Object>> listBPApplicationsStatus(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode, @RequestParam(name = "param") String param) {
 		usercode = getSessionUsercode(model);
-		return SBI.listBPApplicationsStatus(usercode, param);
+//		return SBI.listBPApplicationsStatus(usercode, param);
+		return SBC.listBPApplicationsStatus(usercode, param);
 	};
 
 	@GetMapping(value = "/listbpaconditions.htm")

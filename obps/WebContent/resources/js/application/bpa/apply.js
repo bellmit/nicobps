@@ -137,6 +137,8 @@ app.controller("CommonCtrl", [
 			bpa.occupancy.$touched = true;
 			bpa.plotaddressline1.$touched = true;
 			bpa.nameofengineer.$touched = true;
+			bpa.istatkal.$touched = true;
+			bpa.referenceapplicationcode.$touched = true;
 
 
 			if (
@@ -163,8 +165,8 @@ app.controller("CommonCtrl", [
 				flag = false;
 			}
 
-			
-			if(bpa.plotgiscoordinates!=undefined){
+
+			if (bpa.plotgiscoordinates != undefined) {
 				bpa.plotgiscoordinates.$touched = true;
 			}
 			/*
@@ -408,6 +410,25 @@ app.controller("CommonCtrl", [
 				flag = false;
 			}
 
+			if (
+				bpa.istatkal.$modelValue == null ||
+				bpa.istatkal.$modelValue == ""
+			) {
+				bpa.istatkal.$error.invalid = true;
+				flag = false;
+			}
+
+			if (bpa.appref.$modelValue == 'Y') {
+				if (
+					bpa.referenceapplicationcode.$modelValue == null ||
+					bpa.referenceapplicationcode.$modelValue == ""
+				) {
+					bpa.referenceapplicationcode.$error.invalid = true;
+					flag = false;
+				}
+			}
+
+
 			return flag;
 		};
 		$scope.init = (edcrnumber) => {
@@ -439,8 +460,8 @@ app.controller("CommonCtrl", [
 
 					$scope.totalbuiltuparea = response.totalbuiltuparea;
 					//-- cal
-					let sqmtoft = (parseFloat(response.totalbuiltuparea) * 10.7639).toFixed(3);
-					let amount = sqmtoft * 5;
+					let sqmtoft = response.sqmtoft;
+					let amount = response.amount;
 					let add_charge = amount.toLocaleString('en-IN', {
 						maximumFractionDigits: 2,
 						style: 'currency',
@@ -451,7 +472,7 @@ app.controller("CommonCtrl", [
 
 					$scope.totalbuiltuparea_ft = sqmtoft;
 
-					$scope.additionalcharges = add_charge;
+					$scope.BPA.additionalcharges = add_charge;
 				},
 				error: function(xhr) {
 					alert(xhr.status + " = " + xhr);
@@ -460,7 +481,7 @@ app.controller("CommonCtrl", [
 			});
 		};
 
-	
+
 		/* CREATE */
 		$scope.save = () => {
 			let BPA = {}, valid = false;
@@ -505,5 +526,60 @@ app.controller("CommonCtrl", [
 				$scope.serverMsg = "";
 			}, 5000);
 		};
+
+		$scope.basicDetail = {};
+		$scope.getBasicDetails = () => {
+			console.log(" $scope.BPA.referenceapplicationcode : " + $scope.BPA.referenceapplicationcode);
+			jQuery.ajax({
+				type: "GET",
+				url: "./getBpaApplicationDetailsV2.htm",
+				datatype: "json",
+				data: { param: $scope.BPA.referenceapplicationcode },
+				success: function(response) {
+					$scope.basicDetail.applicationcode = response.applicationcode
+					$scope.basicDetail.edcrnumber = response.edcrnumber;
+					$scope.basicDetail.applicantname = response.fullname;
+					$scope.basicDetail.address = response.plotaddressline1 + " " + response.plotaddressline2;
+					$scope.basicDetail.citytown = response.plotvillagetown;
+					$scope.basicDetail.pincode = response.plotpincode;
+					$scope.basicDetail.officelocationname = response.locationname;
+					$scope.basicDetail.plotidentifier1 = response.plotidentifier1;
+					$scope.basicDetail.holdingno = response.holdingno;
+					$scope.basicDetail.landregistrationno = response.landregistrationno;
+					$scope.basicDetail.landregistrationdetails = response.landregistrationdetails;
+					$scope.basicDetail.ownershiptypename = response.ownershiptypename;
+					$scope.basicDetail.ownershipsubtype = response.ownershipsubtype;
+					$scope.OwnerDetails = response.ownerdetails;
+					//					$scope.DocumentDetails = response.documentdetails;
+					$scope.basicDetail.additionalinfo = JSON.parse(response.additionalinfo.value).nameofengineer;
+
+					$timeout(function() {
+						console.log("add " + $scope.basicDetail.address);
+						jQuery.fancybox.close();
+						jQuery.fancybox({
+							href: '#ViewDetails',
+							'autoSize': false,
+							'transitionIn': 'elastic',
+							'transitionOut': 'elastic',
+							'speedIn': 600,
+							'speedOut': 200,
+							'overlayShow': false,
+							'modal': false,
+							'width': '100%'
+						});
+
+						//					$("#viewDetails").removeClass("d-none");
+
+					}, 100);
+				},
+				error: function(xhr) {
+					alert(xhr.status + " = " + xhr);
+					alert(
+						"Sorry, there was an error while trying to process the request."
+					);
+				},
+			});
+		}
+
 	},
 ]);

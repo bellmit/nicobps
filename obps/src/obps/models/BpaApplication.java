@@ -32,9 +32,27 @@ public class BpaApplication implements Serializable {
 	private String entrydate;
 	private String additionalinfo;
 	private String istatkal;
+	private Double addcharges;
+	private String referenceapplicationcode;
 	private List<BpaOwnerDetail> ownerdetails;
 
 	
+	public Double getAddcharges() {
+		return addcharges;
+	}
+
+	public void setAddcharges(Double addcharges) {
+		this.addcharges = addcharges;
+	}
+
+	public String getReferenceapplicationcode() {
+		return referenceapplicationcode;
+	}
+
+	public void setReferenceapplicationcode(String referenceapplicationcode) {
+		this.referenceapplicationcode = referenceapplicationcode;
+	}
+
 	public String getIstatkal() {
 		return istatkal;
 	}

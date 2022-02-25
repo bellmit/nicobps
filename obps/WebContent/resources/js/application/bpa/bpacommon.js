@@ -11,7 +11,8 @@ app.controller("CommonCtrl", [
 		console.log("BPA Common");
 
 		$scope.colindex = new Set();
-		var tablecolumns_1 = [{
+
+		var table_columns = [{
 			"title": "Slno",
 			"data": "edrnumber",
 			"width": "1%",
@@ -21,7 +22,7 @@ app.controller("CommonCtrl", [
 		}, {
 			"title": "Application code",
 			"data": "applicationcode",
-			"width": "20%",
+			"width": "15%",
 			render: (data, type, row, meta) => {
 				let content = "";
 				if (data != null) {
@@ -31,9 +32,13 @@ app.controller("CommonCtrl", [
 						content += '<br><small>Permit Number:</small> ' + row.permitnumber;
 					if (row.ownername != null)
 						content += '<br><small>Owner(s) Name:</small> ' + row.ownername;
+					else if (row.ownersname != null)
+						content += '<br><small>Owner(s) Name:</small> ' + row.ownersname;
+
+
 					return content;
 				} else {
-					//							    $scope.colindex.add(1);
+					$scope.colindex.add(1);
 					return content;
 				}
 
@@ -57,7 +62,7 @@ app.controller("CommonCtrl", [
 			"width": "5%",
 			render: (data, type, row, meta) => {
 				if (data == null) {
-					//									$scope.colindex.add(3);
+					$scope.colindex.add(3);
 					return "";
 				} else
 					return data;
@@ -77,25 +82,53 @@ app.controller("CommonCtrl", [
 		}, {
 			"title": "Site Address ",
 			"data": "address",
-			"width": "19%",
+			"width": "14%",
 			render: (data, type, row, meta) => {
 				if (data == null) {
-
+					$scope.colindex.add(5);
 					return "";
 				} else
 					return data;
 			}
-		},
+		}, //45
 		{
 			"title": "Current Process ",
 			"data": "currentprocessname",
 			"width": "10%",
 			render: (data, type, row, meta) => {
 				if (data == null) {
-					//										$scope.colindex.add(8);
+					$scope.colindex.add(6);
 					return "";
 				} else
 					return data;
+			}
+		}, {
+			"title": "Current User",
+			"data": "fromusername",
+			"width": "10%",
+			render: (data, type, row, meta) => {
+				if (data == null) {
+					$scope.colindex.add(7);
+					return "";
+				} else
+					return data;
+			}
+		}, {
+			"title": "Remarks",
+			"data": "remarks",
+			"width": "10%",
+			render: (data, type, row, meta) => {
+				let status = data;
+				if (row.rejectdate != null && row.rejectdate != '') {
+					status = row.rejectremarks;
+				} else {
+					if (data == null) {
+						status = "";
+						$scope.colindex.add(8);
+					}
+				}
+
+				return status;
 			}
 		}, {
 			"title": "Next Process",
@@ -110,168 +143,43 @@ app.controller("CommonCtrl", [
 
 			}
 		}, {
-			"title": "Current User",
-			"data": "fromusername",
-			"width": "10%",
-			render: (data, type, row, meta) => {
-				if (data == null) {
-					//									$scope.colindex.add(6);
-					return "";
-				} else
-					return data;
-			}
-		}, {
 			"title": "Next User ",
 			"data": "tousername",
 			"width": "10%",
 			render: (data, type, row, meta) => {
+
 				if (data == null) {
-					//									$scope.colindex.add(7);
+
+					$scope.colindex.add(10);
 					return "";
 				} else
 					return data;
 			}
-		},
+		}, //40  = 85 
 		{
 			"title": "Is Tatkal ",
 			"data": "istatkal",
 			"width": "1%",
 			render: (data, type, row, meta) => {
 				if (data == null) {
-
+					$scope.colindex.add(11);
 					return "";
 				} else
 					return data == 'Y' ? 'YES' : 'NO';
 			}
-		}
-		];
-
-		var tablecolumns_2 = [
-			{
-				"title": "Slno",
-				"data": "applicationcode",
-				"width": "1%",
-				render: function(data, type, row, meta) {
-					return meta.row + 1;
-				}
-			}, {
-				"title": "Application code",
-				"data": "applicationcode",
-				"width": "20%",
-				render: (data, type, row, meta) => {
-					let content = '';
-					if (data != null) {
-						content = '<b>' + data + '</b>';
-						content += '<br><small>eDCRNumber:</small> ' + row.edcrnumber;
-						if (row.permitnumber != null)
-							content += '<br><small>Permit Number:</small> ' + row.permitnumber;
-						if (row.ownersname != null)
-							content += '<br><small>Owner(s) Name:</small> ' + row.ownersname;
-					}
-
-					return content;
-				}
-			},
-			{
-				"title": "filename(.dxf) ",
-				"data": "originalfilename",
-				"width": "5%",
-				render: (data, type, row, meta) => {
-					if (data == null) {
-						//									$scope.colindex.add(3);
-						return "";
-					} else
-						return data;
-				}
-
-			}, {
-				"title": "Site Address ",
-				"data": "address",
-				"width": "19%",
-				render: (data, type, row, meta) => {
-					if (data == null) {
-
-						return "";
-					} else
-						return data;
-				}
-			},
-			{
-				"title": "Status",
-				"data": "status",
-				"width": "10%",
-				render: (data, type, row, meta) => {
-					let status = data;
-					if (row.rejectdate != null && row.rejectdate != '')
-						status = "Rejected";
-					return status;
-				}
-			}, {
-				"title": "Next Process",
-				"data": "nextprocessname",
-				"width": "10%",
-				render: (data, type, row, meta) => {
-					let status = data;
-					if (row.rejectdate != null && row.rejectdate != '')
-						status = 'NA';
-					return status;
-				}
-			}, {
-				"title": "Current User",
-				"data": "fromusername",
-				"width": "7%",
-				render: (data, type, row, meta) => {
-					if (data == null) {
-						//									$scope.colindex.add(5);
-						return "";
-					} else
-						return data;
-				}
-			}, {
-				"title": "Next User ",
-				"data": "tousername",
-				"width": "7%",
-				render: (data, type, row, meta) => {
-					if (data == null) {
-						//									$scope.colindex.add(7);
-						return "";
-					} else
-						return data;
-				}
-			},
-			{
-				"title": "Remarks",
-				"data": "remarks",
-				"width": "10%",
-				render: (data, type, row, meta) => {
-					let status = data;
-					if (row.rejectdate != null && row.rejectdate != '')
-						status = row.rejectremarks;
-					return status;
-				}
-			}, {
-				"title": "Date",
-				"data": "appdate",
-				"width": "5%",
-				render: (data, type, row, meta) => {
-					if (data == null) {
-						return "";
-					} else
-						return data;
-				}
-			},
-			{
-				"title": "Is Tatkal ",
-				"data": "istatkal",
-				"width": "1%",
-				render: (data, type, row, meta) => {
-					if (data == null) {
-
-						return "";
-					} else
-						return data == 'Y' ? 'YES' : 'NO';
-				}
+		}, {
+			"title": "Date",
+			"data": "appdate",
+			"width": "4%",
+			render: (data, type, row, meta) => {
+				if (data == null) {
+					$scope.colindex.add(12);
+					return "";
+				} else
+					return data;
 			}
+		}
+			// 15 = 100
 		];
 
 		$scope.displaycols = [];
@@ -281,8 +189,7 @@ app.controller("CommonCtrl", [
 
 		$scope.init = (page, processcode, applicationcode) => {
 
-			console.log("page  : " + page);
-			console.log("applicationcode  : " + applicationcode);
+
 			$scope.page = page.toString().trim();
 			$scope.processcode = processcode;
 			$scope.search = (page == "bpasearch" ? true : false);
@@ -299,7 +206,7 @@ app.controller("CommonCtrl", [
 
 
 			if ($scope.page == "bpainbox") {
-				$scope.displaycols = tablecolumns_1;
+				$scope.displaycols = table_columns;
 				jQuery("#ajaxLoading").fadeIn();
 				$scope.listBPApplications = () => {
 					BS.listBPApplications((response) => {
@@ -311,8 +218,8 @@ app.controller("CommonCtrl", [
 				$scope.listBPApplications();
 
 			} else if ($scope.page == "bpastatus") {
-				$scope.colindex.add(8);
-				$scope.displaycols = tablecolumns_2;
+
+				$scope.displaycols = table_columns;
 				jQuery("#ajaxLoading").fadeIn();
 				$scope.listApplictionsCurrentProcessStatus = () => {
 					BS.listApplictionsCurrentProcessStatus((response) => {
@@ -323,7 +230,7 @@ app.controller("CommonCtrl", [
 				};
 				$scope.listApplictionsCurrentProcessStatus();
 			} else if ($scope.page == "buildingpermit") {
-				$scope.displaycols = tablecolumns_1;
+				$scope.displaycols = table_columns;
 				jQuery("#ajaxLoading").fadeIn();
 				$scope.listAppScrutinyDetailsForBPA = () => {
 					BS.listAppScrutinyDetailsForBPAV2((response) => {
@@ -334,7 +241,7 @@ app.controller("CommonCtrl", [
 				};
 				$scope.listAppScrutinyDetailsForBPA();
 			} else if ($scope.page == "bpasearch") {
-				$scope.displaycols = tablecolumns_2;
+				$scope.displaycols = table_columns;
 			}
 
 		}, 100);
@@ -343,7 +250,7 @@ app.controller("CommonCtrl", [
 
 		$scope.searchApplication = () => {
 
-			$scope.displaycols = tablecolumns_2;
+			$scope.displaycols = table_columns;
 			$scope.errorMsg = "";
 			$("#displayRecords").html("");
 			if ($scope.searchParam == null || $scope.searchParam == '') {
@@ -372,38 +279,38 @@ app.controller("CommonCtrl", [
 				"data": tData,
 				"columns": displaycols,
 				//				"columnDefs": [{"targets":[1],"visible":false,"searchable":false}],
-				"stateSave": true,
+				//				"stateSave": true,
 				"createdRow": function(row, data, dataIndex) {
 					$compile(angular.element(row).contents())($scope);
 				},
-				"rowCallback": function(row,data,index) {
-				if ($scope.page == "bpainbox") {
-				 if ( data.istatkal == "Y" )
-				    {
-				       $('td', row).css('background-color', '#ffcccb');
-				    // $('td', row).css('color', 'white');
-				    }
-				   
+				"rowCallback": function(row, data, index) {
+					//					if ($scope.page == "bpainbox") {
+					if (data.istatkal == "Y") {
+						$('td', row).addClass('table-danger');
+						// $('td', row).css('color', 'white');
+					}
+
+					//					}
 				}
-				}
-				   
+
 
 			});
 
-			console.log("indxtab " + $scope.colindex);
+
 
 			var emptyflag = 1;
 
 			for (let col of $scope.colindex) {
-				console.log("val ; " + col);
 
-				//					  jQuery.each(table.column(col).data(), function (key, val) {
-				//					     console.log("data column : " + val);
-				//							if (val != null && val != ""){
-				//								emptyflag=0;
-				//							}
-				//							
-				//					    });
+
+				jQuery.each(table.column(col).data(), function(key, val) {
+
+					if (val != null && val != "") {
+						console.log("not empty");
+						emptyflag = 0;
+					}
+
+				});
 
 				if (emptyflag == 1) {
 
@@ -433,7 +340,7 @@ app.controller("CommonCtrl", [
 			if ($scope.page == "bpastatus") {
 
 				try {
-					console.log("APPCODE : " + APPCODE);
+
 					if (APPCODE != null && APPCODE != '' && APPCODE.length > 10) {
 						table.search(APPCODE).draw();
 					}

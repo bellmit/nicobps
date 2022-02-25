@@ -187,6 +187,8 @@ app.directive("basicDetails",["$compile", "bpaService", function($compile, BS) {
 			scope.basicDetail.landregistrationdetails = response.landregistrationdetails;
 			scope.basicDetail.ownershiptypename = response.ownershiptypename;
 			scope.basicDetail.ownershipsubtype = response.ownershipsubtype;
+			scope.basicDetail.istatkal = response.istatkal;
+			scope.basicDetail.referenceapplicationcode = response.referenceapplicationcode;
 			scope.OwnerDetails = response.ownerdetails;
 			scope.DocumentDetails = response.documentdetails;
 			scope.basicDetail.additionalinfo=JSON.parse(response.additionalinfo.value).nameofengineer;

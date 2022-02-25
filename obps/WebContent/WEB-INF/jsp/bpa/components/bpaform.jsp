@@ -79,8 +79,9 @@ hr {
 					<!-- 					modified -->
 					<div class="col">
 						<div class="form-group">
-							<label class="col-sm-12 pl-0">Name of Engineer on Record <span
-								class="fa fa-asterisk"></span></label>
+							<label class="col-sm-12 pl-0">Name of Engineer on Record
+								<span class="fa fa-asterisk"></span>
+							</label>
 							<div class="col-sm-12 pl-0">
 								<select class="form-control custom-form-control"
 									name="nameofengineer"
@@ -174,32 +175,32 @@ hr {
 			</div>
 		</div>
 		<div class="row">
-			
-<!-- 			<div class="col"> -->
-<!-- 				<div class="form-group"> -->
-<!-- 					<label class="col-sm-12">GIS Coordinates</label> -->
-<!-- 					<div class="col-sm-12"> -->
-<!-- 						<div class="input-group"> -->
-<!-- 							<input type="text" class="form-control custom-form-control" -->
-<!-- 								name="plotgiscoordinates" ng-model="BPA.plotgiscoordinates" -->
-<!-- 								maxlength="99" readonly data-toggle="modal" -->
-<!-- 								data-target="#gmapModal" /> -->
-<!-- 															ng-mousedown="toggleGmapModal()"  -->
-<!-- 							<div class="input-group-append"> -->
-<!-- 								<button type="button" class="btn btn-outline-default" -->
-<!-- 									data-toggle="modal" data-target="#gmapModal"> -->
-<!-- 									<i class="fa fa-location"></i> -->
-<!-- 								</button> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 						<div class="col" ng-if="bpaform.plotgiscoordinates.$touched" -->
-<!-- 							style="color: red"> -->
-<!-- 														<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-			 
+
+			<!-- 			<div class="col"> -->
+			<!-- 				<div class="form-group"> -->
+			<!-- 					<label class="col-sm-12">GIS Coordinates</label> -->
+			<!-- 					<div class="col-sm-12"> -->
+			<!-- 						<div class="input-group"> -->
+			<!-- 							<input type="text" class="form-control custom-form-control" -->
+			<!-- 								name="plotgiscoordinates" ng-model="BPA.plotgiscoordinates" -->
+			<!-- 								maxlength="99" readonly data-toggle="modal" -->
+			<!-- 								data-target="#gmapModal" /> -->
+			<!-- 															ng-mousedown="toggleGmapModal()"  -->
+			<!-- 							<div class="input-group-append"> -->
+			<!-- 								<button type="button" class="btn btn-outline-default" -->
+			<!-- 									data-toggle="modal" data-target="#gmapModal"> -->
+			<!-- 									<i class="fa fa-location"></i> -->
+			<!-- 								</button> -->
+			<!-- 							</div> -->
+			<!-- 						</div> -->
+			<!-- 						<div class="col" ng-if="bpaform.plotgiscoordinates.$touched" -->
+			<!-- 							style="color: red"> -->
+			<!-- 														<span ng-show="bpaform.plotgiscoordinates.$error.required">Required</span> -->
+			<!-- 						</div> -->
+			<!-- 					</div> -->
+			<!-- 				</div> -->
+			<!-- 			</div> -->
+
 			<div class="col">
 				<div class="form-group">
 					<label class="col">Ward/Block/Sub-District<span
@@ -755,8 +756,7 @@ hr {
 							<span ng-show="bpaform.istatkal.$error.required">Required</span>
 						</div>
 					</div>
-					<div class="col-sm-6 " id="addch"
-						ng-show="BPA.istatkal == 'Y'">
+					<div class="col-sm-6 " id="addch" ng-show="BPA.istatkal == 'Y'">
 						<table class="table">
 							<thead>
 								<tr>
@@ -781,7 +781,7 @@ hr {
 
 									<td>Additional Charges Per Square Feet</td>
 									<td>-</td>
-									<td>{{additionalcharges}}</td>
+									<td>{{BPA.additionalcharges}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -794,6 +794,58 @@ hr {
 
 	</div>
 </div>
+<br />
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">Reference</h5>
+		<div class="row">
+			<div class="col">
+				<div class="form-group">
+					<div class="row">
+
+						<label class="col-sm-6"> Have you applied for Building
+							Permit for this Building earlier ? </label> <select
+							class="form-control custom-form-control  col-sm-3" name="appref"
+							id="appref" ng-model="BPA.appref">
+							<option value="N" selected>NO</option>
+							<option value="Y">YES</option>
+						</select>
+					</div>
+
+					<div class="row " id="addrefno" ng-show="BPA.appref == 'Y'">
+						<label class="offset-sm-1 col-sm-11"> Please indicate the
+							application code <span class="fa fa-asterisk"></span> :
+						</label>
+
+						<div class="input-group offset-sm-1 col-sm-5">
+							<input type="text" class="form-control  col-sm-10"
+								name="referenceapplicationcode"
+								ng-model="BPA.referenceapplicationcode" maxlength="20"
+								pattern-number  ng-required="BPA.appref == 'Y'" /> <input
+								type="button" class="btn btn-secondary" value="view"
+								ng-click="getBasicDetails()">
+						</div>
+
+						<div class="col-sm-2"
+							ng-if="bpaform.referenceapplicationcode.$touched || bpaform.referenceapplicationcode.$dirty"
+							style="color: red">
+							<span ng-show="bpaform.referenceapplicationcode.$error.required">Required</span>
+						</div>
+
+
+
+
+					</div>
+
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
 <br />
 <div class="card">
 	<div class="card-body">
@@ -814,3 +866,103 @@ hr {
 	</div>
 </div>
 <br />
+
+<div id="ViewDetails" style="display: none" class="h-100"
+	style="display:block">
+	<div class="container-fluid h-100" style="display: block">
+		<div class="row h-100" style="display: flex">
+			<div class="card col-md-12">
+				<div class="card-body">
+					<div class="card-title h5">Application Details</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col">
+								<label class="col-sm-12"><small>Application code</small></label>
+								<label class="col-sm-12">{{basicDetail.applicationcode}}</label>
+							</div>
+							<div class="col">
+								<label class="col-sm-12"><small>Building Plan
+										Scrutiny Number</small></label> <label class="col-sm-12">{{basicDetail.edcrnumber}}</label>
+							</div>
+							<div class="col">
+								<label class="col-sm-12"><small>Applicant Name</small></label> <label
+									class="col-sm-12">{{basicDetail.applicantname}}</label>
+							</div>
+							<div class="col">
+								<label class="col-sm-12"><small>Name of Engineer
+										on Record</small></label> <label class="col-sm-12">{{basicDetail.additionalinfo}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col">
+								<label class="col-sm-12"><small>Address</small></label> <label
+									class="col-sm-12">{{basicDetail.address}}</label>
+							</div>
+							<div class="col">
+								<label class="col-sm-12"><small>City/Town/Village</small></label>
+								<label class="col-sm-12">{{basicDetail.citytown}}</label>
+							</div>
+							<div class="col">
+								<label class="col-sm-12"><small>Ward/Block/Sub-district</small></label>
+								<label class="col-sm-12">{{basicDetail.officelocationname}}</label>
+							</div>
+							<div class="col">
+								<label class="col-sm-12"><small>Pincode</small></label> <label
+									class="col-sm-12">{{basicDetail.pincode}}</label>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6">
+								<label class="col-sm-12"><small>Ownership type</small></label> <label
+									class="col-sm-12">{{basicDetail.ownershiptypename}}</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="col-sm-12"><small>Ownership
+										Subtype</small></label> <label class="col-sm-12">{{basicDetail.ownershipsubtype}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="card pt-2" ng-repeat="O in OwnerDetails">
+						<div class="col h6" ng-if="OwnerDetails.length > 1">
+							{{'Owner '+($index+1)+':'}}
+							<hr style="padding: 0; margin: 0 0 0.6rem 0;" />
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<label class="col-sm-12"><small>Owner Name</small></label> <label
+									class="col-sm-12">{{O.ownername}}</label>
+							</div>
+							<div class="col-sm-4">
+								<label class="col-sm-12"><small>Mobile No.</small></label> <label
+									class="col-sm-12">{{O.mobileno}}</label>
+							</div>
+							<div class="col-sm-4">
+								<label class="col-sm-12"><small>Email</small></label> <label
+									class="col-sm-12">{{(O.emailid != null && O.emailid !=
+									'')?O.emailid: 'NA'}}</label>
+							</div>
+
+							<div class="col-sm-4">
+								<label class="col-sm-12"><small>Correspondence
+										Address</small></label> <label class="col-sm-12">{{O.address}}</label>
+							</div>
+							<div class="col-sm-4">
+								<label class="col-sm-12"><small>Permanent
+										Address</small></label> <label class="col-sm-12">{{O.peraddress}}</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

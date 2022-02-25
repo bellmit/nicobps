@@ -1,6 +1,7 @@
 /*@author Decent Khongstia*/
 package obps.controllers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import obps.models.BpaApplication;
 import obps.models.BpaApplicationFee;
 import obps.models.BpaProcessFlow;
+import obps.services.ServiceBPACommon;
 import obps.services.ServiceBPAInterface;
 import obps.util.application.BPAConstants;
 import obps.util.application.CommonMap;
@@ -46,6 +48,9 @@ public class ControllerBuildingPermit {
 
 	@Autowired
 	private ServiceBPAInterface SBI;
+
+	@Autowired
+	private ServiceBPACommon SBC;
 
 	@Autowired
 	private BpaValidator Bvalid;
@@ -251,14 +256,16 @@ public class ControllerBuildingPermit {
 	public @ResponseBody List<Map<String, Object>> listApplicationsScrutinyDetailsV2(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
 		usercode = getSessionUsercode(model);
-		return SBI.listAppScrutinyDetailsForBPAV2(usercode);
+//		return SBI.listAppScrutinyDetailsForBPAV2(usercode);
+		return SBC.listAppScrutinyDetailsForBPAV2(usercode);
 	};
 
 	@GetMapping(value = "/listApplictionsCurrentProcessStatus.htm")
 	public @ResponseBody List<Map<String, Object>> listApplictionsCurrentProcessStatus(ModelMap model,
 			@ModelAttribute("SESSION_USERCODE") Integer usercode) {
 		usercode = getSessionUsercode(model);
-		return SBI.listApplictionsCurrentProcessStatus(usercode);
+//		return SBI.listApplictionsCurrentProcessStatus(usercode);
+		return SBC.listApplictionsCurrentProcessStatus(usercode);
 	};
 
 	@GetMapping(value = "/listNextProcess.htm")
@@ -395,8 +402,16 @@ public class ControllerBuildingPermit {
 
 		try {
 
-			HashMap plandet = planinfo.getPlanInfoDetails(edcrnumber,"edcr");
+			HashMap plandet = planinfo.getPlanInfoDetails(edcrnumber, "edcr");
 			resp.putAll(plandet);
+
+			BigDecimal sqmtoft = new BigDecimal(
+					Double.parseDouble(plandet.get("totalbuiltuparea").toString()) * 10.7639);
+			BigDecimal sqmtoft_roundOff = sqmtoft.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			BigDecimal amount = sqmtoft_roundOff.multiply(new BigDecimal("5.0"));
+			
+			resp.put("sqmtoft",sqmtoft_roundOff);
+			resp.put("amount", amount);
 
 			System.out.println("params from planinfo :: " + resp.toString());
 		} catch (Exception e) {
