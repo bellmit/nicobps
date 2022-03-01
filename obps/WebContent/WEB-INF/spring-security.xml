@@ -43,7 +43,7 @@
 	         <content-type-options />
 	         <hsts />
 	         <frame-options policy="SAMEORIGIN" />
-	         <content-security-policy policy-directives="default-src 'self' https: ; object-src 'self' https: blob:;script-src 'self' https: blob:; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline' 'self'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;base-uri 'self';frame-ancestors 'self'" />
+	         <content-security-policy policy-directives="default-src 'self' ; object-src 'self' blob:;script-src 'self' blob:; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline' 'self'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;base-uri 'self';frame-ancestors 'self'" />
 	         <referrer-policy policy="strict-origin-when-cross-origin" />
 	         <header name="Pragma" value="no-cache"/>
 	         <!--<header ref="headerWriter"/>-->

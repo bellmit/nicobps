@@ -20,10 +20,9 @@ public class CorsFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		response.setHeader("Access-Control-Allow-Origin", environment.getRequiredProperty("host_server"));
-		response.setHeader("Set-Cookie", "HttpOnly; SameSite=Strict; secure; domain="
+		response.setHeader("Set-Cookie", "HttpOnly; SameSite=Strict;secure; domain="
 				+ environment.getRequiredProperty("host_server") + " ;path=/obps/");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
-
 		if (request.getHeader("Referer") != null
 				&& !request.getHeader("Referer").contains(environment.getRequiredProperty("host_server").toString())) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
