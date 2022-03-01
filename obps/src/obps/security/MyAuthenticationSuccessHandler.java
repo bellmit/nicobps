@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -23,7 +24,9 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 {		
 		@Autowired
 	    private ServiceUserManagementInterface serviceUserManagementInterface = null;
-	    
+		@Autowired
+		Environment environment;
+		
 	    @Override
 	    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {        	
 	    	HttpSession session = request.getSession();
@@ -31,6 +34,8 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 	    	//Userlogin user = (Userlogin)session.getAttribute("user");
 	        //System.out.println(user.toString());	    	
 	        setDefaultTargetUrl("/home.htm");
+//	        response.setHeader("Set-Cookie", "JSESSIONID="+ request.getSession().getId()+";HttpOnly; SameSite=Strict;secure; domain="
+//					+ environment.getRequiredProperty("host_server") + " ;path=/obps/");
 	        super.onAuthenticationSuccess(request, response, authentication);
 	    }
 }
