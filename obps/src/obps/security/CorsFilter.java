@@ -18,25 +18,20 @@ public class CorsFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-//		if (request.getHeader(ORIGIN).equals("null")) {
+
 		response.setHeader("Access-Control-Allow-Origin", environment.getRequiredProperty("host_server"));
 		response.setHeader("Set-Cookie", "HttpOnly; SameSite=Strict; secure; domain="
 				+ environment.getRequiredProperty("host_server") + " ;path=/obps/");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
-//		}
-		if (request.getHeader("Referer")!=null && !request.getHeader("Referer").contains(environment.getRequiredProperty("host_server").toString())) {
-			response.getWriter().print("OK");
-			response.getWriter().flush();
+
+		if (request.getHeader("Referer") != null
+				&& !request.getHeader("Referer").contains(environment.getRequiredProperty("host_server").toString())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		} else if (request.getHeader("Origin") != null
+				&& !request.getHeader("Origin").contains(environment.getRequiredProperty("host_server").toString())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		} else {
+			filterChain.doFilter(request, response);
 		}
-//		if (request.getMethod().equals("OPTIONS")) {
-//			try {
-//				response.getWriter().print("OK");
-//				response.getWriter().flush();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-		filterChain.doFilter(request, response);
-//		}
 	}
 }

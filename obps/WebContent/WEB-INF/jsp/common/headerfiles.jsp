@@ -65,6 +65,7 @@
 <script src="resources/js/application/jclasses.js"></script>  
 
 
+<script src="resources/js/commons/xssFilter.js"></script>  
 <%@include file="ajaxloading.jsp" %>  
 
 <!-- Application -->
